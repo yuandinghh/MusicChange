@@ -1,4 +1,5 @@
 ﻿using System;
+//using System.Windows.Forms
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -11,6 +12,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using ToolTip = System.Windows.Forms.ToolTip;
 
 namespace MusicChange {
 	public partial class Cut : Form {
@@ -27,10 +30,33 @@ namespace MusicChange {
 			this.axWindowsMediaPlayer1.Size = new System.Drawing.Size( 900, 700 );
 			//	axWindowsMediaPlayer1.settings.rate = 0.1; // 最慢0.1倍速
 			comboBoxSpeed.SelectedIndex = 3; // 默认1.0x
-			comboBoxSpeed.SelectedIndexChanged += comboBoxSpeed_SelectedIndexChanged;
+			comboBoxSpeed.SelectedIndexChanged += comboBoxSpeed_SelectedIndexChanged;        // 示例：为按钮和组合框添加说明
+
+
+	#region ------- ToolTip 鼠标进入悬停显示 -------
+			ToolTipEx toolTip1 = new ToolTipEx();   // 创建自定义 ToolTipEx 实例 ，鼠标悬停时显示提示信息
+			toolTip1.TipFont = new Font( "微软雅黑", 20 ); // 这里设置字体和大小
+			ConfigureToolTip( toolTip1 );
 
 		}
-		#region ------- 视频裁剪 -------
+	
+		private void ConfigureToolTip(ToolTipEx toolTip1) {
+
+			// 设置 ToolTip 属性
+			toolTip1.AutoPopDelay = 90000; // 提示框显示 5 秒后消失
+			toolTip1.InitialDelay = 500; // 鼠标悬停 1 秒后显示提示框
+			toolTip1.ReshowDelay = 1000;   // 鼠标移开后再次悬停的延迟时间
+			toolTip1.ShowAlways = true;   // 即使控件未激活也显示提示框
+			toolTip1.IsBalloon = true;    // 使用气泡样式
+			toolTip1.ToolTipIcon = ToolTipIcon.Info; // 提示框图标
+			toolTip1.ToolTipTitle = "提示"; // 提示框标题
+
+			toolTip1.SetToolTip( textBox1, "选择要裁剪的视频文件" );
+			toolTip1.SetToolTip( textBox2, "选择要播放的视频文件" );
+			toolTip1.SetToolTip( label28, "crf（Constant Rate Factor，恒定码率因子）\r\n•\t作用：控制视频压缩的画质和文件大小。\r\n•\t取值范围：0~51，常用范围为 18~28。\r\n•\t数值越小，画质越高，文件越大。\r\n•\t数值越大，画质越低，文件越小。\r\n•\t一般推荐：高质量用 18~22，普通用 23~28。" );
+			toolTip1.SetToolTip( comboBoxSpeed, "选择播放速度" );
+			toolTip1.SetToolTip( label27, "preset（预设编码速度）\r\n•\t作用：控制编码速度与压缩效率的平衡。\r\n•\t可选值（从快到慢）：\r\n•\tultrafast, superfast, veryfast, faster, fast, medium, slow, slower, veryslow\r\n•\t说明：\r\n•\t越快（如 ultrafast），编码速度快，但文件大、画质略低。\r\n•\t越慢（如 veryslow），编码速度慢，但文件更小、画质更好。\r\n•\t默认值是 medium，一般推荐用 fast、medium 或 slow。" );
+		}
 		#endregion
 
 		#region 视频播放相关
@@ -47,7 +73,8 @@ namespace MusicChange {
 					axWindowsMediaPlayer1.Ctlcontrols.play();
 					timer1.Start(); // 播放时启动定时器
 				}
-			} else {
+			}
+			else {
 				axWindowsMediaPlayer1.URL = textBox2.Text;
 				axWindowsMediaPlayer1.uiMode = "full"; // 或 "mini"
 				axWindowsMediaPlayer1.Ctlcontrols.play();
@@ -74,15 +101,18 @@ namespace MusicChange {
 					if (firstdisp) {
 						label15.Text = $"{dur:hh\\:mm\\:ss\\.fff}";
 						firstdisp = false;
-					} else {
+					}
+					else {
 						label1.Text = $"{pos:hh\\:mm\\:ss\\.fff}";
 						//	firstdisp = true;
 					}
 
-				} else {
+				}
+				else {
 					label1.Text = "00:00:00 ";
 				}
-			} else {
+			}
+			else {
 				label1.Text = "00:00:00";
 			}
 		}
@@ -139,12 +169,17 @@ namespace MusicChange {
 			if (imageList.Count == 0) {
 				MessageBox.Show( "没有找到符合条件的文件。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information );
 				return;
-			} else {       // 遍历文件列表并添加到 ListBox    string filestr = timagefiles[0].ToString();
+			}
+			else {       // 遍历文件列表并添加到 ListBox    string filestr = timagefiles[0].ToString();
 				foreach (string file in imageList) {
 					listBox1.Items.Add( file );
 					textBox1.Text = file;
 					if (File.Exists( file )) {
+
+
 						selefile_Click( null, null );
+
+
 					}
 					textBox8.Text = "已经压缩文件数：" + count.ToString();
 					count++;
@@ -171,22 +206,28 @@ namespace MusicChange {
 
 			if (radioButton1.Checked) {            // 高质量压缩参数
 				fileNameWithoutExtension = fileNameWithoutExtension + "_high";
-			} else if (radioButton2.Checked) {             // 高压缩比参数
+			}
+			else if (radioButton2.Checked) {             // 高压缩比参数
 				fileNameWithoutExtension = fileNameWithoutExtension + "_medium";
-			} else if (radioButton4.Checked) {             // 高压缩比参数
+			}
+			else if (radioButton4.Checked) {             // 高压缩比参数
 				fileNameWithoutExtension = fileNameWithoutExtension + "_lower";
-			} else {            // 默认参数
+			}
+			else {            // 默认参数
 				fileNameWithoutExtension = fileNameWithoutExtension + "_low";
 			}
 			outputFile = Path.Combine( textBox3.Text, $"{fileNameWithoutExtension}.mp4" );
 			if (radioButton1.Checked) {            // 高质量压缩参数
 				arguments = $"-i \"{inputFile}\" -c:v libx264 -crf 18 -preset fast -c:a aac -b:a 128k -movflags +faststart \"{outputFile}\" ";
-			} else if (radioButton2.Checked) {          // 高压缩比参数
+			}
+			else if (radioButton2.Checked) {          // 高压缩比参数
 				arguments = $"-i \"{inputFile}\" -c:v libx264 -crf 23 -preset medium -c:a aac -b:a 128k -movflags +faststart \"{outputFile}\" ";
-			} else if (radioButton4.Checked) {          // 高压缩比参数
+			}
+			else if (radioButton4.Checked) {          // 高压缩比参数
 				arguments = $"-i \"{inputFile}\" -c:v libx264 -crf 48 -preset veryslow -c:a aac -b:a 64k -movflags +faststart \"{outputFile}\" ";
-			} else {            // 默认参数
-				arguments = $"-i \"{inputFile}\" -c:v libx264 -crf 30 -preset slower -c:a aac -b:a 128k -movflags +faststart \"{outputFile}\"";
+			}
+			else {            // 默认参数
+				arguments = $"-i \"{inputFile}\" -c:v libx264 -crf 28 -preset slower -c:a aac -b:a 128k -movflags +faststart \"{outputFile}\"";
 			}
 			// 推荐的高效压缩命令：使用libx264，合理设置crf和preset
 			// crf: 23为默认，18-28越大越小，推荐20-28之间
@@ -226,7 +267,8 @@ namespace MusicChange {
 				ffmpegProcess.CancelErrorRead();
 				ffmpegProcess.Close();
 				label3.Text = "压缩完成！";
-			} catch (Exception ex) {
+			}
+			catch (Exception ex) {
 				label3.Text = "压缩失败: " + ex.Message;
 			}
 		}
@@ -271,7 +313,8 @@ namespace MusicChange {
 			if (totalSeconds != 0) {
 				// 如果持续时间不为0，则使用持续时间
 				duration = $"{totalSeconds / 3600:D2}:{(totalSeconds % 3600) / 60:D2}:{totalSeconds % 60:D2}";
-			} else if (endSeconds != 0) {
+			}
+			else if (endSeconds != 0) {
 				// 如果结束时间不为0，则计算持续时间
 				TimeSpan startS = dateTimePicker1.Value.TimeOfDay;
 				int startSeconds = (int)startS.TotalSeconds;
@@ -281,7 +324,8 @@ namespace MusicChange {
 					return;
 				}
 				duration = $"{durationInSeconds / 3600:D2}:{(durationInSeconds % 3600) / 60:D2}:{durationInSeconds % 60:D2}";
-			} else {
+			}
+			else {
 				MessageBox.Show( "请选择持续时间或结束时间！" );
 				return;
 			}
@@ -347,7 +391,8 @@ ffmpeg -ss 00:00:15.200 -to 00:00:30.500 -accurate_seek -i input.mp4 -c:v copy -
 				ffmpegProcess.Close();
 				textBox4.Text = outputBuilder.ToString();
 				label3.Text = "剪切完成！";
-			} catch (Exception ex) {
+			}
+			catch (Exception ex) {
 				label3.Text = "剪切失败: " + ex.Message;
 			}
 		}
@@ -476,10 +521,9 @@ ffmpeg -ss 00:00:15.200 -to 00:00:30.500 -accurate_seek -i input.mp4 -c:v copy -
 			}
 		}
 
-		private void label23_Click(object sender, EventArgs e) {
+		private void tabPage1_Click(object sender, EventArgs e) {
 
 		}
-
 
 		//时间清零 为选择一个时间段做准备
 		private void button9_Click(object sender, EventArgs e) {

@@ -33,6 +33,21 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AForge, Version=2.2.5.0, Culture=neutral, PublicKeyToken=c1db6ff4eaa06aeb, processorArchitecture=MSIL">
+      <HintPath>packages\AForge.2.2.5\lib\AForge.dll</HintPath>
+    </Reference>
+    <Reference Include="AForge.Video, Version=2.2.5.0, Culture=neutral, PublicKeyToken=cbfb6e07d173c401, processorArchitecture=MSIL">
+      <HintPath>packages\AForge.Video.2.2.5\lib\AForge.Video.dll</HintPath>
+    </Reference>
+    <Reference Include="AForge.Video.FFMPEG, Version=2.2.5.0, Culture=neutral, PublicKeyToken=03563089b1be05dd, processorArchitecture=x86">
+      <HintPath>packages\AForge.Video.FFMPEG.2.2.5.1-rc\lib\AForge.Video.FFMPEG.dll</HintPath>
+    </Reference>
+    <Reference Include="FFmpeg.AutoGen, Version=7.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\FFmpeg.AutoGen.7.1.1\lib\netstandard2.0\FFmpeg.AutoGen.dll</HintPath>
+    </Reference>
+    <Reference Include="FFmpeg.AutoGen.Abstractions, Version=7.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\FFmpeg.AutoGen.Abstractions.7.1.1\lib\netstandard2.0\FFmpeg.AutoGen.Abstractions.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -60,6 +75,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ToolTipEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <EmbeddedResource Include="Cut.resx">
       <DependentUpon>Cut.cs</DependentUpon>
     </EmbeddedResource>
@@ -75,6 +93,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
