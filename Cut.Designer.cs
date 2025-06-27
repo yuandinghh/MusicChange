@@ -27,6 +27,7 @@
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Cut));
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
+			this.checkBox1 = new System.Windows.Forms.CheckBox();
 			this.comboBox3 = new System.Windows.Forms.ComboBox();
 			this.label28 = new System.Windows.Forms.Label();
 			this.comboBox2 = new System.Windows.Forms.ComboBox();
@@ -93,7 +94,6 @@
 			this.tabPage3 = new System.Windows.Forms.TabPage();
 			this.tabPage4 = new System.Windows.Forms.TabPage();
 			this.tabPage5 = new System.Windows.Forms.TabPage();
-			this.axWindowsMediaPlayer1 = new AxWMPLib.AxWindowsMediaPlayer();
 			this.button2 = new System.Windows.Forms.Button();
 			this.textBox1 = new System.Windows.Forms.TextBox();
 			this.button3 = new System.Windows.Forms.Button();
@@ -108,7 +108,7 @@
 			this.button8 = new System.Windows.Forms.Button();
 			this.label14 = new System.Windows.Forms.Label();
 			this.label15 = new System.Windows.Forms.Label();
-			this.checkBox1 = new System.Windows.Forms.CheckBox();
+			this.axWindowsMediaPlayer1 = new AxWMPLib.AxWindowsMediaPlayer();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			this.tabPage6.SuspendLayout();
@@ -164,6 +164,19 @@
 			this.tabPage1.UseVisualStyleBackColor = true;
 			this.tabPage1.Click += new System.EventHandler(this.tabPage1_Click);
 			// 
+			// checkBox1
+			// 
+			this.checkBox1.AutoSize = true;
+			this.checkBox1.BackColor = System.Drawing.Color.Transparent;
+			this.checkBox1.Font = new System.Drawing.Font("宋体", 13F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.checkBox1.ForeColor = System.Drawing.Color.Maroon;
+			this.checkBox1.Location = new System.Drawing.Point(32, 65);
+			this.checkBox1.Name = "checkBox1";
+			this.checkBox1.Size = new System.Drawing.Size(193, 26);
+			this.checkBox1.TabIndex = 24;
+			this.checkBox1.Text = "自定义压缩参数";
+			this.checkBox1.UseVisualStyleBackColor = false;
+			// 
 			// comboBox3
 			// 
 			this.comboBox3.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -195,17 +208,18 @@
             "45",
             "47",
             "49"});
-			this.comboBox3.Location = new System.Drawing.Point(640, 67);
+			this.comboBox3.Location = new System.Drawing.Point(657, 67);
 			this.comboBox3.Name = "comboBox3";
-			this.comboBox3.Size = new System.Drawing.Size(82, 28);
+			this.comboBox3.Size = new System.Drawing.Size(65, 28);
 			this.comboBox3.TabIndex = 23;
+			this.comboBox3.Text = "23";
 			// 
 			// label28
 			// 
 			this.label28.AutoSize = true;
 			this.label28.Font = new System.Drawing.Font("宋体", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.label28.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-			this.label28.Location = new System.Drawing.Point(565, 67);
+			this.label28.Location = new System.Drawing.Point(574, 67);
 			this.label28.Name = "label28";
 			this.label28.Size = new System.Drawing.Size(49, 24);
 			this.label28.TabIndex = 22;
@@ -226,9 +240,9 @@
             "slow",
             "slower",
             "veryslow"});
-			this.comboBox2.Location = new System.Drawing.Point(351, 63);
+			this.comboBox2.Location = new System.Drawing.Point(378, 63);
 			this.comboBox2.Name = "comboBox2";
-			this.comboBox2.Size = new System.Drawing.Size(140, 28);
+			this.comboBox2.Size = new System.Drawing.Size(150, 28);
 			this.comboBox2.TabIndex = 21;
 			this.comboBox2.Text = "medium";
 			// 
@@ -237,7 +251,7 @@
 			this.label27.AutoSize = true;
 			this.label27.Font = new System.Drawing.Font("宋体", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.label27.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-			this.label27.Location = new System.Drawing.Point(251, 65);
+			this.label27.Location = new System.Drawing.Point(273, 65);
 			this.label27.Name = "label27";
 			this.label27.Size = new System.Drawing.Size(82, 24);
 			this.label27.TabIndex = 20;
@@ -247,7 +261,7 @@
 			// 
 			this.textBox9.Font = new System.Drawing.Font("宋体", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.textBox9.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-			this.textBox9.Location = new System.Drawing.Point(211, 253);
+			this.textBox9.Location = new System.Drawing.Point(210, 254);
 			this.textBox9.Name = "textBox9";
 			this.textBox9.Size = new System.Drawing.Size(346, 34);
 			this.textBox9.TabIndex = 19;
@@ -318,12 +332,16 @@
 			// 
 			// listBox1
 			// 
+			this.listBox1.Font = new System.Drawing.Font("宋体", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.listBox1.FormattingEnabled = true;
-			this.listBox1.ItemHeight = 15;
-			this.listBox1.Location = new System.Drawing.Point(13, 287);
+			this.listBox1.ItemHeight = 22;
+			this.listBox1.Location = new System.Drawing.Point(13, 317);
 			this.listBox1.Name = "listBox1";
-			this.listBox1.Size = new System.Drawing.Size(711, 259);
+			this.listBox1.ScrollAlwaysVisible = true;
+			this.listBox1.Size = new System.Drawing.Size(711, 224);
 			this.listBox1.TabIndex = 12;
+			this.listBox1.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.listBox1_DrawItem);
+			this.listBox1.MeasureItem += new System.Windows.Forms.MeasureItemEventHandler(this.listBox1_MeasureItem);
 			// 
 			// button22
 			// 
@@ -345,7 +363,7 @@
 			this.textBox5.Name = "textBox5";
 			this.textBox5.Size = new System.Drawing.Size(235, 34);
 			this.textBox5.TabIndex = 10;
-			this.textBox5.Text = "文件夹";
+			this.textBox5.Text = "选择目录";
 			// 
 			// radioButton4
 			// 
@@ -976,15 +994,6 @@
 			this.tabPage5.Text = "添加字库";
 			this.tabPage5.UseVisualStyleBackColor = true;
 			// 
-			// axWindowsMediaPlayer1
-			// 
-			this.axWindowsMediaPlayer1.Enabled = true;
-			this.axWindowsMediaPlayer1.Location = new System.Drawing.Point(789, 100);
-			this.axWindowsMediaPlayer1.Name = "axWindowsMediaPlayer1";
-			this.axWindowsMediaPlayer1.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axWindowsMediaPlayer1.OcxState")));
-			this.axWindowsMediaPlayer1.Size = new System.Drawing.Size(920, 720);
-			this.axWindowsMediaPlayer1.TabIndex = 5;
-			// 
 			// button2
 			// 
 			this.button2.Font = new System.Drawing.Font("楷体", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -1134,18 +1143,14 @@
 			this.label15.Size = new System.Drawing.Size(0, 27);
 			this.label15.TabIndex = 17;
 			// 
-			// checkBox1
+			// axWindowsMediaPlayer1
 			// 
-			this.checkBox1.AutoSize = true;
-			this.checkBox1.BackColor = System.Drawing.Color.Transparent;
-			this.checkBox1.Font = new System.Drawing.Font("宋体", 13F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.checkBox1.ForeColor = System.Drawing.Color.Maroon;
-			this.checkBox1.Location = new System.Drawing.Point(32, 65);
-			this.checkBox1.Name = "checkBox1";
-			this.checkBox1.Size = new System.Drawing.Size(193, 26);
-			this.checkBox1.TabIndex = 24;
-			this.checkBox1.Text = "自定义压缩参数";
-			this.checkBox1.UseVisualStyleBackColor = false;
+			this.axWindowsMediaPlayer1.Enabled = true;
+			this.axWindowsMediaPlayer1.Location = new System.Drawing.Point(789, 100);
+			this.axWindowsMediaPlayer1.Name = "axWindowsMediaPlayer1";
+			this.axWindowsMediaPlayer1.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axWindowsMediaPlayer1.OcxState")));
+			this.axWindowsMediaPlayer1.Size = new System.Drawing.Size(920, 720);
+			this.axWindowsMediaPlayer1.TabIndex = 5;
 			// 
 			// Cut
 			// 

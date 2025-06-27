@@ -28,18 +28,18 @@ namespace MusicChange {
 			InitializeComponent();
 			this.axWindowsMediaPlayer1.Location = new System.Drawing.Point( 580, 76 );
 			this.axWindowsMediaPlayer1.Size = new System.Drawing.Size( 900, 700 );
-			//	axWindowsMediaPlayer1.settings.rate = 0.1; // 最慢0.1倍速
-			comboBoxSpeed.SelectedIndex = 3; // 默认1.0x
+
+			comboBoxSpeed.SelectedIndex = 3; // 默认1.0x	axWindowsMediaPlayer1.settings.rate = 0.1; 
 			comboBoxSpeed.SelectedIndexChanged += comboBoxSpeed_SelectedIndexChanged;        // 示例：为按钮和组合框添加说明
 
 
-	#region ------- ToolTip 鼠标进入悬停显示 -------
+			#region ------- ToolTip 鼠标进入悬停显示 -------
 			ToolTipEx toolTip1 = new ToolTipEx();   // 创建自定义 ToolTipEx 实例 ，鼠标悬停时显示提示信息
 			toolTip1.TipFont = new Font( "微软雅黑", 20 ); // 这里设置字体和大小
 			ConfigureToolTip( toolTip1 );
 
 		}
-	
+
 		private void ConfigureToolTip(ToolTipEx toolTip1) {
 
 			// 设置 ToolTip 属性
@@ -171,6 +171,9 @@ namespace MusicChange {
 				return;
 			}
 			else {       // 遍历文件列表并添加到 ListBox    string filestr = timagefiles[0].ToString();
+				listBox1.Items.Clear(); // 清空ListBox中的所有项
+				listBox1.HorizontalScrollbar = true; // 设置水平滚动条
+
 				foreach (string file in imageList) {
 					listBox1.Items.Add( file );
 					textBox1.Text = file;
@@ -201,37 +204,42 @@ namespace MusicChange {
 			}           //Remove the carriage return and spaces at the end of the string.
 			inputFile = inputFile.TrimEnd( '\r', '\n', ' ' );
 			string fileNameWithoutExtension = Path.GetFileNameWithoutExtension( inputFile );
-			//当前时间 转换为字符串
-			// fileNameWithoutExtension = fileNameWithoutExtension+DateTime.Now.ToString( "_HHmmss" );
+			if (checkBox1.Checked) { //自定义压缩参数
+				fileNameWithoutExtension = fileNameWithoutExtension + DateTime.Now.ToString( "_HHmmss" );
+				outputFile = Path.Combine( textBox3.Text, $"{fileNameWithoutExtension}.mp4" );
+				arguments = $"-i {inputFile} -c:v libx264 -crf {comboBox3.Text} -preset {comboBox2.Text} -c:a aac -b:a 128k -movflags +faststart {outputFile} ";
 
-			if (radioButton1.Checked) {            // 高质量压缩参数
-				fileNameWithoutExtension = fileNameWithoutExtension + "_high";
 			}
-			else if (radioButton2.Checked) {             // 高压缩比参数
-				fileNameWithoutExtension = fileNameWithoutExtension + "_medium";
+			else {
+				if (radioButton1.Checked) {            // 高质量压缩参数
+					fileNameWithoutExtension = fileNameWithoutExtension + "_h";
+				}
+				else if (radioButton2.Checked) {             // 高压缩比参数
+					fileNameWithoutExtension = fileNameWithoutExtension + "_m";
+				}
+				else if (radioButton4.Checked) {             // 高压缩比参数
+					fileNameWithoutExtension = fileNameWithoutExtension + "_l";
+				}
+				else {            // 默认参数
+					fileNameWithoutExtension = fileNameWithoutExtension + "_low";
+				}
+				outputFile = Path.Combine( textBox3.Text, $"{fileNameWithoutExtension}.mp4" );
+				if (radioButton1.Checked) {            // 高质量压缩参数
+					arguments = $"-i \"{inputFile}\" -c:v libx264 -crf 18 -preset fast -c:a aac -b:a 128k -movflags +faststart \"{outputFile}\" ";
+				}
+				else if (radioButton2.Checked) {          // 高压缩比参数
+					arguments = $"-i \"{inputFile}\" -c:v libx264 -crf 23 -preset medium -c:a aac -b:a 128k -movflags +faststart \"{outputFile}\" ";
+				}
+				else if (radioButton4.Checked) {          // 高压缩比参数
+					arguments = $"-i \"{inputFile}\" -c:v libx264 -crf 48 -preset veryslow -c:a aac -b:a 64k -movflags +faststart \"{outputFile}\" ";
+				}
+				else {            // 默认参数
+					arguments = $"-i \"{inputFile}\" -c:v libx264 -crf 28 -preset slower -c:a aac -b:a 128k -movflags +faststart \"{outputFile}\"";
+				}
 			}
-			else if (radioButton4.Checked) {             // 高压缩比参数
-				fileNameWithoutExtension = fileNameWithoutExtension + "_lower";
-			}
-			else {            // 默认参数
-				fileNameWithoutExtension = fileNameWithoutExtension + "_low";
-			}
-			outputFile = Path.Combine( textBox3.Text, $"{fileNameWithoutExtension}.mp4" );
-			if (radioButton1.Checked) {            // 高质量压缩参数
-				arguments = $"-i \"{inputFile}\" -c:v libx264 -crf 18 -preset fast -c:a aac -b:a 128k -movflags +faststart \"{outputFile}\" ";
-			}
-			else if (radioButton2.Checked) {          // 高压缩比参数
-				arguments = $"-i \"{inputFile}\" -c:v libx264 -crf 23 -preset medium -c:a aac -b:a 128k -movflags +faststart \"{outputFile}\" ";
-			}
-			else if (radioButton4.Checked) {          // 高压缩比参数
-				arguments = $"-i \"{inputFile}\" -c:v libx264 -crf 48 -preset veryslow -c:a aac -b:a 64k -movflags +faststart \"{outputFile}\" ";
-			}
-			else {            // 默认参数
-				arguments = $"-i \"{inputFile}\" -c:v libx264 -crf 28 -preset slower -c:a aac -b:a 128k -movflags +faststart \"{outputFile}\"";
-			}
-			// 推荐的高效压缩命令：使用libx264，合理设置crf和preset
-			// crf: 23为默认，18-28越大越小，推荐20-28之间
+			// 推荐的高效压缩命令：使用libx264，合理设置crf和preset // crf: 23为默认，18-28越大越小，推荐20-28之间
 			// preset: ultrafast, superfast, veryfast, faster, fast, medium, slow, slower, veryslow
+			setlisbox(); // 设置ListBox内容
 			try {
 				label3.Text = "压缩中。。。";
 				Process ffmpegProcess = new Process();
@@ -271,6 +279,18 @@ namespace MusicChange {
 			catch (Exception ex) {
 				label3.Text = "压缩失败: " + ex.Message;
 			}
+				}
+		private void setlisbox() {
+			listBox1.DrawMode = DrawMode.OwnerDrawFixed;
+			listBox1.DrawItem += listBox1_DrawItem;
+			listBox1.MeasureItem += listBox1_MeasureItem;
+			listBox1.Items.Clear(); // 清空ListBox中的所有项
+			listBox1.HorizontalScrollbar = true; // 设置水平滚动条
+												 //listBox1.ItemHeight = 14; //在属性窗口中设置ListBox的高度
+			listBox1.Items.Add( $"开始压缩" );
+			listBox1.Items.Add( $"压缩命令: ffmpeg {arguments}" );
+			listBox1.Items.Add( $"被压缩文件:{inputFile}" );
+			listBox1.Items.Add( $"输出文件:{outputFile}" );
 		}
 		// 解析进度信息中的时间字段
 		static string ParseProgress(string line) {
@@ -287,9 +307,7 @@ namespace MusicChange {
 			return "";
 		}
 
-
 		#endregion
-
 		#region ------- 视频裁剪 -------
 		private void button1_Click(object sender, EventArgs e) {
 			textBox6.Text = "";
@@ -314,8 +332,7 @@ namespace MusicChange {
 				// 如果持续时间不为0，则使用持续时间
 				duration = $"{totalSeconds / 3600:D2}:{(totalSeconds % 3600) / 60:D2}:{totalSeconds % 60:D2}";
 			}
-			else if (endSeconds != 0) {
-				// 如果结束时间不为0，则计算持续时间
+			else if (endSeconds != 0) {             // 如果结束时间不为0，则计算持续时间
 				TimeSpan startS = dateTimePicker1.Value.TimeOfDay;
 				int startSeconds = (int)startS.TotalSeconds;
 				int durationInSeconds = endSeconds - startSeconds;
@@ -410,8 +427,6 @@ ffmpeg -ss 00:00:15.200 -to 00:00:30.500 -accurate_seek -i input.mp4 -c:v copy -
 				timer1.Start(); // 播放时启动定时器
 			}
 		}
-
-
 		private void button11_Click(object sender, EventArgs e) {
 			axWindowsMediaPlayer1.Ctlcontrols.pause();
 		}
@@ -519,6 +534,35 @@ ffmpeg -ss 00:00:15.200 -to 00:00:30.500 -accurate_seek -i input.mp4 -c:v copy -
 			{  // 画一条从 (10, 10) 到 (10, 100) 的直线
 				e.Graphics.DrawLine( pen, 6, 430, 500, 430 );
 			}
+		}
+
+		private void listBox1_DrawItem(object sender, DrawItemEventArgs e) {
+			// 确保有项可绘制
+			if (e.Index < 0) return;
+			// 获取当前项的文本
+			string text = listBox1.Items[e.Index].ToString();
+
+			Font font = new Font( "微软雅黑", 12, FontStyle.Bold );
+			Brush textBrush = Brushes.Black; // 默认黑色字体
+			Brush backgroundBrush = Brushes.White; // 默认白色背景
+												   // 根据条件设置不同的颜色（可选）
+			if (e.Index % 2 == 0) // 偶数项
+			{
+				textBrush = Brushes.Blue;
+				backgroundBrush = Brushes.LightGray;
+			}
+			// 绘制背景
+			e.Graphics.FillRectangle( backgroundBrush, e.Bounds );
+			// 绘制文本
+			e.Graphics.DrawString( text, font, textBrush, e.Bounds );
+			// 绘制边框
+			e.DrawFocusRectangle();
+		}
+
+		private void listBox1_MeasureItem(object sender, MeasureItemEventArgs e) {
+			// 这里用和 DrawItem 一致的字体
+			//Font font = new Font( "微软雅黑", 20, FontStyle.Bold );
+			//e.ItemHeight = (int)font.GetHeight() + 8; // 适当加点padding
 		}
 
 		private void tabPage1_Click(object sender, EventArgs e) {
