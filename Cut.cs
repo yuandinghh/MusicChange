@@ -151,7 +151,7 @@ namespace MusicChange {
 
 		#region  ------- 开始压缩 -------
 		//	按目录所有视频文件压缩  yy
-		private void button22_Click(object sender, EventArgs e) {
+		private async void button22_Click(object sender, EventArgs e) {
 			int count = 1;
 			var path = @"F:\newipad";
 			List<string> imageList = new List<string>();
@@ -177,12 +177,57 @@ namespace MusicChange {
 				foreach (string file in imageList) {
 					listBox1.Items.Add( file );
 					textBox1.Text = file;
-					if (File.Exists( file )) {
-
-
-						selefile_Click( null, null );
-
-
+					if (File.Exists( file )) {  //					selefile_Click( null, null );
+						inputFile = textBox1.Text;
+						if (string.IsNullOrEmpty( inputFile ) || !File.Exists( inputFile )) {
+							MessageBox.Show( "请选择有效的视频文件！" );
+							return;
+						}           //Remove the carriage return and spaces at the end of the string.
+						inputFile = inputFile.TrimEnd( '\r', '\n', ' ' );
+						string fileNameWithoutExtension = Path.GetFileNameWithoutExtension( inputFile );
+						fileNameWithoutExtension = fileNameWithoutExtension + "_s";
+						outputFile = Path.Combine( textBox3.Text, $"{fileNameWithoutExtension}.mp4" );
+						arguments = $"-i {inputFile} -c:v libx264 -crf 23 -preset medium -c:a aac -b:a 128k -movflags +faststart {outputFile} ";
+						setlisbox(); // 设置ListBox内容
+						try {
+							label3.Text = "压缩中。。。";
+							Process ffmpegProcess = new Process();
+							ffmpegProcess.StartInfo.FileName = "ffmpeg.exe";
+							ffmpegProcess.StartInfo.Arguments = arguments;
+							ffmpegProcess.StartInfo.UseShellExecute = false;    // 启用重定向
+							ffmpegProcess.StartInfo.RedirectStandardError = true;
+							ffmpegProcess.StartInfo.CreateNoWindow = true;
+							var outputBuilder = new StringBuilder();
+							//注册输出数据处理事件
+							ffmpegProcess.ErrorDataReceived += (eventSender, args) => {
+								if (!string.IsNullOrEmpty( args.Data )) {
+									outputBuilder.AppendLine( args.Data );
+									string timeInfo = ParseProgress( args.Data );
+									if (!string.IsNullOrEmpty( timeInfo )) {
+										// 跨线程安全更新UI
+										this.Invoke( (MethodInvoker)delegate {
+											textBox9.Text = $"压缩时间: {timeInfo}";
+										} );
+									}
+								}
+							};
+							// 启动进程并开始异步读取输出
+							ffmpegProcess.Start();
+							ffmpegProcess.BeginErrorReadLine();
+							// 等待进程完成
+							await Task.Run( ( ) => ffmpegProcess.WaitForExit() );
+							//string output = ffmpegProcess.StandardError.ReadToEnd(); // FFmpeg信息输出在StandardError
+							string output = outputBuilder.ToString();
+							if (!string.IsNullOrEmpty( output )) {
+								textBox4.Text = output;
+							}
+							ffmpegProcess.CancelErrorRead();
+							ffmpegProcess.Close();
+							label3.Text = "压缩完成！";
+						}
+						catch (Exception ex) {
+							label3.Text = "压缩失败: " + ex.Message;
+						}
 					}
 					textBox8.Text = "已经压缩文件数：" + count.ToString();
 					count++;
@@ -279,8 +324,8 @@ namespace MusicChange {
 			catch (Exception ex) {
 				label3.Text = "压缩失败: " + ex.Message;
 			}
-				}
-		private void setlisbox() {
+		}
+		private void setlisbox( ) {
 			listBox1.DrawMode = DrawMode.OwnerDrawFixed;
 			listBox1.DrawItem += listBox1_DrawItem;
 			listBox1.MeasureItem += listBox1_MeasureItem;
@@ -536,10 +581,8 @@ ffmpeg -ss 00:00:15.200 -to 00:00:30.500 -accurate_seek -i input.mp4 -c:v copy -
 			}
 		}
 
-		private void listBox1_DrawItem(object sender, DrawItemEventArgs e) {
-			// 确保有项可绘制
-			if (e.Index < 0) return;
-			// 获取当前项的文本
+		private void listBox1_DrawItem(object sender, DrawItemEventArgs e) {  // 绘制 ListBox 的项 。改变 ListBox 字体大小和颜色
+			if (e.Index < 0) return;            // 获取当前项的文本
 			string text = listBox1.Items[e.Index].ToString();
 
 			Font font = new Font( "微软雅黑", 12, FontStyle.Bold );
