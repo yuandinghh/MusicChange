@@ -17,6 +17,7 @@ using ToolTip = System.Windows.Forms.ToolTip;
 
 namespace MusicChange {
 	public partial class Cut : Form {
+		#region  *********  变量区  ***********
 		private string Filestr, inputFile, outputFile, arguments;
 		bool firstdisp = true; // 是否第一次显示
 		int timeStamp = 0;
@@ -31,8 +32,7 @@ namespace MusicChange {
 
 			comboBoxSpeed.SelectedIndex = 3; // 默认1.0x	axWindowsMediaPlayer1.settings.rate = 0.1; 
 			comboBoxSpeed.SelectedIndexChanged += comboBoxSpeed_SelectedIndexChanged;        // 示例：为按钮和组合框添加说明
-
-
+			#endregion
 			#region ------- ToolTip 鼠标进入悬停显示 -------
 			ToolTipEx toolTip1 = new ToolTipEx();   // 创建自定义 ToolTipEx 实例 ，鼠标悬停时显示提示信息
 			toolTip1.TipFont = new Font( "微软雅黑", 20 ); // 这里设置字体和大小
@@ -58,7 +58,6 @@ namespace MusicChange {
 			toolTip1.SetToolTip( label27, "preset（预设编码速度）\r\n•\t作用：控制编码速度与压缩效率的平衡。\r\n•\t可选值（从快到慢）：\r\n•\tultrafast, superfast, veryfast, faster, fast, medium, slow, slower, veryslow\r\n•\t说明：\r\n•\t越快（如 ultrafast），编码速度快，但文件大、画质略低。\r\n•\t越慢（如 veryslow），编码速度慢，但文件更小、画质更好。\r\n•\t默认值是 medium，一般推荐用 fast、medium 或 slow。" );
 		}
 		#endregion
-
 		#region 视频播放相关
 		private void button3_Click(object sender, EventArgs e) {
 			// 选择要播放的视频文件
@@ -124,10 +123,12 @@ namespace MusicChange {
 			//	firstdisp = true;
 		}
 		private void button4_Click(object sender, EventArgs e) {
+			button9_Click( null, null ); // 调用播放按钮事件
+			axWindowsMediaPlayer1.settings.mute = true; // 静音
 			axWindowsMediaPlayer1.URL = textBox2.Text;
 			axWindowsMediaPlayer1.uiMode = "full"; // 或 "mini"
 			axWindowsMediaPlayer1.Ctlcontrols.play();
-			axWindowsMediaPlayer1.settings.mute = false; // 取消静音
+		//	axWindowsMediaPlayer1.settings.mute = false; // 取消静音
 			timer1.Start(); // 播放时启动定时器
 		}
 		private void button7_Click(object sender, EventArgs e) {
@@ -165,7 +166,7 @@ namespace MusicChange {
 			}
 			var timagefiles = Directory.GetFiles( path, "*.*" ).Where( file => file.ToLower().EndsWith( "mp4" ) || file.ToLower().EndsWith( "mov" ) || file.ToLower().EndsWith( "avi" ) || file.ToLower().EndsWith( "mkv" ) || file.ToLower().EndsWith( "wmv" ) ).ToList();
 			imageList.AddRange( timagefiles );
-			label24.Text = "要视频压缩的文件数量：" + count.ToString();
+			label24.Text = "视频压缩文件数量：" + count.ToString();
 			if (imageList.Count == 0) {
 				MessageBox.Show( "没有找到符合条件的文件。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information );
 				return;
@@ -229,7 +230,7 @@ namespace MusicChange {
 							label3.Text = "压缩失败: " + ex.Message;
 						}
 					}
-					textBox8.Text = "已经压缩文件数：" + count.ToString();
+					textBox8.Text = count.ToString();
 					count++;
 				}
 			}
@@ -238,8 +239,6 @@ namespace MusicChange {
 			//	throw;
 			//}  //   GetFileInfo(listBox2.GetItemText(0).ToLower());  “GetFileInfo” 通常是一个用于获取文件相关信息的函数或方法。
 		}
-
-
 		private async void selefile_Click(object sender, EventArgs e) {
 			label3.Text = "准备压缩"; textBox4.Text = "";
 			inputFile = textBox1.Text;
@@ -282,8 +281,6 @@ namespace MusicChange {
 					arguments = $"-i \"{inputFile}\" -c:v libx264 -crf 28 -preset slower -c:a aac -b:a 128k -movflags +faststart \"{outputFile}\"";
 				}
 			}
-			// 推荐的高效压缩命令：使用libx264，合理设置crf和preset // crf: 23为默认，18-28越大越小，推荐20-28之间
-			// preset: ultrafast, superfast, veryfast, faster, fast, medium, slow, slower, veryslow
 			setlisbox(); // 设置ListBox内容
 			try {
 				label3.Text = "压缩中。。。";
@@ -293,14 +290,12 @@ namespace MusicChange {
 				ffmpegProcess.StartInfo.UseShellExecute = false;    // 启用重定向
 				ffmpegProcess.StartInfo.RedirectStandardError = true;
 				ffmpegProcess.StartInfo.CreateNoWindow = true;
-				var outputBuilder = new StringBuilder();
-				//注册输出数据处理事件
+				var outputBuilder = new StringBuilder();    //注册输出数据处理事件
 				ffmpegProcess.ErrorDataReceived += (eventSender, args) => {
 					if (!string.IsNullOrEmpty( args.Data )) {
 						outputBuilder.AppendLine( args.Data );
 						string timeInfo = ParseProgress( args.Data );
-						if (!string.IsNullOrEmpty( timeInfo )) {
-							// 跨线程安全更新UI
+						if (!string.IsNullOrEmpty( timeInfo )) { // 跨线程安全更新UI
 							this.Invoke( (MethodInvoker)delegate {
 								textBox9.Text = $"压缩时间: {timeInfo}";
 							} );
@@ -309,11 +304,9 @@ namespace MusicChange {
 				};
 				// 启动进程并开始异步读取输出
 				ffmpegProcess.Start();
-				ffmpegProcess.BeginErrorReadLine();
-				// 等待进程完成
+				ffmpegProcess.BeginErrorReadLine();         // 等待进程完成
 				await Task.Run( ( ) => ffmpegProcess.WaitForExit() );
-				//string output = ffmpegProcess.StandardError.ReadToEnd(); // FFmpeg信息输出在StandardError
-				string output = outputBuilder.ToString();
+				string output = outputBuilder.ToString();   // FFmpeg信息输出在StandardError
 				if (!string.IsNullOrEmpty( output )) {
 					textBox4.Text = output;
 				}
@@ -353,6 +346,7 @@ namespace MusicChange {
 		}
 
 		#endregion
+
 		#region ------- 视频裁剪 -------
 		private void button1_Click(object sender, EventArgs e) {
 			textBox6.Text = "";
@@ -459,10 +453,12 @@ ffmpeg -ss 00:00:15.200 -to 00:00:30.500 -accurate_seek -i input.mp4 -c:v copy -
 			}
 		}
 		//播放选择视频
-		private void button10_Click(object sender, EventArgs e) {
+		private void button10_Click(object sender, EventArgs e) {  // 播放选择视频
 			if (textBox1 == null || string.IsNullOrEmpty( textBox1.Text )) {
 				MessageBox.Show( "请先选择视频文件！" );
 			}
+			axWindowsMediaPlayer1.settings.mute = true; // 静音
+			button9_Click( null, null ); // 调用播放按钮事件
 			if (axWindowsMediaPlayer1.currentMedia != null) {
 				axWindowsMediaPlayer1.URL = textBox1.Text;
 				axWindowsMediaPlayer1.uiMode = "full"; // 或 "mini"
@@ -506,7 +502,6 @@ ffmpeg -ss 00:00:15.200 -to 00:00:30.500 -accurate_seek -i input.mp4 -c:v copy -
 				axWindowsMediaPlayer1.Ctlcontrols.play();
 			}
 		}
-
 		private void comboBoxSpeed_SelectedIndexChanged(object sender, EventArgs e) {
 			double rate = 1.0;
 			switch (comboBoxSpeed.SelectedItem.ToString()) {
@@ -521,7 +516,6 @@ ffmpeg -ss 00:00:15.200 -to 00:00:30.500 -accurate_seek -i input.mp4 -c:v copy -
 			axWindowsMediaPlayer1.settings.rate = rate;
 			axWindowsMediaPlayer1.settings.mute = true; // 静音
 		}
-
 		private void button14_Click(object sender, EventArgs e) {
 			startTime = label10.Text;
 			DateTime endDateTime = DateTime.Parse( "2023-01-01 " + startTime );
@@ -534,7 +528,6 @@ ffmpeg -ss 00:00:15.200 -to 00:00:30.500 -accurate_seek -i input.mp4 -c:v copy -
 			dateTimePicker3.Value = DateTime.Parse( "2023-01-01 " + endTime );
 			label21.Text = label16.Text;
 		}
-
 		private void button13_Click(object sender, EventArgs e) {
 			axWindowsMediaPlayer1.Ctlcontrols.play();
 			timer1.Start(); // 恢复进度条刷新
@@ -608,6 +601,27 @@ ffmpeg -ss 00:00:15.200 -to 00:00:30.500 -accurate_seek -i input.mp4 -c:v copy -
 			//e.ItemHeight = (int)font.GetHeight() + 8; // 适当加点padding
 		}
 
+		private void button23_Click(object sender, EventArgs e) {  //视频后退
+			double currentPosition = axWindowsMediaPlayer1.Ctlcontrols.currentPosition;
+			if (currentPosition < 0) return;
+			double newPosition = currentPosition - dateTimePicker5.Value.TimeOfDay.TotalSeconds; ; // 后退5秒
+			if (newPosition < 0) return;
+			axWindowsMediaPlayer1.Ctlcontrols.currentPosition = newPosition;
+		}
+
+		private void button24_Click(object sender, EventArgs e) {
+			double currentPosition = axWindowsMediaPlayer1.Ctlcontrols.currentPosition;
+			//取得当前视频长度
+			double duration = axWindowsMediaPlayer1.currentMedia.duration;
+			currentPosition = dateTimePicker5.Value.TimeOfDay.TotalSeconds + currentPosition; // 前进5秒
+			if (currentPosition > duration) return;
+			axWindowsMediaPlayer1.Ctlcontrols.currentPosition = currentPosition;
+		}
+
+		private void button25_Click(object sender, EventArgs e) {  //打开视频声音
+			axWindowsMediaPlayer1.settings.mute = false; // 取消静音
+		}
+
 		private void tabPage1_Click(object sender, EventArgs e) {
 
 		}
@@ -617,6 +631,9 @@ ffmpeg -ss 00:00:15.200 -to 00:00:30.500 -accurate_seek -i input.mp4 -c:v copy -
 			dateTimePicker1.Value = new DateTime( 2023, 1, 1, 0, 0, 0 );
 			dateTimePicker2.Value = new DateTime( 2023, 1, 1, 0, 0, 0 );
 			dateTimePicker3.Value = new DateTime( 2023, 1, 1, 0, 0, 0 );
+			dateTimePicker4.Value = new DateTime( 2025, 7, 1, 0, 0, 10 );
+			dateTimePicker5.Value = new DateTime( 2023, 1, 1, 0, 0, 10 );
+			dateTimePicker6.Value = new DateTime( 2025, 7, 1, 0, 0, 10 );
 			timeStamp = 0;
 			startTime = "00:00:00"; // 起始时间
 			endTime = "00:00:00"; // 结束时间

@@ -34,10 +34,8 @@
 			this.label27 = new System.Windows.Forms.Label();
 			this.textBox9 = new System.Windows.Forms.TextBox();
 			this.textBox8 = new System.Windows.Forms.TextBox();
-			this.label26 = new System.Windows.Forms.Label();
 			this.label25 = new System.Windows.Forms.Label();
 			this.label24 = new System.Windows.Forms.Label();
-			this.label23 = new System.Windows.Forms.Label();
 			this.label22 = new System.Windows.Forms.Label();
 			this.listBox1 = new System.Windows.Forms.ListBox();
 			this.button22 = new System.Windows.Forms.Button();
@@ -80,7 +78,6 @@
 			this.textBox7 = new System.Windows.Forms.TextBox();
 			this.label9 = new System.Windows.Forms.Label();
 			this.button9 = new System.Windows.Forms.Button();
-			this.label8 = new System.Windows.Forms.Label();
 			this.dateTimePicker3 = new System.Windows.Forms.DateTimePicker();
 			this.label7 = new System.Windows.Forms.Label();
 			this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
@@ -108,7 +105,12 @@
 			this.button8 = new System.Windows.Forms.Button();
 			this.label14 = new System.Windows.Forms.Label();
 			this.label15 = new System.Windows.Forms.Label();
+			this.dateTimePicker5 = new System.Windows.Forms.DateTimePicker();
 			this.axWindowsMediaPlayer1 = new AxWMPLib.AxWindowsMediaPlayer();
+			this.button23 = new System.Windows.Forms.Button();
+			this.button24 = new System.Windows.Forms.Button();
+			this.dateTimePicker6 = new System.Windows.Forms.DateTimePicker();
+			this.button25 = new System.Windows.Forms.Button();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			this.tabPage6.SuspendLayout();
@@ -117,8 +119,8 @@
 			// 
 			// tabControl1
 			// 
-			this.tabControl1.Controls.Add(this.tabPage1);
 			this.tabControl1.Controls.Add(this.tabPage6);
+			this.tabControl1.Controls.Add(this.tabPage1);
 			this.tabControl1.Controls.Add(this.tabPage2);
 			this.tabControl1.Controls.Add(this.tabPage3);
 			this.tabControl1.Controls.Add(this.tabPage4);
@@ -138,10 +140,8 @@
 			this.tabPage1.Controls.Add(this.label27);
 			this.tabPage1.Controls.Add(this.textBox9);
 			this.tabPage1.Controls.Add(this.textBox8);
-			this.tabPage1.Controls.Add(this.label26);
 			this.tabPage1.Controls.Add(this.label25);
 			this.tabPage1.Controls.Add(this.label24);
-			this.tabPage1.Controls.Add(this.label23);
 			this.tabPage1.Controls.Add(this.label22);
 			this.tabPage1.Controls.Add(this.listBox1);
 			this.tabPage1.Controls.Add(this.button22);
@@ -261,7 +261,7 @@
 			// 
 			this.textBox9.Font = new System.Drawing.Font("宋体", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.textBox9.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-			this.textBox9.Location = new System.Drawing.Point(210, 254);
+			this.textBox9.Location = new System.Drawing.Point(195, 264);
 			this.textBox9.Name = "textBox9";
 			this.textBox9.Size = new System.Drawing.Size(346, 34);
 			this.textBox9.TabIndex = 19;
@@ -270,28 +270,17 @@
 			// textBox8
 			// 
 			this.textBox8.Font = new System.Drawing.Font("宋体", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.textBox8.Location = new System.Drawing.Point(591, 211);
+			this.textBox8.Location = new System.Drawing.Point(643, 155);
 			this.textBox8.Name = "textBox8";
-			this.textBox8.Size = new System.Drawing.Size(116, 34);
+			this.textBox8.Size = new System.Drawing.Size(64, 34);
 			this.textBox8.TabIndex = 18;
-			// 
-			// label26
-			// 
-			this.label26.AutoSize = true;
-			this.label26.Font = new System.Drawing.Font("宋体", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.label26.ForeColor = System.Drawing.Color.Black;
-			this.label26.Location = new System.Drawing.Point(560, 161);
-			this.label26.Name = "label26";
-			this.label26.Size = new System.Drawing.Size(164, 22);
-			this.label26.TabIndex = 17;
-			this.label26.Text = "结果当前文件夹";
 			// 
 			// label25
 			// 
 			this.label25.AutoSize = true;
 			this.label25.Font = new System.Drawing.Font("宋体", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.label25.ForeColor = System.Drawing.Color.Green;
-			this.label25.Location = new System.Drawing.Point(289, 159);
+			this.label25.Location = new System.Drawing.Point(415, 159);
 			this.label25.Name = "label25";
 			this.label25.Size = new System.Drawing.Size(208, 22);
 			this.label25.TabIndex = 16;
@@ -302,22 +291,11 @@
 			this.label24.AutoSize = true;
 			this.label24.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.label24.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-			this.label24.Location = new System.Drawing.Point(238, 163);
+			this.label24.Location = new System.Drawing.Point(19, 161);
 			this.label24.Name = "label24";
 			this.label24.Size = new System.Drawing.Size(29, 20);
 			this.label24.TabIndex = 15;
 			this.label24.Text = "00";
-			// 
-			// label23
-			// 
-			this.label23.AutoSize = true;
-			this.label23.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.label23.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-			this.label23.Location = new System.Drawing.Point(3, 161);
-			this.label23.Name = "label23";
-			this.label23.Size = new System.Drawing.Size(229, 20);
-			this.label23.TabIndex = 14;
-			this.label23.Text = "要视频压缩的文件数量：";
 			// 
 			// label22
 			// 
@@ -466,6 +444,11 @@
 			// 
 			// tabPage6
 			// 
+			this.tabPage6.Controls.Add(this.button25);
+			this.tabPage6.Controls.Add(this.button24);
+			this.tabPage6.Controls.Add(this.dateTimePicker6);
+			this.tabPage6.Controls.Add(this.button23);
+			this.tabPage6.Controls.Add(this.dateTimePicker5);
 			this.tabPage6.Controls.Add(this.comboBox1);
 			this.tabPage6.Controls.Add(this.label21);
 			this.tabPage6.Controls.Add(this.label20);
@@ -494,7 +477,6 @@
 			this.tabPage6.Controls.Add(this.textBox7);
 			this.tabPage6.Controls.Add(this.label9);
 			this.tabPage6.Controls.Add(this.button9);
-			this.tabPage6.Controls.Add(this.label8);
 			this.tabPage6.Controls.Add(this.dateTimePicker3);
 			this.tabPage6.Controls.Add(this.label7);
 			this.tabPage6.Controls.Add(this.dateTimePicker2);
@@ -519,7 +501,7 @@
 			this.comboBox1.Items.AddRange(new object[] {
             "ewrtet",
             "1421342134"});
-			this.comboBox1.Location = new System.Drawing.Point(13, 503);
+			this.comboBox1.Location = new System.Drawing.Point(22, 537);
 			this.comboBox1.Name = "comboBox1";
 			this.comboBox1.Size = new System.Drawing.Size(161, 23);
 			this.comboBox1.TabIndex = 43;
@@ -566,7 +548,7 @@
 			this.label18.BackColor = System.Drawing.SystemColors.Info;
 			this.label18.Font = new System.Drawing.Font("宋体", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.label18.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
-			this.label18.Location = new System.Drawing.Point(157, 349);
+			this.label18.Location = new System.Drawing.Point(147, 383);
 			this.label18.Name = "label18";
 			this.label18.Size = new System.Drawing.Size(72, 27);
 			this.label18.TabIndex = 39;
@@ -578,7 +560,7 @@
 			this.label17.BackColor = System.Drawing.SystemColors.Info;
 			this.label17.Font = new System.Drawing.Font("宋体", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.label17.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
-			this.label17.Location = new System.Drawing.Point(440, 205);
+			this.label17.Location = new System.Drawing.Point(449, 239);
 			this.label17.Name = "label17";
 			this.label17.Size = new System.Drawing.Size(72, 27);
 			this.label17.TabIndex = 38;
@@ -590,7 +572,7 @@
 			this.label16.BackColor = System.Drawing.SystemColors.Info;
 			this.label16.Font = new System.Drawing.Font("宋体", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.label16.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
-			this.label16.Location = new System.Drawing.Point(168, 205);
+			this.label16.Location = new System.Drawing.Point(177, 239);
 			this.label16.Name = "label16";
 			this.label16.Size = new System.Drawing.Size(72, 27);
 			this.label16.TabIndex = 37;
@@ -600,11 +582,11 @@
 			// 
 			this.button21.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.button21.ForeColor = System.Drawing.Color.Green;
-			this.button21.Location = new System.Drawing.Point(610, 104);
+			this.button21.Location = new System.Drawing.Point(571, 113);
 			this.button21.Name = "button21";
-			this.button21.Size = new System.Drawing.Size(117, 40);
+			this.button21.Size = new System.Drawing.Size(158, 40);
 			this.button21.TabIndex = 36;
-			this.button21.Text = "快速定位";
+			this.button21.Text = "定位指定位置";
 			this.button21.UseVisualStyleBackColor = true;
 			this.button21.Click += new System.EventHandler(this.button21_Click);
 			// 
@@ -612,7 +594,7 @@
 			// 
 			this.dateTimePicker4.Font = new System.Drawing.Font("宋体", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.dateTimePicker4.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-			this.dateTimePicker4.Location = new System.Drawing.Point(462, 111);
+			this.dateTimePicker4.Location = new System.Drawing.Point(405, 113);
 			this.dateTimePicker4.Name = "dateTimePicker4";
 			this.dateTimePicker4.ShowUpDown = true;
 			this.dateTimePicker4.Size = new System.Drawing.Size(137, 34);
@@ -635,7 +617,7 @@
 			// 
 			this.button18.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.button18.ForeColor = System.Drawing.Color.DarkSlateBlue;
-			this.button18.Location = new System.Drawing.Point(10, 432);
+			this.button18.Location = new System.Drawing.Point(22, 468);
 			this.button18.Name = "button18";
 			this.button18.Size = new System.Drawing.Size(144, 36);
 			this.button18.TabIndex = 32;
@@ -647,7 +629,7 @@
 			// 
 			this.button19.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.button19.ForeColor = System.Drawing.Color.Indigo;
-			this.button19.Location = new System.Drawing.Point(10, 390);
+			this.button19.Location = new System.Drawing.Point(19, 424);
 			this.button19.Name = "button19";
 			this.button19.Size = new System.Drawing.Size(144, 36);
 			this.button19.TabIndex = 31;
@@ -659,7 +641,7 @@
 			// 
 			this.button16.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.button16.ForeColor = System.Drawing.Color.DarkSlateBlue;
-			this.button16.Location = new System.Drawing.Point(290, 300);
+			this.button16.Location = new System.Drawing.Point(299, 346);
 			this.button16.Name = "button16";
 			this.button16.Size = new System.Drawing.Size(144, 36);
 			this.button16.TabIndex = 30;
@@ -671,7 +653,7 @@
 			// 
 			this.button17.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.button17.ForeColor = System.Drawing.Color.Indigo;
-			this.button17.Location = new System.Drawing.Point(290, 246);
+			this.button17.Location = new System.Drawing.Point(301, 292);
 			this.button17.Name = "button17";
 			this.button17.Size = new System.Drawing.Size(144, 36);
 			this.button17.TabIndex = 29;
@@ -683,7 +665,7 @@
 			// 
 			this.button15.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.button15.ForeColor = System.Drawing.Color.DarkSlateBlue;
-			this.button15.Location = new System.Drawing.Point(19, 300);
+			this.button15.Location = new System.Drawing.Point(22, 334);
 			this.button15.Name = "button15";
 			this.button15.Size = new System.Drawing.Size(144, 36);
 			this.button15.TabIndex = 28;
@@ -695,7 +677,7 @@
 			// 
 			this.button14.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.button14.ForeColor = System.Drawing.Color.Indigo;
-			this.button14.Location = new System.Drawing.Point(19, 246);
+			this.button14.Location = new System.Drawing.Point(19, 289);
 			this.button14.Name = "button14";
 			this.button14.Size = new System.Drawing.Size(144, 36);
 			this.button14.TabIndex = 27;
@@ -750,7 +732,7 @@
 			this.label12.AutoSize = true;
 			this.label12.Font = new System.Drawing.Font("宋体", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.label12.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
-			this.label12.Location = new System.Drawing.Point(24, 349);
+			this.label12.Location = new System.Drawing.Point(18, 383);
 			this.label12.Name = "label12";
 			this.label12.Size = new System.Drawing.Size(117, 27);
 			this.label12.TabIndex = 24;
@@ -761,7 +743,7 @@
 			this.label11.AutoSize = true;
 			this.label11.Font = new System.Drawing.Font("宋体", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.label11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
-			this.label11.Location = new System.Drawing.Point(304, 205);
+			this.label11.Location = new System.Drawing.Point(294, 239);
 			this.label11.Name = "label11";
 			this.label11.Size = new System.Drawing.Size(117, 27);
 			this.label11.TabIndex = 23;
@@ -772,7 +754,7 @@
 			this.label10.AutoSize = true;
 			this.label10.Font = new System.Drawing.Font("宋体", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.label10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
-			this.label10.Location = new System.Drawing.Point(34, 205);
+			this.label10.Location = new System.Drawing.Point(18, 239);
 			this.label10.Name = "label10";
 			this.label10.Size = new System.Drawing.Size(117, 27);
 			this.label10.TabIndex = 22;
@@ -780,11 +762,11 @@
 			// 
 			// button12
 			// 
-			this.button12.Font = new System.Drawing.Font("宋体", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.button12.Font = new System.Drawing.Font("宋体", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.button12.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-			this.button12.Location = new System.Drawing.Point(536, 321);
+			this.button12.Location = new System.Drawing.Point(555, 355);
 			this.button12.Name = "button12";
-			this.button12.Size = new System.Drawing.Size(191, 40);
+			this.button12.Size = new System.Drawing.Size(181, 40);
 			this.button12.TabIndex = 21;
 			this.button12.Text = "取得时间戳";
 			this.button12.UseVisualStyleBackColor = true;
@@ -818,7 +800,7 @@
 			// 
 			this.textBox7.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.textBox7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
-			this.textBox7.Location = new System.Drawing.Point(625, 261);
+			this.textBox7.Location = new System.Drawing.Point(634, 295);
 			this.textBox7.Name = "textBox7";
 			this.textBox7.Size = new System.Drawing.Size(87, 30);
 			this.textBox7.TabIndex = 19;
@@ -829,7 +811,7 @@
 			this.label9.AutoSize = true;
 			this.label9.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.label9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-			this.label9.Location = new System.Drawing.Point(506, 271);
+			this.label9.Location = new System.Drawing.Point(515, 305);
 			this.label9.Name = "label9";
 			this.label9.Size = new System.Drawing.Size(93, 20);
 			this.label9.TabIndex = 18;
@@ -839,24 +821,13 @@
 			// 
 			this.button9.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.button9.ForeColor = System.Drawing.SystemColors.Highlight;
-			this.button9.Location = new System.Drawing.Point(592, 205);
+			this.button9.Location = new System.Drawing.Point(601, 239);
 			this.button9.Name = "button9";
 			this.button9.Size = new System.Drawing.Size(125, 32);
 			this.button9.TabIndex = 17;
 			this.button9.Text = "时间清零";
 			this.button9.UseVisualStyleBackColor = true;
 			this.button9.Click += new System.EventHandler(this.button9_Click);
-			// 
-			// label8
-			// 
-			this.label8.AutoSize = true;
-			this.label8.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.label8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
-			this.label8.Location = new System.Drawing.Point(19, 161);
-			this.label8.Name = "label8";
-			this.label8.Size = new System.Drawing.Size(669, 19);
-			this.label8.TabIndex = 16;
-			this.label8.Text = "如果设置持续时间，则直接裁剪，如果设置结束时间则计算持续时间，裁剪";
 			// 
 			// dateTimePicker3
 			// 
@@ -894,11 +865,11 @@
 			// label6
 			// 
 			this.label6.AutoSize = true;
-			this.label6.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.label6.Font = new System.Drawing.Font("宋体", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.label6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-			this.label6.Location = new System.Drawing.Point(388, 434);
+			this.label6.Location = new System.Drawing.Point(397, 468);
 			this.label6.Name = "label6";
-			this.label6.Size = new System.Drawing.Size(93, 20);
+			this.label6.Size = new System.Drawing.Size(110, 24);
 			this.label6.TabIndex = 9;
 			this.label6.Text = "准备剪切";
 			// 
@@ -949,7 +920,7 @@
 			// 
 			this.button1.Font = new System.Drawing.Font("宋体", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.button1.ForeColor = System.Drawing.Color.Maroon;
-			this.button1.Location = new System.Drawing.Point(546, 417);
+			this.button1.Location = new System.Drawing.Point(555, 453);
 			this.button1.Name = "button1";
 			this.button1.Size = new System.Drawing.Size(181, 51);
 			this.button1.TabIndex = 0;
@@ -1143,6 +1114,17 @@
 			this.label15.Size = new System.Drawing.Size(0, 27);
 			this.label15.TabIndex = 17;
 			// 
+			// dateTimePicker5
+			// 
+			this.dateTimePicker5.Font = new System.Drawing.Font("宋体", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.dateTimePicker5.Format = System.Windows.Forms.DateTimePickerFormat.Time;
+			this.dateTimePicker5.Location = new System.Drawing.Point(23, 175);
+			this.dateTimePicker5.Name = "dateTimePicker5";
+			this.dateTimePicker5.ShowUpDown = true;
+			this.dateTimePicker5.Size = new System.Drawing.Size(137, 34);
+			this.dateTimePicker5.TabIndex = 44;
+			this.dateTimePicker5.Value = new System.DateTime(2000, 1, 1, 0, 0, 0, 0);
+			// 
 			// axWindowsMediaPlayer1
 			// 
 			this.axWindowsMediaPlayer1.Enabled = true;
@@ -1151,6 +1133,57 @@
 			this.axWindowsMediaPlayer1.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axWindowsMediaPlayer1.OcxState")));
 			this.axWindowsMediaPlayer1.Size = new System.Drawing.Size(920, 720);
 			this.axWindowsMediaPlayer1.TabIndex = 5;
+			// 
+			// button23
+			// 
+			this.button23.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.button23.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
+			this.button23.Image = global::MusicChange.Properties.Resources.后退x;
+			this.button23.Location = new System.Drawing.Point(182, 172);
+			this.button23.Name = "button23";
+			this.button23.Size = new System.Drawing.Size(156, 45);
+			this.button23.TabIndex = 45;
+			this.button23.Text = "后退";
+			this.button23.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+			this.button23.UseVisualStyleBackColor = true;
+			this.button23.Click += new System.EventHandler(this.button23_Click);
+			// 
+			// button24
+			// 
+			this.button24.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.button24.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
+			this.button24.Image = global::MusicChange.Properties.Resources.前进x;
+			this.button24.Location = new System.Drawing.Point(555, 175);
+			this.button24.Name = "button24";
+			this.button24.Size = new System.Drawing.Size(157, 45);
+			this.button24.TabIndex = 47;
+			this.button24.Text = "向前";
+			this.button24.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+			this.button24.UseVisualStyleBackColor = true;
+			this.button24.Click += new System.EventHandler(this.button24_Click);
+			// 
+			// dateTimePicker6
+			// 
+			this.dateTimePicker6.Font = new System.Drawing.Font("宋体", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.dateTimePicker6.Format = System.Windows.Forms.DateTimePickerFormat.Time;
+			this.dateTimePicker6.Location = new System.Drawing.Point(405, 175);
+			this.dateTimePicker6.Name = "dateTimePicker6";
+			this.dateTimePicker6.ShowUpDown = true;
+			this.dateTimePicker6.Size = new System.Drawing.Size(137, 34);
+			this.dateTimePicker6.TabIndex = 46;
+			this.dateTimePicker6.Value = new System.DateTime(2000, 1, 1, 0, 0, 0, 0);
+			// 
+			// button25
+			// 
+			this.button25.Font = new System.Drawing.Font("宋体", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.button25.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+			this.button25.Location = new System.Drawing.Point(542, 537);
+			this.button25.Name = "button25";
+			this.button25.Size = new System.Drawing.Size(194, 40);
+			this.button25.TabIndex = 48;
+			this.button25.Text = "打开视频声音";
+			this.button25.UseVisualStyleBackColor = true;
+			this.button25.Click += new System.EventHandler(this.button25_Click);
 			// 
 			// Cut
 			// 
@@ -1230,7 +1263,6 @@
 		private System.Windows.Forms.Label label7;
 		private System.Windows.Forms.DateTimePicker dateTimePicker2;
 		private System.Windows.Forms.DateTimePicker dateTimePicker3;
-		private System.Windows.Forms.Label label8;
 		private System.Windows.Forms.Button button9;
 		private System.Windows.Forms.TextBox textBox7;
 		private System.Windows.Forms.Label label9;
@@ -1263,10 +1295,8 @@
 		private System.Windows.Forms.ComboBox comboBox1;
 		private System.Windows.Forms.Button button22;
 		private System.Windows.Forms.ListBox listBox1;
-		private System.Windows.Forms.Label label23;
 		private System.Windows.Forms.Label label22;
 		private System.Windows.Forms.Label label24;
-		private System.Windows.Forms.Label label26;
 		private System.Windows.Forms.Label label25;
 		private System.Windows.Forms.TextBox textBox8;
 		private System.Windows.Forms.TextBox textBox9;
@@ -1275,5 +1305,10 @@
 		private System.Windows.Forms.ComboBox comboBox3;
 		private System.Windows.Forms.Label label28;
 		private System.Windows.Forms.CheckBox checkBox1;
+		private System.Windows.Forms.Button button23;
+		private System.Windows.Forms.DateTimePicker dateTimePicker5;
+		private System.Windows.Forms.Button button24;
+		private System.Windows.Forms.DateTimePicker dateTimePicker6;
+		private System.Windows.Forms.Button button25;
 	}
 }
