@@ -117,17 +117,20 @@
 			this.label14 = new System.Windows.Forms.Label();
 			this.label15 = new System.Windows.Forms.Label();
 			this.axWindowsMediaPlayer1 = new AxWMPLib.AxWindowsMediaPlayer();
+			this.button31 = new System.Windows.Forms.Button();
+			this.listBox2 = new System.Windows.Forms.ListBox();
 			this.tabControl1.SuspendLayout();
 			this.tabPage6.SuspendLayout();
 			this.tabPage1.SuspendLayout();
+			this.tabPage2.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.axWindowsMediaPlayer1)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// tabControl1
 			// 
 			this.tabControl1.Controls.Add(this.tabPage6);
-			this.tabControl1.Controls.Add(this.tabPage1);
 			this.tabControl1.Controls.Add(this.tabPage2);
+			this.tabControl1.Controls.Add(this.tabPage1);
 			this.tabControl1.Controls.Add(this.tabPage3);
 			this.tabControl1.Controls.Add(this.tabPage4);
 			this.tabControl1.Controls.Add(this.tabPage5);
@@ -234,6 +237,8 @@
 			// 
 			this.checkBox2.AutoSize = true;
 			this.checkBox2.BackColor = System.Drawing.Color.Transparent;
+			this.checkBox2.Checked = true;
+			this.checkBox2.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.checkBox2.Font = new System.Drawing.Font("宋体", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.checkBox2.ForeColor = System.Drawing.Color.Maroon;
 			this.checkBox2.Location = new System.Drawing.Point(28, 619);
@@ -253,6 +258,7 @@
 			this.button28.TabIndex = 52;
 			this.button28.Text = "裁剪去结尾部分";
 			this.button28.UseVisualStyleBackColor = true;
+			this.button28.Click += new System.EventHandler(this.button28_Click);
 			// 
 			// textBox10
 			// 
@@ -392,7 +398,7 @@
 			this.label18.BackColor = System.Drawing.SystemColors.Info;
 			this.label18.Font = new System.Drawing.Font("宋体", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.label18.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
-			this.label18.Location = new System.Drawing.Point(147, 383);
+			this.label18.Location = new System.Drawing.Point(141, 383);
 			this.label18.Name = "label18";
 			this.label18.Size = new System.Drawing.Size(72, 27);
 			this.label18.TabIndex = 39;
@@ -404,7 +410,7 @@
 			this.label17.BackColor = System.Drawing.SystemColors.Info;
 			this.label17.Font = new System.Drawing.Font("宋体", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.label17.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
-			this.label17.Location = new System.Drawing.Point(449, 239);
+			this.label17.Location = new System.Drawing.Point(415, 239);
 			this.label17.Name = "label17";
 			this.label17.Size = new System.Drawing.Size(72, 27);
 			this.label17.TabIndex = 38;
@@ -416,7 +422,7 @@
 			this.label16.BackColor = System.Drawing.SystemColors.Info;
 			this.label16.Font = new System.Drawing.Font("宋体", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.label16.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
-			this.label16.Location = new System.Drawing.Point(177, 239);
+			this.label16.Location = new System.Drawing.Point(161, 239);
 			this.label16.Name = "label16";
 			this.label16.Size = new System.Drawing.Size(72, 27);
 			this.label16.TabIndex = 37;
@@ -1074,6 +1080,8 @@
 			// 
 			// tabPage2
 			// 
+			this.tabPage2.Controls.Add(this.listBox2);
+			this.tabPage2.Controls.Add(this.button31);
 			this.tabPage2.Location = new System.Drawing.Point(4, 25);
 			this.tabPage2.Name = "tabPage2";
 			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -1266,8 +1274,31 @@
 			this.axWindowsMediaPlayer1.Location = new System.Drawing.Point(789, 100);
 			this.axWindowsMediaPlayer1.Name = "axWindowsMediaPlayer1";
 			this.axWindowsMediaPlayer1.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axWindowsMediaPlayer1.OcxState")));
-			this.axWindowsMediaPlayer1.Size = new System.Drawing.Size(920, 720);
+			this.axWindowsMediaPlayer1.Size = new System.Drawing.Size(963, 720);
 			this.axWindowsMediaPlayer1.TabIndex = 5;
+			// 
+			// button31
+			// 
+			this.button31.AutoSize = true;
+			this.button31.FlatAppearance.BorderColor = System.Drawing.Color.Cyan;
+			this.button31.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.button31.ForeColor = System.Drawing.Color.DarkGreen;
+			this.button31.Location = new System.Drawing.Point(18, 161);
+			this.button31.Name = "button31";
+			this.button31.Size = new System.Drawing.Size(250, 35);
+			this.button31.TabIndex = 12;
+			this.button31.Text = "按目录所有视频文件压缩";
+			// 
+			// listBox2
+			// 
+			this.listBox2.Font = new System.Drawing.Font("宋体", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.listBox2.FormattingEnabled = true;
+			this.listBox2.ItemHeight = 22;
+			this.listBox2.Location = new System.Drawing.Point(18, 315);
+			this.listBox2.Name = "listBox2";
+			this.listBox2.ScrollAlwaysVisible = true;
+			this.listBox2.Size = new System.Drawing.Size(711, 224);
+			this.listBox2.TabIndex = 13;
 			// 
 			// Cut
 			// 
@@ -1301,6 +1332,8 @@
 			this.tabPage6.PerformLayout();
 			this.tabPage1.ResumeLayout(false);
 			this.tabPage1.PerformLayout();
+			this.tabPage2.ResumeLayout(false);
+			this.tabPage2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.axWindowsMediaPlayer1)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
@@ -1400,5 +1433,7 @@
 		private System.Windows.Forms.CheckBox checkBox2;
 		private System.Windows.Forms.Button button30;
 		private System.Windows.Forms.TextBox textBox11;
+		private System.Windows.Forms.ListBox listBox2;
+		private System.Windows.Forms.Button button31;
 	}
 }

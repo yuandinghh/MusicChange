@@ -21,9 +21,10 @@ namespace MusicChange
 	{
 		#region  *********  变量区  ***********
 		private string Filestr, inputFile, outputFile, arguments;
-		TimeSpan durationS;
-		int totalSeconds;
+		TimeSpan durationS, startTimeTs, endTimeTs;
+		int  totalSeconds;
 		bool firstdisp = true; // 是否第一次显示
+		bool clibb = false; //裁剪 时间正确
 		int timeStamp = 0;
 		private bool waitingForBuffer = false;
 		string startTime = "00:00:00"; // 起始时间
@@ -105,8 +106,10 @@ namespace MusicChange
 					// 显示当前时间和总时长
 					TimeSpan pos = TimeSpan.FromSeconds( position );
 					TimeSpan dur = TimeSpan.FromSeconds( duration );
+					
 					if (firstdisp) {
 						label15.Text = $"{dur:hh\\:mm\\:ss\\.fff}";
+						totalSeconds = (int)dur.TotalSeconds; // 获取总时长的秒数
 						firstdisp = false;
 					}
 					else {
@@ -371,49 +374,38 @@ namespace MusicChange
 		#region ------- 视频裁剪 -------
 		private void button1_Click(object sender, EventArgs e)
 		{
-			Clip();
-			if (totalSeconds != 0) {
-				CutVideoSegment( startTime, endTime, inputFile, outputFile );
-			}
-
-			TimeSpan endS = dateTimePicker3.Value.TimeOfDay;
-			int endSeconds = (int)endS.TotalSeconds;
-			if (totalSeconds != 0) {        // 如果持续时间不为0，则使用持续时间
-				duration = $"{totalSeconds / 3600:D2}:{(totalSeconds % 3600) / 60:D2}:{totalSeconds % 60:D2}";
-			}
-			else if (endSeconds != 0) {             // 如果结束时间不为0，则计算持续时间
-				TimeSpan startS = dateTimePicker1.Value.TimeOfDay;
-				int startSeconds = (int)startS.TotalSeconds;
-				int durationInSeconds = endSeconds - startSeconds;
-				if (durationInSeconds < 0) {
-					MessageBox.Show( "结束时间必须大于起始时间！" );
-					return;
+			if (Clip()) {
+				if (totalSeconds != 0) {
+					CutVideoSegment( startTime, endTime, inputFile, outputFile );
 				}
-				duration = $"{durationInSeconds / 3600:D2}:{(durationInSeconds % 3600) / 60:D2}:{durationInSeconds % 60:D2}";
 			}
-			else {
-				MessageBox.Show( "请选择持续时间或结束时间！" );
-				return;
-			}
+			//TimeSpan endS = dateTimePicker3.Value.TimeOfDay;
+			//int endSeconds = (int)endS.TotalSeconds;
 		}
 		private void button27_Click(object sender, EventArgs e)  //裁剪开始部分视频
 		{
-			Clip();
-			if (totalSeconds != 0) {        //获得整个视频时间
-				double duration = axWindowsMediaPlayer1.currentMedia.duration;
-				TimeSpan dur = TimeSpan.FromSeconds( duration );
-				string endss = $"{dur:hh\\:mm\\:ss\\.fff}";
-				CutVideoSegment( endTime, endss, inputFile, outputFile );
+			if (dateTimePicker1.Value.TimeOfDay.TotalSeconds != 0) {
+				MessageBox.Show( "起始时间必须 0 ！" );
+				return;
+			}
+			if (Clip()) {
+				if (totalSeconds != 0) {        //获得整个视频时间
+					double duration = axWindowsMediaPlayer1.currentMedia.duration;
+					TimeSpan dur = TimeSpan.FromSeconds( duration );
+					string endss = $"{dur:hh\\:mm\\:ss\\.fff}";
+					CutVideoSegment( endTime, endss, inputFile, outputFile );
+				}
 			}
 		}
-		void Clip( )  //Clip the video  裁剪视频
+		bool Clip( )  //Clip the video  裁剪视频
 		{
+			clibb = false;
 			axWindowsMediaPlayer1.Ctlcontrols.pause();  // 暂停视频播放
 			textBox6.Text = "";
 			inputFile = textBox1.Text;
 			if (string.IsNullOrEmpty( inputFile ) || !File.Exists( inputFile )) {
 				MessageBox.Show( "请选择有效的视频文件！" );
-				return;
+				return clibb;
 			}
 			inputFile = inputFile.TrimEnd( '\r', '\n', ' ' );
 			string fileNameWithoutExtension = Path.GetFileNameWithoutExtension( inputFile );
@@ -424,27 +416,57 @@ namespace MusicChange
 			// 将 DateTimePicker 的值转换为字符串格式
 			// 注意：DateTimePicker 的 Value 属性返回的是 DateTime 类型，包含日期和时间
 			// 如果需要精确到毫秒，可以使用 ToString("HH:mm:ss.fff")
-
 			startTime = dateTimePicker1.Value.ToString( "HH:mm:ss" );
 			duration = dateTimePicker2.Value.ToString( "HH:mm:ss" );
 			endTime = dateTimePicker3.Value.ToString( "HH:mm:ss" );
+			int totaltime = (int)durationS.TotalSeconds;  // 转换为总秒数
 			durationS = dateTimePicker2.Value.TimeOfDay;
-			totalSeconds = (int)durationS.TotalSeconds;  // 转换为总秒数
+			startTimeTs = dateTimePicker1.Value.TimeOfDay;
+			endTimeTs = dateTimePicker3.Value.TimeOfDay;
+			int di = ((int)durationS.TotalSeconds);
+			int startSeconds = (int)startTimeTs.TotalSeconds;
+			int endSeconds = (int)endTimeTs.TotalSeconds;
+
+			if (di == 0) {  //持续时间为0
+				if (startSeconds >= endSeconds) {
+					MessageBox.Show( "起始时间不能大于等于结束时间 ！" );
+					return clibb;
+				}
+			}
+			else
+			{
+				if ( endSeconds != 0) {
+					MessageBox.Show( "持续时间非 0，结束时间必须为 0 ！" );
+					return clibb;
+				}
+
+				if (startSeconds >= endSeconds) {
+					MessageBox.Show( "起始时间不能大于等于结束时间！" );
+					return clibb;
+				}
+
+				if (di < 0) {
+					MessageBox.Show( "持续时间不能小于 0！" );
+					return clibb;
+				}
+			}
+				
 			outputFile = Path.Combine( textBox11.Text, $"{fileNameWithoutExtension}" );
 			outputFile = outputFile.TrimEnd( '\r', '\n', ' ' );
 			if (!Directory.Exists( textBox11.Text )) {
 				MessageBox.Show( "输出目录不存在，请先创建目录！" );
-				return;
+				return clibb;
 			}
 			outputFile = outputFile + ".mp4";
-
-			if (totalSeconds == 0) {
+			//??????????????
+			if (totaltime == 0) {
 				durationS = dateTimePicker3.Value.TimeOfDay;
-				totalSeconds = (int)durationS.TotalSeconds;  // 转换为总秒数
+				totaltime = (int)durationS.TotalSeconds;  // 转换为总秒数
 				startTime = startTime + label19.Text;
 				endTime = endTime + label21.Text;
 
 			}
+			return true; // 返回裁剪成功标志
 		}
 		/*使用FFmpeg精确到毫秒裁剪视频段，可以使用以下命令：
 ``
@@ -467,7 +489,14 @@ ffmpeg -ss 00:00:10.000 -t 00:00:20.500 -accurate_seek -i input.mp4 -c:v copy -c
 ffmpeg -ss 00:00:15.200 -to 00:00:30.500 -accurate_seek -i input.mp4 -c:v copy -c:a copy -avoid_negative_ts 1 output.mp4
 		*/
 		private async void CutVideoSegment(string startTime, string endTime, string inputFile, string outputFile)
-		{  //string arguments = $"-ss {startTime} -to {endTime} -i \"{inputFile}\" -c:v copy -c:a copy \"{outputFile}\"";  ffmpeg 被裁剪视频保持也原视频同样质量，时间精确到毫秒
+		{
+			if (checkBox2.Checked) { // 如果选中则复制到指定目录
+				if (!Directory.Exists( textBox7.Text )) {
+					MessageBox.Show( "剪切视频备份目录不存在，请先创建或选择目录！" );
+					return;
+				}
+			}
+			//string arguments = $"-ss {startTime} -to {endTime} -i \"{inputFile}\" -c:v copy -c:a copy \"{outputFile}\"";  ffmpeg 被裁剪视频保持也原视频同样质量，时间精确到毫秒
 
 			//string arguments = $"-i \"{inputFile}\" -ss {startTime} -t {duration} -c copy \"{outputFile}\"";
 			//ffmpeg - ss 00:01:20.500 - to 00:02:30.750 - i input.mp4 - c copy - avoid_negative_ts 1 output.mp4
@@ -519,7 +548,7 @@ ffmpeg -ss 00:00:15.200 -to 00:00:30.500 -accurate_seek -i input.mp4 -c:v copy -
 				if (checkBox2.Checked) {        //copy file
 					checkBox2.Checked = false;
 					// 如果选中则复制到指定目录
-					CopyFile(outputFile, textBox7.Text );
+					CopyFile( outputFile, textBox7.Text );
 				}
 			}
 			catch (Exception ex) {
@@ -560,10 +589,10 @@ ffmpeg -ss 00:00:15.200 -to 00:00:30.500 -accurate_seek -i input.mp4 -c:v copy -
 		{  // 播放选择视频
 			if (textBox1 == null || string.IsNullOrEmpty( textBox1.Text )) {
 				MessageBox.Show( "请先选择视频文件！" );
+				return;
 			}
 			axWindowsMediaPlayer1.settings.mute = true; // 静音
 			button9_Click( null, null ); // 调用播放按钮事件
-										 //if (axWindowsMediaPlayer1.currentMedia != null) {
 			axWindowsMediaPlayer1.URL = textBox1.Text;
 			axWindowsMediaPlayer1.uiMode = "full"; // 或 "mini"
 			axWindowsMediaPlayer1.Ctlcontrols.play();
@@ -737,6 +766,11 @@ ffmpeg -ss 00:00:15.200 -to 00:00:30.500 -accurate_seek -i input.mp4 -c:v copy -
 
 		private void button23_Click(object sender, EventArgs e)
 		{  //视频后退
+		   //判断当前视频是否正在播放
+			if (axWindowsMediaPlayer1.playState != WMPLib.WMPPlayState.wmppsPlaying) {
+				MessageBox.Show( "请先播放视频！" );
+				return;
+			}
 			double currentPosition = axWindowsMediaPlayer1.Ctlcontrols.currentPosition;
 			if (currentPosition < 0)
 				return;
@@ -749,6 +783,11 @@ ffmpeg -ss 00:00:15.200 -to 00:00:30.500 -accurate_seek -i input.mp4 -c:v copy -
 
 		private void button24_Click(object sender, EventArgs e)
 		{
+			//判断当前视频是否正在播放
+			if (axWindowsMediaPlayer1.playState != WMPLib.WMPPlayState.wmppsPlaying) {
+				MessageBox.Show( "请先播放视频！" );
+				return;
+			}
 			double currentPosition = axWindowsMediaPlayer1.Ctlcontrols.currentPosition;
 			//取得当前视频长度
 			double duration = axWindowsMediaPlayer1.currentMedia.duration;
@@ -768,9 +807,20 @@ ffmpeg -ss 00:00:15.200 -to 00:00:30.500 -accurate_seek -i input.mp4 -c:v copy -
 			axWindowsMediaPlayer1.settings.mute = true; // 取消静音
 		}
 
-		private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+		private void button28_Click(object sender, EventArgs e)  //裁剪去结尾部分
 		{
-
+			if (dateTimePicker3.Value.TimeOfDay.TotalSeconds != 0) {
+				MessageBox.Show( "结束时间必须 0 ！" );
+				return;
+			}
+			if (Clip()) {  
+				if (totalSeconds != 0) {        //获得整个视频时间
+					double duration = axWindowsMediaPlayer1.currentMedia.duration;
+					TimeSpan dur = TimeSpan.FromSeconds( duration );
+					string endss = $"{dur:hh\\:mm\\:ss\\.fff}";
+					CutVideoSegment( endTime, endss, inputFile, outputFile );
+				}
+			}
 		}
 
 		private void button29_Click(object sender, EventArgs e)
