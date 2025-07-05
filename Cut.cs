@@ -22,7 +22,9 @@ namespace MusicChange
 		#region  *********  变量区  ***********
 		private string Filestr, inputFile, outputFile, arguments;
 		TimeSpan durationS, startTimeTs, endTimeTs;
-		int  totalSeconds;
+		int totalSeconds;
+		int right_rotate_angle = 0; // 视频旋转角度
+		int left_rotate_angle = 0; // ++6+
 		bool firstdisp = true; // 是否第一次显示
 		bool clibb = false; //裁剪 时间正确
 		int timeStamp = 0;
@@ -64,6 +66,45 @@ namespace MusicChange
 			toolTip1.SetToolTip( label27, "preset（预设编码速度）\r\n•\t作用：控制编码速度与压缩效率的平衡。\r\n•\t可选值（从快到慢）：\r\n•\tultrafast, superfast, veryfast, faster, fast, medium, slow, slower, veryslow\r\n•\t说明：\r\n•\t越快（如 ultrafast），编码速度快，但文件大、画质略低。\r\n•\t越慢（如 veryslow），编码速度慢，但文件更小、画质更好。\r\n•\t默认值是 medium，一般推荐用 fast、medium 或 slow。" );
 		}
 		#endregion
+
+		#region ------- 视频旋转 -------
+
+
+		private void button31_Click(object sender, EventArgs e) //旋转视频
+		{
+			clibb = false;
+			axWindowsMediaPlayer1.Ctlcontrols.pause();  // 暂停视频播放
+			textBox6.Text = "";
+			inputFile = textBox1.Text;
+			if (string.IsNullOrEmpty( inputFile ) || !File.Exists( inputFile )) {
+				MessageBox.Show( "请选择有效的视频文件！" );
+				return;
+			}
+			inputFile = inputFile.TrimEnd( '\r', '\n', ' ' );
+			string fileNameWithoutExtension = Path.GetFileNameWithoutExtension( inputFile );
+			//当前时间 转换为字符串  F:\newipad\已经压缩\Aigirl3.mp4
+			fileNameWithoutExtension = fileNameWithoutExtension + DateTime.Now.ToString( "_HHmmss" );
+
+		}
+		private void button32_Click(object sender, EventArgs e)
+		{
+			right_rotate_angle++; // 右旋转角度增加
+			if (right_rotate_angle >= 360) {
+				right_rotate_angle = 0; // 重置角度
+			}
+			label8.Text = "右旋转角度:" + right_rotate_angle.ToString() + "°";
+		}
+		private void button34_Click(object sender, EventArgs e)
+		{
+			right_rotate_angle = right_rotate_angle + 10; // 右旋转角度增加
+			if (right_rotate_angle >= 360) {
+				right_rotate_angle = 0; // 重置角度
+			}
+			label8.Text = "右旋转角度:" + right_rotate_angle.ToString() + "°";
+		}
+
+		#endregion
+
 		#region 视频播放相关
 		private void button3_Click(object sender, EventArgs e)
 		{
@@ -106,7 +147,7 @@ namespace MusicChange
 					// 显示当前时间和总时长
 					TimeSpan pos = TimeSpan.FromSeconds( position );
 					TimeSpan dur = TimeSpan.FromSeconds( duration );
-					
+
 					if (firstdisp) {
 						label15.Text = $"{dur:hh\\:mm\\:ss\\.fff}";
 						totalSeconds = (int)dur.TotalSeconds; // 获取总时长的秒数
@@ -433,9 +474,8 @@ namespace MusicChange
 					return clibb;
 				}
 			}
-			else
-			{
-				if ( endSeconds != 0) {
+			else {
+				if (endSeconds != 0) {
 					MessageBox.Show( "持续时间非 0，结束时间必须为 0 ！" );
 					return clibb;
 				}
@@ -450,7 +490,7 @@ namespace MusicChange
 					return clibb;
 				}
 			}
-				
+
 			outputFile = Path.Combine( textBox11.Text, $"{fileNameWithoutExtension}" );
 			outputFile = outputFile.TrimEnd( '\r', '\n', ' ' );
 			if (!Directory.Exists( textBox11.Text )) {
@@ -813,7 +853,7 @@ ffmpeg -ss 00:00:15.200 -to 00:00:30.500 -accurate_seek -i input.mp4 -c:v copy -
 				MessageBox.Show( "结束时间必须 0 ！" );
 				return;
 			}
-			if (Clip()) {  
+			if (Clip()) {
 				if (totalSeconds != 0) {        //获得整个视频时间
 					double duration = axWindowsMediaPlayer1.currentMedia.duration;
 					TimeSpan dur = TimeSpan.FromSeconds( duration );
@@ -821,6 +861,13 @@ ffmpeg -ss 00:00:15.200 -to 00:00:30.500 -accurate_seek -i input.mp4 -c:v copy -
 					CutVideoSegment( endTime, endss, inputFile, outputFile );
 				}
 			}
+		}
+
+		private void button38_Click(object sender, EventArgs e)
+		{
+			right_rotate_angle = 0;
+			left_rotate_angle = 0;
+			label8.Text = "视频旋转为 0°"; // 重置角度显示
 		}
 
 		private void button29_Click(object sender, EventArgs e)
@@ -877,7 +924,9 @@ ffmpeg -ss 00:00:15.200 -to 00:00:30.500 -accurate_seek -i input.mp4 -c:v copy -
 		}
 
 		#endregion
+
 	}
+
 
 }
 

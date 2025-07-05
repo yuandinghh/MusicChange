@@ -148,5 +148,17 @@
   <ItemGroup>
     <None Include="后退x.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="左转.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="右转.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="右转150.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="左转150.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

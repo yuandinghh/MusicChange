@@ -121,13 +121,25 @@
   <data name="后退" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\后退.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="前进" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\前进.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="前进x" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\前进x.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="左转" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\左转.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="右转" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\右转.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="后退x" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\后退x.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="右转150" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\右转150.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="前进" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\前进.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="左转150" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\左转150.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
