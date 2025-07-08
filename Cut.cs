@@ -10,6 +10,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
@@ -21,23 +22,27 @@ namespace MusicChange
 	{
 		#region  *********  变量区  ***********
 		private string Filestr, inputFile, outputFile, arguments;
-		TimeSpan durationS, startTimeTs, endTimeTs;
-		int totalSeconds;
+		TimeSpan durationS, startTimeTs, endTimeTs;  // 视频时长、起始时间和结束时间
+		int totalSeconds; // 视频总时长（秒）
 		int right_rotate_angle = 0; // 视频旋转角度
 		int left_rotate_angle = 0; // ++6+
 		bool firstdisp = true; // 是否第一次显示
 		bool clibb = false; //裁剪 时间正确
-		int timeStamp = 0;
-		private bool waitingForBuffer = false;
+		bool isCutting = false; // 是否正在裁剪
+		bool isCompress = false; // 是否正在压缩
+		int timeStamp = 0; // 时间戳
+		private bool waitingForBuffer = false; // 是否等待缓冲完成
 		string startTime = "00:00:00"; // 起始时间
 		string endTime = "00:00:00"; // 结束时间
 		string duration = "00:00:30"; // 持续时间
 		public Cut( )
 		{  //类的初始化 函数
 			InitializeComponent();
-			this.axWindowsMediaPlayer1.Location = new System.Drawing.Point( 580, 76 );
-			this.axWindowsMediaPlayer1.Size = new System.Drawing.Size( 900, 700 );
-			comboBoxSpeed.SelectedIndex = 3; // 默认1.0x	axWindowsMediaPlayer1.settings.rate = 0.1; 
+			this.axWindowsMediaPlayer1.Location = new System.Drawing.Point( 580, 76 ); // 设置主播放器位置
+			this.axWindowsMediaPlayer1.Size = new System.Drawing.Size( 900, 700 );  // 设置主播放器大小
+
+			this.axWindowsMediaPlayer2.Location = new System.Drawing.Point( 2, 430 ); // 设置旋转主播放器位置
+			this.axWindowsMediaPlayer2.Size = new System.Drawing.Size( 530, 330 ); 			comboBoxSpeed.SelectedIndex = 3; // 默认1.0x	axWindowsMediaPlayer1.settings.rate = 0.1; 
 			comboBoxSpeed.SelectedIndexChanged += comboBoxSpeed_SelectedIndexChanged; //示例：为按钮和组合框添加说明
 			#endregion
 			#region ------- ToolTip 鼠标进入悬停显示 -------
@@ -68,7 +73,73 @@ namespace MusicChange
 		#endregion
 
 		#region ------- 视频旋转 -------
+		/*1. 顺时针旋转 90 度
+		bash
+		ffmpeg -i input.mp4 -vf "rotate=90*(PI/180)" output.mp4
+		2. 逆时针旋转 90 度
+		bash
+		ffmpeg -i input.mp4 -vf "rotate=270*(PI/180)" output.mp4
+		3. 旋转 180 度
+		bash
+		ffmpeg -i input.mp4 -vf "rotate=180*(PI/180)" output.mp4
+		4. 依据视频元数据自动旋转（适合手机拍摄的视频）
+		bash
+		ffmpeg -i input.mp4 -metadata:s:v:0 rotate=0 -c:v copy -c:a copy output.mp4
+		命令参数说明
+-i input.mp4：用于指定输入视频的文件路径。
+-vf：即-filter:v的简写，是用来设置视频滤镜的参数。
+rotate=90*(PI/180)：此表达式中角度需以弧度为单位，所以用角度值乘以PI/180来完成转换。
+-metadata:s:v:0 rotate=0：该参数的作用是移除视频元数据里的旋转标记。
+-c:v copy和-c:a copy：它们能让视频和音频直接复制，无需重新编码，从而加快处理速度。
+		要将视频向右旋转 1 度（顺时针），可以使用以下命令：
 
+bash
+ffmpeg -i input.mp4 -vf "rotate=1*PI/180:c=black" -preset medium -crf 23 output.mp4
+
+参数说明：
+rotate=1*PI/180：将视频顺时针旋转 1 度（FFmpeg 使用弧度制，因此将角度转换为弧度）
+c=black：指定旋转后填充边缘的颜色为黑色（可选参数）
+-preset medium：编码速度与质量的平衡设置（可选）
+-crf 23：视频质量参数，默认值 23，越小质量越高（可选）
+		如果需要更精确的控制（如旋转中心点、插值算法），可以扩展rotate滤镜的参数：
+
+bash
+ffmpeg -i input.mp4 -vf "rotate=1*PI/180:ow=ceil(iw*1.01):oh=ceil(ih*1.01):bilinear=1:c=black" output.mp4
+
+
+这个扩展命令中：
+
+ow=ceil(iw*1.01)：输出宽度增加 1%，避免内容被裁剪
+oh=ceil(ih*1.01)：输出高度增加 1%
+bilinear=1：使用双线性插值提高旋转后的画质
+要将视频向左旋转 1 度（逆时针），只需将旋转角度改为 -1 度（或等效为 359 度）即可。以下是具体命令：
+
+bash
+ffmpeg -i input.mp4 -vf "rotate=-1*PI/180:c=black" -preset medium -crf 23 output.mp4
+
+参数说明：
+rotate=-1*PI/180：将视频逆时针旋转 1 度（负号表示逆时针方向）
+c=black：指定旋转后填充边缘的颜色为黑色（可选）
+-preset medium：编码速度与质量的平衡设置（可选）
+-crf 23：视频质量参数，默认值 23，越小质量越高（可选）
+等效写法：
+如果你更喜欢使用正数角度，可以将 -1度 转换为 359度（360-1）：
+bash
+ffmpeg -i input.mp4 -vf "rotate=359*PI/180:c=black" output.mp4
+
+注意事项：
+逆时针旋转会使视频内容向左倾斜，边缘可能出现黑边
+如需避免黑边，可以结合使用 scale 或 crop 滤镜
+旋转操作需要重新编码视频，建议保持足够的输出码率
+
+如果需要更精确的控制（如旋转中心点、插值算法），可以扩展 rotate 滤镜的参数：
+		这个扩展命令中：
+
+ow=ceil(iw*1.01)：输出宽度增加 1%，避免内容被裁剪
+oh=ceil(ih*1.01)：输出高度增加 1%
+bilinear=1：使用双线性插值提高旋转后的画质
+
+		*/
 
 		private void button31_Click(object sender, EventArgs e) //旋转视频
 		{
@@ -84,8 +155,228 @@ namespace MusicChange
 			string fileNameWithoutExtension = Path.GetFileNameWithoutExtension( inputFile );
 			//当前时间 转换为字符串  F:\newipad\已经压缩\Aigirl3.mp4
 			fileNameWithoutExtension = fileNameWithoutExtension + DateTime.Now.ToString( "_HHmmss" );
-
 		}
+		#endregion
+
+		#region VideoRotationTool
+		////namespace VideoRotationTool
+		////	{
+		////		class Program
+		////		{
+		//// 配置参数
+
+		//private const string FFmpegPath = "ffmpeg.exe";  // FFmpeg可执行文件路径
+		//	private const string LogFilePath = "ffmpeg_log.txt";  // 日志文件路径
+
+		//	static void Main(string[] args)
+		//	{
+		//		Console.WriteLine( "=== 视频旋转工具 ===" );
+
+		//		// 获取输入文件路径
+		//		string inputFilePath = GetUserInput( "请输入要旋转的视频文件路径：" );
+		//		if (!File.Exists( inputFilePath )) {
+		//			Console.WriteLine( $"错误：文件 '{inputFilePath}' 不存在！" );
+		//			WaitAndExit();
+		//			return;
+		//		}
+
+		//		// 获取旋转角度
+		//		int rotationAngle = GetRotationAngle();
+
+		//		// 获取输出文件路径
+		//		string outputFilePath = Path.Combine(
+		//			Path.GetDirectoryName( inputFilePath ),
+		//			Path.GetFileNameWithoutExtension( inputFilePath ) +
+		//			$"_rotated_{rotationAngle}deg" +
+		//			Path.GetExtension( inputFilePath )
+		//		);
+
+		//		// 确认操作
+		//		Console.WriteLine( "\n=== 操作确认 ===" );
+		//		Console.WriteLine( $"输入文件: {inputFilePath}" );
+		//		Console.WriteLine( $"旋转角度: {rotationAngle} 度 (顺时针)" );
+		//		Console.WriteLine( $"输出文件: {outputFilePath}" );
+
+		//		if (!ConfirmAction( "是否继续？(Y/N): " )) {
+		//			Console.WriteLine( "操作已取消。" );
+		//			WaitAndExit();
+		//			return;
+		//		}
+
+		//		// 执行旋转
+		//		bool success = RotateVideo( inputFilePath, outputFilePath, rotationAngle, out TimeSpan executionTime );
+
+		//		// 显示结果
+		//		Console.WriteLine( "\n=== 操作结果 ===" );
+		//		if (success) {
+		//			Console.WriteLine( $"✅ 视频旋转成功！" );
+		//			Console.WriteLine( $"输出文件大小: {new FileInfo( outputFilePath ).Length / 1024 / 1024:F2} MB" );
+		//			Console.WriteLine( $"执行时间: {FormatTimeSpan( executionTime )}" );
+		//		}
+		//		else {
+		//			Console.WriteLine( $"❌ 视频旋转失败！" );
+		//			Console.WriteLine( $"详细错误信息请查看日志文件: {LogFilePath}" );
+		//		}
+
+		//		WaitAndExit();
+		//	}
+
+		//	/// <summary>
+		//	/// 获取用户输入
+		//	/// </summary>
+		//	private static string GetUserInput(string prompt)
+		//	{
+		//		Console.Write( prompt );
+		//		return Console.ReadLine()?.Trim() ?? "";
+		//	}
+
+		//	/// <summary>
+		//	/// 获取旋转角度
+		//	/// </summary>
+		//	private static int GetRotationAngle( )
+		//	{
+		//		while (true) {
+		//			string input = GetUserInput( "请输入旋转角度 (正数=顺时针，负数=逆时针，例如 1 或 -1): " );
+
+		//			if (int.TryParse( input, out int angle )) {
+		//				return angle;
+		//			}
+
+		//			Console.WriteLine( "错误：请输入有效的整数值！" );
+		//		}
+		//	}
+
+		//	/// <summary>
+		//	/// 确认操作
+		//	/// </summary>
+		//	private static bool ConfirmAction(string prompt)
+		//	{
+		//		Console.Write( prompt );
+		//		string response = Console.ReadLine()?.Trim().ToUpper();
+		//		return response == "Y" || response == "YES";
+		//	}
+
+		//	/// <summary>
+		//	/// 旋转视频
+		//	/// </summary>
+		//	private static bool RotateVideo(string inputPath, string outputPath, int angle, out TimeSpan executionTime)
+		//	{
+		//		executionTime = TimeSpan.Zero;
+		//		bool success = false;
+		//		Stopwatch stopwatch = new Stopwatch();
+
+		//		try {
+		//			// 检查FFmpeg是否存在
+		//			if (!File.Exists( FFmpegPath )) {
+		//				Console.WriteLine( $"错误：找不到FFmpeg可执行文件 '{FFmpegPath}'" );
+		//				Console.WriteLine( "请确保FFmpeg已安装并正确配置路径" );
+		//				return false;
+		//			}
+
+		//			// 创建临时日志文件
+		//			File.Delete( LogFilePath );
+
+		//			// 构建FFmpeg参数
+		//			string ffmpegArgs = $"-i \"{inputPath}\" " +
+		//				$"-vf \"rotate={angle}*PI/180:c=black\" " +
+		//				$"-preset medium -crf 23 " +
+		//				$"-y \"{outputPath}\"";
+
+		//			// 创建进程信息
+		//			ProcessStartInfo startInfo = new ProcessStartInfo
+		//			{
+		//				FileName = FFmpegPath,
+		//				Arguments = ffmpegArgs,
+		//				UseShellExecute = false,
+		//				CreateNoWindow = true,
+		//				RedirectStandardOutput = true,
+		//				RedirectStandardError = true
+		//			};
+
+		//			// 启动计时器
+		//			stopwatch.Start();
+
+		//			// 启动进程
+		//			using (Process process = new Process { StartInfo = startInfo }) {
+		//				// 设置输出和错误处理
+		//				process.OutputDataReceived += (sender, e) => WriteToLog( e.Data );
+		//				process.ErrorDataReceived += (sender, e) => WriteToLog( e.Data );
+
+		//				process.Start();
+		//				process.BeginOutputReadLine();
+		//				process.BeginErrorReadLine();
+
+		//				// 显示进度
+		//				Console.WriteLine( "\n正在处理视频..." );
+		//				Console.WriteLine( "(按 Ctrl+C 终止)" );
+
+		//				// 等待进程完成
+		//				while (!process.HasExited) {
+		//					Console.Write( "." );
+		//					Thread.Sleep( 500 );
+		//				}
+
+		//				// 停止计时器
+		//				stopwatch.Stop();
+		//				executionTime = stopwatch.Elapsed;
+
+		//				// 检查退出代码
+		//				success = process.ExitCode == 0;
+		//			}
+		//		}
+		//		catch (Exception ex) {
+		//			WriteToLog( $"异常: {ex}" );
+		//			success = false;
+		//		}
+		//		finally {
+		//			if (!success && File.Exists( outputPath )) {
+		//				try {
+		//					File.Delete( outputPath );
+		//				}
+		//				catch { }
+		//			}
+		//		}
+
+		//		return success;
+		//	}
+
+		//	/// <summary>
+		//	/// 写入日志
+		//	/// </summary>
+		//	private static void WriteToLog(string message)
+		//	{
+		//		if (string.IsNullOrEmpty( message ))
+		//			return;
+
+		//		try {
+		//			File.AppendAllText( LogFilePath, $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {message}\n" );
+		//		}
+		//		catch { }
+		//	}
+
+		//	/// <summary>
+		//	/// 格式化时间间隔
+		//	/// </summary>
+		//	private static string FormatTimeSpan(TimeSpan ts)
+		//	{
+		//		if (ts.TotalHours >= 1)
+		//			return $"{ts.Hours}小时{ts.Minutes}分{ts.Seconds}秒";
+		//		else if (ts.TotalMinutes >= 1)
+		//			return $"{ts.Minutes}分{ts.Seconds}秒{ts.Milliseconds}毫秒";
+		//		else
+		//			return $"{ts.Seconds}秒{ts.Milliseconds}毫秒";
+		//	}
+
+		//	/// <summary>
+		//	/// 等待用户按键后退出
+		//	/// </summary>
+		//	private static void WaitAndExit( )
+		//	{
+		//		Console.WriteLine( "\n按任意键退出..." );
+		//		Console.ReadKey();
+		//	}
+		//#endregion
+
 		private void button32_Click(object sender, EventArgs e)
 		{
 			right_rotate_angle++; // 右旋转角度增加
@@ -212,6 +503,12 @@ namespace MusicChange
 		//	按目录所有视频文件压缩  yy
 		private async void button22_Click(object sender, EventArgs e)
 		{
+			killProcess();
+			if (isCompress) {
+				MessageBox.Show( "正在压缩中，请稍后再试！" );
+				return;
+			}
+			isCompress = true; // 设置压缩状态为 true
 			int count = 1;
 			var path = @"F:\newipad";
 			List<string> imageList = new List<string>();
@@ -247,6 +544,9 @@ namespace MusicChange
 						string fileNameWithoutExtension = Path.GetFileNameWithoutExtension( inputFile );
 						fileNameWithoutExtension = fileNameWithoutExtension + "_s";
 						outputFile = Path.Combine( textBox3.Text, $"{fileNameWithoutExtension}.mp4" );
+						if (File.Exists( outputFile )) {     //如果存在 删除文件outputFile
+							File.Delete( outputFile ); // 删除文件
+						}
 						arguments = $"-i {inputFile} -c:v libx264 -crf 23 -preset medium -c:a aac -b:a 128k -movflags +faststart {outputFile} ";
 						setlisbox(); // 设置ListBox内容
 						try {
@@ -300,8 +600,14 @@ namespace MusicChange
 			//	throw;
 			//}  //   GetFileInfo(listBox2.GetItemText(0).ToLower());  “GetFileInfo” 通常是一个用于获取文件相关信息的函数或方法。
 		}
-		private async void selefile_Click(object sender, EventArgs e)
+		private async void selefile_Click(object sender, EventArgs e)// 压缩 单个视频文件
 		{
+			killProcess();
+			if (isCompress) {
+				MessageBox.Show( "正在压缩中，请稍后再试！" );
+				return;
+			}
+			isCompress= true; // 设置压缩状态为 true
 			label3.Text = "准备压缩";
 			textBox4.Text = "";
 			inputFile = textBox1.Text;
@@ -311,6 +617,7 @@ namespace MusicChange
 			}           //Remove the carriage return and spaces at the end of the string.
 			inputFile = inputFile.TrimEnd( '\r', '\n', ' ' );
 			string fileNameWithoutExtension = Path.GetFileNameWithoutExtension( inputFile );
+	
 			if (checkBox1.Checked) { //自定义压缩参数
 				fileNameWithoutExtension = fileNameWithoutExtension + DateTime.Now.ToString( "_HHmmss" );
 				outputFile = Path.Combine( textBox3.Text, $"{fileNameWithoutExtension}.mp4" );
@@ -343,6 +650,9 @@ namespace MusicChange
 				else {            // 默认参数
 					arguments = $"-i \"{inputFile}\" -c:v libx264 -crf 28 -preset slower -c:a aac -b:a 128k -movflags +faststart \"{outputFile}\"";
 				}
+			}
+			if (File.Exists( outputFile )) {     //如果存在 删除文件outputFile
+				File.Delete( outputFile ); // 删除文件
 			}
 			setlisbox(); // 设置ListBox内容
 			try {
@@ -382,6 +692,7 @@ namespace MusicChange
 			catch (Exception ex) {
 				label3.Text = "压缩失败: " + ex.Message;
 			}
+			isCompress = false; 
 		}
 		private void setlisbox( )
 		{
@@ -441,6 +752,7 @@ namespace MusicChange
 		bool Clip( )  //Clip the video  裁剪视频
 		{
 			clibb = false;
+			killProcess();
 			axWindowsMediaPlayer1.Ctlcontrols.pause();  // 暂停视频播放
 			textBox6.Text = "";
 			inputFile = textBox1.Text;
@@ -490,7 +802,6 @@ namespace MusicChange
 					return clibb;
 				}
 			}
-
 			outputFile = Path.Combine( textBox11.Text, $"{fileNameWithoutExtension}" );
 			outputFile = outputFile.TrimEnd( '\r', '\n', ' ' );
 			if (!Directory.Exists( textBox11.Text )) {
@@ -530,18 +841,16 @@ ffmpeg -ss 00:00:15.200 -to 00:00:30.500 -accurate_seek -i input.mp4 -c:v copy -
 		*/
 		private async void CutVideoSegment(string startTime, string endTime, string inputFile, string outputFile)
 		{
+			if (isCutting) { // 如果选中则复制到指定目录
+				MessageBox.Show( "剪切视频正在运行！" );
+			}
 			if (checkBox2.Checked) { // 如果选中则复制到指定目录
 				if (!Directory.Exists( textBox7.Text )) {
 					MessageBox.Show( "剪切视频备份目录不存在，请先创建或选择目录！" );
 					return;
 				}
 			}
-			//string arguments = $"-ss {startTime} -to {endTime} -i \"{inputFile}\" -c:v copy -c:a copy \"{outputFile}\"";  ffmpeg 被裁剪视频保持也原视频同样质量，时间精确到毫秒
-
-			//string arguments = $"-i \"{inputFile}\" -ss {startTime} -t {duration} -c copy \"{outputFile}\"";
-			//ffmpeg - ss 00:01:20.500 - to 00:02:30.750 - i input.mp4 - c copy - avoid_negative_ts 1 output.mp4
-			//ffmpeg - ss 00:01:20.500 - i input.mp4 - to 00:02:30.750 - c:v libx264 -preset ultrafast - qp 0 - c:a copy output_lossless.mp4
-			//ffmpeg - ss 00:00:10.500 - to 00:00:30.750 - accurate_seek - i input.mp4 - c:v copy -c:a copy -avoid_negative_ts 1 output.mp4
+			isCutting = true; // 设置正在裁剪标志
 			textBox10.Text = ""; // 清空裁剪时间文本框
 			textBox6.Text = "";
 			string arguments = $"-ss {startTime} -to {endTime}  -accurate_seek -i {inputFile}  -c:v copy -c:a copy -avoid_negative_ts 1 {outputFile}";
@@ -595,6 +904,7 @@ ffmpeg -ss 00:00:15.200 -to 00:00:30.500 -accurate_seek -i input.mp4 -c:v copy -
 				label6.Text = "剪切失败: ";
 				textBox6.Text = "剪切失败: " + ex.Message;
 			}
+			isCutting = false;
 		}
 		private void CopyFile(string sourceFilePath, string destinationDirectory) //copy file
 		{
@@ -869,7 +1179,29 @@ ffmpeg -ss 00:00:15.200 -to 00:00:30.500 -accurate_seek -i input.mp4 -c:v copy -
 			left_rotate_angle = 0;
 			label8.Text = "视频旋转为 0°"; // 重置角度显示
 		}
+		void killProcess( )
+		{
+			Process[] processes = Process.GetProcessesByName( "ffmpeg" );
+			if (processes.Length > 0) {
+				foreach (Process process in processes) {
+					process.Kill();
+				}
+			}
+		}
 
+		private void button39_Click(object sender, EventArgs e) //删除ffmpeg 进程
+		{
+			Process[] processes = Process.GetProcessesByName( "ffmpeg" );
+			if (processes.Length > 0) {
+				foreach (Process process in processes) {
+					process.Kill();
+				}
+				MessageBox.Show( "已删除 ffmpeg 进程！" );
+			}
+			else {
+				MessageBox.Show( "没有找到 ffmpeg 进程！" );
+			}
+		}
 		private void button29_Click(object sender, EventArgs e)
 		{
 			using (FolderBrowserDialog folderDialog = new FolderBrowserDialog()) {
@@ -929,7 +1261,5 @@ ffmpeg -ss 00:00:15.200 -to 00:00:30.500 -accurate_seek -i input.mp4 -c:v copy -
 
 
 }
-
-
 
 

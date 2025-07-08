@@ -26,6 +26,21 @@
 			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Cut));
 			this.tabControl1 = new System.Windows.Forms.TabControl();
+			this.tabPage2 = new System.Windows.Forms.TabPage();
+			this.label8 = new System.Windows.Forms.Label();
+			this.button38 = new System.Windows.Forms.Button();
+			this.button35 = new System.Windows.Forms.Button();
+			this.button36 = new System.Windows.Forms.Button();
+			this.button37 = new System.Windows.Forms.Button();
+			this.button34 = new System.Windows.Forms.Button();
+			this.axWindowsMediaPlayer2 = new AxWMPLib.AxWindowsMediaPlayer();
+			this.button33 = new System.Windows.Forms.Button();
+			this.button32 = new System.Windows.Forms.Button();
+			this.textBox12 = new System.Windows.Forms.TextBox();
+			this.pictureBox2 = new System.Windows.Forms.PictureBox();
+			this.pictureBox1 = new System.Windows.Forms.PictureBox();
+			this.listBox2 = new System.Windows.Forms.ListBox();
+			this.button31 = new System.Windows.Forms.Button();
 			this.tabPage6 = new System.Windows.Forms.TabPage();
 			this.button30 = new System.Windows.Forms.Button();
 			this.textBox11 = new System.Windows.Forms.TextBox();
@@ -73,9 +88,8 @@
 			this.label5 = new System.Windows.Forms.Label();
 			this.label4 = new System.Windows.Forms.Label();
 			this.button1 = new System.Windows.Forms.Button();
-			this.tabPage2 = new System.Windows.Forms.TabPage();
-			this.listBox2 = new System.Windows.Forms.ListBox();
-			this.button31 = new System.Windows.Forms.Button();
+			this.button24 = new System.Windows.Forms.Button();
+			this.button23 = new System.Windows.Forms.Button();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
 			this.checkBox1 = new System.Windows.Forms.CheckBox();
 			this.comboBox3 = new System.Windows.Forms.ComboBox();
@@ -117,28 +131,16 @@
 			this.label14 = new System.Windows.Forms.Label();
 			this.label15 = new System.Windows.Forms.Label();
 			this.axWindowsMediaPlayer1 = new AxWMPLib.AxWindowsMediaPlayer();
-			this.textBox12 = new System.Windows.Forms.TextBox();
-			this.button32 = new System.Windows.Forms.Button();
-			this.button33 = new System.Windows.Forms.Button();
-			this.axWindowsMediaPlayer2 = new AxWMPLib.AxWindowsMediaPlayer();
-			this.button34 = new System.Windows.Forms.Button();
-			this.pictureBox2 = new System.Windows.Forms.PictureBox();
-			this.pictureBox1 = new System.Windows.Forms.PictureBox();
-			this.button24 = new System.Windows.Forms.Button();
-			this.button23 = new System.Windows.Forms.Button();
-			this.button35 = new System.Windows.Forms.Button();
-			this.button36 = new System.Windows.Forms.Button();
-			this.button37 = new System.Windows.Forms.Button();
-			this.button38 = new System.Windows.Forms.Button();
-			this.label8 = new System.Windows.Forms.Label();
+			this.button39 = new System.Windows.Forms.Button();
+			this.button40 = new System.Windows.Forms.Button();
 			this.tabControl1.SuspendLayout();
-			this.tabPage6.SuspendLayout();
 			this.tabPage2.SuspendLayout();
-			this.tabPage1.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.axWindowsMediaPlayer1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.axWindowsMediaPlayer2)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+			this.tabPage6.SuspendLayout();
+			this.tabPage1.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.axWindowsMediaPlayer1)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// tabControl1
@@ -149,11 +151,193 @@
 			this.tabControl1.Controls.Add(this.tabPage3);
 			this.tabControl1.Controls.Add(this.tabPage4);
 			this.tabControl1.Controls.Add(this.tabPage5);
-			this.tabControl1.Location = new System.Drawing.Point(7, 75);
+			this.tabControl1.Location = new System.Drawing.Point(12, 60);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
 			this.tabControl1.Size = new System.Drawing.Size(754, 1008);
 			this.tabControl1.TabIndex = 1;
+			// 
+			// tabPage2
+			// 
+			this.tabPage2.Controls.Add(this.button40);
+			this.tabPage2.Controls.Add(this.label8);
+			this.tabPage2.Controls.Add(this.button38);
+			this.tabPage2.Controls.Add(this.button35);
+			this.tabPage2.Controls.Add(this.button36);
+			this.tabPage2.Controls.Add(this.button37);
+			this.tabPage2.Controls.Add(this.button34);
+			this.tabPage2.Controls.Add(this.axWindowsMediaPlayer2);
+			this.tabPage2.Controls.Add(this.button33);
+			this.tabPage2.Controls.Add(this.button32);
+			this.tabPage2.Controls.Add(this.textBox12);
+			this.tabPage2.Controls.Add(this.pictureBox2);
+			this.tabPage2.Controls.Add(this.pictureBox1);
+			this.tabPage2.Controls.Add(this.listBox2);
+			this.tabPage2.Controls.Add(this.button31);
+			this.tabPage2.Location = new System.Drawing.Point(4, 25);
+			this.tabPage2.Name = "tabPage2";
+			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPage2.Size = new System.Drawing.Size(746, 979);
+			this.tabPage2.TabIndex = 1;
+			this.tabPage2.Text = "视频旋转";
+			this.tabPage2.UseVisualStyleBackColor = true;
+			// 
+			// label8
+			// 
+			this.label8.AutoEllipsis = true;
+			this.label8.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.label8.Location = new System.Drawing.Point(295, 246);
+			this.label8.Name = "label8";
+			this.label8.Size = new System.Drawing.Size(229, 25);
+			this.label8.TabIndex = 25;
+			this.label8.Text = "视频旋转为0";
+			// 
+			// button38
+			// 
+			this.button38.AutoSize = true;
+			this.button38.FlatAppearance.BorderColor = System.Drawing.Color.Cyan;
+			this.button38.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.button38.ForeColor = System.Drawing.Color.DarkGreen;
+			this.button38.Location = new System.Drawing.Point(36, 246);
+			this.button38.Name = "button38";
+			this.button38.Size = new System.Drawing.Size(145, 30);
+			this.button38.TabIndex = 24;
+			this.button38.Text = "旋转角度复位";
+			this.button38.Click += new System.EventHandler(this.button38_Click);
+			// 
+			// button35
+			// 
+			this.button35.AutoSize = true;
+			this.button35.FlatAppearance.BorderColor = System.Drawing.Color.Cyan;
+			this.button35.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.button35.ForeColor = System.Drawing.Color.DarkGreen;
+			this.button35.Location = new System.Drawing.Point(603, 103);
+			this.button35.Name = "button35";
+			this.button35.Size = new System.Drawing.Size(124, 30);
+			this.button35.TabIndex = 23;
+			this.button35.Text = "左转10度";
+			// 
+			// button36
+			// 
+			this.button36.AutoSize = true;
+			this.button36.FlatAppearance.BorderColor = System.Drawing.Color.Cyan;
+			this.button36.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.button36.ForeColor = System.Drawing.Color.DarkGreen;
+			this.button36.Location = new System.Drawing.Point(603, 160);
+			this.button36.Name = "button36";
+			this.button36.Size = new System.Drawing.Size(124, 30);
+			this.button36.TabIndex = 22;
+			this.button36.Text = "左转90度";
+			// 
+			// button37
+			// 
+			this.button37.AutoSize = true;
+			this.button37.FlatAppearance.BorderColor = System.Drawing.Color.Cyan;
+			this.button37.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.button37.ForeColor = System.Drawing.Color.DarkGreen;
+			this.button37.Location = new System.Drawing.Point(603, 40);
+			this.button37.Name = "button37";
+			this.button37.Size = new System.Drawing.Size(124, 35);
+			this.button37.TabIndex = 21;
+			this.button37.Text = "左转1度";
+			// 
+			// button34
+			// 
+			this.button34.AutoSize = true;
+			this.button34.FlatAppearance.BorderColor = System.Drawing.Color.Cyan;
+			this.button34.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.button34.ForeColor = System.Drawing.Color.DarkGreen;
+			this.button34.Location = new System.Drawing.Point(219, 114);
+			this.button34.Name = "button34";
+			this.button34.Size = new System.Drawing.Size(125, 30);
+			this.button34.TabIndex = 20;
+			this.button34.Text = "右转10度";
+			this.button34.Click += new System.EventHandler(this.button34_Click);
+			// 
+			// axWindowsMediaPlayer2
+			// 
+			this.axWindowsMediaPlayer2.Enabled = true;
+			this.axWindowsMediaPlayer2.Location = new System.Drawing.Point(49, 602);
+			this.axWindowsMediaPlayer2.Name = "axWindowsMediaPlayer2";
+			this.axWindowsMediaPlayer2.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axWindowsMediaPlayer2.OcxState")));
+			this.axWindowsMediaPlayer2.Size = new System.Drawing.Size(631, 353);
+			this.axWindowsMediaPlayer2.TabIndex = 19;
+			// 
+			// button33
+			// 
+			this.button33.AutoSize = true;
+			this.button33.FlatAppearance.BorderColor = System.Drawing.Color.Cyan;
+			this.button33.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.button33.ForeColor = System.Drawing.Color.DarkGreen;
+			this.button33.Location = new System.Drawing.Point(219, 171);
+			this.button33.Name = "button33";
+			this.button33.Size = new System.Drawing.Size(125, 30);
+			this.button33.TabIndex = 18;
+			this.button33.Text = "右转90度";
+			// 
+			// button32
+			// 
+			this.button32.AutoSize = true;
+			this.button32.FlatAppearance.BorderColor = System.Drawing.Color.Cyan;
+			this.button32.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.button32.ForeColor = System.Drawing.Color.DarkGreen;
+			this.button32.Location = new System.Drawing.Point(219, 51);
+			this.button32.Name = "button32";
+			this.button32.Size = new System.Drawing.Size(125, 35);
+			this.button32.TabIndex = 17;
+			this.button32.Text = "右转1度";
+			this.button32.Click += new System.EventHandler(this.button32_Click);
+			// 
+			// textBox12
+			// 
+			this.textBox12.Location = new System.Drawing.Point(219, 292);
+			this.textBox12.Name = "textBox12";
+			this.textBox12.Size = new System.Drawing.Size(324, 25);
+			this.textBox12.TabIndex = 16;
+			// 
+			// pictureBox2
+			// 
+			this.pictureBox2.Image = global::MusicChange.Properties.Resources.右转150;
+			this.pictureBox2.Location = new System.Drawing.Point(6, 26);
+			this.pictureBox2.Name = "pictureBox2";
+			this.pictureBox2.Size = new System.Drawing.Size(150, 150);
+			this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+			this.pictureBox2.TabIndex = 15;
+			this.pictureBox2.TabStop = false;
+			// 
+			// pictureBox1
+			// 
+			this.pictureBox1.Image = global::MusicChange.Properties.Resources.左转150;
+			this.pictureBox1.Location = new System.Drawing.Point(384, 26);
+			this.pictureBox1.Name = "pictureBox1";
+			this.pictureBox1.Size = new System.Drawing.Size(150, 150);
+			this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+			this.pictureBox1.TabIndex = 14;
+			this.pictureBox1.TabStop = false;
+			// 
+			// listBox2
+			// 
+			this.listBox2.Font = new System.Drawing.Font("宋体", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.listBox2.FormattingEnabled = true;
+			this.listBox2.ItemHeight = 22;
+			this.listBox2.Location = new System.Drawing.Point(0, 338);
+			this.listBox2.Name = "listBox2";
+			this.listBox2.ScrollAlwaysVisible = true;
+			this.listBox2.Size = new System.Drawing.Size(711, 224);
+			this.listBox2.TabIndex = 13;
+			// 
+			// button31
+			// 
+			this.button31.AutoSize = true;
+			this.button31.FlatAppearance.BorderColor = System.Drawing.Color.Cyan;
+			this.button31.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.button31.ForeColor = System.Drawing.Color.Purple;
+			this.button31.Location = new System.Drawing.Point(569, 230);
+			this.button31.Name = "button31";
+			this.button31.Size = new System.Drawing.Size(158, 46);
+			this.button31.TabIndex = 12;
+			this.button31.Text = "旋转视频";
+			this.button31.Click += new System.EventHandler(this.button31_Click);
 			// 
 			// tabPage6
 			// 
@@ -754,53 +938,33 @@
 			this.button1.UseVisualStyleBackColor = true;
 			this.button1.Click += new System.EventHandler(this.button1_Click);
 			// 
-			// tabPage2
+			// button24
 			// 
-			this.tabPage2.Controls.Add(this.label8);
-			this.tabPage2.Controls.Add(this.button38);
-			this.tabPage2.Controls.Add(this.button35);
-			this.tabPage2.Controls.Add(this.button36);
-			this.tabPage2.Controls.Add(this.button37);
-			this.tabPage2.Controls.Add(this.button34);
-			this.tabPage2.Controls.Add(this.axWindowsMediaPlayer2);
-			this.tabPage2.Controls.Add(this.button33);
-			this.tabPage2.Controls.Add(this.button32);
-			this.tabPage2.Controls.Add(this.textBox12);
-			this.tabPage2.Controls.Add(this.pictureBox2);
-			this.tabPage2.Controls.Add(this.pictureBox1);
-			this.tabPage2.Controls.Add(this.listBox2);
-			this.tabPage2.Controls.Add(this.button31);
-			this.tabPage2.Location = new System.Drawing.Point(4, 25);
-			this.tabPage2.Name = "tabPage2";
-			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage2.Size = new System.Drawing.Size(746, 979);
-			this.tabPage2.TabIndex = 1;
-			this.tabPage2.Text = "视频旋转";
-			this.tabPage2.UseVisualStyleBackColor = true;
+			this.button24.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.button24.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
+			this.button24.Image = global::MusicChange.Properties.Resources.前进x;
+			this.button24.Location = new System.Drawing.Point(555, 175);
+			this.button24.Name = "button24";
+			this.button24.Size = new System.Drawing.Size(157, 45);
+			this.button24.TabIndex = 47;
+			this.button24.Text = "向前";
+			this.button24.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+			this.button24.UseVisualStyleBackColor = true;
+			this.button24.Click += new System.EventHandler(this.button24_Click);
 			// 
-			// listBox2
+			// button23
 			// 
-			this.listBox2.Font = new System.Drawing.Font("宋体", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.listBox2.FormattingEnabled = true;
-			this.listBox2.ItemHeight = 22;
-			this.listBox2.Location = new System.Drawing.Point(0, 338);
-			this.listBox2.Name = "listBox2";
-			this.listBox2.ScrollAlwaysVisible = true;
-			this.listBox2.Size = new System.Drawing.Size(711, 224);
-			this.listBox2.TabIndex = 13;
-			// 
-			// button31
-			// 
-			this.button31.AutoSize = true;
-			this.button31.FlatAppearance.BorderColor = System.Drawing.Color.Cyan;
-			this.button31.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.button31.ForeColor = System.Drawing.Color.Purple;
-			this.button31.Location = new System.Drawing.Point(569, 230);
-			this.button31.Name = "button31";
-			this.button31.Size = new System.Drawing.Size(158, 46);
-			this.button31.TabIndex = 12;
-			this.button31.Text = "旋转视频";
-			this.button31.Click += new System.EventHandler(this.button31_Click);
+			this.button23.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.button23.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
+			this.button23.Image = global::MusicChange.Properties.Resources.后退x;
+			this.button23.Location = new System.Drawing.Point(182, 172);
+			this.button23.Name = "button23";
+			this.button23.Size = new System.Drawing.Size(156, 45);
+			this.button23.TabIndex = 45;
+			this.button23.Text = "后退";
+			this.button23.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+			this.button23.UseVisualStyleBackColor = true;
+			this.button23.Click += new System.EventHandler(this.button23_Click);
 			// 
 			// tabPage1
 			// 
@@ -1300,172 +1464,33 @@
 			this.axWindowsMediaPlayer1.Size = new System.Drawing.Size(963, 720);
 			this.axWindowsMediaPlayer1.TabIndex = 5;
 			// 
-			// textBox12
+			// button39
 			// 
-			this.textBox12.Location = new System.Drawing.Point(219, 292);
-			this.textBox12.Name = "textBox12";
-			this.textBox12.Size = new System.Drawing.Size(324, 25);
-			this.textBox12.TabIndex = 16;
+			this.button39.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.button39.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+			this.button39.Location = new System.Drawing.Point(1603, 59);
+			this.button39.Name = "button39";
+			this.button39.Size = new System.Drawing.Size(190, 34);
+			this.button39.TabIndex = 18;
+			this.button39.Text = "删除ffmpeg 进程";
+			this.button39.UseVisualStyleBackColor = true;
+			this.button39.Click += new System.EventHandler(this.button39_Click);
 			// 
-			// button32
+			// button40
 			// 
-			this.button32.AutoSize = true;
-			this.button32.FlatAppearance.BorderColor = System.Drawing.Color.Cyan;
-			this.button32.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.button32.ForeColor = System.Drawing.Color.DarkGreen;
-			this.button32.Location = new System.Drawing.Point(219, 51);
-			this.button32.Name = "button32";
-			this.button32.Size = new System.Drawing.Size(125, 35);
-			this.button32.TabIndex = 17;
-			this.button32.Text = "右转1度";
-			this.button32.Click += new System.EventHandler(this.button32_Click);
-			// 
-			// button33
-			// 
-			this.button33.AutoSize = true;
-			this.button33.FlatAppearance.BorderColor = System.Drawing.Color.Cyan;
-			this.button33.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.button33.ForeColor = System.Drawing.Color.DarkGreen;
-			this.button33.Location = new System.Drawing.Point(219, 171);
-			this.button33.Name = "button33";
-			this.button33.Size = new System.Drawing.Size(125, 30);
-			this.button33.TabIndex = 18;
-			this.button33.Text = "右转90度";
-			// 
-			// axWindowsMediaPlayer2
-			// 
-			this.axWindowsMediaPlayer2.Enabled = true;
-			this.axWindowsMediaPlayer2.Location = new System.Drawing.Point(48, 568);
-			this.axWindowsMediaPlayer2.Name = "axWindowsMediaPlayer2";
-			this.axWindowsMediaPlayer2.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axWindowsMediaPlayer2.OcxState")));
-			this.axWindowsMediaPlayer2.Size = new System.Drawing.Size(631, 353);
-			this.axWindowsMediaPlayer2.TabIndex = 19;
-			// 
-			// button34
-			// 
-			this.button34.AutoSize = true;
-			this.button34.FlatAppearance.BorderColor = System.Drawing.Color.Cyan;
-			this.button34.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.button34.ForeColor = System.Drawing.Color.DarkGreen;
-			this.button34.Location = new System.Drawing.Point(219, 114);
-			this.button34.Name = "button34";
-			this.button34.Size = new System.Drawing.Size(125, 30);
-			this.button34.TabIndex = 20;
-			this.button34.Text = "右转10度";
-			this.button34.Click += new System.EventHandler(this.button34_Click);
-			// 
-			// pictureBox2
-			// 
-			this.pictureBox2.Image = global::MusicChange.Properties.Resources.右转150;
-			this.pictureBox2.Location = new System.Drawing.Point(6, 26);
-			this.pictureBox2.Name = "pictureBox2";
-			this.pictureBox2.Size = new System.Drawing.Size(150, 150);
-			this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-			this.pictureBox2.TabIndex = 15;
-			this.pictureBox2.TabStop = false;
-			// 
-			// pictureBox1
-			// 
-			this.pictureBox1.Image = global::MusicChange.Properties.Resources.左转150;
-			this.pictureBox1.Location = new System.Drawing.Point(384, 26);
-			this.pictureBox1.Name = "pictureBox1";
-			this.pictureBox1.Size = new System.Drawing.Size(150, 150);
-			this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-			this.pictureBox1.TabIndex = 14;
-			this.pictureBox1.TabStop = false;
-			// 
-			// button24
-			// 
-			this.button24.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.button24.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
-			this.button24.Image = global::MusicChange.Properties.Resources.前进x;
-			this.button24.Location = new System.Drawing.Point(555, 175);
-			this.button24.Name = "button24";
-			this.button24.Size = new System.Drawing.Size(157, 45);
-			this.button24.TabIndex = 47;
-			this.button24.Text = "向前";
-			this.button24.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-			this.button24.UseVisualStyleBackColor = true;
-			this.button24.Click += new System.EventHandler(this.button24_Click);
-			// 
-			// button23
-			// 
-			this.button23.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.button23.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
-			this.button23.Image = global::MusicChange.Properties.Resources.后退x;
-			this.button23.Location = new System.Drawing.Point(182, 172);
-			this.button23.Name = "button23";
-			this.button23.Size = new System.Drawing.Size(156, 45);
-			this.button23.TabIndex = 45;
-			this.button23.Text = "后退";
-			this.button23.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-			this.button23.UseVisualStyleBackColor = true;
-			this.button23.Click += new System.EventHandler(this.button23_Click);
-			// 
-			// button35
-			// 
-			this.button35.AutoSize = true;
-			this.button35.FlatAppearance.BorderColor = System.Drawing.Color.Cyan;
-			this.button35.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.button35.ForeColor = System.Drawing.Color.DarkGreen;
-			this.button35.Location = new System.Drawing.Point(603, 103);
-			this.button35.Name = "button35";
-			this.button35.Size = new System.Drawing.Size(124, 30);
-			this.button35.TabIndex = 23;
-			this.button35.Text = "左转10度";
-			// 
-			// button36
-			// 
-			this.button36.AutoSize = true;
-			this.button36.FlatAppearance.BorderColor = System.Drawing.Color.Cyan;
-			this.button36.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.button36.ForeColor = System.Drawing.Color.DarkGreen;
-			this.button36.Location = new System.Drawing.Point(603, 160);
-			this.button36.Name = "button36";
-			this.button36.Size = new System.Drawing.Size(124, 30);
-			this.button36.TabIndex = 22;
-			this.button36.Text = "左转90度";
-			// 
-			// button37
-			// 
-			this.button37.AutoSize = true;
-			this.button37.FlatAppearance.BorderColor = System.Drawing.Color.Cyan;
-			this.button37.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.button37.ForeColor = System.Drawing.Color.DarkGreen;
-			this.button37.Location = new System.Drawing.Point(603, 40);
-			this.button37.Name = "button37";
-			this.button37.Size = new System.Drawing.Size(124, 35);
-			this.button37.TabIndex = 21;
-			this.button37.Text = "左转1度";
-			// 
-			// button38
-			// 
-			this.button38.AutoSize = true;
-			this.button38.FlatAppearance.BorderColor = System.Drawing.Color.Cyan;
-			this.button38.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.button38.ForeColor = System.Drawing.Color.DarkGreen;
-			this.button38.Location = new System.Drawing.Point(36, 246);
-			this.button38.Name = "button38";
-			this.button38.Size = new System.Drawing.Size(145, 30);
-			this.button38.TabIndex = 24;
-			this.button38.Text = "旋转角度复位";
-			this.button38.Click += new System.EventHandler(this.button38_Click);
-			// 
-			// label8
-			// 
-			this.label8.AutoEllipsis = true;
-			this.label8.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.label8.Location = new System.Drawing.Point(295, 246);
-			this.label8.Name = "label8";
-			this.label8.Size = new System.Drawing.Size(229, 25);
-			this.label8.TabIndex = 25;
-			this.label8.Text = "视频旋转为0";
+			this.button40.Location = new System.Drawing.Point(49, 592);
+			this.button40.Name = "button40";
+			this.button40.Size = new System.Drawing.Size(75, 23);
+			this.button40.TabIndex = 26;
+			this.button40.Text = "button40";
+			this.button40.UseVisualStyleBackColor = true;
 			// 
 			// Cut
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(2046, 1070);
+			this.Controls.Add(this.button39);
 			this.Controls.Add(this.label15);
 			this.Controls.Add(this.label14);
 			this.Controls.Add(this.button8);
@@ -1489,16 +1514,16 @@
 			this.Text = "Cut";
 			this.Load += new System.EventHandler(this.Cut_Load);
 			this.tabControl1.ResumeLayout(false);
-			this.tabPage6.ResumeLayout(false);
-			this.tabPage6.PerformLayout();
 			this.tabPage2.ResumeLayout(false);
 			this.tabPage2.PerformLayout();
-			this.tabPage1.ResumeLayout(false);
-			this.tabPage1.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.axWindowsMediaPlayer1)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.axWindowsMediaPlayer2)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+			this.tabPage6.ResumeLayout(false);
+			this.tabPage6.PerformLayout();
+			this.tabPage1.ResumeLayout(false);
+			this.tabPage1.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.axWindowsMediaPlayer1)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -1611,5 +1636,7 @@
 		private System.Windows.Forms.Button button35;
 		private System.Windows.Forms.Button button36;
 		private System.Windows.Forms.Button button37;
+		private System.Windows.Forms.Button button39;
+		private System.Windows.Forms.Button button40;
 	}
 }
