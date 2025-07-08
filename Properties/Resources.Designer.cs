@@ -83,9 +83,9 @@ namespace MusicChange.Properties {
         /// <summary>
         ///   查找 System.Drawing.Bitmap 类型的本地化资源。
         /// </summary>
-        internal static System.Drawing.Bitmap 右转 {
+        internal static System.Drawing.Bitmap 右转150 {
             get {
-                object obj = ResourceManager.GetObject("右转", resourceCulture);
+                object obj = ResourceManager.GetObject("右转150", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -93,9 +93,9 @@ namespace MusicChange.Properties {
         /// <summary>
         ///   查找 System.Drawing.Bitmap 类型的本地化资源。
         /// </summary>
-        internal static System.Drawing.Bitmap 右转150 {
+        internal static System.Drawing.Bitmap 右转1501 {
             get {
-                object obj = ResourceManager.GetObject("右转150", resourceCulture);
+                object obj = ResourceManager.GetObject("右转1501", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -116,16 +116,6 @@ namespace MusicChange.Properties {
         internal static System.Drawing.Bitmap 后退x {
             get {
                 object obj = ResourceManager.GetObject("后退x", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
-        /// </summary>
-        internal static System.Drawing.Bitmap 左转 {
-            get {
-                object obj = ResourceManager.GetObject("左转", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
