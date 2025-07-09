@@ -37,12 +37,12 @@ namespace MusicChange
 		public Cut( )
 		{  //类的初始化 函数
 			InitializeComponent();
-			this.axWindowsMediaPlayer1.Location = new System.Drawing.Point( 580, 76 ); // 设置主播放器位置
-			this.axWindowsMediaPlayer1.Size = new System.Drawing.Size( 900, 700 );  // 设置主播放器大小
+			videoView1.Size = new Size( 900, 700 ); // 设置视频视图控件大小
+			videoView1.Location = new Point( 868,146);
 
 			this.axWindowsMediaPlayer2.Location = new System.Drawing.Point( 2, 430 ); // 设置旋转主播放器位置
 			this.axWindowsMediaPlayer2.Size = new System.Drawing.Size( 530, 330 );
-			comboBoxSpeed.SelectedIndex = 3; // 默认1.0x	axWindowsMediaPlayer1.settings.rate = 0.1; 
+			comboBoxSpeed.SelectedIndex = 3; // 默认1.0x	_mediaPlayer.SetRate(rate) = 0.1; 
 			comboBoxSpeed.SelectedIndexChanged += comboBoxSpeed_SelectedIndexChanged; //示例：为按钮和组合框添加说明
 			#endregion
 			#region ------- ToolTip 鼠标进入悬停显示 -------
@@ -55,8 +55,7 @@ namespace MusicChange
 			//Core.Initialize( );
 			_libVLC = new LibVLC();
 			_mediaPlayer = new MediaPlayer( _libVLC );
-			// 将 MediaPlayer 绑定到 VideoView 控件
-			videoView1.MediaPlayer = _mediaPlayer;
+			videoView1.MediaPlayer = _mediaPlayer;  // 将 MediaPlayer 绑定到 VideoView 控件
 
 
 		}
@@ -74,7 +73,7 @@ namespace MusicChange
 			toolTip1.ToolTipTitle = "提示"; // 提示框标题
 
 			toolTip1.SetToolTip( textBox1, "选择要裁剪的视频文件" );
-			toolTip1.SetToolTip( textBox2, "选择要播放的视频文件" );
+			toolTip1.SetToolTip( textBox1, "选择要播放的视频文件" );
 			toolTip1.SetToolTip( label28, "crf（Constant Rate Factor，恒定码率因子）\r\n•\t作用：控制视频压缩的画质和文件大小。\r\n•\t取值范围：0~51，常用范围为 18~28。\r\n•\t数值越小，画质越高，文件越大。\r\n•\t数值越大，画质越低，文件越小。\r\n•\t一般推荐：高质量用 18~22，普通用 23~28。" );
 			toolTip1.SetToolTip( comboBoxSpeed, "选择播放速度" );
 			toolTip1.SetToolTip( label27, "preset（预设编码速度）\r\n•\t作用：控制编码速度与压缩效率的平衡。\r\n•\t可选值（从快到慢）：\r\n•\tultrafast, superfast, veryfast, faster, fast, medium, slow, slower, veryslow\r\n•\t说明：\r\n•\t越快（如 ultrafast），编码速度快，但文件大、画质略低。\r\n•\t越慢（如 veryslow），编码速度慢，但文件更小、画质更好。\r\n•\t默认值是 medium，一般推荐用 fast、medium 或 slow。" );
@@ -84,28 +83,26 @@ namespace MusicChange
 		private void button3_Click(object sender, EventArgs e)
 		{
 			// 选择要播放的视频文件
-			if (textBox2 != null) {
+			if (textBox1 != null) {
 				OpenFileDialog ofd = new OpenFileDialog();
 				ofd.Filter = "视频文件|*.mp4;*.avi;*.wmv;*.mov|所有文件|*.*";
 				if (ofd.ShowDialog() == DialogResult.OK) {
-					axWindowsMediaPlayer1.URL = ofd.FileName;
-					axWindowsMediaPlayer1.uiMode = "full"; // 或 "mini"
+					//_mediaPlayer.uiMode = "full"; // 或 "mini"
 					Filestr = ofd.FileName;
-					textBox2.Text = Filestr;
-					axWindowsMediaPlayer1.Ctlcontrols.play();
+					textBox1.Text = Filestr;
+					_mediaPlayer.Play();
 					timer1.Start(); // 播放时启动定时器
 				}
 			}
 			else {
-				axWindowsMediaPlayer1.URL = textBox2.Text;
-				axWindowsMediaPlayer1.uiMode = "full"; // 或 "mini"
-				axWindowsMediaPlayer1.Ctlcontrols.play();
+				PlayVideo( textBox1.Text );
+				//_mediaPlayer.uiMode = "full"; 				_mediaPlayer.Play();
 				timer1.Start(); // 播放时启动定时器
 			}
 		}
 		private void buttonStop_Click(object sender, EventArgs e)
 		{
-			axWindowsMediaPlayer1.Ctlcontrols.stop();
+			_mediaPlayer.Stop();
 			timer1.Stop(); // 停止进度条刷新
 			label1.Text = "00:00:00 / 00:00:00";
 			progressBar1.Value = 0;
@@ -113,9 +110,9 @@ namespace MusicChange
 		}
 		private void timer1_Tick(object sender, EventArgs e)
 		{
-			if (axWindowsMediaPlayer1.currentMedia != null) {
-				double duration = axWindowsMediaPlayer1.currentMedia.duration;
-				double position = axWindowsMediaPlayer1.Ctlcontrols.currentPosition;
+			if (_mediaPlayer.IsPlaying) {
+				double duration = _mediaPlayer.Length / 1000.0; // 当前播放进度，单位：秒
+				double position = _mediaPlayer.Time;
 				if (duration > 0) {
 					progressBar1.Maximum = (int)duration;
 					progressBar1.Value = Math.Min( (int)position, progressBar1.Maximum );
@@ -144,26 +141,26 @@ namespace MusicChange
 		}
 		private void button5_Click(object sender, EventArgs e)
 		{
-			axWindowsMediaPlayer1.Ctlcontrols.pause();
+			_mediaPlayer.Pause();
 		}
 		private void button6_Click(object sender, EventArgs e)
 		{
-			axWindowsMediaPlayer1.Ctlcontrols.stop();
+			_mediaPlayer.Stop();
 			//	firstdisp = true;
 		}
 		private void button4_Click(object sender, EventArgs e)
 		{
 			button9_Click( null, null ); // 调用播放按钮事件
-			axWindowsMediaPlayer1.settings.mute = true; // 静音
-			axWindowsMediaPlayer1.URL = textBox2.Text;
-			axWindowsMediaPlayer1.uiMode = "full"; // 或 "mini"
-			axWindowsMediaPlayer1.Ctlcontrols.play();
-			//	axWindowsMediaPlayer1.settings.mute = false; // 取消静音
+			_mediaPlayer.Mute = true; // 静音
+			PlayVideo( textBox1.Text );
+			//	_mediaPlayer.uiMode = "full"; // 或 "mini"
+			_mediaPlayer.Play();
+			//	_mediaPlayer.Mute = false; // 取消静音
 			timer1.Start(); // 播放时启动定时器
 		}
 		private void button7_Click(object sender, EventArgs e)
 		{
-			axWindowsMediaPlayer1.Ctlcontrols.play();
+			_mediaPlayer.Play();
 			timer1.Start(); // 恢复进度条刷新
 		}
 		private void button8_Click(object sender, EventArgs e)
@@ -424,7 +421,7 @@ namespace MusicChange
 			}
 			if (Clip()) {
 				if (totalSeconds != 0) {        //获得整个视频时间
-					double duration = axWindowsMediaPlayer1.currentMedia.duration;
+					double duration = _mediaPlayer.Time;
 					TimeSpan dur = TimeSpan.FromSeconds( duration );
 					string endss = $"{dur:hh\\:mm\\:ss\\.fff}";
 					CutVideoSegment( endTime, endss, inputFile, outputFile );
@@ -435,7 +432,7 @@ namespace MusicChange
 		{
 			clibb = false;
 			killProcess();
-			axWindowsMediaPlayer1.Ctlcontrols.pause();  // 暂停视频播放
+			_mediaPlayer.Pause();  // 暂停视频播放
 			textBox6.Text = "";
 			inputFile = textBox1.Text;
 			if (string.IsNullOrEmpty( inputFile ) || !File.Exists( inputFile )) {
@@ -623,25 +620,25 @@ ffmpeg -ss 00:00:15.200 -to 00:00:30.500 -accurate_seek -i input.mp4 -c:v copy -
 				MessageBox.Show( "请先选择视频文件！" );
 				return;
 			}
-			axWindowsMediaPlayer1.settings.mute = true; // 静音
+			_mediaPlayer.Mute = true; // 静音
 			button9_Click( null, null ); // 调用播放按钮事件
-			axWindowsMediaPlayer1.URL = textBox1.Text;
-			axWindowsMediaPlayer1.uiMode = "full"; // 或 "mini"
-			axWindowsMediaPlayer1.Ctlcontrols.play();
+			PlayVideo( textBox1.Text );
+			//_mediaPlayer.uiMode = "full"; // 或 "mini"
+			_mediaPlayer.Play();
 			waitingForBuffer = true;
-			axWindowsMediaPlayer1.settings.mute = false; // 静音
+			_mediaPlayer.Mute = false; // 静音
 			timer1.Start(); // 播放时启动定时器
 							//}
 		}
 		private void button11_Click(object sender, EventArgs e)
 		{
-			axWindowsMediaPlayer1.Ctlcontrols.pause();
+			_mediaPlayer.Pause();
 		}
 		//取得时间戳
 		private void button12_Click(object sender, EventArgs e)
 		{
 			double position;                  // i转换为时间标准时间格式0:00:00.000
-			position = axWindowsMediaPlayer1.Ctlcontrols.currentPosition;
+			position = _mediaPlayer.Time;
 			TimeSpan pos = TimeSpan.FromSeconds( position );
 			if (timeStamp == 0) {
 				label10.Text = pos.ToString( @"hh\:mm\:ss" ); // 显示到毫秒
@@ -661,44 +658,46 @@ ffmpeg -ss 00:00:15.200 -to 00:00:30.500 -accurate_seek -i input.mp4 -c:v copy -
 
 		private void Cut_Load(object sender, EventArgs e)
 		{
-			axWindowsMediaPlayer1.PlayStateChange += axWindowsMediaPlayer1_PlayStateChange;
+			//_mediaPlayer.PlayStateChange += _mediaPlayer_PlayStateChange;
 		}
-		private void axWindowsMediaPlayer1_PlayStateChange(object sender, AxWMPLib._WMPOCXEvents_PlayStateChangeEvent e)
+		private void _mediaPlayer_PlayStateChange(object sender, AxWMPLib._WMPOCXEvents_PlayStateChangeEvent e)
 		{
 			// 3 = Playing, 6 = Buffering
 			if (waitingForBuffer && e.newState == 3) {
 				waitingForBuffer = false;
-				axWindowsMediaPlayer1.Ctlcontrols.play();
+				_mediaPlayer.Play();
 			}
 		}
 		private void comboBoxSpeed_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			double rate = 1.0;
+			float rate = 1.0f; // 默认速度为1.0x
 			switch (comboBoxSpeed.SelectedItem.ToString()) {
 				case "0.1x":
-					rate = 0.1;
+					rate = 0.1f;
 					break;
 				case "0.25x":
-					rate = 0.25;
+					rate = 0.25f;
 					break;
 				case "0.5x":
-					rate = 0.5;
+					rate = 0.5f;
 					break;
 				case "1.0x":
-					rate = 1.0;
+					rate = 1.0f;
 					break;
 				case "2.0x":
-					rate = 2.0;
+					rate = 2.0f;
 					break;
 				case "5.0x":
-					rate = 5.0;
+					rate = 5.0f;
 					break;
 				case "10.0x":
-					rate = 10.0;
+					rate = 10.0f;
 					break;
 			}
-			axWindowsMediaPlayer1.settings.rate = rate;
-			axWindowsMediaPlayer1.settings.mute = true; // 静音
+			//string rateStr = rate.ToString( "F1" );
+			float rataf = (float)Convert.ToDouble( rate.ToString( "F1" ) );
+			//_mediaPlayer.SetRate( rataf ) ;
+			//_mediaPlayer.Mute = true; // 静音
 		}
 		private void button14_Click(object sender, EventArgs e)
 		{
@@ -716,12 +715,12 @@ ffmpeg -ss 00:00:15.200 -to 00:00:30.500 -accurate_seek -i input.mp4 -c:v copy -
 		}
 		private void button13_Click(object sender, EventArgs e)
 		{
-			axWindowsMediaPlayer1.Ctlcontrols.play();
+			_mediaPlayer.Play();
 			timer1.Start(); // 恢复进度条刷新
 		}
 		private void button20_Click(object sender, EventArgs e)
 		{   //stop show
-			axWindowsMediaPlayer1.Ctlcontrols.stop();
+			_mediaPlayer.Stop();
 			//firstdisp = true;
 		}
 		private void button17_Click(object sender, EventArgs e)
@@ -751,7 +750,7 @@ ffmpeg -ss 00:00:15.200 -to 00:00:30.500 -accurate_seek -i input.mp4 -c:v copy -
 		private void button21_Click(object sender, EventArgs e)
 		{
 			// 跳转到指定时间（秒）
-			axWindowsMediaPlayer1.Ctlcontrols.currentPosition = dateTimePicker4.Value.TimeOfDay.TotalSeconds;
+			_mediaPlayer.Time = (long) dateTimePicker4.Value.TimeOfDay.TotalSeconds;
 		}
 		private void tabPage6_Paint(object sender, PaintEventArgs e)
 		{           // 创建画笔  画一条线
@@ -791,41 +790,41 @@ ffmpeg -ss 00:00:15.200 -to 00:00:30.500 -accurate_seek -i input.mp4 -c:v copy -
 		private void button23_Click(object sender, EventArgs e)
 		{  //视频后退
 		   //判断当前视频是否正在播放
-			if (axWindowsMediaPlayer1.playState != WMPLib.WMPPlayState.wmppsPlaying) {
+			if (!_mediaPlayer.IsPlaying) {
 				MessageBox.Show( "请先播放视频！" );
 				return;
 			}
-			double currentPosition = axWindowsMediaPlayer1.Ctlcontrols.currentPosition;
-			if (currentPosition < 0)
+			double Time = _mediaPlayer.Time;
+			if (Time < 0)
 				return;
-			double newPosition = currentPosition - dateTimePicker5.Value.TimeOfDay.TotalSeconds;
+			double newPosition = Time - dateTimePicker5.Value.TimeOfDay.TotalSeconds;
 			; // 后退5秒
 			if (newPosition < 0)
 				return;
-			axWindowsMediaPlayer1.Ctlcontrols.currentPosition = newPosition;
+			_mediaPlayer.Time = (long) newPosition;
 		}
 		private void button24_Click(object sender, EventArgs e)
 		{
 			//判断当前视频是否正在播放
-			if (axWindowsMediaPlayer1.playState != WMPLib.WMPPlayState.wmppsPlaying) {
+			if (!_mediaPlayer.IsPlaying) {
 				MessageBox.Show( "请先播放视频！" );
 				return;
 			}
-			double currentPosition = axWindowsMediaPlayer1.Ctlcontrols.currentPosition;
+			double Time = _mediaPlayer.Time;
 			//取得当前视频长度
-			double duration = axWindowsMediaPlayer1.currentMedia.duration;
-			currentPosition = dateTimePicker5.Value.TimeOfDay.TotalSeconds + currentPosition; // 前进5秒
-			if (currentPosition > duration)
+			double duration = _mediaPlayer.Time;
+			Time = dateTimePicker5.Value.TimeOfDay.TotalSeconds + Time; // 前进5秒
+			if (Time > duration)
 				return;
-			axWindowsMediaPlayer1.Ctlcontrols.currentPosition = currentPosition;
+			_mediaPlayer.Time = (long)Time;
 		}
 		private void button25_Click(object sender, EventArgs e)
 		{  //打开视频声音
-			axWindowsMediaPlayer1.settings.mute = false; // 取消静音
+			_mediaPlayer.Mute = false; // 取消静音
 		}
 		private void button26_Click(object sender, EventArgs e)
 		{
-			axWindowsMediaPlayer1.settings.mute = true; // 取消静音
+			_mediaPlayer.Mute = true; // 取消静音
 		}
 		private void button28_Click(object sender, EventArgs e)  //裁剪去结尾部分
 		{
@@ -835,7 +834,7 @@ ffmpeg -ss 00:00:15.200 -to 00:00:30.500 -accurate_seek -i input.mp4 -c:v copy -
 			}
 			if (Clip()) {
 				if (totalSeconds != 0) {        //获得整个视频时间
-					double duration = axWindowsMediaPlayer1.currentMedia.duration;
+					double duration = _mediaPlayer.Time;
 					TimeSpan dur = TimeSpan.FromSeconds( duration );
 					string endss = $"{dur:hh\\:mm\\:ss\\.fff}";
 					CutVideoSegment( endTime, endss, inputFile, outputFile );
@@ -914,7 +913,7 @@ ffmpeg -ss 00:00:15.200 -to 00:00:30.500 -accurate_seek -i input.mp4 -c:v copy -
 
 			//// 清空 ListBox 或其他显示控件（假设有一个 listBox1 用于显示）
 			//listBox3.Items.Clear();
-			//axWindowsMediaPlayer1.Visible = false;
+			//_mediaPlayer.Visible = false;
 			//try {       // 获取所有正在运行的进程
 			//	processes = Process.GetProcesses();
 			//	listBox3.Items.Clear();
@@ -1142,7 +1141,7 @@ bilinear=1：使用双线性插值提高旋转后的画质
 		private void button31_Click(object sender, EventArgs e) //旋转视频
 		{
 			clibb = false;
-			axWindowsMediaPlayer1.Ctlcontrols.pause();  // 暂停视频播放
+			_mediaPlayer.Pause();  // 暂停视频播放
 			textBox6.Text = "";
 			inputFile = textBox1.Text;
 			if (string.IsNullOrEmpty( inputFile ) || !File.Exists( inputFile )) {
@@ -1169,17 +1168,14 @@ bilinear=1：使用双线性插值提高旋转后的画质
 				MessageBox.Show( "视频文件不存在！", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error );
 			}
 		}
-	
+
 
 		private void button41_Click(object sender, EventArgs e)
 		{
 			button9_Click( null, null ); // 调用播放按钮事件
-										 //axWindowsMediaPlayer1.settings.mute = true; // 静音
-										 //axWindowsMediaPlayer1.URL = textBox2.Text;
-										 //axWindowsMediaPlayer1.uiMode = "full"; // 或 "mini"
-										 //axWindowsMediaPlayer1.Ctlcontrols.play();
-										 //axWindowsMediaPlayer1.settings.mute = false; // 取消静音
-			  // 假设视频路径在 textBox1 中
+			_mediaPlayer.Mute = true; // 静音
+									  //_mediaPlayer.uiMode = "full"; // 或 "mini"
+			_mediaPlayer.Mute = false; // 取消静音
 			PlayVideo( textBox1.Text );
 			timer1.Start(); // 播放时启动定时器
 		}
