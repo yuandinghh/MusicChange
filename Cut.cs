@@ -1,5 +1,4 @@
 ﻿using System;
-//using System.Windows.Forms
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -7,21 +6,20 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
+using System.Security.Principal;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using ToolTip = System.Windows.Forms.ToolTip;
-using System.Security.Principal;
+using LibVLCSharp.Shared;
 
 namespace MusicChange
 {
 	public partial class Cut : Form
 	{
 		#region  *********  变量区  ***********
+		private LibVLC _libVLC;
+		private MediaPlayer _mediaPlayer;
 		private string Filestr, inputFile, outputFile, arguments;
 		TimeSpan durationS, startTimeTs, endTimeTs;  // 视频时长、起始时间和结束时间
 		int totalSeconds; // 视频总时长（秒）
@@ -51,6 +49,15 @@ namespace MusicChange
 			ToolTipEx toolTip1 = new ToolTipEx();   // 创建自定义 ToolTipEx 实例 ，鼠标悬停时显示提示信息
 			toolTip1.TipFont = new Font( "微软雅黑", 20 ); // 这里设置字体和大小
 			ConfigureToolTip( toolTip1 );
+			// 初始化 LibVLC
+
+			Core.Initialize( @"D:\Documents\Visual Studio 2022\MusicChange" );
+			//Core.Initialize( );
+			_libVLC = new LibVLC();
+			_mediaPlayer = new MediaPlayer( _libVLC );
+			// 将 MediaPlayer 绑定到 VideoView 控件
+			videoView1.MediaPlayer = _mediaPlayer;
+
 
 		}
 
@@ -73,7 +80,6 @@ namespace MusicChange
 			toolTip1.SetToolTip( label27, "preset（预设编码速度）\r\n•\t作用：控制编码速度与压缩效率的平衡。\r\n•\t可选值（从快到慢）：\r\n•\tultrafast, superfast, veryfast, faster, fast, medium, slow, slower, veryslow\r\n•\t说明：\r\n•\t越快（如 ultrafast），编码速度快，但文件大、画质略低。\r\n•\t越慢（如 veryslow），编码速度慢，但文件更小、画质更好。\r\n•\t默认值是 medium，一般推荐用 fast、medium 或 slow。" );
 		}
 		#endregion
-
 		#region 视频播放相关
 		private void button3_Click(object sender, EventArgs e)
 		{
@@ -176,7 +182,6 @@ namespace MusicChange
 			}
 		}
 		#endregion
-
 		#region  ------- 开始压缩 -------
 		//	按目录所有视频文件压缩  yy
 		private async void button22_Click(object sender, EventArgs e)
@@ -400,7 +405,6 @@ namespace MusicChange
 			return "";
 		}
 		#endregion
-
 		#region ------- 视频裁剪 -------
 		private void button1_Click(object sender, EventArgs e)
 		{
@@ -838,7 +842,7 @@ ffmpeg -ss 00:00:15.200 -to 00:00:30.500 -accurate_seek -i input.mp4 -c:v copy -
 				}
 			}
 		}
-	
+
 		void killProcess( )
 		{
 			Process[] processes = Process.GetProcessesByName( "ffmpeg" );
@@ -848,7 +852,7 @@ ffmpeg -ss 00:00:15.200 -to 00:00:30.500 -accurate_seek -i input.mp4 -c:v copy -
 				}
 			}
 		}
-	
+
 		private void tabPage1_Click(object sender, EventArgs e)
 		{
 
@@ -892,22 +896,21 @@ ffmpeg -ss 00:00:15.200 -to 00:00:30.500 -accurate_seek -i input.mp4 -c:v copy -
 			}
 		}
 
-	
+
 
 		#endregion
-
 		#region ------- 删除ffmpeg进程 -------		
 		private void button39_Click(object sender, EventArgs e) //删除ffmpeg 进程
-		{ 		//扫描所有进程
-			
-			Process[] processes;  			// 检查管理员权限
-			//if (!IsRunningAsAdmin()) {
-			//	Console.WriteLine( "请以管理员身份运行程序" );
-			//	RestartAsAdmin();
-			//	return;
-			//}
-			//TerminateProcess( "AlibabaProtect" );
-			//TerminateProcess( "AliPaladin" );  // 可能存在的关联进程
+		{       //扫描所有进程
+
+			Process[] processes;            // 检查管理员权限
+											//if (!IsRunningAsAdmin()) {
+											//	Console.WriteLine( "请以管理员身份运行程序" );
+											//	RestartAsAdmin();
+											//	return;
+											//}
+											//TerminateProcess( "AlibabaProtect" );
+											//TerminateProcess( "AliPaladin" );  // 可能存在的关联进程
 
 			//// 清空 ListBox 或其他显示控件（假设有一个 listBox1 用于显示）
 			//listBox3.Items.Clear();
@@ -1136,7 +1139,6 @@ bilinear=1：使用双线性插值提高旋转后的画质
 			left_rotate_angle = 0;
 			label8.Text = "视频旋转为 0°"; // 重置角度显示
 		}
-
 		private void button31_Click(object sender, EventArgs e) //旋转视频
 		{
 			clibb = false;
@@ -1154,10 +1156,66 @@ bilinear=1：使用双线性插值提高旋转后的画质
 		}
 
 
+		#endregion
+
+		#region  --------------  ffmpeg 视频播放   -------------
+		private void PlayVideo(string filePath)
+		{
+			if (File.Exists( filePath )) {
+				var media = new Media( _libVLC, new Uri( filePath ) );
+				_mediaPlayer.Play( media );
+			}
+			else {
+				MessageBox.Show( "视频文件不存在！", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error );
+			}
+		}
+	
+
+		private void button41_Click(object sender, EventArgs e)
+		{
+			button9_Click( null, null ); // 调用播放按钮事件
+										 //axWindowsMediaPlayer1.settings.mute = true; // 静音
+										 //axWindowsMediaPlayer1.URL = textBox2.Text;
+										 //axWindowsMediaPlayer1.uiMode = "full"; // 或 "mini"
+										 //axWindowsMediaPlayer1.Ctlcontrols.play();
+										 //axWindowsMediaPlayer1.settings.mute = false; // 取消静音
+			  // 假设视频路径在 textBox1 中
+			PlayVideo( textBox1.Text );
+			timer1.Start(); // 播放时启动定时器
+		}
+		// 暂停
+		private void PauseVideo( )
+		{
+			_mediaPlayer.Pause();
+		}
+
+		// 停止
+		private void StopVideo( )
+		{
+			_mediaPlayer.Stop();
+		}
+
+		// 调整音量（0~100）
+		private void SetVolume(int volume)
+		{
+			_mediaPlayer.Volume = volume;
+		}
+
+		// 设置播放进度（单位：秒）
+		private void SetPosition(double seconds)
+		{
+			if (_mediaPlayer.Length > 0)
+				_mediaPlayer.Time = (long)(seconds * 1000); // 毫秒
+		}
+
+		// 获取当前进度（单位：秒）
+		private double GetPosition( )
+		{
+			return _mediaPlayer.Time / 1000.0;
+		}
 
 
 		#endregion
-
 
 	}
 
