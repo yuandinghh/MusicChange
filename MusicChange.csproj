@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -53,21 +53,6 @@
     <StartupObject>MusicChange.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AForge, Version=2.2.5.0, Culture=neutral, PublicKeyToken=c1db6ff4eaa06aeb, processorArchitecture=MSIL">
-      <HintPath>packages\AForge.2.2.5\lib\AForge.dll</HintPath>
-    </Reference>
-    <Reference Include="AForge.Video, Version=2.2.5.0, Culture=neutral, PublicKeyToken=cbfb6e07d173c401, processorArchitecture=MSIL">
-      <HintPath>packages\AForge.Video.2.2.5\lib\AForge.Video.dll</HintPath>
-    </Reference>
-    <Reference Include="AForge.Video.FFMPEG, Version=2.2.5.0, Culture=neutral, PublicKeyToken=03563089b1be05dd, processorArchitecture=x86">
-      <HintPath>packages\AForge.Video.FFMPEG.2.2.5.1-rc\lib\AForge.Video.FFMPEG.dll</HintPath>
-    </Reference>
-    <Reference Include="FFmpeg.AutoGen, Version=7.1.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\FFmpeg.AutoGen.7.1.1\lib\netstandard2.0\FFmpeg.AutoGen.dll</HintPath>
-    </Reference>
-    <Reference Include="FFmpeg.AutoGen.Abstractions, Version=7.1.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\FFmpeg.AutoGen.Abstractions.7.1.1\lib\netstandard2.0\FFmpeg.AutoGen.Abstractions.dll</HintPath>
-    </Reference>
     <Reference Include="LibVLCSharp, Version=3.9.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\LibVLCSharp.3.9.3\lib\net471\LibVLCSharp.dll</HintPath>
     </Reference>

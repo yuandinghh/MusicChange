@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -18,6 +19,14 @@ namespace MusicChange
 	public partial class Cut : Form
 	{
 		#region  *********  变量区  ***********
+		// 引入用户32库中的方法，用于实现窗口拖动
+		[DllImport( "user32.dll" )]
+		public static extern bool ReleaseCapture( );
+
+		[DllImport( "user32.dll" )]
+		public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+		private const int WM_NCLBUTTONDOWN = 0xA1;
+		private const int HTCAPTION = 0x2;
 		private LibVLC _libVLC;
 		private MediaPlayer _mediaPlayer;
 		private string Filestr, inputFile, outputFile, arguments;
@@ -37,14 +46,11 @@ namespace MusicChange
 		public Cut( )
 		{  //类的初始化 函数
 			InitializeComponent();
-			videoView1.Size = new Size( 900, 700 ); // 设置视频视图控件大小
-			videoView1.Location = new Point( 868,146);
-
-			this.axWindowsMediaPlayer2.Location = new System.Drawing.Point( 2, 430 ); // 设置旋转主播放器位置
-			this.axWindowsMediaPlayer2.Size = new System.Drawing.Size( 530, 330 );
+			videoView1.Size = new Size( 700, 580 ); // 设置视频视图控件大小
+			videoView1.Location = new Point( 678,146);
 			comboBoxSpeed.SelectedIndex = 3; // 默认1.0x	_mediaPlayer.SetRate(rate) = 0.1; 
 			comboBoxSpeed.SelectedIndexChanged += comboBoxSpeed_SelectedIndexChanged; //示例：为按钮和组合框添加说明
-			#endregion
+#endregion
 			#region ------- ToolTip 鼠标进入悬停显示 -------
 			ToolTipEx toolTip1 = new ToolTipEx();   // 创建自定义 ToolTipEx 实例 ，鼠标悬停时显示提示信息
 			toolTip1.TipFont = new Font( "微软雅黑", 20 ); // 这里设置字体和大小
@@ -81,8 +87,7 @@ namespace MusicChange
 		#endregion
 		#region 视频播放相关
 		private void button3_Click(object sender, EventArgs e)
-		{
-			// 选择要播放的视频文件
+		{	// 选择要播放的视频文件
 			if (textBox1 != null) {
 				OpenFileDialog ofd = new OpenFileDialog();
 				ofd.Filter = "视频文件|*.mp4;*.avi;*.wmv;*.mov|所有文件|*.*";
@@ -111,15 +116,14 @@ namespace MusicChange
 		private void timer1_Tick(object sender, EventArgs e)
 		{
 			if (_mediaPlayer.IsPlaying) {
-				double duration = _mediaPlayer.Length / 1000.0; // 当前播放进度，单位：秒
-				double position = _mediaPlayer.Time;
+				double duration = _mediaPlayer.Time / 1000.0; // 当前播放进度，单位：秒
+				double position = _mediaPlayer.Length / 1000.0;
 				if (duration > 0) {
 					progressBar1.Maximum = (int)duration;
 					progressBar1.Value = Math.Min( (int)position, progressBar1.Maximum );
 					// 显示当前时间和总时长
-					TimeSpan pos = TimeSpan.FromSeconds( position );
-					TimeSpan dur = TimeSpan.FromSeconds( duration );
-
+					TimeSpan pos = TimeSpan.FromSeconds( duration );
+					TimeSpan dur = TimeSpan.FromSeconds( position );
 					if (firstdisp) {
 						label15.Text = $"{dur:hh\\:mm\\:ss\\.fff}";
 						totalSeconds = (int)dur.TotalSeconds; // 获取总时长的秒数
@@ -1157,7 +1161,7 @@ bilinear=1：使用双线性插值提高旋转后的画质
 
 		#endregion
 
-		#region  --------------  ffmpeg 视频播放   -------------
+		#region  --------------  VLC 视频播放   -------------
 		private void PlayVideo(string filePath)
 		{
 			if (File.Exists( filePath )) {
@@ -1179,6 +1183,38 @@ bilinear=1：使用双线性插值提高旋转后的画质
 			PlayVideo( textBox1.Text );
 			timer1.Start(); // 播放时启动定时器
 		}
+
+		private void Cut_MouseDown(object sender, MouseEventArgs e)
+		{
+			if (e.Button == MouseButtons.Left) {
+				// 释放鼠标捕获并发送消息以模拟拖动窗口
+				ReleaseCapture();
+				SendMessage( this.Handle, WM_NCLBUTTONDOWN, HTCAPTION, 0 );
+			}
+		}
+
+		private void button3_Click_1(object sender, EventArgs e)
+		{
+			//maximize
+			if (WindowState == FormWindowState.Maximized) {
+				WindowState = FormWindowState.Normal; // 恢复到正常状态
+			}
+			else {
+				WindowState = FormWindowState.Maximized; // 最大化窗口
+			}	
+		}
+
+		private void button42_Click(object sender, EventArgs e)
+		{
+			//minimize
+			if (WindowState == FormWindowState.Minimized) {
+				WindowState = FormWindowState.Normal; // 恢复到正常状态
+			}
+			else {
+				WindowState = FormWindowState.Minimized; // 最小化窗口
+			}
+		}
+
 		// 暂停
 		private void PauseVideo( )
 		{

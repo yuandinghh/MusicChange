@@ -13,8 +13,8 @@ namespace MusicChange {
 		static void Main( ) {
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault( false );
-			Application.Run( new Cut() );
-			//Application.Run( new Form2() );
+			//Application.Run( new Cut() );
+			Application.Run( new Form2() );
 
 		}
 	}

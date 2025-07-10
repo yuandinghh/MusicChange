@@ -1,57 +1,45 @@
-﻿namespace MusicChange {
-	partial class Form2 {
+﻿namespace MusicChange
+{
+	partial class Form2
+	{
 		/// <summary>
-		/// 必需的设计器变量。
+		/// Required designer variable.
 		/// </summary>
 		private System.ComponentModel.IContainer components = null;
 
 		/// <summary>
-		/// 清理所有正在使用的资源。
+		/// Clean up any resources being used.
 		/// </summary>
-		/// <param name="disposing">如果应释放托管资源，为 true；否则为 false。</param>
-		protected override void Dispose(bool disposing) {
+		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+		protected override void Dispose(bool disposing)
+		{
 			if (disposing && (components != null)) {
 				components.Dispose();
 			}
 			base.Dispose( disposing );
 		}
 
-		#region Windows 窗体设计器生成的代码
+		#region Windows Form Designer generated code
 
 		/// <summary>
-		/// 设计器支持所需的方法 - 不要修改
-		/// 使用代码编辑器修改此方法的内容。
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
 		/// </summary>
-		private void InitializeComponent( ) {
-			this.checkBox1 = new System.Windows.Forms.CheckBox();
+		private void InitializeComponent( )
+		{
 			this.SuspendLayout();
-			// 
-			// checkBox1
-			// 
-			this.checkBox1.AutoSize = true;
-			this.checkBox1.Location = new System.Drawing.Point(12, 28);
-			this.checkBox1.Name = "checkBox1";
-			this.checkBox1.Size = new System.Drawing.Size(101, 19);
-			this.checkBox1.TabIndex = 0;
-			this.checkBox1.Text = "checkBox1";
-			this.checkBox1.UseVisualStyleBackColor = true;
 			// 
 			// Form2
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 450);
-			this.Controls.Add(this.checkBox1);
 			this.Name = "Form2";
-			this.Text = "Form1";
+			this.Text = "Form2";
 			this.ResumeLayout(false);
-			this.PerformLayout();
 
 		}
 
 		#endregion
-
-		private System.Windows.Forms.CheckBox checkBox1;
 	}
 }
-

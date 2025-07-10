@@ -1,16 +1,18 @@
-﻿namespace MusicChange {
-	partial class Cut {
+﻿namespace MusicChange
+{
+	partial class Cut
+	{
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
 		private System.ComponentModel.IContainer components = null;
-		private LibVLCSharp.WinForms.VideoView videoView1;
 
 		/// <summary>
 		/// Clean up any resources being used.
 		/// </summary>
 		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-		protected override void Dispose(bool disposing) {
+		protected override void Dispose(bool disposing)
+		{
 			if (disposing && (components != null)) {
 				components.Dispose();
 			}
@@ -23,10 +25,10 @@
 		/// Required method for Designer support - do not modify
 		/// the contents of this method with the code editor.
 		/// </summary>
-		private void InitializeComponent( ) {
+		private void InitializeComponent( )
+		{
 			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Cut));
-			this.videoView1 = new LibVLCSharp.WinForms.VideoView();
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage3 = new System.Windows.Forms.TabPage();
 			this.button41 = new System.Windows.Forms.Button();
@@ -119,7 +121,6 @@
 			this.selefile = new System.Windows.Forms.Button();
 			this.tabPage4 = new System.Windows.Forms.TabPage();
 			this.tabPage5 = new System.Windows.Forms.TabPage();
-			this.axWindowsMediaPlayer2 = new AxWMPLib.AxWindowsMediaPlayer();
 			this.button2 = new System.Windows.Forms.Button();
 			this.textBox1 = new System.Windows.Forms.TextBox();
 			this.progressBar1 = new System.Windows.Forms.ProgressBar();
@@ -130,12 +131,14 @@
 			this.button6 = new System.Windows.Forms.Button();
 			this.button7 = new System.Windows.Forms.Button();
 			this.button8 = new System.Windows.Forms.Button();
-			this.label14 = new System.Windows.Forms.Label();
 			this.label15 = new System.Windows.Forms.Label();
 			this.button39 = new System.Windows.Forms.Button();
 			this.label9 = new System.Windows.Forms.Label();
-			this.listBox3 = new System.Windows.Forms.ListBox();
-			((System.ComponentModel.ISupportInitialize)(this.videoView1)).BeginInit();
+			this.pictureBox3 = new System.Windows.Forms.PictureBox();
+			this.label23 = new System.Windows.Forms.Label();
+			this.button3 = new System.Windows.Forms.Button();
+			this.button42 = new System.Windows.Forms.Button();
+			this.videoView1 = new LibVLCSharp.WinForms.VideoView();
 			this.tabControl1.SuspendLayout();
 			this.tabPage3.SuspendLayout();
 			this.tabPage2.SuspendLayout();
@@ -143,18 +146,9 @@
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			this.tabPage6.SuspendLayout();
 			this.tabPage1.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.axWindowsMediaPlayer2)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.videoView1)).BeginInit();
 			this.SuspendLayout();
-			// 
-			// videoView1
-			// 
-			this.videoView1.BackColor = System.Drawing.Color.DarkGray;
-			this.videoView1.Location = new System.Drawing.Point(868, 146);
-			this.videoView1.MediaPlayer = null;
-			this.videoView1.Name = "videoView1";
-			this.videoView1.Size = new System.Drawing.Size(901, 814);
-			this.videoView1.TabIndex = 0;
-			this.videoView1.Text = "868";
 			// 
 			// tabControl1
 			// 
@@ -164,10 +158,10 @@
 			this.tabControl1.Controls.Add(this.tabPage1);
 			this.tabControl1.Controls.Add(this.tabPage4);
 			this.tabControl1.Controls.Add(this.tabPage5);
-			this.tabControl1.Location = new System.Drawing.Point(-1, 109);
+			this.tabControl1.Location = new System.Drawing.Point(342, 80);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
-			this.tabControl1.Size = new System.Drawing.Size(844, 851);
+			this.tabControl1.Size = new System.Drawing.Size(749, 851);
 			this.tabControl1.TabIndex = 1;
 			// 
 			// tabPage3
@@ -175,9 +169,9 @@
 			this.tabPage3.Controls.Add(this.button41);
 			this.tabPage3.Location = new System.Drawing.Point(4, 27);
 			this.tabPage3.Name = "tabPage3";
-			this.tabPage3.Size = new System.Drawing.Size(836, 820);
+			this.tabPage3.Size = new System.Drawing.Size(741, 820);
 			this.tabPage3.TabIndex = 2;
-			this.tabPage3.Text = "a";
+			this.tabPage3.Text = "测试";
 			this.tabPage3.UseVisualStyleBackColor = true;
 			// 
 			// button41
@@ -1332,35 +1326,29 @@
 			this.tabPage5.Text = "添加字库";
 			this.tabPage5.UseVisualStyleBackColor = true;
 			// 
-			// axWindowsMediaPlayer2
-			// 
-			this.axWindowsMediaPlayer2.Enabled = true;
-			this.axWindowsMediaPlayer2.Location = new System.Drawing.Point(49, 602);
-			this.axWindowsMediaPlayer2.Name = "axWindowsMediaPlayer2";
-			this.axWindowsMediaPlayer2.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axWindowsMediaPlayer2.OcxState")));
-			this.axWindowsMediaPlayer2.Size = new System.Drawing.Size(631, 353);
-			this.axWindowsMediaPlayer2.TabIndex = 19;
-			// 
 			// button2
 			// 
-			this.button2.Font = new System.Drawing.Font("楷体", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.button2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
-			this.button2.Location = new System.Drawing.Point(-1, 47);
+			this.button2.AutoSize = true;
+			this.button2.BackColor = System.Drawing.Color.Black;
+			this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+			this.button2.Font = new System.Drawing.Font("楷体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.button2.ForeColor = System.Drawing.Color.White;
+			this.button2.Location = new System.Drawing.Point(277, 2);
 			this.button2.Name = "button2";
-			this.button2.Size = new System.Drawing.Size(140, 36);
+			this.button2.Size = new System.Drawing.Size(145, 30);
 			this.button2.TabIndex = 2;
-			this.button2.Text = "选择文件";
-			this.button2.UseVisualStyleBackColor = true;
+			this.button2.Text = "导入视频文件";
+			this.button2.UseVisualStyleBackColor = false;
 			this.button2.Click += new System.EventHandler(this.button2_Click);
 			// 
 			// textBox1
 			// 
 			this.textBox1.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.textBox1.Location = new System.Drawing.Point(168, 46);
+			this.textBox1.Location = new System.Drawing.Point(442, 4);
 			this.textBox1.Name = "textBox1";
-			this.textBox1.Size = new System.Drawing.Size(630, 30);
+			this.textBox1.Size = new System.Drawing.Size(374, 30);
 			this.textBox1.TabIndex = 3;
-			this.textBox1.Text = "F:\\newipad\\已经压缩\\小妞爱跳舞_s.mp4";
+			this.textBox1.Text = "F:\\newipad\\已经压缩\\跳舞3_m.mp4";
 			// 
 			// progressBar1
 			// 
@@ -1388,76 +1376,78 @@
 			// 
 			// button4
 			// 
+			this.button4.AutoSize = true;
+			this.button4.BackColor = System.Drawing.Color.Black;
+			this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
 			this.button4.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.button4.ForeColor = System.Drawing.Color.Red;
-			this.button4.Location = new System.Drawing.Point(950, 43);
+			this.button4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+			this.button4.Location = new System.Drawing.Point(904, 8);
 			this.button4.Name = "button4";
-			this.button4.Size = new System.Drawing.Size(106, 45);
+			this.button4.Size = new System.Drawing.Size(63, 32);
 			this.button4.TabIndex = 11;
 			this.button4.Text = "播放";
-			this.button4.UseVisualStyleBackColor = true;
+			this.button4.UseVisualStyleBackColor = false;
 			this.button4.Click += new System.EventHandler(this.button4_Click);
 			// 
 			// button5
 			// 
+			this.button5.AutoSize = true;
+			this.button5.BackColor = System.Drawing.Color.Black;
+			this.button5.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
 			this.button5.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.button5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
-			this.button5.Location = new System.Drawing.Point(1191, 43);
+			this.button5.ForeColor = System.Drawing.Color.Transparent;
+			this.button5.Location = new System.Drawing.Point(1077, 8);
 			this.button5.Name = "button5";
-			this.button5.Size = new System.Drawing.Size(106, 45);
+			this.button5.Size = new System.Drawing.Size(61, 30);
 			this.button5.TabIndex = 12;
 			this.button5.Text = "暂停";
-			this.button5.UseVisualStyleBackColor = true;
+			this.button5.UseVisualStyleBackColor = false;
 			this.button5.Click += new System.EventHandler(this.button5_Click);
 			// 
 			// button6
 			// 
+			this.button6.AutoSize = true;
+			this.button6.BackColor = System.Drawing.Color.Black;
+			this.button6.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
 			this.button6.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.button6.ForeColor = System.Drawing.Color.Black;
-			this.button6.Location = new System.Drawing.Point(1317, 43);
+			this.button6.ForeColor = System.Drawing.Color.Transparent;
+			this.button6.Location = new System.Drawing.Point(1165, 10);
 			this.button6.Name = "button6";
-			this.button6.Size = new System.Drawing.Size(106, 45);
+			this.button6.Size = new System.Drawing.Size(61, 30);
 			this.button6.TabIndex = 13;
 			this.button6.Text = "停止";
-			this.button6.UseVisualStyleBackColor = true;
+			this.button6.UseVisualStyleBackColor = false;
 			this.button6.Click += new System.EventHandler(this.button6_Click);
 			// 
 			// button7
 			// 
+			this.button7.AutoSize = true;
+			this.button7.BackColor = System.Drawing.Color.Black;
+			this.button7.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
 			this.button7.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.button7.ForeColor = System.Drawing.Color.Green;
-			this.button7.Location = new System.Drawing.Point(1079, 43);
+			this.button7.ForeColor = System.Drawing.Color.White;
+			this.button7.Location = new System.Drawing.Point(994, 8);
 			this.button7.Name = "button7";
-			this.button7.Size = new System.Drawing.Size(106, 45);
+			this.button7.Size = new System.Drawing.Size(61, 30);
 			this.button7.TabIndex = 14;
 			this.button7.Text = "继续";
-			this.button7.UseVisualStyleBackColor = true;
+			this.button7.UseVisualStyleBackColor = false;
 			this.button7.Click += new System.EventHandler(this.button7_Click);
 			// 
 			// button8
 			// 
-			this.button8.BackColor = System.Drawing.Color.White;
+			this.button8.AutoSize = true;
+			this.button8.BackColor = System.Drawing.Color.Black;
+			this.button8.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
 			this.button8.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.button8.ForeColor = System.Drawing.Color.Black;
-			this.button8.Location = new System.Drawing.Point(827, 41);
+			this.button8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			this.button8.Location = new System.Drawing.Point(1759, 4);
 			this.button8.Name = "button8";
-			this.button8.Size = new System.Drawing.Size(106, 45);
+			this.button8.Size = new System.Drawing.Size(61, 30);
 			this.button8.TabIndex = 15;
 			this.button8.Text = "退出";
 			this.button8.UseVisualStyleBackColor = false;
 			this.button8.Click += new System.EventHandler(this.button8_Click);
-			// 
-			// label14
-			// 
-			this.label14.AutoSize = true;
-			this.label14.BackColor = System.Drawing.SystemColors.Info;
-			this.label14.Font = new System.Drawing.Font("宋体", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.label14.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
-			this.label14.Location = new System.Drawing.Point(1139, 100);
-			this.label14.Name = "label14";
-			this.label14.Size = new System.Drawing.Size(152, 27);
-			this.label14.TabIndex = 16;
-			this.label14.Text = "视频长度：";
 			// 
 			// label15
 			// 
@@ -1474,9 +1464,9 @@
 			// 
 			this.button39.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.button39.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-			this.button39.Location = new System.Drawing.Point(1814, 0);
+			this.button39.Location = new System.Drawing.Point(1331, 10);
 			this.button39.Name = "button39";
-			this.button39.Size = new System.Drawing.Size(214, 31);
+			this.button39.Size = new System.Drawing.Size(214, 26);
 			this.button39.TabIndex = 18;
 			this.button39.Text = "删除ffmpeg 进程";
 			this.button39.UseVisualStyleBackColor = true;
@@ -1487,36 +1477,90 @@
 			this.label9.AutoSize = true;
 			this.label9.BackColor = System.Drawing.Color.Bisque;
 			this.label9.Font = new System.Drawing.Font("宋体", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.label9.Location = new System.Drawing.Point(1558, 2);
+			this.label9.Location = new System.Drawing.Point(1544, 936);
 			this.label9.Name = "label9";
 			this.label9.Size = new System.Drawing.Size(250, 24);
 			this.label9.TabIndex = 19;
 			this.label9.Text = "已删除 ffmpeg 进程！";
 			// 
-			// listBox3
+			// pictureBox3
 			// 
-			this.listBox3.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.listBox3.FormattingEnabled = true;
-			this.listBox3.ItemHeight = 20;
-			this.listBox3.Location = new System.Drawing.Point(1038, 232);
-			this.listBox3.Name = "listBox3";
-			this.listBox3.Size = new System.Drawing.Size(1037, 544);
-			this.listBox3.TabIndex = 20;
+			this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
+			this.pictureBox3.Location = new System.Drawing.Point(2, 2);
+			this.pictureBox3.Name = "pictureBox3";
+			this.pictureBox3.Size = new System.Drawing.Size(26, 26);
+			this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+			this.pictureBox3.TabIndex = 21;
+			this.pictureBox3.TabStop = false;
+			// 
+			// label23
+			// 
+			this.label23.AutoSize = true;
+			this.label23.BackColor = System.Drawing.Color.Black;
+			this.label23.Font = new System.Drawing.Font("楷体", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label23.ForeColor = System.Drawing.Color.Yellow;
+			this.label23.Location = new System.Drawing.Point(34, 3);
+			this.label23.Name = "label23";
+			this.label23.Size = new System.Drawing.Size(120, 25);
+			this.label23.TabIndex = 22;
+			this.label23.Text = "极光快剪";
+			// 
+			// button3
+			// 
+			this.button3.AutoSize = true;
+			this.button3.BackColor = System.Drawing.Color.Black;
+			this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+			this.button3.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.button3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			this.button3.Image = ((System.Drawing.Image)(resources.GetObject("button3.Image")));
+			this.button3.Location = new System.Drawing.Point(1708, 4);
+			this.button3.Name = "button3";
+			this.button3.Size = new System.Drawing.Size(61, 30);
+			this.button3.TabIndex = 23;
+			this.button3.UseVisualStyleBackColor = false;
+			this.button3.Click += new System.EventHandler(this.button3_Click_1);
+			// 
+			// button42
+			// 
+			this.button42.AutoSize = true;
+			this.button42.BackColor = System.Drawing.Color.Black;
+			this.button42.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+			this.button42.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.button42.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			this.button42.Image = ((System.Drawing.Image)(resources.GetObject("button42.Image")));
+			this.button42.Location = new System.Drawing.Point(1659, 4);
+			this.button42.Name = "button42";
+			this.button42.Size = new System.Drawing.Size(61, 30);
+			this.button42.TabIndex = 24;
+			this.button42.UseVisualStyleBackColor = false;
+			this.button42.Click += new System.EventHandler(this.button42_Click);
+			// 
+			// videoView1
+			// 
+			this.videoView1.BackColor = System.Drawing.Color.DimGray;
+			this.videoView1.Location = new System.Drawing.Point(855, 146);
+			this.videoView1.MediaPlayer = null;
+			this.videoView1.Name = "videoView1";
+			this.videoView1.Size = new System.Drawing.Size(283, 235);
+			this.videoView1.TabIndex = 25;
+			this.videoView1.Text = "videoView2";
 			// 
 			// Cut
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 17F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.AutoSize = true;
 			this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
 			this.BackColor = System.Drawing.Color.Black;
-			this.ClientSize = new System.Drawing.Size(2302, 1213);
+			this.ClientSize = new System.Drawing.Size(2100, 1080);
 			this.Controls.Add(this.videoView1);
-			this.Controls.Add(this.listBox3);
+			this.Controls.Add(this.button42);
+			this.Controls.Add(this.button3);
+			this.Controls.Add(this.label23);
+			this.Controls.Add(this.pictureBox3);
 			this.Controls.Add(this.label9);
 			this.Controls.Add(this.button39);
 			this.Controls.Add(this.label15);
-			this.Controls.Add(this.label14);
 			this.Controls.Add(this.button8);
 			this.Controls.Add(this.button7);
 			this.Controls.Add(this.label1);
@@ -1528,6 +1572,7 @@
 			this.Controls.Add(this.button2);
 			this.Controls.Add(this.tabControl1);
 			this.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.ForeColor = System.Drawing.Color.Black;
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.HelpButton = true;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -1536,7 +1581,7 @@
 			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
 			this.Text = "Cut";
 			this.Load += new System.EventHandler(this.Cut_Load);
-			((System.ComponentModel.ISupportInitialize)(this.videoView1)).EndInit();
+			this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Cut_MouseDown);
 			this.tabControl1.ResumeLayout(false);
 			this.tabPage3.ResumeLayout(false);
 			this.tabPage2.ResumeLayout(false);
@@ -1547,7 +1592,8 @@
 			this.tabPage6.PerformLayout();
 			this.tabPage1.ResumeLayout(false);
 			this.tabPage1.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.axWindowsMediaPlayer2)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.videoView1)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -1608,7 +1654,6 @@
 		private System.Windows.Forms.Button button16;
 		private System.Windows.Forms.Button button17;
 		private System.Windows.Forms.Button button20;
-		private System.Windows.Forms.Label label14;
 		private System.Windows.Forms.Label label15;
 		private System.Windows.Forms.Button button21;
 		private System.Windows.Forms.DateTimePicker dateTimePicker4;
@@ -1647,7 +1692,6 @@
 		private System.Windows.Forms.Button button31;
 		private System.Windows.Forms.PictureBox pictureBox1;
 		private System.Windows.Forms.PictureBox pictureBox2;
-		private AxWMPLib.AxWindowsMediaPlayer axWindowsMediaPlayer2;
 		private System.Windows.Forms.Button button33;
 		private System.Windows.Forms.Button button32;
 		private System.Windows.Forms.TextBox textBox12;
@@ -1660,7 +1704,11 @@
 		private System.Windows.Forms.Button button39;
 		private System.Windows.Forms.Button button40;
 		private System.Windows.Forms.Label label9;
-		private System.Windows.Forms.ListBox listBox3;
 		private System.Windows.Forms.Button button41;
+		private System.Windows.Forms.PictureBox pictureBox3;
+		private System.Windows.Forms.Label label23;
+		private System.Windows.Forms.Button button3;
+		private System.Windows.Forms.Button button42;
+		private LibVLCSharp.WinForms.VideoView videoView1;
 	}
 }
