@@ -10,14 +10,18 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using ImageMagick;
 
-namespace MusicChange {
-	public partial class ChangePictuer : Form {
+namespace MusicChange
+{
+	public partial class ChangePictuer : Form
+	{
 		public static int failCount = 0;
 		public static int successCount;
-		public ChangePictuer( ) {
+		public ChangePictuer( )
+		{
 			InitializeComponent();
 		}
-		private void button1_Click(object sender, EventArgs e) {
+		private void button1_Click(object sender, EventArgs e)
+		{
 			//选择目录和webp 类型文件
 			using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog()) {
 				folderBrowserDialog.Description = "请选择一个文件夹";
@@ -37,7 +41,8 @@ namespace MusicChange {
 						//string fileList = string.Join( Environment.NewLine, webpFiles );
 						//MessageBox.Show( $"找到以下 .webp 文件:\n{fileList}", "文件列表" );
 						label1.Text = $"找到 {webpFiles.Length} 个 .webp 文件。";
-					} else {
+					}
+					else {
 						label1.Text = "未找到任何 .webp 文件。";
 					}
 				}
@@ -46,12 +51,12 @@ namespace MusicChange {
 		}
 
 
-		private void button2_Click(object sender, EventArgs e) {
+		private void button2_Click(object sender, EventArgs e)
+		{
 
 			successCount = 0;
 			failCount = 0;
 			StringBuilder failFiles = new StringBuilder();
-
 			foreach (var item in listBox1.Items) {
 				string webpFile = item.ToString();
 				if (!File.Exists( webpFile ) || Path.GetExtension( webpFile ).ToLower() != ".webp")
@@ -70,7 +75,8 @@ namespace MusicChange {
 						successCount++;
 						textBox1.Text = $"转换成功：{webpFile} -> {jpgFile}" + successCount.ToString();
 					}
-				} catch (Exception ex) {
+				}
+				catch (Exception ex) {
 					failCount++;
 					failFiles.AppendLine( $"{webpFile}: {ex.Message}" );
 				}
@@ -83,11 +89,13 @@ namespace MusicChange {
 					MessageBox.Show( $"以下文件转换失败：\n{failFiles}", "转换失败" );
 			}
 		}
-		private void Form3_Load(object sender, EventArgs e) {
+		private void Form3_Load(object sender, EventArgs e)
+		{
 
 		}
 
-		private void button3_Click(object sender, EventArgs e) {
+		private async void button3_Click(object sender, EventArgs e)
+		{
 			if (listBox1.Items.Count == 0) {
 				MessageBox.Show( "列表中没有文件。" );
 				return;
@@ -106,11 +114,12 @@ namespace MusicChange {
 						string jpgFile = Path.ChangeExtension( heicFile, ".jpg" );
 						image.Format = ImageMagick.MagickFormat.Jpeg;
 						image.Quality = 100; // 设置JPEG质量
-						image.Write( jpgFile );
+						await Task.Run( ( ) => image.Write( jpgFile ) );
 						successCount++;
-						textBox1.Text = $"转换成功：{heicFile} -> {jpgFile}" + successCount.ToString();
+						textBox1.Text = "成功转换：" + successCount.ToString() + $"转换成功： {jpgFile}";
 					}
-				} catch (Exception ex) {
+				}
+				catch (Exception ex) {
 					failCount++;
 					failFiles.AppendLine( $"{heicFile}: {ex.Message}" );
 				}
@@ -125,7 +134,8 @@ namespace MusicChange {
 				MessageBox.Show( $"以下文件转换失败：\n{failFiles}", "转换失败" );
 		}
 
-		private void button4_Click(object sender, EventArgs e) {
+		private void button4_Click(object sender, EventArgs e)
+		{
 			using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog()) {
 				folderBrowserDialog.Description = "请选择一个文件夹";
 				// 如果用户选择了文件夹
@@ -143,7 +153,8 @@ namespace MusicChange {
 						//string fileList = string.Join( Environment.NewLine, webpFiles );
 						//MessageBox.Show( $"找到以下 .webp 文件:\n{fileList}", "文件列表" );
 						label1.Text = $"找到 {webpFiles.Length} 个 .Heic 文件。";
-					} else {
+					}
+					else {
 						label1.Text = "未找到任何 .webp 文件。";
 					}
 				}
@@ -151,7 +162,8 @@ namespace MusicChange {
 
 		}
 
-		private void button5_Click(object sender, EventArgs e) {
+		private void button5_Click(object sender, EventArgs e)
+		{
 			using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog()) {
 				folderBrowserDialog.Description = "请选择一个文件夹";
 				if (folderBrowserDialog.ShowDialog() == DialogResult.OK) {
@@ -173,7 +185,8 @@ namespace MusicChange {
 
 
 
-		private void button6_Click(object sender, EventArgs e) {
+		private async void button6_Click(object sender, EventArgs e)
+		{
 			if (listBox1.Items.Count == 0) {
 				MessageBox.Show( "列表中没有文件。" );
 				return;
@@ -188,7 +201,8 @@ namespace MusicChange {
 					MessageBox.Show( "请选择一个有效的 .livp 文件。" );
 					return;
 				}
-				LivpConverter.ConvertLivpToJpg( livpFile, directory, listBox2 );
+				//	await Task.Run( ( ) => ffmpegProcess.WaitForExit() );
+				await Task.Run( ( ) => LivpConverter.ConvertLivpToJpg( livpFile, directory, listBox2 ) );
 				successCount++;
 				//delay 10 sec
 				//System.Threading.Thread.Sleep( 10000 );
@@ -205,8 +219,58 @@ namespace MusicChange {
 			//	MessageBox.Show( $"以下文件转换失败：\n{failFiles}", "转换失败" );
 		}
 
-		private void timer1_Tick(object sender, EventArgs e) {
+		private void timer1_Tick(object sender, EventArgs e)
+		{
 			textBox1.Text = $"转换成功共：{successCount}";
+		}
+
+		private void buttonX1_Click(object sender, EventArgs e)
+		{
+			//转换扩展名
+			if (listBox1.Items.Count == 0) {
+				MessageBox.Show( "列表中没有文件。" );
+				return;
+			}
+			foreach (var item in listBox1.Items) {
+				string filePath = item.ToString();
+				if (!File.Exists( filePath )) {
+					MessageBox.Show( $"文件不存在: {filePath}" );
+					continue;
+				}
+				string newFilePath = Path.ChangeExtension( filePath, ".jpg" );
+				if (filePath != newFilePath) {
+					try {
+						File.Move( filePath, newFilePath );
+						listBox2.Items.Add( newFilePath );
+					}
+					catch (Exception ex) {
+						MessageBox.Show( $"转换失败: {filePath}\n{ex.Message}" );
+					}
+				}
+			}
+		}
+
+		private void buttonx2_Click(object sender, EventArgs e)
+		{
+	
+			//选择文件夹
+			using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog()) {
+				folderBrowserDialog.Description = "请选择一个文件夹";
+				if (folderBrowserDialog.ShowDialog() == DialogResult.OK) {
+					string selectedPath = folderBrowserDialog.SelectedPath;
+					string[] jpgFiles = Directory.GetFiles( selectedPath, "*.txt", SearchOption.TopDirectoryOnly );
+					listBox2.Items.Clear();
+					foreach (string file in jpgFiles) {
+						listBox1.Items.Add( file );
+					}
+					if (jpgFiles.Length > 0) {
+						label1.Text = $"找到 {jpgFiles.Length} 个 .jpg 文件。";
+					}
+					else {
+						label1.Text = "未找到任何 .jpg 文件。";
+					}
+				}
+			}
 		}
 	}
 }

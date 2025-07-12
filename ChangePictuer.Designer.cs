@@ -41,6 +41,10 @@
             this.buttonX1 = new DevComponents.DotNetBar.ButtonX();
             this.comboBoxEx2 = new DevComponents.DotNetBar.Controls.ComboBoxEx();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.buttonx2 = new DevComponents.DotNetBar.ButtonX();
             this.SuspendLayout();
             // 
             // button1
@@ -50,7 +54,7 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(184, 37);
             this.button1.TabIndex = 0;
-            this.button1.Text = "选择图片目录和webp";
+            this.button1.Text = "选择图片目录webp";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -108,7 +112,7 @@
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(184, 30);
             this.button4.TabIndex = 6;
-            this.button4.Text = "选择图片目录和Heic\r\n\r\n";
+            this.button4.Text = "选择图片目录Heic\r\n\r\n";
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
@@ -119,7 +123,7 @@
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(184, 27);
             this.button5.TabIndex = 8;
-            this.button5.Text = "选择图片目录和Livp";
+            this.button5.Text = "选择图片目录Livp";
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
@@ -146,13 +150,16 @@
             // buttonX1
             // 
             this.buttonX1.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+            this.buttonX1.AutoSize = true;
             this.buttonX1.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-            this.buttonX1.Location = new System.Drawing.Point(778, 26);
+            this.buttonX1.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonX1.Location = new System.Drawing.Point(719, 71);
             this.buttonX1.Name = "buttonX1";
             this.buttonX1.Size = new System.Drawing.Size(141, 38);
             this.buttonX1.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
             this.buttonX1.TabIndex = 10;
-            this.buttonX1.Text = "buttonX1";
+            this.buttonX1.Text = "转换扩展名";
+            this.buttonX1.Click += new System.EventHandler(this.buttonX1_Click);
             // 
             // comboBoxEx2
             // 
@@ -169,15 +176,57 @@
             // 
             // timer1
             // 
-            this.timer1.Enabled = true;
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(562, 23);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(67, 25);
+            this.textBox2.TabIndex = 13;
+            this.textBox2.Text = "TXT";
+            // 
+            // textBox3
+            // 
+            this.textBox3.Location = new System.Drawing.Point(719, 25);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(74, 25);
+            this.textBox3.TabIndex = 14;
+            this.textBox3.Text = "JPG";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(653, 28);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(23, 15);
+            this.label2.TabIndex = 15;
+            this.label2.Text = "TO";
+            // 
+            // buttonx2
+            // 
+            this.buttonx2.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+            this.buttonx2.AutoSize = true;
+            this.buttonx2.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
+            this.buttonx2.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonx2.Location = new System.Drawing.Point(562, 71);
+            this.buttonx2.Name = "buttonx2";
+            this.buttonx2.Size = new System.Drawing.Size(141, 38);
+            this.buttonx2.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.buttonx2.TabIndex = 16;
+            this.buttonx2.Text = "选择目录";
+            this.buttonx2.Click += new System.EventHandler(this.buttonx2_Click);
             // 
             // ChangePictuer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1381, 671);
+            this.Controls.Add(this.buttonx2);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.textBox3);
+            this.Controls.Add(this.textBox2);
             this.Controls.Add(this.comboBoxEx2);
             this.Controls.Add(this.buttonX1);
             this.Controls.Add(this.listBox2);
@@ -213,5 +262,9 @@
 		private DevComponents.DotNetBar.ButtonX buttonX1;
 		private DevComponents.DotNetBar.Controls.ComboBoxEx comboBoxEx2;
 		private System.Windows.Forms.Timer timer1;
+		private System.Windows.Forms.TextBox textBox2;
+		private System.Windows.Forms.TextBox textBox3;
+		private System.Windows.Forms.Label label2;
+		private DevComponents.DotNetBar.ButtonX buttonx2;
 	}
 }
