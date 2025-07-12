@@ -22,7 +22,6 @@ namespace MusicChange
 		// 引入用户32库中的方法，用于实现窗口拖动
 		[DllImport( "user32.dll" )]
 		public static extern bool ReleaseCapture( );
-
 		[DllImport( "user32.dll" )]
 		public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
 		private const int WM_NCLBUTTONDOWN = 0xA1;

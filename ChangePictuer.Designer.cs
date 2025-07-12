@@ -27,6 +27,7 @@
 		/// </summary>
 		private void InitializeComponent( )
 		{
+            this.components = new System.ComponentModel.Container();
             this.button1 = new System.Windows.Forms.Button();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.button2 = new System.Windows.Forms.Button();
@@ -36,10 +37,15 @@
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
+            this.listBox2 = new System.Windows.Forms.ListBox();
+            this.buttonX1 = new DevComponents.DotNetBar.ButtonX();
+            this.comboBoxEx2 = new DevComponents.DotNetBar.Controls.ComboBoxEx();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // button1
             // 
+            this.button1.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button1.Location = new System.Drawing.Point(12, 12);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(184, 37);
@@ -59,6 +65,7 @@
             // 
             // button2
             // 
+            this.button2.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button2.Location = new System.Drawing.Point(282, 12);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(213, 31);
@@ -80,11 +87,12 @@
             // 
             this.textBox1.Location = new System.Drawing.Point(12, 179);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(632, 25);
+            this.textBox1.Size = new System.Drawing.Size(981, 25);
             this.textBox1.TabIndex = 4;
             // 
             // button3
             // 
+            this.button3.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button3.Location = new System.Drawing.Point(282, 71);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(213, 31);
@@ -95,6 +103,7 @@
             // 
             // button4
             // 
+            this.button4.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button4.Location = new System.Drawing.Point(12, 71);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(184, 30);
@@ -105,6 +114,7 @@
             // 
             // button5
             // 
+            this.button5.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button5.Location = new System.Drawing.Point(12, 124);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(184, 27);
@@ -115,19 +125,62 @@
             // 
             // button6
             // 
+            this.button6.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button6.Location = new System.Drawing.Point(282, 124);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(213, 27);
             this.button6.TabIndex = 7;
             this.button6.Text = "批量转换Livp为Jpeg图片";
             this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.button6_Click_1);
+            this.button6.Click += new System.EventHandler(this.button6_Click);
+            // 
+            // listBox2
+            // 
+            this.listBox2.FormattingEnabled = true;
+            this.listBox2.ItemHeight = 15;
+            this.listBox2.Location = new System.Drawing.Point(682, 264);
+            this.listBox2.Name = "listBox2";
+            this.listBox2.Size = new System.Drawing.Size(632, 334);
+            this.listBox2.TabIndex = 9;
+            // 
+            // buttonX1
+            // 
+            this.buttonX1.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+            this.buttonX1.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
+            this.buttonX1.Location = new System.Drawing.Point(778, 26);
+            this.buttonX1.Name = "buttonX1";
+            this.buttonX1.Size = new System.Drawing.Size(141, 38);
+            this.buttonX1.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.buttonX1.TabIndex = 10;
+            this.buttonX1.Text = "buttonX1";
+            // 
+            // comboBoxEx2
+            // 
+            this.comboBoxEx2.DisplayMember = "Text";
+            this.comboBoxEx2.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.comboBoxEx2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.comboBoxEx2.FormattingEnabled = true;
+            this.comboBoxEx2.ItemHeight = 19;
+            this.comboBoxEx2.Location = new System.Drawing.Point(1006, 25);
+            this.comboBoxEx2.Name = "comboBoxEx2";
+            this.comboBoxEx2.Size = new System.Drawing.Size(121, 25);
+            this.comboBoxEx2.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.comboBoxEx2.TabIndex = 12;
+            // 
+            // timer1
+            // 
+            this.timer1.Enabled = true;
+            this.timer1.Interval = 1000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // ChangePictuer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(690, 621);
+            this.ClientSize = new System.Drawing.Size(1381, 671);
+            this.Controls.Add(this.comboBoxEx2);
+            this.Controls.Add(this.buttonX1);
+            this.Controls.Add(this.listBox2);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button6);
             this.Controls.Add(this.button4);
@@ -156,5 +209,9 @@
 		private System.Windows.Forms.Button button4;
 		private System.Windows.Forms.Button button5;
 		private System.Windows.Forms.Button button6;
+		private System.Windows.Forms.ListBox listBox2;
+		private DevComponents.DotNetBar.ButtonX buttonX1;
+		private DevComponents.DotNetBar.Controls.ComboBoxEx comboBoxEx2;
+		private System.Windows.Forms.Timer timer1;
 	}
 }
