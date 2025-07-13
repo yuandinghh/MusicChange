@@ -1043,6 +1043,9 @@
         lIaV0rBSEAM3GgWJj8akxF4AAAAASUVORK5CYII=
 </value>
   </data>
+  <metadata name="sideBar1.PredefinedColorScheme" type="DevComponents.DotNetBar.eSideBarColorScheme, DevComponents.DotNetBar2, Version=14.1.0.34, Culture=neutral, PublicKeyToken=7eb7c3a35b91de04">
+    <value>Blue</value>
+  </metadata>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>70</value>
   </metadata>

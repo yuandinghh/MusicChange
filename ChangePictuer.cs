@@ -51,7 +51,7 @@ namespace MusicChange
 		}
 
 
-		private void button2_Click(object sender, EventArgs e)
+		private async void button2_Click(object sender, EventArgs e)
 		{
 			successCount = 0;
 			failCount = 0;
@@ -72,7 +72,8 @@ namespace MusicChange
 						//加上当前时间
 						string time = DateTime.Now.ToString( "HHmmss" );
 						fileName = fileName + time + ".jpg";
-						image.Write( fileName );
+						//await Task.Run(() => LivpConverter.ConvertLivpToJpg(livpFile, directory, listBox2));
+						await  Task.Run( () =>	image.Write( fileName ));
 						successCount++;
 						textBox1.Text = $"转换成功：{webpFile} -> {jpgFile}" + successCount.ToString();
 					}

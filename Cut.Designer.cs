@@ -143,6 +143,9 @@
 			this.checkBoxX1 = new DevComponents.DotNetBar.Controls.CheckBoxX();
 			this.comboBoxEx1 = new DevComponents.DotNetBar.Controls.ComboBoxEx();
 			this.buttonX2 = new DevComponents.DotNetBar.ButtonX();
+			this.listViewEx1 = new DevComponents.DotNetBar.Controls.ListViewEx();
+			this.labelX1 = new DevComponents.DotNetBar.LabelX();
+			this.sideBar1 = new DevComponents.DotNetBar.SideBar();
 			this.tabControl1.SuspendLayout();
 			this.tabPage3.SuspendLayout();
 			this.tabPage2.SuspendLayout();
@@ -1542,7 +1545,7 @@
 			// videoView1
 			// 
 			this.videoView1.BackColor = System.Drawing.Color.DimGray;
-			this.videoView1.Location = new System.Drawing.Point(855, 146);
+			this.videoView1.Location = new System.Drawing.Point(1166, 238);
 			this.videoView1.MediaPlayer = null;
 			this.videoView1.Name = "videoView1";
 			this.videoView1.Size = new System.Drawing.Size(283, 235);
@@ -1553,7 +1556,7 @@
 			// 
 			this.buttonX1.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
 			this.buttonX1.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-			this.buttonX1.Location = new System.Drawing.Point(1611, 100);
+			this.buttonX1.Location = new System.Drawing.Point(1938, 17);
 			this.buttonX1.Name = "buttonX1";
 			this.buttonX1.Size = new System.Drawing.Size(129, 23);
 			this.buttonX1.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
@@ -1567,7 +1570,7 @@
 			// 
 			// 
 			this.checkBoxX1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-			this.checkBoxX1.Location = new System.Drawing.Point(1627, 146);
+			this.checkBoxX1.Location = new System.Drawing.Point(1769, 55);
 			this.checkBoxX1.Name = "checkBoxX1";
 			this.checkBoxX1.Size = new System.Drawing.Size(100, 23);
 			this.checkBoxX1.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
@@ -1579,10 +1582,10 @@
 			this.comboBoxEx1.DisplayMember = "Text";
 			this.comboBoxEx1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
 			this.comboBoxEx1.FormattingEnabled = true;
-			this.comboBoxEx1.ItemHeight = 21;
-			this.comboBoxEx1.Location = new System.Drawing.Point(1627, 193);
+			this.comboBoxEx1.ItemHeight = 22;
+			this.comboBoxEx1.Location = new System.Drawing.Point(1938, 117);
 			this.comboBoxEx1.Name = "comboBoxEx1";
-			this.comboBoxEx1.Size = new System.Drawing.Size(121, 27);
+			this.comboBoxEx1.Size = new System.Drawing.Size(121, 28);
 			this.comboBoxEx1.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
 			this.comboBoxEx1.TabIndex = 28;
 			// 
@@ -1590,12 +1593,51 @@
 			// 
 			this.buttonX2.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
 			this.buttonX2.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-			this.buttonX2.Location = new System.Drawing.Point(1659, 258);
+			this.buttonX2.Location = new System.Drawing.Point(1962, 300);
 			this.buttonX2.Name = "buttonX2";
 			this.buttonX2.Size = new System.Drawing.Size(75, 23);
 			this.buttonX2.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
 			this.buttonX2.TabIndex = 29;
 			this.buttonX2.Text = "buttonX2";
+			// 
+			// listViewEx1
+			// 
+			// 
+			// 
+			// 
+			this.listViewEx1.Border.Class = "ListViewBorder";
+			this.listViewEx1.Border.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+			this.listViewEx1.DisabledBackColor = System.Drawing.Color.Empty;
+			this.listViewEx1.HideSelection = false;
+			this.listViewEx1.Location = new System.Drawing.Point(1946, 170);
+			this.listViewEx1.Name = "listViewEx1";
+			this.listViewEx1.Size = new System.Drawing.Size(121, 97);
+			this.listViewEx1.TabIndex = 30;
+			this.listViewEx1.UseCompatibleStateImageBehavior = false;
+			// 
+			// labelX1
+			// 
+			// 
+			// 
+			// 
+			this.labelX1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+			this.labelX1.Location = new System.Drawing.Point(1935, 313);
+			this.labelX1.Name = "labelX1";
+			this.labelX1.Size = new System.Drawing.Size(75, 23);
+			this.labelX1.TabIndex = 31;
+			this.labelX1.Text = "labelX1";
+			// 
+			// sideBar1
+			// 
+			this.sideBar1.AccessibleRole = System.Windows.Forms.AccessibleRole.ToolBar;
+			this.sideBar1.BorderStyle = DevComponents.DotNetBar.eBorderType.None;
+			this.sideBar1.ExpandedPanel = null;
+			this.sideBar1.Location = new System.Drawing.Point(1957, 386);
+			this.sideBar1.Name = "sideBar1";
+			this.sideBar1.Size = new System.Drawing.Size(131, 23);
+			this.sideBar1.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+			this.sideBar1.TabIndex = 32;
+			this.sideBar1.Text = "sideBar1";
 			// 
 			// Cut
 			// 
@@ -1605,6 +1647,9 @@
 			this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
 			this.BackColor = System.Drawing.Color.Black;
 			this.ClientSize = new System.Drawing.Size(2100, 1080);
+			this.Controls.Add(this.sideBar1);
+			this.Controls.Add(this.labelX1);
+			this.Controls.Add(this.listViewEx1);
 			this.Controls.Add(this.buttonX2);
 			this.Controls.Add(this.comboBoxEx1);
 			this.Controls.Add(this.checkBoxX1);
@@ -1770,5 +1815,8 @@
 		private DevComponents.DotNetBar.Controls.CheckBoxX checkBoxX1;
 		private DevComponents.DotNetBar.Controls.ComboBoxEx comboBoxEx1;
 		private DevComponents.DotNetBar.ButtonX buttonX2;
+		private DevComponents.DotNetBar.Controls.ListViewEx listViewEx1;
+		private DevComponents.DotNetBar.LabelX labelX1;
+		private DevComponents.DotNetBar.SideBar sideBar1;
 	}
 }

@@ -14,6 +14,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace MusicChange {
 	public partial class Form1 : Form {
+		private string Filestr, inputFile, outputFile, arguments;
 		public struct FileItem {
 			public string FileName;      // 文件名
 			public string FilePath;      // 完整路径
@@ -68,6 +69,7 @@ namespace MusicChange {
 			else {
 				path = textBox1.Text;
 			}
+
 			try {
 				var timagefiles = Directory.GetFiles( path, "*.*" ).Where( file => file.ToLower().EndsWith( "mp4" ) ).ToList();
 				imageList.AddRange( timagefiles );
@@ -135,25 +137,23 @@ namespace MusicChange {
 							}
 
 						}
-
-
 		label2.Text = "转换Mp4-》Aac：" + count.ToString();
 					}
 				}
 			}
 			catch (Exception ex) {
-				Console.WriteLine( $"Processing failed: {ex.Message}" );   //LogError( e, "Shape processing failed." );
-				throw;
+				Console.WriteLine( $"Processing failed: {ex.Message}" ); 
+				//object p = LogError(e, "Shape processing failed.");
+				//		throw;
 			}  //   GetFileInfo(listBox2.GetItemText(0).ToLower());  “GetFileInfo” 通常是一个用于获取文件相关信息的函数或方法。
 		}
 		/// <summary>
 		/// 按钮2 查找目录文件的重复文件
 		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
 		private void button2_Click(object sender, EventArgs e) {
 			int count = 0;
-			var path = @"D:\Documents\Camera Roll";
+
+			string path; // = @"D:\Documents\Camera Roll";
 			//	List<string> imageList = new List<string>();
 			if (textBox2.Text == "") {
 				path = @"D:\Documents\Camera Roll";
@@ -161,6 +161,7 @@ namespace MusicChange {
 			else {
 				path = textBox2.Text;
 			}
+
 			try {
 				//		var timagefiles = Directory.GetFiles( path, "*.*" ).Where( file => file.ToLower().EndsWith( "gif" ) || file.ToLower().EndsWith( "jpeg" ) ).ToList();
 				ImageList.Clear();
@@ -234,7 +235,43 @@ namespace MusicChange {
 		}
 
 		private void button3_Click(object sender, EventArgs e) {
-
+			//OpenFileDialog ofd = new OpenFileDialog();
+			//ofd.Filter = "文本文件(*.jpg)|*.|所有文件(*.*)|*.*";   //选择文件
+			//if(ofd.ShowDialog() == DialogResult.OK)
+			//{
+			//	Filestr = ofd.FileName;
+			//	textBox1.Text = Filestr;
+			//}
+			//选择目录和webp 类型文件
+			using(FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
+			{
+				folderBrowserDialog.Description = "请选择一个文件夹";
+					folderBrowserDialog.SelectedPath = $"F:\\下载\\edge";
+				// 如果用户选择了文件夹
+				if(folderBrowserDialog.ShowDialog() == DialogResult.OK)
+				{
+					string selectedPath = folderBrowserDialog.SelectedPath;
+					string[] webpFiles = Directory.GetFiles(selectedPath, "*.*", SearchOption.TopDirectoryOnly);
+					//选择的文件存入listbox
+					listBox1.Items.Clear();
+					// 将文件路径添加到 ListBox
+					foreach(string file in webpFiles)
+					{
+						listBox1.Items.Add(file);
+					}
+					// 显示文件列表
+					if(webpFiles.Length > 0)
+					{
+						//string fileList = string.Join( Environment.NewLine, webpFiles );
+						//MessageBox.Show( $"找到以下 .webp 文件:\n{fileList}", "文件列表" );
+						label2.Text = $"找到 {webpFiles.Length} 个 .webp 文件。";
+					}
+					else
+					{
+						label2.Text = "未找到任何 .webp 文件。";
+					}
+				}
+			}
 		}
 		private void TraverseAllFilesAndDirectories(string rootPath, List<string> allFiles) {
 			try {
