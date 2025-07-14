@@ -70,7 +70,9 @@ namespace MusicChange
 						//设置图片质量
 						image.Quality = 100; // 设置JPEG质量为90
 						//加上当前时间
-						string time = DateTime.Now.ToString( "HHmmss" );
+						//显示毫秒
+
+						string time = DateTime.Now.ToString( "HHmmss.fff" );
 						fileName = fileName + time + ".jpg";
 						//await Task.Run(() => LivpConverter.ConvertLivpToJpg(livpFile, directory, listBox2));
 						await  Task.Run( () =>	image.Write( fileName ));
