@@ -14,7 +14,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace MusicChange {
 	public partial class Form1 : Form {
-		private string Filestr, inputFile, outputFile, arguments;
+	//	private string Filestr, inputFile, outputFile, arguments;
 		public struct FileItem {
 			public string FileName;      // 文件名
 			public string FilePath;      // 完整路径

@@ -27,6 +27,7 @@
 		/// </summary>
 		private void InitializeComponent( )
 		{
+			this.components = new System.ComponentModel.Container();
 			System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
             "选择",
             "儿童沃尔特",
@@ -34,7 +35,6 @@
             "饿的人太晚"}, -1, System.Drawing.Color.Empty, System.Drawing.Color.Empty, new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134))));
 			System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
             "文件名"}, -1, System.Drawing.Color.Empty, System.Drawing.Color.IndianRed, new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134))));
-			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
 			this.listBox1 = new System.Windows.Forms.ListBox();
 			this.textBox1 = new System.Windows.Forms.TextBox();
 			this.listBox2 = new System.Windows.Forms.ListBox();
@@ -47,8 +47,8 @@
 			this.button4 = new System.Windows.Forms.Button();
 			this.listView1 = new System.Windows.Forms.ListView();
 			this.label4 = new System.Windows.Forms.Label();
-			this.dataGridViewX1 = new DevComponents.DotNetBar.Controls.DataGridViewX();
-			((System.ComponentModel.ISupportInitialize)(this.dataGridViewX1)).BeginInit();
+			//this.toolBarArray1 = new Microsoft.VisualBasic.Compatibility.VB6.ToolBarArray(this.components);
+			((System.ComponentModel.ISupportInitialize)(this.toolBarArray1)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// listBox1
@@ -193,31 +193,11 @@
 			this.label4.TabIndex = 12;
 			this.label4.Text = "label4";
 			// 
-			// dataGridViewX1
-			// 
-			this.dataGridViewX1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-			dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
-			dataGridViewCellStyle1.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
-			dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-			dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-			dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-			this.dataGridViewX1.DefaultCellStyle = dataGridViewCellStyle1;
-			this.dataGridViewX1.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(215)))), ((int)(((byte)(229)))));
-			this.dataGridViewX1.Location = new System.Drawing.Point(418, 78);
-			this.dataGridViewX1.Name = "dataGridViewX1";
-			this.dataGridViewX1.RowHeadersWidth = 51;
-			this.dataGridViewX1.RowTemplate.Height = 27;
-			this.dataGridViewX1.Size = new System.Drawing.Size(803, 392);
-			this.dataGridViewX1.TabIndex = 13;
-			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 17F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(1401, 893);
-			this.Controls.Add(this.dataGridViewX1);
+			this.ClientSize = new System.Drawing.Size(1628, 893);
 			this.Controls.Add(this.label4);
 			this.Controls.Add(this.listView1);
 			this.Controls.Add(this.button4);
@@ -236,7 +216,7 @@
 			this.Name = "Form1";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
 			this.Text = "Form1";
-			((System.ComponentModel.ISupportInitialize)(this.dataGridViewX1)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.toolBarArray1)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -256,7 +236,8 @@
 		private System.Windows.Forms.Button button4;
 		private System.Windows.Forms.ListView listView1;
 		private System.Windows.Forms.Label label4;
-		private DevComponents.DotNetBar.Controls.DataGridViewX dataGridViewX1;
+		private System.Windows.Forms.ToolBar toolBarArray1;
+		//private Microsoft.VisualBasic.Compatibility.VB6.ToolBarArray toolBarArray1;
 	}
 }
 
