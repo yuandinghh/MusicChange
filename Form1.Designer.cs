@@ -27,7 +27,6 @@
 		/// </summary>
 		private void InitializeComponent( )
 		{
-			this.components = new System.ComponentModel.Container();
 			System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
             "选择",
             "儿童沃尔特",
@@ -47,8 +46,6 @@
 			this.button4 = new System.Windows.Forms.Button();
 			this.listView1 = new System.Windows.Forms.ListView();
 			this.label4 = new System.Windows.Forms.Label();
-			//this.toolBarArray1 = new Microsoft.VisualBasic.Compatibility.VB6.ToolBarArray(this.components);
-			((System.ComponentModel.ISupportInitialize)(this.toolBarArray1)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// listBox1
@@ -58,7 +55,7 @@
 			this.listBox1.Location = new System.Drawing.Point(18, 78);
 			this.listBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.listBox1.Name = "listBox1";
-			this.listBox1.Size = new System.Drawing.Size(343, 361);
+			this.listBox1.Size = new System.Drawing.Size(1324, 361);
 			this.listBox1.TabIndex = 0;
 			// 
 			// textBox1
@@ -216,7 +213,6 @@
 			this.Name = "Form1";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
 			this.Text = "Form1";
-			((System.ComponentModel.ISupportInitialize)(this.toolBarArray1)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -236,8 +232,6 @@
 		private System.Windows.Forms.Button button4;
 		private System.Windows.Forms.ListView listView1;
 		private System.Windows.Forms.Label label4;
-		private System.Windows.Forms.ToolBar toolBarArray1;
-		//private Microsoft.VisualBasic.Compatibility.VB6.ToolBarArray toolBarArray1;
 	}
 }
 
