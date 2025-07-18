@@ -138,7 +138,6 @@
 			this.label23 = new System.Windows.Forms.Label();
 			this.button3 = new System.Windows.Forms.Button();
 			this.button42 = new System.Windows.Forms.Button();
-			this.videoView1 = new LibVLCSharp.WinForms.VideoView();
 			this.buttonX1 = new DevComponents.DotNetBar.ButtonX();
 			this.checkBoxX1 = new DevComponents.DotNetBar.Controls.CheckBoxX();
 			this.comboBoxEx1 = new DevComponents.DotNetBar.Controls.ComboBoxEx();
@@ -146,6 +145,8 @@
 			this.listViewEx1 = new DevComponents.DotNetBar.Controls.ListViewEx();
 			this.labelX1 = new DevComponents.DotNetBar.LabelX();
 			this.sideBar1 = new DevComponents.DotNetBar.SideBar();
+			this.button43 = new System.Windows.Forms.Button();
+			this.videoView1 = new LibVLCSharp.WinForms.VideoView();
 			this.tabControl1.SuspendLayout();
 			this.tabPage3.SuspendLayout();
 			this.tabPage2.SuspendLayout();
@@ -165,7 +166,7 @@
 			this.tabControl1.Controls.Add(this.tabPage1);
 			this.tabControl1.Controls.Add(this.tabPage4);
 			this.tabControl1.Controls.Add(this.tabPage5);
-			this.tabControl1.Location = new System.Drawing.Point(342, 80);
+			this.tabControl1.Location = new System.Drawing.Point(12, 80);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
 			this.tabControl1.Size = new System.Drawing.Size(749, 851);
@@ -1542,35 +1543,28 @@
 			this.button42.UseVisualStyleBackColor = false;
 			this.button42.Click += new System.EventHandler(this.button42_Click);
 			// 
-			// videoView1
-			// 
-			this.videoView1.BackColor = System.Drawing.Color.DimGray;
-			this.videoView1.Location = new System.Drawing.Point(1166, 238);
-			this.videoView1.MediaPlayer = null;
-			this.videoView1.Name = "videoView1";
-			this.videoView1.Size = new System.Drawing.Size(283, 235);
-			this.videoView1.TabIndex = 25;
-			this.videoView1.Text = "videoView2";
-			// 
 			// buttonX1
 			// 
 			this.buttonX1.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+			this.buttonX1.AutoSize = true;
 			this.buttonX1.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-			this.buttonX1.Location = new System.Drawing.Point(1938, 17);
+			this.buttonX1.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.buttonX1.Location = new System.Drawing.Point(1908, 17);
 			this.buttonX1.Name = "buttonX1";
-			this.buttonX1.Size = new System.Drawing.Size(129, 23);
+			this.buttonX1.Size = new System.Drawing.Size(137, 32);
 			this.buttonX1.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
 			this.buttonX1.TabIndex = 26;
-			this.buttonX1.Text = "buttonX1";
+			this.buttonX1.Text = "各种图片转换";
 			this.buttonX1.Click += new System.EventHandler(this.buttonX1_Click);
 			// 
 			// checkBoxX1
 			// 
+			this.checkBoxX1.BackColor = System.Drawing.Color.LightGray;
 			// 
 			// 
 			// 
 			this.checkBoxX1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-			this.checkBoxX1.Location = new System.Drawing.Point(1769, 55);
+			this.checkBoxX1.Location = new System.Drawing.Point(1959, 446);
 			this.checkBoxX1.Name = "checkBoxX1";
 			this.checkBoxX1.Size = new System.Drawing.Size(100, 23);
 			this.checkBoxX1.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
@@ -1617,11 +1611,12 @@
 			// 
 			// labelX1
 			// 
+			this.labelX1.BackColor = System.Drawing.Color.LightGray;
 			// 
 			// 
 			// 
 			this.labelX1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-			this.labelX1.Location = new System.Drawing.Point(1935, 313);
+			this.labelX1.Location = new System.Drawing.Point(1962, 343);
 			this.labelX1.Name = "labelX1";
 			this.labelX1.Size = new System.Drawing.Size(75, 23);
 			this.labelX1.TabIndex = 31;
@@ -1639,6 +1634,30 @@
 			this.sideBar1.TabIndex = 32;
 			this.sideBar1.Text = "sideBar1";
 			// 
+			// button43
+			// 
+			this.button43.AutoSize = true;
+			this.button43.BackColor = System.Drawing.Color.Black;
+			this.button43.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+			this.button43.Font = new System.Drawing.Font("楷体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.button43.ForeColor = System.Drawing.Color.White;
+			this.button43.Location = new System.Drawing.Point(168, 2);
+			this.button43.Name = "button43";
+			this.button43.Size = new System.Drawing.Size(103, 30);
+			this.button43.TabIndex = 33;
+			this.button43.Text = "获取音频";
+			this.button43.UseVisualStyleBackColor = false;
+			// 
+			// videoView1
+			// 
+			this.videoView1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+			this.videoView1.Location = new System.Drawing.Point(873, 291);
+			this.videoView1.MediaPlayer = null;
+			this.videoView1.Name = "videoView1";
+			this.videoView1.Size = new System.Drawing.Size(482, 308);
+			this.videoView1.TabIndex = 34;
+			this.videoView1.Text = "videoView1";
+			// 
 			// Cut
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
@@ -1647,6 +1666,8 @@
 			this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
 			this.BackColor = System.Drawing.Color.Black;
 			this.ClientSize = new System.Drawing.Size(2100, 1080);
+			this.Controls.Add(this.videoView1);
+			this.Controls.Add(this.button43);
 			this.Controls.Add(this.sideBar1);
 			this.Controls.Add(this.labelX1);
 			this.Controls.Add(this.listViewEx1);
@@ -1654,7 +1675,6 @@
 			this.Controls.Add(this.comboBoxEx1);
 			this.Controls.Add(this.checkBoxX1);
 			this.Controls.Add(this.buttonX1);
-			this.Controls.Add(this.videoView1);
 			this.Controls.Add(this.button42);
 			this.Controls.Add(this.button3);
 			this.Controls.Add(this.label23);
@@ -1810,7 +1830,7 @@
 		private System.Windows.Forms.Label label23;
 		private System.Windows.Forms.Button button3;
 		private System.Windows.Forms.Button button42;
-		private LibVLCSharp.WinForms.VideoView videoView1;
+		//private LibVLCSharp.WinForms.VideoView videoView1;
 		private DevComponents.DotNetBar.ButtonX buttonX1;
 		private DevComponents.DotNetBar.Controls.CheckBoxX checkBoxX1;
 		private DevComponents.DotNetBar.Controls.ComboBoxEx comboBoxEx1;
@@ -1818,5 +1838,7 @@
 		private DevComponents.DotNetBar.Controls.ListViewEx listViewEx1;
 		private DevComponents.DotNetBar.LabelX labelX1;
 		private DevComponents.DotNetBar.SideBar sideBar1;
+		private System.Windows.Forms.Button button43;
+		private LibVLCSharp.WinForms.VideoView videoView1;
 	}
 }

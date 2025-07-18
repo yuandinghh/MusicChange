@@ -433,7 +433,7 @@ namespace MusicChange
 			listBox1.Items.Add($"输出文件:{outputFile}");
 		}
 		// 解析进度信息中的时间字段
-		static string ParseProgress(string line)
+		public static string ParseProgress(string line)
 		{
 			// 匹配out_time字段（格式：out_time=00:00:10.50）
 			Match timeMatch = Regex.Match(line, @"^out_time=(\d+:\d+:\d+\.\d+)$");
@@ -1333,8 +1333,7 @@ bilinear=1：使用双线性插值提高旋转后的画质
 		private void buttonX1_Click(object sender, EventArgs e)
 		{
 			//跳转到changepictuer窗口
-			this.Hide();
-
+			//this.Hide();
 			ChangePictuer change = new ChangePictuer();
 			change.Show();
 
