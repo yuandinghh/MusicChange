@@ -182,6 +182,12 @@
     <Compile Include="ChangePictuer.Designer.cs">
       <DependentUpon>ChangePictuer.cs</DependentUpon>
     </Compile>
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
     <Compile Include="LaserEditing.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -207,6 +213,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ChangePictuer.resx">
       <DependentUpon>ChangePictuer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LaserEditing.resx">
       <DependentUpon>LaserEditing.cs</DependentUpon>
@@ -288,6 +297,7 @@
   <ItemGroup>
     <Content Include="0e1506c6-7555-47e6-a927-04173f21a973.jpg" />
     <Content Include="1b5a5c69-bb5e-4a99-b95d-1ebdb12d2b9d.jpg" />
+    <None Include="ico.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -14,8 +14,8 @@ namespace MusicChange {
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault( false );
 			//Application.Run(new Cut());
-			Application.Run( new LaserEditing() );
-			//Application.Run( new Form3() );
+			//Application.Run( new LaserEditing() );
+			Application.Run( new Form1() );
 			//Application.Run( new ChangePictuer() );
 
 		}

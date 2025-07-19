@@ -21,41 +21,24 @@ namespace MusicChange
 	{
 		private bool splitContainer5mouseDown;
 		int count = 0;
-
-	
 		public LaserEditing()
 		{
-			
 			InitializeComponent();
 			#endregion
-			//// 固定左侧分区宽度
-			//splitContainer5.FixedPanel = FixedPanel.Panel1;
-			//splitContainer5.SplitterDistance = 130; // 左侧宽度 200px
-			////// 可选：限制最小宽度（防止用户拖得过小）
-			////splitContainer5.Panel1MinSize = 135; // 左侧最小宽度 150px[4,5](@ref)
-			////// 可选：禁用拖动
-			//splitContainer5.IsSplitterFixed = true;
-			////splitContainer5.Width = 600;
 
-			////splitContainer5.Panel2MinSize = 400;
-			///
-		
+			panel2.Height = 80;// 设置panel1的宽度为300像素
+			panel2.AutoSize = false; // 关闭自动调整大小功能，确保宽度固定
+
 		}
 		private void LaserEditing_Load(object sender, EventArgs e)
 		{
 			splitContainer5mouseDown = false;
 			splitContainer1.Panel2MinSize = 400;
 		}
-
-
-
-	
-
 		private void LaserEditing_MouseDown(object sender, MouseEventArgs e)
 		{
 			splitContainer5mouseDown = true;
 		}
-
 		private void splitContainer5_MouseDown(object sender, MouseEventArgs e)
 		{
 			splitContainer5mouseDown = true;

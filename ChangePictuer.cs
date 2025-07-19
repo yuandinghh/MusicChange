@@ -105,7 +105,6 @@ namespace MusicChange
 		{
 
 		}
-
 		private async void button3_Click(object sender, EventArgs e)
 		{
 			if(listBox1.Items.Count == 0)
@@ -150,7 +149,6 @@ namespace MusicChange
 			if(failCount > 0)
 				MessageBox.Show($"以下文件转换失败：\n{failFiles}", "转换失败");
 		}
-
 		private void button4_Click(object sender, EventArgs e)
 		{
 			using(FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
@@ -183,7 +181,6 @@ namespace MusicChange
 			}
 
 		}
-
 		private void button5_Click(object sender, EventArgs e)
 		{
 			using(FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
@@ -207,9 +204,6 @@ namespace MusicChange
 				}
 			}
 		}
-
-
-
 		private async void button6_Click(object sender, EventArgs e)
 		{
 			if(listBox1.Items.Count == 0)
@@ -246,12 +240,10 @@ namespace MusicChange
 			//if (failCount > 0)
 			//	MessageBox.Show( $"以下文件转换失败：\n{failFiles}", "转换失败" );
 		}
-
 		private void timer1_Tick(object sender, EventArgs e)
 		{
 			textBox1.Text = $"转换成功共：{successCount}";
 		}
-
 		private void buttonX1_Click(object sender, EventArgs e)   //转换扩展名	
 		{
 			//转换扩展名
@@ -283,7 +275,6 @@ namespace MusicChange
 				}
 			}
 		}
-
 		private void buttonx2_Click(object sender, EventArgs e)  //选择目录
 		{//选择文件夹
 			using(FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
@@ -309,7 +300,6 @@ namespace MusicChange
 				}
 			}
 		}
-
 		private void buttonx4_Click(object sender, EventArgs e)
 		{  //选择文件夹 音频
 			using(FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
@@ -337,7 +327,6 @@ namespace MusicChange
 			}
 
 		}
-
 		private async void buttonx3_Click(object sender, EventArgs e)
 		{
 			int count = 0;
@@ -479,7 +468,6 @@ namespace MusicChange
 				MessageBox.Show($"获取文件信息失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 		}
-
 		private async void buttonX5_Click(object sender, EventArgs e) //将目录下的所有文件改名存到别的目录
 		{
 			int count = 0;
@@ -509,7 +497,6 @@ namespace MusicChange
 
 
 		}
-
 		public static void CopyDirectory(string sourceDir, string targetDir, bool overwrite = true)
 		{
 			var source = new DirectoryInfo(sourceDir);
