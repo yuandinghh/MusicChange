@@ -179,7 +179,10 @@ namespace MusicChange
 		private void button8_Click(object sender, EventArgs e)
 		{
 			//退出当前窗口
-			this.Close();        //如果需要释放资源，可以在这里添加代码
+			Application.Exit();
+			this.Close();
+		//释放资源
+
 		}
 		//选择目录
 		private void button2_Click(object sender, EventArgs e)

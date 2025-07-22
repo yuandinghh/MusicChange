@@ -136,10 +136,13 @@
   <data name="右转150" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\右转150.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="ico" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\ico.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="前进" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\前进.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="ico" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="ico1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\ico.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

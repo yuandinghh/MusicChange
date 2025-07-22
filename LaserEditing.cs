@@ -14,37 +14,56 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using LibVLCSharp.Shared;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace MusicChange
 {
-	public partial class LaserEditing:Form
+	public partial class LaserEditing : Form
 	{
+		#endregion
 		private bool splitContainer5mouseDown;
 		int count = 0;
-		public LaserEditing()
+		[DllImport( "user32.dll" )]
+		public static extern bool ReleaseCapture( );
+		[DllImport( "user32.dll" )]
+		public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+		private const int WM_NCLBUTTONDOWN = 0xA1;
+		private const int HTCAPTION = 0x2;
+		private LibVLC _libVLC;
+
+
+
+		private const int HT_CAPTION = 0x2;
+
+		private void LaserEditing_MouseDown(object sender, MouseEventArgs e)
+		{
+			splitContainer5mouseDown = true;
+			if (e.Button == MouseButtons.Left) {
+				// 释放鼠标捕获并发送消息以模拟拖动窗口
+				ReleaseCapture();
+				SendMessage( this.Handle, WM_NCLBUTTONDOWN, HTCAPTION, 0 );
+			}
+		}
+		public LaserEditing( )
 		{
 			InitializeComponent();
-			#endregion
-
-			panel2.Height = 80;// 设置panel1的宽度为300像素
-			panel2.AutoSize = false; // 关闭自动调整大小功能，确保宽度固定
+			this.DoubleBuffered = true;
+								
 
 		}
+
 		private void LaserEditing_Load(object sender, EventArgs e)
 		{
 			splitContainer5mouseDown = false;
 			splitContainer1.Panel2MinSize = 400;
-		}
-		private void LaserEditing_MouseDown(object sender, MouseEventArgs e)
-		{
-			splitContainer5mouseDown = true;
+			//buttonx8.BackColor = System.Drawing.Color.Gray;
 		}
 		private void splitContainer5_MouseDown(object sender, MouseEventArgs e)
 		{
 			splitContainer5mouseDown = true;
 		}
 
-	
+
 		private void splitContainer3_Panel1_Paint(object sender, PaintEventArgs e)
 		{
 
@@ -68,9 +87,58 @@ namespace MusicChange
 		private void 修改图片_Click(object sender, EventArgs e)
 		{
 			ChangePictuer form = new ChangePictuer();
-           form.Show();
+			form.Show();
 
 		}
+
+		private void flowLayoutPanel2_Paint(object sender, PaintEventArgs e)
+		{
+
+		}
+		#region  -------------  窗口 close, maximize, minimize  -----------------
+		private void button8_Click(object sender, EventArgs e)  //退出当前窗口
+		{
+			Application.Exit();
+			this.Close();
+		}
+
+		private void button3_Click(object sender, EventArgs e)
+		{
+			if (WindowState == FormWindowState.Maximized) {
+				WindowState = FormWindowState.Normal; // 恢复到正常状态
+			}
+			else {
+				WindowState = FormWindowState.Maximized; // 最大化窗口
+			}
+
+		}
+
+		private void button42_Click(object sender, EventArgs e)
+		{           //minimize
+			if (WindowState == FormWindowState.Minimized) {
+				WindowState = FormWindowState.Normal; // 恢复到正常状态
+			}
+			else {
+				WindowState = FormWindowState.Minimized; // 最小化窗口
+			}
+		}
+
+		private void buttonx6_Click(object sender, EventArgs e)
+		{       //show cut 
+			Cut form = new Cut();
+			form.Show();
+		}
+
+		private void LaserEditing_MouseMove(object sender, MouseEventArgs e)
+		{
+			if (e.Button == MouseButtons.Left) {
+				// 计算偏移量并更新窗口位置
+				//int deltaX = e.X - _dragStartPoint.X;
+				//int deltaY = e.Y - _dragStartPoint.Y;
+				//this.Location = new Point( this.Left + deltaX, this.Top + deltaY );
+			}
+		}
+		#endregion
 
 		//private void SplitContainer5_SplitterMoving(object sender, SplitterCancelEventArgs e)
 		//{
