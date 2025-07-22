@@ -53,6 +53,7 @@ namespace MusicChange
 			this.panelEx1 = new DevComponents.DotNetBar.PanelEx();
 			this.splitContainer5 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer6 = new System.Windows.Forms.SplitContainer();
+			this.button1 = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -261,10 +262,12 @@ namespace MusicChange
 			// 
 			// flowLayoutPanel2
 			// 
+			this.flowLayoutPanel2.AutoScroll = true;
 			this.flowLayoutPanel2.BackColor = System.Drawing.Color.Black;
 			this.flowLayoutPanel2.Controls.Add(this.buttonx8);
 			this.flowLayoutPanel2.Controls.Add(this.buttonx4);
 			this.flowLayoutPanel2.Controls.Add(this.buttonx5);
+			this.flowLayoutPanel2.Controls.Add(this.button1);
 			this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Left;
 			this.flowLayoutPanel2.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
 			this.flowLayoutPanel2.Location = new System.Drawing.Point(2, 62);
@@ -285,10 +288,10 @@ namespace MusicChange
 			this.buttonx8.Location = new System.Drawing.Point(10, 20);
 			this.buttonx8.Margin = new System.Windows.Forms.Padding(10, 20, 10, 10);
 			this.buttonx8.Name = "buttonx8";
-			this.buttonx8.Size = new System.Drawing.Size(105, 38);
+			this.buttonx8.Size = new System.Drawing.Size(105, 35);
 			this.buttonx8.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-			this.buttonx8.Symbol = "";
 			this.buttonx8.SymbolColor = System.Drawing.Color.Black;
+			this.buttonx8.SymbolSet = DevComponents.DotNetBar.eSymbolSet.Material;
 			this.buttonx8.SymbolSize = 1F;
 			this.buttonx8.TabIndex = 15;
 			this.buttonx8.Text = "导入素材";
@@ -299,44 +302,44 @@ namespace MusicChange
 			// buttonx4
 			// 
 			this.buttonx4.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-			this.buttonx4.BackColor = System.Drawing.Color.Green;
-			this.buttonx4.ColorTable = DevComponents.DotNetBar.eButtonColor.Office2007WithBackground;
+			this.buttonx4.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.buttonx4.BackColor = System.Drawing.Color.GreenYellow;
+			this.buttonx4.ColorTable = DevComponents.DotNetBar.eButtonColor.Flat;
 			this.buttonx4.Font = new System.Drawing.Font("宋体", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(120)));
-			this.buttonx4.HotTrackingStyle = DevComponents.DotNetBar.eHotTrackingStyle.Color;
-			this.buttonx4.Location = new System.Drawing.Point(10, 78);
+			this.buttonx4.Location = new System.Drawing.Point(10, 75);
 			this.buttonx4.Margin = new System.Windows.Forms.Padding(10);
 			this.buttonx4.Name = "buttonx4";
 			this.buttonx4.Padding = new System.Windows.Forms.Padding(5);
-			this.buttonx4.Size = new System.Drawing.Size(104, 33);
+			this.buttonx4.Size = new System.Drawing.Size(104, 35);
 			this.buttonx4.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
 			this.buttonx4.Symbol = "";
 			this.buttonx4.SymbolColor = System.Drawing.Color.Black;
 			this.buttonx4.SymbolSize = 1F;
 			this.buttonx4.TabIndex = 16;
-			this.buttonx4.Text = "导入素材";
+			this.buttonx4.Text = "个人收藏";
 			this.buttonx4.TextAlignment = DevComponents.DotNetBar.eButtonTextAlignment.Left;
 			this.buttonx4.TextColor = System.Drawing.Color.Black;
 			// 
 			// buttonx5
 			// 
 			this.buttonx5.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-			this.buttonx5.BackColor = System.Drawing.Color.Green;
-			this.buttonx5.ColorTable = DevComponents.DotNetBar.eButtonColor.Office2007WithBackground;
+			this.buttonx5.BackColor = System.Drawing.Color.GreenYellow;
+			this.buttonx5.ColorTable = DevComponents.DotNetBar.eButtonColor.Flat;
 			this.buttonx5.Font = new System.Drawing.Font("宋体", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(120)));
-			this.buttonx5.HotTrackingStyle = DevComponents.DotNetBar.eHotTrackingStyle.Color;
-			this.buttonx5.Location = new System.Drawing.Point(10, 131);
+			this.buttonx5.Location = new System.Drawing.Point(10, 130);
 			this.buttonx5.Margin = new System.Windows.Forms.Padding(10);
 			this.buttonx5.Name = "buttonx5";
 			this.buttonx5.Padding = new System.Windows.Forms.Padding(5);
-			this.buttonx5.Size = new System.Drawing.Size(104, 33);
+			this.buttonx5.Size = new System.Drawing.Size(104, 35);
 			this.buttonx5.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-			this.buttonx5.Symbol = "";
 			this.buttonx5.SymbolColor = System.Drawing.Color.Black;
+			this.buttonx5.SymbolSet = DevComponents.DotNetBar.eSymbolSet.Material;
 			this.buttonx5.SymbolSize = 1F;
 			this.buttonx5.TabIndex = 16;
-			this.buttonx5.Text = "导入素材";
+			this.buttonx5.Text = "官方素材";
 			this.buttonx5.TextAlignment = DevComponents.DotNetBar.eButtonTextAlignment.Left;
 			this.buttonx5.TextColor = System.Drawing.Color.Black;
+			this.buttonx5.Click += new System.EventHandler(this.buttonx5_Click);
 			// 
 			// panelEx3
 			// 
@@ -401,13 +404,15 @@ namespace MusicChange
 			this.buttonX3.Name = "buttonX3";
 			this.buttonX3.Size = new System.Drawing.Size(58, 58);
 			this.buttonX3.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+			this.buttonX3.SubItemsExpandWidth = 15;
 			this.buttonX3.Symbol = "";
-			this.buttonX3.SymbolColor = System.Drawing.Color.Green;
+			this.buttonX3.SymbolColor = System.Drawing.Color.GreenYellow;
 			this.buttonX3.SymbolSize = 12F;
 			this.buttonX3.TabIndex = 4;
 			this.buttonX3.Text = "素材";
 			this.buttonX3.TextColor = System.Drawing.Color.White;
 			this.buttonX3.ThemeAware = true;
+			this.buttonX3.Click += new System.EventHandler(this.buttonX3_Click);
 			// 
 			// buttonX2
 			// 
@@ -420,13 +425,15 @@ namespace MusicChange
 			this.buttonX2.Name = "buttonX2";
 			this.buttonX2.Size = new System.Drawing.Size(58, 58);
 			this.buttonX2.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-			this.buttonX2.Symbol = "";
-			this.buttonX2.SymbolColor = System.Drawing.Color.Green;
+			this.buttonX2.SubItemsExpandWidth = 15;
+			this.buttonX2.Symbol = "";
+			this.buttonX2.SymbolColor = System.Drawing.Color.DodgerBlue;
 			this.buttonX2.SymbolSize = 12F;
 			this.buttonX2.TabIndex = 0;
-			this.buttonX2.Text = "素材";
+			this.buttonX2.Text = "音频";
 			this.buttonX2.TextColor = System.Drawing.Color.White;
 			this.buttonX2.ThemeAware = true;
+			this.buttonX2.Click += new System.EventHandler(this.buttonX2_Click);
 			// 
 			// splitContainer4
 			// 
@@ -492,6 +499,22 @@ namespace MusicChange
 			this.splitContainer6.SplitterDistance = 622;
 			this.splitContainer6.TabIndex = 0;
 			// 
+			// button1
+			// 
+			this.button1.AutoSize = true;
+			this.button1.FlatAppearance.BorderSize = 0;
+			this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.button1.Font = new System.Drawing.Font("楷体", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.button1.ForeColor = System.Drawing.Color.White;
+			this.button1.Location = new System.Drawing.Point(5, 185);
+			this.button1.Margin = new System.Windows.Forms.Padding(5, 10, 5, 5);
+			this.button1.Name = "button1";
+			this.button1.Size = new System.Drawing.Size(75, 27);
+			this.button1.TabIndex = 17;
+			this.button1.Text = "热门";
+			this.button1.UseVisualStyleBackColor = true;
+			this.button1.Click += new System.EventHandler(this.button1_Click);
+			// 
 			// LaserEditing
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -528,6 +551,7 @@ namespace MusicChange
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
 			this.splitContainer3.ResumeLayout(false);
 			this.flowLayoutPanel2.ResumeLayout(false);
+			this.flowLayoutPanel2.PerformLayout();
 			this.panelEx2.ResumeLayout(false);
 			this.flowLayoutPanel1.ResumeLayout(false);
 			this.splitContainer4.Panel2.ResumeLayout(false);
@@ -567,5 +591,6 @@ namespace MusicChange
 		private System.Windows.Forms.Button button8;
 		private System.Windows.Forms.Panel panel1;
 		private DevComponents.DotNetBar.ButtonX buttonx6;
+		private System.Windows.Forms.Button button1;
 	}
 }
