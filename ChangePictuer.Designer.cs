@@ -154,7 +154,7 @@
             this.buttonX1.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.buttonX1.Location = new System.Drawing.Point(718, 72);
             this.buttonX1.Name = "buttonX1";
-            this.buttonX1.Size = new System.Drawing.Size(232, 30);
+            this.buttonX1.Size = new System.Drawing.Size(140, 30);
             this.buttonX1.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
             this.buttonX1.TabIndex = 10;
             this.buttonX1.Text = "转换扩展名";
@@ -194,12 +194,12 @@
             // buttonx2
             // 
             this.buttonx2.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-            this.buttonx2.AutoSize = true;
+            this.buttonx2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.buttonx2.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
             this.buttonx2.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.buttonx2.Location = new System.Drawing.Point(516, 71);
             this.buttonx2.Name = "buttonx2";
-            this.buttonx2.Size = new System.Drawing.Size(160, 31);
+            this.buttonx2.Size = new System.Drawing.Size(163, 28);
             this.buttonx2.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
             this.buttonx2.TabIndex = 16;
             this.buttonx2.Text = "TXT选择目录";
@@ -283,10 +283,11 @@
             // 
             this.textBoxX3.Border.Class = "TextBoxBorder";
             this.textBoxX3.Border.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.textBoxX3.Location = new System.Drawing.Point(718, 223);
+            this.textBoxX3.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.textBoxX3.Location = new System.Drawing.Point(525, 126);
             this.textBoxX3.Name = "textBoxX3";
             this.textBoxX3.PreventEnterBeep = true;
-            this.textBoxX3.Size = new System.Drawing.Size(333, 25);
+            this.textBoxX3.Size = new System.Drawing.Size(333, 30);
             this.textBoxX3.TabIndex = 22;
             this.textBoxX3.Text = "F:\\下载\\图片助手(ImageAssistant)_批量图片下载器";
             // 

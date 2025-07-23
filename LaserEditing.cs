@@ -7,13 +7,19 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Media;
+using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
+using DevComponents.DotNetBar;
 using LibVLCSharp.Shared;
+//using System.Windows.Forms.Keys;
+
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace MusicChange
@@ -21,6 +27,25 @@ namespace MusicChange
 	public partial class LaserEditing : Form
 	{
 		#endregion
+		// Windows API 函数
+		[DllImport( "user32.dll" )]
+		private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
+
+		[DllImport( "user32.dll" )]
+		private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
+		// 快捷键ID
+		private const int HOTKEY_ID = 1;
+		// 修饰符常量
+		private const uint MOD_ALT = 0x0001;
+		private const uint MOD_CONTROL = 0x0002;
+		private const uint MOD_SHIFT = 0x0004;
+		// 鼠标状态变量
+		private bool isDragging = false;
+		private Point dragStartPoint;
+		private const int borderSize = 10;
+		private FormWindowState previousWindowState;
+
+
 		private bool splitContainer5mouseDown;
 		int count = 0;
 		[DllImport( "user32.dll" )]
@@ -32,6 +57,87 @@ namespace MusicChange
 		private LibVLC _libVLC;
 		private const int HT_CAPTION = 0x2;
 		bool Ismaterial = true;   //当前是素材
+	
+		
+		protected override void WndProc(ref Message m)
+		{
+			const int WM_NCHITTEST = 0x0084;
+			const int HTCLIENT = 0x1;
+			const int HTLEFT = 0xA;
+			const int HTRIGHT = 0xB;
+			const int HTTOP = 0xC;
+			const int HTTOPLEFT = 0xD;
+			const int HTTOPRIGHT = 0xE;
+			const int HTBOTTOM = 0xF;
+			const int HTBOTTOMLEFT = 0x10;
+			const int HTBOTTOMRIGHT = 0x11;
+
+			const int RESIZE_HANDLE_SIZE = 10; // 可调整大小的边缘宽度
+
+			if (m.Msg == WM_NCHITTEST && this.WindowState == FormWindowState.Normal) {
+				Point cursorPos = this.PointToClient( Cursor.Position );
+				int hitTestResult = HTCLIENT;
+
+				// 判断鼠标是否在窗体边缘
+				if (cursorPos.X <= RESIZE_HANDLE_SIZE) {
+					if (cursorPos.Y <= RESIZE_HANDLE_SIZE)
+						hitTestResult = HTTOPLEFT; // 左上角
+					else if (cursorPos.Y >= this.ClientSize.Height - RESIZE_HANDLE_SIZE)
+						hitTestResult = HTBOTTOMLEFT; // 左下角
+					else
+						hitTestResult = HTLEFT; // 左边
+				}
+				else if (cursorPos.X >= this.ClientSize.Width - RESIZE_HANDLE_SIZE) {
+					if (cursorPos.Y <= RESIZE_HANDLE_SIZE)
+						hitTestResult = HTTOPRIGHT; // 右上角
+					else if (cursorPos.Y >= this.ClientSize.Height - RESIZE_HANDLE_SIZE)
+						hitTestResult = HTBOTTOMRIGHT; // 右下角
+					else
+						hitTestResult = HTRIGHT; // 右边
+				}
+				else if (cursorPos.Y <= RESIZE_HANDLE_SIZE)
+					hitTestResult = HTTOP; // 上边
+				else if (cursorPos.Y >= this.ClientSize.Height - RESIZE_HANDLE_SIZE)
+					hitTestResult = HTBOTTOM; // 下边
+
+				m.Result = (IntPtr)hitTestResult;
+				return;
+			}
+
+			base.WndProc( ref m );
+		}
+
+		public LaserEditing( )
+		{
+			InitializeComponent();
+			this.DoubleBuffered = true;
+			// 允许最大化
+			this.MaximizeBox = true;
+			// 初始窗口状态
+			this.WindowState = FormWindowState.Normal;
+			//this.FormBorderStyle = FormBorderStyle.None; // 无边框
+			this.DoubleBuffered = true;
+			this.MaximizeBox = true;
+			this.MinimizeBox = true;
+			this.SizeGripStyle = SizeGripStyle.Show;
+
+		}
+
+		private void LaserEditing_Load(object sender, EventArgs e)
+		{
+			//splitContainer5mouseDown = false;
+			splitContainer1.Panel2MinSize = 400;
+			//buttonx8.BackColor = System.Drawing.Color.Gray;
+		}
+
+		private void panelEx4_MouseDown(object sender, MouseEventArgs e)
+		{
+			if (e.Button == MouseButtons.Left) {
+				ReleaseCapture();
+				SendMessage( this.Handle, WM_NCLBUTTONDOWN, HTCAPTION, 0 );
+			}
+
+		}
 
 		private void LaserEditing_MouseDown(object sender, MouseEventArgs e)
 		{
@@ -41,28 +147,131 @@ namespace MusicChange
 				ReleaseCapture();
 				SendMessage( this.Handle, WM_NCLBUTTONDOWN, HTCAPTION, 0 );
 			}
+			//// 只有在正常状态下才能拖动和调整大小
+			//if(this.WindowState == FormWindowState.Normal)
+			//{
+			//	// 鼠标左键按下时开始拖动（排除边缘区域，避免与缩放冲突）
+			if (e.Button == MouseButtons.Left) {  //&& !IsInResizeArea( e.Location )
+				isDragging = true;
+				dragStartPoint = new Point( e.X, e.Y );
+				this.Cursor = Cursors.Hand;
+			}
 		}
-		public LaserEditing( )
+
+		//if(e.Button == MouseButtons.Left)
+		//{
+		//	ReleaseCapture();
+		//	SendMessage(this.Handle, WM_NCLBUTTONDOWN, HTCAPTION, 0); // 欺骗系统认为在标题栏按下
+		//}
+		private void LaserEditing_MouseMove(object sender, MouseEventArgs e)
 		{
-			InitializeComponent();
-			this.DoubleBuffered = true;
 
-
+			// 处理拖动
+			if (isDragging) {
+				this.Location = new Point( this.Location.X + e.X - dragStartPoint.X, this.Location.Y + e.Y - dragStartPoint.Y );
+				//  Point newLocation = this.Location;
+				//newLocation.X += e.X - dragStartPoint.X;
+				//newLocation.Y += e.Y - dragStartPoint.Y;
+				//this.Location = newLocation;
+			}
+			//// 处理边框鼠标样式
+			//else if (this.WindowState == FormWindowState.Normal) {
+			//	SetCursorBasedOnPosition( e.Location );
+			//}
 		}
 
-		private void LaserEditing_Load(object sender, EventArgs e)
+		private void LaserEditing_MouseUp(object sender, MouseEventArgs e)
 		{
-			splitContainer5mouseDown = false;
-			splitContainer1.Panel2MinSize = 400;
-			//buttonx8.BackColor = System.Drawing.Color.Gray;
+			if (e.Button == MouseButtons.Left) {
+				isDragging = false;
+				//this.Cursor = Cursors.Default;
+			}
+		}
+
+		private void LaserEditing_MouseDoubleClick(object sender, MouseEventArgs e)
+		{
+			// 双击标题栏切换最大化/正常状态
+			if (e.Button == MouseButtons.Left &&
+				e.Y < 50) // 假设标题栏高度为50
+			{
+				ToggleMaximize();
+			}
+		}
+		private void ToggleMaximize( )
+		{
+			if (this.WindowState == FormWindowState.Normal) {
+				previousWindowState = FormWindowState.Normal;
+				this.WindowState = FormWindowState.Maximized;
+			}
+			else {
+				this.WindowState = previousWindowState;
+			}
+		}
+
+		private void buttonX2_Click(object sender, EventArgs e) //video 音频
+		{
+			Ismaterial = false;
+			this.buttonX3.SymbolColor = System.Drawing.Color.Gray;
+			buttonx8.Visible = false;
+			buttonx4.Visible = false;
+			buttonx5.Visible = false;
+		}
+
+		private void LaserEditing_KeyDown(object sender, KeyEventArgs e)
+		{
+			Keys key = e.KeyCode;
+			//  if (e.Control != true)//如果没按Ctrl键      return;
+			switch (key) {
+				case Keys.F1:
+
+					break;
+				case Keys.F2:
+
+					break;
+				case Keys.F3:
+
+					break;
+				case Keys.F4:             //减少 图片显示时间5秒
+				case Keys.F6:             //停音乐
+					break;
+				case Keys.F5:             //增加图片显示时间
+				case Keys.F10:
+					break;
+				case Keys.F11:             //关闭计算机
+					break;
+				case Keys.F12:
+					Application.Exit();
+					this.Close();
+					break;
+
+			}
 		}
 		private void buttonx5_Click(object sender, EventArgs e) //官方素材
 		{
-		
+
+		}
+		private void buttonX3_Click(object sender, EventArgs e)  //当前选择素材
+		{
+			Ismaterial = true;
+			this.buttonX3.BackColor = System.Drawing.Color.Black;
+			this.buttonX3.ColorTable = DevComponents.DotNetBar.eButtonColor.Flat;
+			this.buttonX3.SymbolColor = System.Drawing.Color.GreenYellow;
+			//this.buttonX3.ThemeAware = true;  //这个属性很可能用于让按钮能够感知并自动适应应用程序的主题变化。当主题（如浅色 / 深色模式）发生改变时，设置为 ThemeAware=true 的控件会自动更新其外观（如颜色、样式等）以匹配当前主题，而无需手动编写额外的主题切换代码。
+			buttonx8.Visible = true;
+			buttonx4.Visible = true;
+			buttonx5.Visible = true;
+			this.buttonx8.BackColor = System.Drawing.Color.GreenYellow;
+			this.buttonx8.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+			this.buttonx8.TextColor = System.Drawing.Color.Black;
+
 		}
 
+		private void button1_Click(object sender, EventArgs e) //素材热门
+		{
 
-#region 没用的程序
+		}
+
+		#region 没用的程序
 		private void splitContainer5_MouseDown(object sender, MouseEventArgs e)
 		{
 			splitContainer5mouseDown = true;
@@ -113,7 +322,7 @@ namespace MusicChange
 		//		}
 		//	}
 		//}
-	#endregion
+		#endregion
 		#region  -------------  窗口 close, maximize, minimize  -----------------
 		private void button8_Click(object sender, EventArgs e)  //退出当前窗口
 		{
@@ -148,54 +357,99 @@ namespace MusicChange
 			form.Show();
 		}
 
-		private void LaserEditing_MouseMove(object sender, MouseEventArgs e)
+		private bool IsInResizeArea(Point point)
 		{
-			if (e.Button == MouseButtons.Left) {
-				// 计算偏移量并更新窗口位置
-				//int deltaX = e.X - _dragStartPoint.X;
-				//int deltaY = e.Y - _dragStartPoint.Y;
-				//this.Location = new Point( this.Left + deltaX, this.Top + deltaY );
+			return point.X <= borderSize ||  // 左边界
+				   point.X >= this.ClientSize.Width - borderSize ||  // 右边界
+				   point.Y <= borderSize ||  // 上边界
+				   point.Y >= this.ClientSize.Height - borderSize;   // 下边界
+		}
+
+		private void SetCursorBasedOnPosition(Point point)
+		{
+			if (this.WindowState == FormWindowState.Maximized) {
+				this.Cursor = Cursors.Default;
+				return;
+			}
+
+			// 右下角
+			if (point.X >= this.ClientSize.Width - borderSize &&
+				point.Y >= this.ClientSize.Height - borderSize) {
+				this.Cursor = Cursors.SizeNWSE;
+			}
+			// 左下角
+			else if (point.X <= borderSize &&
+					 point.Y >= this.ClientSize.Height - borderSize) {
+				this.Cursor = Cursors.SizeNESW;
+			}
+			// 右上角
+			else if (point.X >= this.ClientSize.Width - borderSize &&
+					 point.Y <= borderSize) {
+				this.Cursor = Cursors.SizeNESW;
+			}
+			// 左上角
+			else if (point.X <= borderSize &&
+					 point.Y <= borderSize) {
+				this.Cursor = Cursors.SizeNWSE;
+			}
+			// 左边框
+			else if (point.X <= borderSize) {
+				this.Cursor = Cursors.SizeWE;
+			}
+			// 右边框
+			else if (point.X >= this.ClientSize.Width - borderSize) {
+				this.Cursor = Cursors.SizeWE;
+			}
+			// 上边框
+			else if (point.Y <= borderSize) {
+				this.Cursor = Cursors.SizeNS;
+			}
+			// 下边框
+			else if (point.Y >= this.ClientSize.Height - borderSize) {
+				this.Cursor = Cursors.SizeNS;
+			}
+			// 窗体内部
+			else {
+				this.Cursor = Cursors.Default;
 			}
 		}
 
-		private void buttonX3_Click(object sender, EventArgs e)  //当前选择素材
-		{
-			Ismaterial = true;
-			this.buttonX3.Visible = true;
-			this.buttonX3.BackColor = System.Drawing.Color.Black;
-			this.buttonX3.ColorTable = DevComponents.DotNetBar.eButtonColor.Flat;
-			this.buttonX3.SymbolColor = System.Drawing.Color.GreenYellow;
-			this.buttonX3.SymbolSize = 12F;
-			this.buttonX3.TextColor = System.Drawing.Color.White;
-			this.buttonX3.ThemeAware = true;  //这个属性很可能用于让按钮能够感知并自动适应应用程序的主题变化。当主题（如浅色 / 深色模式）发生改变时，设置为 ThemeAware=true 的控件会自动更新其外观（如颜色、样式等）以匹配当前主题，而无需手动编写额外的主题切换代码。
-			buttonx8.Visible = true;
-			this.buttonx8.BackColor = System.Drawing.Color.GreenYellow;
-			this.buttonx8.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-			this.buttonx8.TextColor = System.Drawing.Color.Black;
 
+
+		#endregion
+
+		#region 初始化事件绑定
+		//private void InitializeComponent()
+		//{
+		//	this.SuspendLayout();
+		//	// 
+		//	// BorderlessForm
+		//	// 
+		//	//this.ClientSize = new System.Drawing.Size(800, 450);
+		//	//this.Name = "BorderlessForm";
+		//	//this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form_MouseDown);
+		//	//this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Form_MouseMove);
+		//	//this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Form_MouseUp);
+		//	//this.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.Form_MouseDoubleClick);
+		//	this.ResumeLayout(false);
+		//}
+		#endregion
+
+		private void splitContainer6_MouseMove(object sender, MouseEventArgs e)
+		{
+			//SetCursorBasedOnPosition( e.Location );
 		}
 
-		private void button1_Click(object sender, EventArgs e) //素材热门
+		private void panelEx1_MouseMove(object sender, MouseEventArgs e)
 		{
-			Ismaterial = false;
-			this.buttonX3.Visible = false;
-			buttonx8.Visible = false;
+			SetCursorBasedOnPosition( e.Location );
 		}
-
-		private void buttonX2_Click(object sender, EventArgs e) //video 音频
-		{
-
-		}
-
-
-		// 添加边距
-
-
 	}
-	#endregion
-
-
-
 
 }
+
+
+
+
+
 

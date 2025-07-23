@@ -54,12 +54,12 @@ namespace MusicChange
 		{
 			successCount = 0;
 			failCount = 0;
+			textBox3.Text="";
 			StringBuilder failFiles = new StringBuilder();
 			foreach (var item in listBox1.Items) {
 				string webpFile = item.ToString();
 				if (!File.Exists( webpFile ) || Path.GetExtension( webpFile ).ToLower() != ".webp")
 					continue;
-
 				try {
 					using (var image = new MagickImage( webpFile )) {
 						string jpgFile = Path.ChangeExtension( webpFile, ".jpg" );
@@ -69,14 +69,18 @@ namespace MusicChange
 						//get file  name
 						string fileName = Path.GetFileNameWithoutExtension( webpFile );
 						//设置图片质量
-						image.Quality = 100; // 设置JPEG质量为90
-											 //加上当前时间  显示毫秒
+						image.Quality = 100; // 设置JPEG质量为90	 //加上当前时间  显示毫秒
 						string time = DateTime.Now.ToString( "HHmmss.fff" );
 						fileName = directory + "\\" + fileName + time + ".jpg";
 						//await Task.Run(() => LivpConverter.ConvertLivpToJpg(livpFile, directory, listBox2));
 						await Task.Run( ( ) => image.Write( fileName ) );
 						successCount++;
-						textBox1.Text = $"转换成功：{webpFile} -> {jpgFile}" + successCount.ToString();
+						textBox1.Text = $"转换成功为： {jpgFile}";
+						//将转换后的文件添加到listbox2
+						listBox2.Items.Add( fileName );
+						//delete original webp file
+						File.Delete( webpFile );
+						textBox3.Text = $"成功删除：{webpFile}";
 					}
 				}
 				catch (Exception ex) {
