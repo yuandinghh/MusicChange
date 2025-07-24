@@ -14,7 +14,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using LibVLCSharp.Shared;
 
-
 namespace MusicChange
 {
 	public partial class Cut:Form
@@ -51,7 +50,8 @@ namespace MusicChange
 			comboBoxSpeed.SelectedIndex = 3; // 默认1.0x	_mediaPlayer.SetRate(rate) = 0.1; 
 			comboBoxSpeed.SelectedIndexChanged += comboBoxSpeed_SelectedIndexChanged; //示例：为按钮和组合框添加说明
 			#endregion
-			#region ------- ToolTip 鼠标进入悬停显示 -------
+
+		#region ------- ToolTip 鼠标进入悬停显示 -------
 			ToolTipEx toolTip1 = new ToolTipEx();   // 创建自定义 ToolTipEx 实例 ，鼠标悬停时显示提示信息
 			toolTip1.TipFont = new Font("微软雅黑", 20); // 这里设置字体和大小
 			ConfigureToolTip(toolTip1);
@@ -85,9 +85,11 @@ namespace MusicChange
 			toolTip1.SetToolTip(label27, "preset（预设编码速度）\r\n•\t作用：控制编码速度与压缩效率的平衡。\r\n•\t可选值（从快到慢）：\r\n•\tultrafast, superfast, veryfast, faster, fast, medium, slow, slower, veryslow\r\n•\t说明：\r\n•\t越快（如 ultrafast），编码速度快，但文件大、画质略低。\r\n•\t越慢（如 veryslow），编码速度慢，但文件更小、画质更好。\r\n•\t默认值是 medium，一般推荐用 fast、medium 或 slow。");
 		}
 		#endregion
-		#region 视频播放相关
+
+		#region -------------- 视频播放相关 ------------
+		// 选择要播放的视频文件
 		private void button3_Click(object sender, EventArgs e)
-		{    // 选择要播放的视频文件
+		{  
 			if(textBox1 != null)
 			{
 				OpenFileDialog ofd = new OpenFileDialog();
@@ -196,6 +198,7 @@ namespace MusicChange
 			}
 		}
 		#endregion
+
 		#region  ------- 开始压缩 -------
 		//	按目录所有视频文件压缩  yy
 		private async void button22_Click(object sender, EventArgs e)
@@ -453,6 +456,7 @@ namespace MusicChange
 			return "";
 		}
 		#endregion
+
 		#region ------- 视频裁剪 -------
 		private void button1_Click(object sender, EventArgs e)
 		{
@@ -992,6 +996,7 @@ ffmpeg -ss 00:00:15.200 -to 00:00:30.500 -accurate_seek -i input.mp4 -c:v copy -
 
 
 		#endregion
+
 		#region ------- 删除ffmpeg进程 -------		
 		private void button39_Click(object sender, EventArgs e) //删除ffmpeg 进程
 		{       //扫描所有进程
@@ -1164,6 +1169,7 @@ ffmpeg -ss 00:00:15.200 -to 00:00:30.500 -accurate_seek -i input.mp4 -c:v copy -
 			Environment.Exit(0);
 		}
 		#endregion
+
 		#region ------- 视频旋转 -------
 		/*1. 顺时针旋转 90 度
 		bash

@@ -58,7 +58,7 @@ namespace MusicChange
 		private const int HT_CAPTION = 0x2;
 		bool  IsOfficialMaterialSwitch = false; //官方素材开关
 		bool Ismaterial =true;
-
+		string importfile;  //import a file
 
 		public LaserEditing( )
 		{
@@ -475,7 +475,8 @@ namespace MusicChange
 		//导入素材  Importing the materials
 		private void buttonx7_Click(object sender, EventArgs e)  
 		{
-
+			panel4.Visible = true;
+			buttonx10.Visible = true;
 		}
 
 
@@ -483,11 +484,50 @@ namespace MusicChange
 
 		private void buttonx10_Click(object sender, EventArgs e)  //导入：视频、音频、图片
 		{
+			buttonx10.Visible = false;
+			// 获取默认文档目录路径
+			string documentsPath = Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments );
+			temp.Text =  "默认文档目录: " + documentsPath ;
+			string subDirectory = Path.Combine( documentsPath, "ResourceFolder" );
+			//判断是否目录存在
+			if (Directory.Exists( subDirectory )) {
+				temp.Text = "子目录已存在: " + subDirectory ;
+			}
+			else {
+				temp1.Text = "子目录不存在，将创建: " + subDirectory ;
+				// 创建子目录
+				try {
+					Directory.CreateDirectory( subDirectory );
+					temp1.Text = "子目录创建成功: " + subDirectory;
+				}
+				catch (Exception ex) {
+					temp1.Text = "创建子目录失败: " + ex.Message;
+				}
+			}
+			//选择目录
+			OpenFileDialog ofd = new OpenFileDialog();
+			//所有音频文件
+			ofd.Title = "请选择要导入的音频、视频或图片文件";
+			//设置缺省文档目录
+			
+			ofd.InitialDirectory = subDirectory;
+			//ofd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic); //默认打开音乐文件夹
+			ofd.Multiselect = true; //允许多选
+			ofd.Filter = "素材|*.mp3;*.wav;*.wma;*.flac;*.aac;*.ogg;*.mp4;*.avi;*.wmv;*.mov;*.jpg;*.jpeg;*.png;*.bmp;*.gif";
+			if (ofd.ShowDialog() == DialogResult.OK)
+				{
+				//获取所有的选中文件存入string数组
+				string[] selectedFiles = ofd.FileNames;
+				}
+			}
+		//全局设置
+		private void buttonx11_Click(object sender, EventArgs e)
+		{
 
 		}
 	}
+	}
 
-}
 
 
 

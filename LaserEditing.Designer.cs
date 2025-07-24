@@ -32,6 +32,7 @@ namespace MusicChange
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LaserEditing));
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.panelEx4 = new DevComponents.DotNetBar.PanelEx();
+			this.buttonx11 = new DevComponents.DotNetBar.ButtonX();
 			this.修改图片 = new DevComponents.DotNetBar.ButtonX();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.button42 = new System.Windows.Forms.Button();
@@ -42,6 +43,8 @@ namespace MusicChange
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer3 = new System.Windows.Forms.SplitContainer();
 			this.panel3 = new System.Windows.Forms.Panel();
+			this.panel4 = new System.Windows.Forms.Panel();
+			this.buttonx10 = new DevComponents.DotNetBar.ButtonX();
 			this.panel2 = new System.Windows.Forms.Panel();
 			this.buttonx9 = new DevComponents.DotNetBar.ButtonX();
 			this.buttonx7 = new DevComponents.DotNetBar.ButtonX();
@@ -56,11 +59,12 @@ namespace MusicChange
 			this.buttonX3 = new DevComponents.DotNetBar.ButtonX();
 			this.buttonX2 = new DevComponents.DotNetBar.ButtonX();
 			this.splitContainer4 = new System.Windows.Forms.SplitContainer();
+			this.temp1 = new System.Windows.Forms.TextBox();
+			this.temp = new System.Windows.Forms.TextBox();
 			this.splitContainer5 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer6 = new System.Windows.Forms.SplitContainer();
 			this.panelEx1 = new DevComponents.DotNetBar.PanelEx();
-			this.panel4 = new System.Windows.Forms.Panel();
-			this.buttonx10 = new DevComponents.DotNetBar.ButtonX();
+			this.fontDialog1 = new System.Windows.Forms.FontDialog();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -76,11 +80,13 @@ namespace MusicChange
 			this.splitContainer3.Panel2.SuspendLayout();
 			this.splitContainer3.SuspendLayout();
 			this.panel3.SuspendLayout();
+			this.panel4.SuspendLayout();
 			this.panel2.SuspendLayout();
 			this.flowLayoutPanel2.SuspendLayout();
 			this.panelEx2.SuspendLayout();
 			this.flowLayoutPanel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).BeginInit();
+			this.splitContainer4.Panel2.SuspendLayout();
 			this.splitContainer4.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer5)).BeginInit();
 			this.splitContainer5.Panel2.SuspendLayout();
@@ -88,7 +94,6 @@ namespace MusicChange
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer6)).BeginInit();
 			this.splitContainer6.Panel2.SuspendLayout();
 			this.splitContainer6.SuspendLayout();
-			this.panel4.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// splitContainer1
@@ -116,6 +121,7 @@ namespace MusicChange
 			// 
 			this.panelEx4.CanvasColor = System.Drawing.SystemColors.Control;
 			this.panelEx4.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.VS2005;
+			this.panelEx4.Controls.Add(this.buttonx11);
 			this.panelEx4.Controls.Add(this.修改图片);
 			this.panelEx4.Controls.Add(this.panel1);
 			this.panelEx4.Controls.Add(this.buttonX1);
@@ -135,6 +141,27 @@ namespace MusicChange
 			this.panelEx4.TabIndex = 3;
 			this.panelEx4.Text = "panelEx4";
 			this.panelEx4.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelEx4_MouseDown);
+			// 
+			// buttonx11
+			// 
+			this.buttonx11.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+			this.buttonx11.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+			this.buttonx11.AutoSize = true;
+			this.buttonx11.BackColor = System.Drawing.Color.Black;
+			this.buttonx11.ColorTable = DevComponents.DotNetBar.eButtonColor.Flat;
+			this.buttonx11.Font = new System.Drawing.Font("楷体", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(120)));
+			this.buttonx11.Location = new System.Drawing.Point(1293, 5);
+			this.buttonx11.Name = "buttonx11";
+			this.buttonx11.Size = new System.Drawing.Size(127, 33);
+			this.buttonx11.Style = DevComponents.DotNetBar.eDotNetBarStyle.Office2013;
+			this.buttonx11.Symbol = "";
+			this.buttonx11.SymbolColor = System.Drawing.Color.Lime;
+			this.buttonx11.SymbolSize = 12F;
+			this.buttonx11.TabIndex = 1;
+			this.buttonx11.Text = "全局设置";
+			this.buttonx11.TextColor = System.Drawing.Color.White;
+			this.buttonx11.Click += new System.EventHandler(this.buttonx11_Click);
 			// 
 			// 修改图片
 			// 
@@ -306,6 +333,35 @@ namespace MusicChange
 			this.panel3.Name = "panel3";
 			this.panel3.Size = new System.Drawing.Size(671, 476);
 			this.panel3.TabIndex = 18;
+			// 
+			// panel4
+			// 
+			this.panel4.BackColor = System.Drawing.Color.Black;
+			this.panel4.Controls.Add(this.buttonx10);
+			this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
+			this.panel4.Location = new System.Drawing.Point(0, 0);
+			this.panel4.Name = "panel4";
+			this.panel4.Size = new System.Drawing.Size(671, 117);
+			this.panel4.TabIndex = 0;
+			// 
+			// buttonx10
+			// 
+			this.buttonx10.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+			this.buttonx10.BackColor = System.Drawing.Color.Black;
+			this.buttonx10.ColorTable = DevComponents.DotNetBar.eButtonColor.Flat;
+			this.buttonx10.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.buttonx10.Font = new System.Drawing.Font("宋体", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(120)));
+			this.buttonx10.Location = new System.Drawing.Point(0, 0);
+			this.buttonx10.Name = "buttonx10";
+			this.buttonx10.Size = new System.Drawing.Size(671, 117);
+			this.buttonx10.Style = DevComponents.DotNetBar.eDotNetBarStyle.Office2013;
+			this.buttonx10.Symbol = "";
+			this.buttonx10.SymbolColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+			this.buttonx10.SymbolSize = 16F;
+			this.buttonx10.TabIndex = 1;
+			this.buttonx10.Text = "导入：视频、音频、图片";
+			this.buttonx10.TextColor = System.Drawing.Color.White;
+			this.buttonx10.Click += new System.EventHandler(this.buttonx10_Click);
 			// 
 			// panel2
 			// 
@@ -562,9 +618,25 @@ namespace MusicChange
 			// splitContainer4.Panel2
 			// 
 			this.splitContainer4.Panel2.BackColor = System.Drawing.SystemColors.ActiveCaption;
+			this.splitContainer4.Panel2.Controls.Add(this.temp1);
+			this.splitContainer4.Panel2.Controls.Add(this.temp);
 			this.splitContainer4.Size = new System.Drawing.Size(1066, 588);
 			this.splitContainer4.SplitterDistance = 555;
 			this.splitContainer4.TabIndex = 0;
+			// 
+			// temp1
+			// 
+			this.temp1.Location = new System.Drawing.Point(69, 62);
+			this.temp1.Name = "temp1";
+			this.temp1.Size = new System.Drawing.Size(387, 25);
+			this.temp1.TabIndex = 1;
+			// 
+			// temp
+			// 
+			this.temp.Location = new System.Drawing.Point(69, 17);
+			this.temp.Name = "temp";
+			this.temp.Size = new System.Drawing.Size(387, 25);
+			this.temp.TabIndex = 0;
 			// 
 			// splitContainer5
 			// 
@@ -625,35 +697,6 @@ namespace MusicChange
 			this.panelEx1.Text = "panelEx1";
 			this.panelEx1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panelEx1_MouseMove);
 			// 
-			// panel4
-			// 
-			this.panel4.BackColor = System.Drawing.Color.Black;
-			this.panel4.Controls.Add(this.buttonx10);
-			this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
-			this.panel4.Location = new System.Drawing.Point(0, 0);
-			this.panel4.Name = "panel4";
-			this.panel4.Size = new System.Drawing.Size(671, 117);
-			this.panel4.TabIndex = 0;
-			// 
-			// buttonx10
-			// 
-			this.buttonx10.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-			this.buttonx10.BackColor = System.Drawing.Color.Black;
-			this.buttonx10.ColorTable = DevComponents.DotNetBar.eButtonColor.Flat;
-			this.buttonx10.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.buttonx10.Font = new System.Drawing.Font("宋体", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(120)));
-			this.buttonx10.Location = new System.Drawing.Point(0, 0);
-			this.buttonx10.Name = "buttonx10";
-			this.buttonx10.Size = new System.Drawing.Size(671, 117);
-			this.buttonx10.Style = DevComponents.DotNetBar.eDotNetBarStyle.Office2013;
-			this.buttonx10.Symbol = "";
-			this.buttonx10.SymbolColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
-			this.buttonx10.SymbolSize = 16F;
-			this.buttonx10.TabIndex = 1;
-			this.buttonx10.Text = "导入：视频、音频、图片";
-			this.buttonx10.TextColor = System.Drawing.Color.White;
-			this.buttonx10.Click += new System.EventHandler(this.buttonx10_Click);
-			// 
 			// LaserEditing
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -667,7 +710,7 @@ namespace MusicChange
 			this.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.KeyPreview = true;
-			this.Location = new System.Drawing.Point(3468, 350);
+			this.Location = new System.Drawing.Point(-1770, 350);
 			this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.Name = "LaserEditing";
 			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
@@ -696,11 +739,14 @@ namespace MusicChange
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
 			this.splitContainer3.ResumeLayout(false);
 			this.panel3.ResumeLayout(false);
+			this.panel4.ResumeLayout(false);
 			this.panel2.ResumeLayout(false);
 			this.flowLayoutPanel2.ResumeLayout(false);
 			this.flowLayoutPanel2.PerformLayout();
 			this.panelEx2.ResumeLayout(false);
 			this.flowLayoutPanel1.ResumeLayout(false);
+			this.splitContainer4.Panel2.ResumeLayout(false);
+			this.splitContainer4.Panel2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).EndInit();
 			this.splitContainer4.ResumeLayout(false);
 			this.splitContainer5.Panel2.ResumeLayout(false);
@@ -709,7 +755,6 @@ namespace MusicChange
 			this.splitContainer6.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer6)).EndInit();
 			this.splitContainer6.ResumeLayout(false);
-			this.panel4.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -747,5 +792,9 @@ namespace MusicChange
 		private System.Windows.Forms.Panel panel3;
 		private System.Windows.Forms.Panel panel4;
 		private DevComponents.DotNetBar.ButtonX buttonx10;
+		private DevComponents.DotNetBar.ButtonX buttonx11;
+		private System.Windows.Forms.FontDialog fontDialog1;
+		private System.Windows.Forms.TextBox temp;
+		private System.Windows.Forms.TextBox temp1;
 	}
 }
