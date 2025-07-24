@@ -295,8 +295,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="0e1506c6-7555-47e6-a927-04173f21a973.jpg" />
-    <Content Include="1b5a5c69-bb5e-4a99-b95d-1ebdb12d2b9d.jpg" />
     <None Include="ico.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

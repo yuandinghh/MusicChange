@@ -56,56 +56,9 @@ namespace MusicChange
 		private const int HTCAPTION = 0x2;
 		private LibVLC _libVLC;
 		private const int HT_CAPTION = 0x2;
-		bool Ismaterial = true;   //当前是素材
-	
-		
-		protected override void WndProc(ref Message m)
-		{
-			const int WM_NCHITTEST = 0x0084;
-			const int HTCLIENT = 0x1;
-			const int HTLEFT = 0xA;
-			const int HTRIGHT = 0xB;
-			const int HTTOP = 0xC;
-			const int HTTOPLEFT = 0xD;
-			const int HTTOPRIGHT = 0xE;
-			const int HTBOTTOM = 0xF;
-			const int HTBOTTOMLEFT = 0x10;
-			const int HTBOTTOMRIGHT = 0x11;
+		bool  IsOfficialMaterialSwitch = false; //官方素材开关
+		bool Ismaterial =true;
 
-			const int RESIZE_HANDLE_SIZE = 10; // 可调整大小的边缘宽度
-
-			if (m.Msg == WM_NCHITTEST && this.WindowState == FormWindowState.Normal) {
-				Point cursorPos = this.PointToClient( Cursor.Position );
-				int hitTestResult = HTCLIENT;
-
-				// 判断鼠标是否在窗体边缘
-				if (cursorPos.X <= RESIZE_HANDLE_SIZE) {
-					if (cursorPos.Y <= RESIZE_HANDLE_SIZE)
-						hitTestResult = HTTOPLEFT; // 左上角
-					else if (cursorPos.Y >= this.ClientSize.Height - RESIZE_HANDLE_SIZE)
-						hitTestResult = HTBOTTOMLEFT; // 左下角
-					else
-						hitTestResult = HTLEFT; // 左边
-				}
-				else if (cursorPos.X >= this.ClientSize.Width - RESIZE_HANDLE_SIZE) {
-					if (cursorPos.Y <= RESIZE_HANDLE_SIZE)
-						hitTestResult = HTTOPRIGHT; // 右上角
-					else if (cursorPos.Y >= this.ClientSize.Height - RESIZE_HANDLE_SIZE)
-						hitTestResult = HTBOTTOMRIGHT; // 右下角
-					else
-						hitTestResult = HTRIGHT; // 右边
-				}
-				else if (cursorPos.Y <= RESIZE_HANDLE_SIZE)
-					hitTestResult = HTTOP; // 上边
-				else if (cursorPos.Y >= this.ClientSize.Height - RESIZE_HANDLE_SIZE)
-					hitTestResult = HTBOTTOM; // 下边
-
-				m.Result = (IntPtr)hitTestResult;
-				return;
-			}
-
-			base.WndProc( ref m );
-		}
 
 		public LaserEditing( )
 		{
@@ -128,8 +81,12 @@ namespace MusicChange
 			//splitContainer5mouseDown = false;
 			splitContainer1.Panel2MinSize = 400;
 			//buttonx8.BackColor = System.Drawing.Color.Gray;
-		}
+			Ismaterial = true;  // 默认选择当前素材
+			buttonX3_Click(null,null); // 设置当前素材按钮样式
 
+
+		}
+		#region ----------- 鼠标拖动窗口和改变大小问题 还没解决-------------------
 		private void panelEx4_MouseDown(object sender, MouseEventArgs e)
 		{
 			if (e.Button == MouseButtons.Left) {
@@ -207,16 +164,55 @@ namespace MusicChange
 				this.WindowState = previousWindowState;
 			}
 		}
-
-		private void buttonX2_Click(object sender, EventArgs e) //video 音频
+		protected override void WndProc(ref Message m)
 		{
-			Ismaterial = false;
-			this.buttonX3.SymbolColor = System.Drawing.Color.Gray;
-			buttonx8.Visible = false;
-			buttonx4.Visible = false;
-			buttonx5.Visible = false;
-		}
+			const int WM_NCHITTEST = 0x0084;
+			const int HTCLIENT = 0x1;
+			const int HTLEFT = 0xA;
+			const int HTRIGHT = 0xB;
+			const int HTTOP = 0xC;
+			const int HTTOPLEFT = 0xD;
+			const int HTTOPRIGHT = 0xE;
+			const int HTBOTTOM = 0xF;
+			const int HTBOTTOMLEFT = 0x10;
+			const int HTBOTTOMRIGHT = 0x11;
 
+			const int RESIZE_HANDLE_SIZE = 10; // 可调整大小的边缘宽度
+
+			if (m.Msg == WM_NCHITTEST && this.WindowState == FormWindowState.Normal) {
+				Point cursorPos = this.PointToClient( Cursor.Position );
+				int hitTestResult = HTCLIENT;
+
+				// 判断鼠标是否在窗体边缘
+				if (cursorPos.X <= RESIZE_HANDLE_SIZE) {
+					if (cursorPos.Y <= RESIZE_HANDLE_SIZE)
+						hitTestResult = HTTOPLEFT; // 左上角
+					else if (cursorPos.Y >= this.ClientSize.Height - RESIZE_HANDLE_SIZE)
+						hitTestResult = HTBOTTOMLEFT; // 左下角
+					else
+						hitTestResult = HTLEFT; // 左边
+				}
+				else if (cursorPos.X >= this.ClientSize.Width - RESIZE_HANDLE_SIZE) {
+					if (cursorPos.Y <= RESIZE_HANDLE_SIZE)
+						hitTestResult = HTTOPRIGHT; // 右上角
+					else if (cursorPos.Y >= this.ClientSize.Height - RESIZE_HANDLE_SIZE)
+						hitTestResult = HTBOTTOMRIGHT; // 右下角
+					else
+						hitTestResult = HTRIGHT; // 右边
+				}
+				else if (cursorPos.Y <= RESIZE_HANDLE_SIZE)
+					hitTestResult = HTTOP; // 上边
+				else if (cursorPos.Y >= this.ClientSize.Height - RESIZE_HANDLE_SIZE)
+					hitTestResult = HTBOTTOM; // 下边
+
+				m.Result = (IntPtr)hitTestResult;
+				return;
+			}
+
+			base.WndProc( ref m );
+		}
+		#endregion
+		// 处理快捷键
 		private void LaserEditing_KeyDown(object sender, KeyEventArgs e)
 		{
 			Keys key = e.KeyCode;
@@ -246,31 +242,6 @@ namespace MusicChange
 
 			}
 		}
-		private void buttonx5_Click(object sender, EventArgs e) //官方素材
-		{
-
-		}
-		private void buttonX3_Click(object sender, EventArgs e)  //当前选择素材
-		{
-			Ismaterial = true;
-			this.buttonX3.BackColor = System.Drawing.Color.Black;
-			this.buttonX3.ColorTable = DevComponents.DotNetBar.eButtonColor.Flat;
-			this.buttonX3.SymbolColor = System.Drawing.Color.GreenYellow;
-			//this.buttonX3.ThemeAware = true;  //这个属性很可能用于让按钮能够感知并自动适应应用程序的主题变化。当主题（如浅色 / 深色模式）发生改变时，设置为 ThemeAware=true 的控件会自动更新其外观（如颜色、样式等）以匹配当前主题，而无需手动编写额外的主题切换代码。
-			buttonx8.Visible = true;
-			buttonx4.Visible = true;
-			buttonx5.Visible = true;
-			this.buttonx8.BackColor = System.Drawing.Color.GreenYellow;
-			this.buttonx8.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-			this.buttonx8.TextColor = System.Drawing.Color.Black;
-
-		}
-
-		private void button1_Click(object sender, EventArgs e) //素材热门
-		{
-
-		}
-
 		#region 没用的程序
 		private void splitContainer5_MouseDown(object sender, MouseEventArgs e)
 		{
@@ -414,36 +385,81 @@ namespace MusicChange
 			}
 		}
 
-
-
-		#endregion
-
-		#region 初始化事件绑定
-		//private void InitializeComponent()
-		//{
-		//	this.SuspendLayout();
-		//	// 
-		//	// BorderlessForm
-		//	// 
-		//	//this.ClientSize = new System.Drawing.Size(800, 450);
-		//	//this.Name = "BorderlessForm";
-		//	//this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form_MouseDown);
-		//	//this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Form_MouseMove);
-		//	//this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Form_MouseUp);
-		//	//this.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.Form_MouseDoubleClick);
-		//	this.ResumeLayout(false);
-		//}
-		#endregion
-
 		private void splitContainer6_MouseMove(object sender, MouseEventArgs e)
 		{
 			//SetCursorBasedOnPosition( e.Location );
 		}
-
 		private void panelEx1_MouseMove(object sender, MouseEventArgs e)
 		{
 			SetCursorBasedOnPosition( e.Location );
 		}
+
+		#endregion
+
+		#region ----------  素材  Material  -------------------
+		private void buttonX2_Click(object sender, EventArgs e) //video 音频
+		{
+			Ismaterial = false;
+			this.buttonX3.SymbolColor = System.Drawing.Color.Gray;
+			buttonx8.Visible = false;
+			buttonx4.Visible = false;
+			buttonx5.Visible = false;
+		}
+		//官方素材 开关
+		private void OfficialMaterialSwitch( )
+		{
+			if (IsOfficialMaterialSwitch) {
+				button1.Visible = true;
+			}
+			else {
+				button1.Visible = false;
+			}
+		}
+		private void buttonx5_Click(object sender, EventArgs e) //官方素材
+		{
+			IsOfficialMaterialSwitch = true;
+			OfficialMaterialSwitch();
+
+		}
+		private void buttonX3_Click(object sender, EventArgs e)  //当前选择素材
+		{
+			Ismaterial = true;
+			this.buttonX3.BackColor = System.Drawing.Color.Black;
+			this.buttonX3.ColorTable = DevComponents.DotNetBar.eButtonColor.Flat;
+			this.buttonX3.SymbolColor = System.Drawing.Color.GreenYellow;
+			//this.buttonX3.ThemeAware = true;  //这个属性很可能用于让按钮能够感知并自动适应应用程序的主题变化。当主题（如浅色 / 深色模式）发生改变时，设置为 ThemeAware=true 的控件会自动更新其外观（如颜色、样式等）以匹配当前主题，而无需手动编写额外的主题切换代码。
+			buttonx8.Visible = true;
+			buttonx4.Visible = true;
+			buttonx5.Visible = true;
+			this.buttonx8.BackColor = System.Drawing.Color.GreenYellow;
+			this.buttonx8.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+			this.buttonx8.TextColor = System.Drawing.Color.Black;
+
+		}
+
+		private void button1_Click(object sender, EventArgs e) //素材热门
+		{
+
+		}
+	
+
+
+
+		//导入素材
+		private void buttonx8_Click(object sender, EventArgs e)
+		{
+			IsOfficialMaterialSwitch = false;
+			OfficialMaterialSwitch();
+		}
+		//个人收藏
+		private void buttonx4_Click(object sender, EventArgs e)
+		{
+			IsOfficialMaterialSwitch = false;
+			OfficialMaterialSwitch();
+		}
+
+
+		#endregion
 	}
 
 }
