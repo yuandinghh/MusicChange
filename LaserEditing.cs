@@ -397,14 +397,38 @@ namespace MusicChange
 		#endregion
 
 		#region ----------  素材  Material  -------------------
+
+		private void buttonX3_Click(object sender, EventArgs e)  //当前选择素材
+		{
+			Ismaterial = true;
+			AllGray();
+			//this.buttonX3.BackColor = System.Drawing.Color.Black;
+			//this.buttonX3.ColorTable = DevComponents.DotNetBar.eButtonColor.Flat;
+			this.buttonX3.SymbolColor = System.Drawing.Color.GreenYellow;
+			//this.buttonX3.ThemeAware = true;  //这个属性很可能用于让按钮能够感知并自动适应应用程序的主题变化。当主题（如浅色 / 深色模式）发生改变时，设置为 ThemeAware=true 的控件会自动更新其外观（如颜色、样式等）以匹配当前主题，而无需手动编写额外的主题切换代码。
+			buttonx8.Visible = true;
+			buttonx4.Visible = true;
+			buttonx5.Visible = true;
+			this.buttonx8.BackColor = System.Drawing.Color.GreenYellow;
+		
+
+		}
 		private void buttonX2_Click(object sender, EventArgs e) //video 音频
 		{
 			Ismaterial = false;
-			this.buttonX3.SymbolColor = System.Drawing.Color.Gray;
+			AllGray();
+			this.buttonX2.SymbolColor = System.Drawing.Color.YellowGreen;
 			buttonx8.Visible = false;
 			buttonx4.Visible = false;
 			buttonx5.Visible = false;
 		}
+		private void AllGray()
+		{
+			this.buttonX3.SymbolColor = System.Drawing.Color.Gray;
+			this.buttonX2.SymbolColor = System.Drawing.Color.Gray;
+		}
+
+	
 		//官方素材 开关
 		private void OfficialMaterialSwitch( )
 		{
@@ -421,31 +445,14 @@ namespace MusicChange
 			OfficialMaterialSwitch();
 
 		}
-		private void buttonX3_Click(object sender, EventArgs e)  //当前选择素材
-		{
-			Ismaterial = true;
-			this.buttonX3.BackColor = System.Drawing.Color.Black;
-			this.buttonX3.ColorTable = DevComponents.DotNetBar.eButtonColor.Flat;
-			this.buttonX3.SymbolColor = System.Drawing.Color.GreenYellow;
-			//this.buttonX3.ThemeAware = true;  //这个属性很可能用于让按钮能够感知并自动适应应用程序的主题变化。当主题（如浅色 / 深色模式）发生改变时，设置为 ThemeAware=true 的控件会自动更新其外观（如颜色、样式等）以匹配当前主题，而无需手动编写额外的主题切换代码。
-			buttonx8.Visible = true;
-			buttonx4.Visible = true;
-			buttonx5.Visible = true;
-			this.buttonx8.BackColor = System.Drawing.Color.GreenYellow;
-			this.buttonx8.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-			this.buttonx8.TextColor = System.Drawing.Color.Black;
-
-		}
+	
 
 		private void button1_Click(object sender, EventArgs e) //素材热门
 		{
 
 		}
 	
-
-
-
-		//导入素材
+		//导入素材  选项
 		private void buttonx8_Click(object sender, EventArgs e)
 		{
 			IsOfficialMaterialSwitch = false;
@@ -459,7 +466,25 @@ namespace MusicChange
 		}
 
 
+	
+
+		private void panel2_Paint(object sender, PaintEventArgs e)
+		{
+
+		}
+		//导入素材  Importing the materials
+		private void buttonx7_Click(object sender, EventArgs e)  
+		{
+
+		}
+
+
 		#endregion
+
+		private void buttonx10_Click(object sender, EventArgs e)  //导入：视频、音频、图片
+		{
+
+		}
 	}
 
 }

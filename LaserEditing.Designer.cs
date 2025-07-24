@@ -41,6 +41,10 @@ namespace MusicChange
 			this.buttonx6 = new DevComponents.DotNetBar.ButtonX();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+			this.panel3 = new System.Windows.Forms.Panel();
+			this.panel2 = new System.Windows.Forms.Panel();
+			this.buttonx9 = new DevComponents.DotNetBar.ButtonX();
+			this.buttonx7 = new DevComponents.DotNetBar.ButtonX();
 			this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
 			this.buttonx8 = new DevComponents.DotNetBar.ButtonX();
 			this.buttonx4 = new DevComponents.DotNetBar.ButtonX();
@@ -55,6 +59,8 @@ namespace MusicChange
 			this.splitContainer5 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer6 = new System.Windows.Forms.SplitContainer();
 			this.panelEx1 = new DevComponents.DotNetBar.PanelEx();
+			this.panel4 = new System.Windows.Forms.Panel();
+			this.buttonx10 = new DevComponents.DotNetBar.ButtonX();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -69,6 +75,8 @@ namespace MusicChange
 			this.splitContainer3.Panel1.SuspendLayout();
 			this.splitContainer3.Panel2.SuspendLayout();
 			this.splitContainer3.SuspendLayout();
+			this.panel3.SuspendLayout();
+			this.panel2.SuspendLayout();
 			this.flowLayoutPanel2.SuspendLayout();
 			this.panelEx2.SuspendLayout();
 			this.flowLayoutPanel1.SuspendLayout();
@@ -80,6 +88,7 @@ namespace MusicChange
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer6)).BeginInit();
 			this.splitContainer6.Panel2.SuspendLayout();
 			this.splitContainer6.SuspendLayout();
+			this.panel4.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// splitContainer1
@@ -272,6 +281,8 @@ namespace MusicChange
 			// splitContainer3.Panel1
 			// 
 			this.splitContainer3.Panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+			this.splitContainer3.Panel1.Controls.Add(this.panel3);
+			this.splitContainer3.Panel1.Controls.Add(this.panel2);
 			this.splitContainer3.Panel1.Controls.Add(this.flowLayoutPanel2);
 			this.splitContainer3.Panel1.Controls.Add(this.panelEx3);
 			this.splitContainer3.Panel1.Controls.Add(this.panelEx2);
@@ -283,8 +294,70 @@ namespace MusicChange
 			this.splitContainer3.Panel2.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
 			this.splitContainer3.Panel2.Controls.Add(this.splitContainer4);
 			this.splitContainer3.Size = new System.Drawing.Size(1870, 588);
-			this.splitContainer3.SplitterDistance = 700;
+			this.splitContainer3.SplitterDistance = 800;
 			this.splitContainer3.TabIndex = 0;
+			// 
+			// panel3
+			// 
+			this.panel3.BackColor = System.Drawing.Color.DarkSlateGray;
+			this.panel3.Controls.Add(this.panel4);
+			this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.panel3.Location = new System.Drawing.Point(127, 110);
+			this.panel3.Name = "panel3";
+			this.panel3.Size = new System.Drawing.Size(671, 476);
+			this.panel3.TabIndex = 18;
+			// 
+			// panel2
+			// 
+			this.panel2.BackColor = System.Drawing.Color.Black;
+			this.panel2.Controls.Add(this.buttonx9);
+			this.panel2.Controls.Add(this.buttonx7);
+			this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
+			this.panel2.Location = new System.Drawing.Point(127, 62);
+			this.panel2.Margin = new System.Windows.Forms.Padding(6);
+			this.panel2.Name = "panel2";
+			this.panel2.Size = new System.Drawing.Size(671, 48);
+			this.panel2.TabIndex = 11;
+			this.panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
+			// 
+			// buttonx9
+			// 
+			this.buttonx9.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+			this.buttonx9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+			this.buttonx9.ColorTable = DevComponents.DotNetBar.eButtonColor.Flat;
+			this.buttonx9.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(120)));
+			this.buttonx9.Location = new System.Drawing.Point(82, 11);
+			this.buttonx9.Margin = new System.Windows.Forms.Padding(1);
+			this.buttonx9.Name = "buttonx9";
+			this.buttonx9.Size = new System.Drawing.Size(40, 33);
+			this.buttonx9.Style = DevComponents.DotNetBar.eDotNetBarStyle.Office2013;
+			this.buttonx9.Symbol = "";
+			this.buttonx9.SymbolColor = System.Drawing.Color.White;
+			this.buttonx9.SymbolSize = 14F;
+			this.buttonx9.TabIndex = 2;
+			this.buttonx9.TextAlignment = DevComponents.DotNetBar.eButtonTextAlignment.Left;
+			this.buttonx9.TextColor = System.Drawing.Color.Transparent;
+			// 
+			// buttonx7
+			// 
+			this.buttonx7.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+			this.buttonx7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+			this.buttonx7.ColorTable = DevComponents.DotNetBar.eButtonColor.Flat;
+			this.buttonx7.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(120)));
+			this.buttonx7.Location = new System.Drawing.Point(6, 11);
+			this.buttonx7.Margin = new System.Windows.Forms.Padding(0);
+			this.buttonx7.Name = "buttonx7";
+			this.buttonx7.Size = new System.Drawing.Size(75, 33);
+			this.buttonx7.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+			this.buttonx7.Symbol = "";
+			this.buttonx7.SymbolColor = System.Drawing.Color.Lime;
+			this.buttonx7.SymbolSize = 12F;
+			this.buttonx7.TabIndex = 2;
+			this.buttonx7.Text = "导入";
+			this.buttonx7.TextAlignment = DevComponents.DotNetBar.eButtonTextAlignment.Left;
+			this.buttonx7.TextColor = System.Drawing.Color.White;
+			this.buttonx7.ThemeAware = true;
+			this.buttonx7.Click += new System.EventHandler(this.buttonx7_Click);
 			// 
 			// flowLayoutPanel2
 			// 
@@ -415,7 +488,7 @@ namespace MusicChange
 			this.panelEx2.Dock = System.Windows.Forms.DockStyle.Top;
 			this.panelEx2.Location = new System.Drawing.Point(2, 2);
 			this.panelEx2.Name = "panelEx2";
-			this.panelEx2.Size = new System.Drawing.Size(696, 60);
+			this.panelEx2.Size = new System.Drawing.Size(796, 60);
 			this.panelEx2.Style.Alignment = System.Drawing.StringAlignment.Center;
 			this.panelEx2.Style.BackColor1.Color = System.Drawing.Color.Black;
 			this.panelEx2.Style.BackColor2.Color = System.Drawing.Color.Black;
@@ -435,7 +508,7 @@ namespace MusicChange
 			this.flowLayoutPanel1.ForeColor = System.Drawing.SystemColors.AppWorkspace;
 			this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
 			this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-			this.flowLayoutPanel1.Size = new System.Drawing.Size(696, 60);
+			this.flowLayoutPanel1.Size = new System.Drawing.Size(796, 60);
 			this.flowLayoutPanel1.TabIndex = 0;
 			// 
 			// buttonX3
@@ -489,8 +562,8 @@ namespace MusicChange
 			// splitContainer4.Panel2
 			// 
 			this.splitContainer4.Panel2.BackColor = System.Drawing.SystemColors.ActiveCaption;
-			this.splitContainer4.Size = new System.Drawing.Size(1166, 588);
-			this.splitContainer4.SplitterDistance = 608;
+			this.splitContainer4.Size = new System.Drawing.Size(1066, 588);
+			this.splitContainer4.SplitterDistance = 555;
 			this.splitContainer4.TabIndex = 0;
 			// 
 			// splitContainer5
@@ -552,6 +625,35 @@ namespace MusicChange
 			this.panelEx1.Text = "panelEx1";
 			this.panelEx1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panelEx1_MouseMove);
 			// 
+			// panel4
+			// 
+			this.panel4.BackColor = System.Drawing.Color.Black;
+			this.panel4.Controls.Add(this.buttonx10);
+			this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
+			this.panel4.Location = new System.Drawing.Point(0, 0);
+			this.panel4.Name = "panel4";
+			this.panel4.Size = new System.Drawing.Size(671, 117);
+			this.panel4.TabIndex = 0;
+			// 
+			// buttonx10
+			// 
+			this.buttonx10.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+			this.buttonx10.BackColor = System.Drawing.Color.Black;
+			this.buttonx10.ColorTable = DevComponents.DotNetBar.eButtonColor.Flat;
+			this.buttonx10.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.buttonx10.Font = new System.Drawing.Font("宋体", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(120)));
+			this.buttonx10.Location = new System.Drawing.Point(0, 0);
+			this.buttonx10.Name = "buttonx10";
+			this.buttonx10.Size = new System.Drawing.Size(671, 117);
+			this.buttonx10.Style = DevComponents.DotNetBar.eDotNetBarStyle.Office2013;
+			this.buttonx10.Symbol = "";
+			this.buttonx10.SymbolColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+			this.buttonx10.SymbolSize = 16F;
+			this.buttonx10.TabIndex = 1;
+			this.buttonx10.Text = "导入：视频、音频、图片";
+			this.buttonx10.TextColor = System.Drawing.Color.White;
+			this.buttonx10.Click += new System.EventHandler(this.buttonx10_Click);
+			// 
 			// LaserEditing
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -565,11 +667,11 @@ namespace MusicChange
 			this.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.KeyPreview = true;
-			this.Location = new System.Drawing.Point(-1400, 290);
+			this.Location = new System.Drawing.Point(3468, 350);
 			this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.Name = "LaserEditing";
 			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
-			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
 			this.Load += new System.EventHandler(this.LaserEditing_Load);
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.LaserEditing_KeyDown);
 			this.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.LaserEditing_MouseDoubleClick);
@@ -593,6 +695,8 @@ namespace MusicChange
 			this.splitContainer3.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
 			this.splitContainer3.ResumeLayout(false);
+			this.panel3.ResumeLayout(false);
+			this.panel2.ResumeLayout(false);
 			this.flowLayoutPanel2.ResumeLayout(false);
 			this.flowLayoutPanel2.PerformLayout();
 			this.panelEx2.ResumeLayout(false);
@@ -605,6 +709,7 @@ namespace MusicChange
 			this.splitContainer6.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer6)).EndInit();
 			this.splitContainer6.ResumeLayout(false);
+			this.panel4.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -636,5 +741,11 @@ namespace MusicChange
 		private DevComponents.DotNetBar.ButtonX buttonx6;
 		private System.Windows.Forms.Button button1;
 		private DevComponents.DotNetBar.PanelEx panelEx4;
+		private System.Windows.Forms.Panel panel2;
+		private DevComponents.DotNetBar.ButtonX buttonx9;
+		private DevComponents.DotNetBar.ButtonX buttonx7;
+		private System.Windows.Forms.Panel panel3;
+		private System.Windows.Forms.Panel panel4;
+		private DevComponents.DotNetBar.ButtonX buttonx10;
 	}
 }
