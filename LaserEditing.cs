@@ -1,4 +1,5 @@
-﻿#region 系统加载部分
+﻿
+#region ------------- 系统加载部分  无需改变的变量 -------------
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -25,12 +26,9 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 namespace MusicChange
 {
 	public partial class LaserEditing : Form
-	{
-		#endregion
-		// Windows API 函数
+	{       // Windows API 函数
 		[DllImport( "user32.dll" )]
 		private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
-
 		[DllImport( "user32.dll" )]
 		private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
 		// 快捷键ID
@@ -44,10 +42,6 @@ namespace MusicChange
 		private Point dragStartPoint;
 		private const int borderSize = 10;
 		private FormWindowState previousWindowState;
-
-
-		private bool splitContainer5mouseDown;
-		int count = 0;
 		[DllImport( "user32.dll" )]
 		public static extern bool ReleaseCapture( );
 		[DllImport( "user32.dll" )]
@@ -56,24 +50,22 @@ namespace MusicChange
 		private const int HTCAPTION = 0x2;
 		private LibVLC _libVLC;
 		private const int HT_CAPTION = 0x2;
-		bool  IsOfficialMaterialSwitch = false; //官方素材开关
-		bool Ismaterial =true;
+		#endregion
+
+		private bool splitContainer5mouseDown;
+		int count = 0;
+
+		bool IsOfficialMaterialSwitch = false; //官方素材开关
+		bool Ismaterial = true;
 		string importfile;  //import a file
 
 		public LaserEditing( )
 		{
+			//AutoScaleMode = AutoScaleMode.Dpi; // 根据系统DPI自动缩放
 			InitializeComponent();
 			this.DoubleBuffered = true;
-			// 允许最大化
-			this.MaximizeBox = true;
-			// 初始窗口状态
-			this.WindowState = FormWindowState.Normal;
-			//this.FormBorderStyle = FormBorderStyle.None; // 无边框
-			this.DoubleBuffered = true;
-			this.MaximizeBox = true;
-			this.MinimizeBox = true;
-			this.SizeGripStyle = SizeGripStyle.Show;
-
+			button2.FlatAppearance.BorderSize = 0;    // 边框大小设为 0
+			buttonX12.FlatAppearance.BorderSize = 0;    // 边框大小设为 0
 		}
 
 		private void LaserEditing_Load(object sender, EventArgs e)
@@ -82,7 +74,14 @@ namespace MusicChange
 			splitContainer1.Panel2MinSize = 400;
 			//buttonx8.BackColor = System.Drawing.Color.Gray;
 			Ismaterial = true;  // 默认选择当前素材
-			buttonX3_Click(null,null); // 设置当前素材按钮样式
+			buttonX3_Click( null, null ); // 设置当前素材按钮样式	this.ClientSize = new System.Drawing.Size( 1900, 1080 );
+			this.Size = new System.Drawing.Size( 1910, 1080);
+			// 注册快捷键	RegisterHotKey( this.Handle, HOTKEY_ID, MOD_CONTROL | MOD_ALT, (uint)Keys.F1 );
+			// 初始化 LibVLC			Core.Initialize();			_libVLC = new LibVLC();
+			// 设置初始状态
+
+			splitContainer5mouseDown = false;
+			OfficialMaterialSwitch(); // 初始化官方素材开关状态
 
 
 		}
@@ -397,7 +396,6 @@ namespace MusicChange
 		#endregion
 
 		#region ----------  素材  Material  -------------------
-
 		private void buttonX3_Click(object sender, EventArgs e)  //当前选择素材
 		{
 			Ismaterial = true;
@@ -410,7 +408,7 @@ namespace MusicChange
 			buttonx4.Visible = true;
 			buttonx5.Visible = true;
 			this.buttonx8.BackColor = System.Drawing.Color.GreenYellow;
-		
+
 
 		}
 		private void buttonX2_Click(object sender, EventArgs e) //video 音频
@@ -422,13 +420,13 @@ namespace MusicChange
 			buttonx4.Visible = false;
 			buttonx5.Visible = false;
 		}
-		private void AllGray()
+		private void AllGray( )
 		{
 			this.buttonX3.SymbolColor = System.Drawing.Color.Gray;
 			this.buttonX2.SymbolColor = System.Drawing.Color.Gray;
 		}
 
-	
+
 		//官方素材 开关
 		private void OfficialMaterialSwitch( )
 		{
@@ -445,13 +443,13 @@ namespace MusicChange
 			OfficialMaterialSwitch();
 
 		}
-	
+
 
 		private void button1_Click(object sender, EventArgs e) //素材热门
 		{
 
 		}
-	
+
 		//导入素材  选项
 		private void buttonx8_Click(object sender, EventArgs e)
 		{
@@ -465,36 +463,33 @@ namespace MusicChange
 			OfficialMaterialSwitch();
 		}
 
-
-	
-
 		private void panel2_Paint(object sender, PaintEventArgs e)
 		{
 
 		}
 		//导入素材  Importing the materials
-		private void buttonx7_Click(object sender, EventArgs e)  
+		private void buttonx7_Click(object sender, EventArgs e)
 		{
 			panel4.Visible = true;
-			buttonx10.Visible = true;
+			button2.Visible = true;
 		}
-
 
 		#endregion
 
-		private void buttonx10_Click(object sender, EventArgs e)  //导入：视频、音频、图片
+		private void button2_Click(object sender, EventArgs e)  //导入：视频、音频、图片
 		{
-			buttonx10.Visible = false;
+			button2.Visible = false;
+			buttonX12.Visible = false;
 			// 获取默认文档目录路径
 			string documentsPath = Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments );
-			temp.Text =  "默认文档目录: " + documentsPath ;
+			temp.Text = "默认文档目录: " + documentsPath;
 			string subDirectory = Path.Combine( documentsPath, "ResourceFolder" );
 			//判断是否目录存在
 			if (Directory.Exists( subDirectory )) {
-				temp.Text = "子目录已存在: " + subDirectory ;
+				temp.Text = "子目录已存在: " + subDirectory;
 			}
 			else {
-				temp1.Text = "子目录不存在，将创建: " + subDirectory ;
+				temp1.Text = "子目录不存在，将创建: " + subDirectory;
 				// 创建子目录
 				try {
 					Directory.CreateDirectory( subDirectory );
@@ -509,24 +504,70 @@ namespace MusicChange
 			//所有音频文件
 			ofd.Title = "请选择要导入的音频、视频或图片文件";
 			//设置缺省文档目录
-			
+
 			ofd.InitialDirectory = subDirectory;
 			//ofd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic); //默认打开音乐文件夹
 			ofd.Multiselect = true; //允许多选
 			ofd.Filter = "素材|*.mp3;*.wav;*.wma;*.flac;*.aac;*.ogg;*.mp4;*.avi;*.wmv;*.mov;*.jpg;*.jpeg;*.png;*.bmp;*.gif";
-			if (ofd.ShowDialog() == DialogResult.OK)
-				{
+			if (ofd.ShowDialog() == DialogResult.OK) {
 				//获取所有的选中文件存入string数组
 				string[] selectedFiles = ofd.FileNames;
+			}
+			if (ofd.FileNames.Length > 0) {
+				// 遍历选中的文件
+				foreach (string file in ofd.FileNames) {
+					try {
+						// 获取文件名
+						string fileName = Path.GetFileName( file );
+						// 构建目标路径
+						string targetPath = Path.Combine( subDirectory, fileName );
+						// 复制文件到目标路径
+						File.Copy( file, targetPath, true ); // true表示覆盖同名文件
+						temp1.Text += $"\n已导入: {fileName}";
+					}
+					catch (Exception ex) {
+						temp1.Text += $"\n导入失败: {ex.Message}";
+					}
 				}
 			}
+			else {
+				temp1.Text = "未选择任何文件";
+				button2.Visible = true;
+				buttonX12.Visible = true;
+			}
+
+		}
+		/*// 递归删除子目录及其所有内容
+try
+{
+    if (Directory.Exists(subDirectory))
+    {
+        Directory.Delete(subDirectory, recursive: true); // recursive: true 表示删除所有子文件和子目录
+        Console.WriteLine("子目录删除成功");
+    }
+}
+catch (Exception ex)
+{
+    Console.WriteLine("删除子目录失败: " + ex.Message);
+}*/
 		//全局设置
 		private void buttonx11_Click(object sender, EventArgs e)
 		{
 
 		}
+
+		private void panel4_SizeChanged(object sender, EventArgs e)
+		{
+			// 调整按钮位置
+			button2.Left = (panel4.Width - button2.Width) / 2; // 水平居中
+			button2.Top = (panel4.Height - button2.Height) / 2; // 垂直居中
+			buttonX12.Left = button2.Left+250; // 水平居中	
+
+
+		}
+
 	}
-	}
+}
 
 
 
