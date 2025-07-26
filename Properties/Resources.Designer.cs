@@ -113,6 +113,16 @@ namespace MusicChange.Properties {
         /// <summary>
         ///   查找 System.Drawing.Bitmap 类型的本地化资源。
         /// </summary>
+        internal static System.Drawing.Bitmap R_Code100 {
+            get {
+                object obj = ResourceManager.GetObject("R-Code100", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
         internal static System.Drawing.Bitmap 前进 {
             get {
                 object obj = ResourceManager.GetObject("前进", resourceCulture);

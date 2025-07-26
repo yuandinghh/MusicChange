@@ -65,23 +65,26 @@ namespace MusicChange
 			InitializeComponent();
 			this.DoubleBuffered = true;
 			button2.FlatAppearance.BorderSize = 0;    // 边框大小设为 0
-			buttonX12.FlatAppearance.BorderSize = 0;    // 边框大小设为 0
+			qrcode1.FlatAppearance.BorderSize = 0;    // 边框大小设为 0
+
 		}
 
 		private void LaserEditing_Load(object sender, EventArgs e)
 		{
 			//splitContainer5mouseDown = false;
-			splitContainer1.Panel2MinSize = 400;
+			//splitContainer1.Panel2MinSize = 400;
 			//buttonx8.BackColor = System.Drawing.Color.Gray;
 			Ismaterial = true;  // 默认选择当前素材
 			buttonX3_Click( null, null ); // 设置当前素材按钮样式	this.ClientSize = new System.Drawing.Size( 1900, 1080 );
-			this.Size = new System.Drawing.Size( 1910, 1080);
+
 			// 注册快捷键	RegisterHotKey( this.Handle, HOTKEY_ID, MOD_CONTROL | MOD_ALT, (uint)Keys.F1 );
 			// 初始化 LibVLC			Core.Initialize();			_libVLC = new LibVLC();
 			// 设置初始状态
-
+			this.Size = new System.Drawing.Size( 1950, 1080 ); // 设置主窗口初始大小
 			splitContainer5mouseDown = false;
 			OfficialMaterialSwitch(); // 初始化官方素材开关状态
+			sC4.SplitterDistance = 500; //上中
+			sC3.SplitterDistance = 750; // 上左 宽度
 
 
 		}
@@ -475,11 +478,12 @@ namespace MusicChange
 		}
 
 		#endregion
-
-		private void button2_Click(object sender, EventArgs e)  //导入：视频、音频、图片
+		//导入：视频、音频、图片
+		private void button2_Click(object sender, EventArgs e) 
 		{
-			button2.Visible = false;
-			buttonX12.Visible = false;
+			//button2.Visible = false;
+			//qrcode1.Visible = false;
+			panel4.Visible = false;
 			// 获取默认文档目录路径
 			string documentsPath = Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments );
 			temp.Text = "默认文档目录: " + documentsPath;
@@ -532,8 +536,8 @@ namespace MusicChange
 			}
 			else {
 				temp1.Text = "未选择任何文件";
-				button2.Visible = true;
-				buttonX12.Visible = true;
+				//button2.Visible = true;				qrcode1.Visible = true;
+				panel4.Visible = true;
 			}
 
 		}
@@ -561,11 +565,19 @@ catch (Exception ex)
 			// 调整按钮位置
 			button2.Left = (panel4.Width - button2.Width) / 2; // 水平居中
 			button2.Top = (panel4.Height - button2.Height) / 2; // 垂直居中
-			buttonX12.Left = button2.Left+250; // 水平居中	
+			qrcode1.Left = button2.Left+250; // 水平居中	
 
 
 		}
+		//QRCode 二维码 
+		private void buttonX12_Click(object sender, EventArgs e)  
+		{
+			// 显示二维码生成界面
+			QRCode form = new QRCode();
+			form.Show();
+			// 隐藏当前界面			this.Hide();
 
+		}
 	}
 }
 
