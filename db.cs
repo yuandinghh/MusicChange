@@ -324,6 +324,7 @@ namespace MusicChange
                     CREATE TABLE IF NOT EXISTS clips (
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                         name TEXT NOT NULL,
+						type TEXT NOT NULL,
                         file_path TEXT NOT NULL,
                         project_id INTEGER NOT NULL,
                         start_position REAL NOT NULL DEFAULT 0,
@@ -491,7 +492,7 @@ namespace MusicChange
 				connection.Open();
 
 				string sql = @"
-                    INSERT INTO clips (name, file_path, project_id, start_position, end_position, speed, pitch, created_at, updated_at)
+                    INSERT INTO clips (name, type,file_path, project_id, start_position, end_position, speed, pitch, created_at, updated_at)
                     VALUES (@name, @file_path, @project_id, @start_position, @end_position, @speed, @pitch, @created_at, @updated_at);
                     SELECT last_insert_rowid();";
 
@@ -532,6 +533,7 @@ namespace MusicChange
 							{
 								Id = Convert.ToInt32(reader["id"]),
 								Name = reader["name"].ToString(),
+								Type = reader["type"].ToString(),
 								FilePath = reader["file_path"].ToString(),
 								ProjectId = Convert.ToInt32(reader["project_id"]),
 								StartPosition = Convert.ToDouble(reader["start_position"]),
@@ -571,6 +573,7 @@ namespace MusicChange
 							{
 								Id = Convert.ToInt32(reader["id"]),
 								Name = reader["name"].ToString(),
+								Type = reader["name"].ToString(),
 								FilePath = reader["file_path"].ToString(),
 								ProjectId = Convert.ToInt32(reader["project_id"]),
 								StartPosition = Convert.ToDouble(reader["start_position"]),
@@ -607,6 +610,7 @@ namespace MusicChange
 						{
 							Id = Convert.ToInt32(reader["id"]),
 							Name = reader["name"].ToString(),
+							Type = reader["name"].ToString(),
 							FilePath = reader["file_path"].ToString(),
 							ProjectId = Convert.ToInt32(reader["project_id"]),
 							StartPosition = Convert.ToDouble(reader["start_position"]),
@@ -631,7 +635,7 @@ namespace MusicChange
 
 				string sql = @"
                     UPDATE clips 
-                    SET name = @name, file_path = @file_path, project_id = @project_id, 
+                    SET name = @name,Type = @type,file_path = @file_path, project_id = @project_id, 
                         start_position = @start_position, end_position = @end_position,
                         speed = @speed, pitch = @pitch, updated_at = @updated_at
                     WHERE id = @id";
@@ -639,6 +643,7 @@ namespace MusicChange
 				using(var command = new SQLiteCommand(sql, connection))
 				{
 					command.Parameters.AddWithValue("@name", clip.Name);
+					command.Parameters.AddWithValue("@type", clip.Type);
 					command.Parameters.AddWithValue("@file_path", clip.FilePath);
 					command.Parameters.AddWithValue("@project_id", clip.ProjectId);
 					command.Parameters.AddWithValue("@start_position", clip.StartPosition);
@@ -864,6 +869,10 @@ public class Clip
 		get; set;
 	}
 	public string Name
+	{
+		get; set;
+	}
+	public string Type  // mp3, wav, etc.
 	{
 		get; set;
 	}

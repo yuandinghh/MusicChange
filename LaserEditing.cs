@@ -590,10 +590,11 @@ catch (Exception ex)
 			//dbAccess.RunData();
 			//dbAccess.InitDatabase();   //创建用户表
 			dbAccess.InitializeDatabase();
+			//dbAccess.CreateTable();   //创建用户表
 
 		}
 
-}
+	}
 
 
 	
