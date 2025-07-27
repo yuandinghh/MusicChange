@@ -384,7 +384,7 @@ namespace MusicChange
 			}
 			catch (Exception ex) {
 				// 可根据需要处理异常
-				Console.WriteLine( $"遍历失败: {ex.Message}" );
+				MessageBox.Show( $"遍历失败: {ex.Message}" );
 			}
 		}
 		private void GetFileInfo(string filePath)

@@ -310,7 +310,7 @@ namespace MusicChange
 				}
 			}
 			//} catch (Exception ex) {
-			//	Console.WriteLine( $"Processing failed: {ex.Message}" );   //LogError( e, "Shape processing failed." );
+			//	MessageBox.Show( $"Processing failed: {ex.Message}" );   //LogError( e, "Shape processing failed." );
 			//	throw;
 			//}  //   GetFileInfo(listBox2.GetItemText(0).ToLower());  “GetFileInfo” 通常是一个用于获取文件相关信息的函数或方法。
 		}
@@ -1003,7 +1003,7 @@ ffmpeg -ss 00:00:15.200 -to 00:00:30.500 -accurate_seek -i input.mp4 -c:v copy -
 
 			Process[] processes;            // 检查管理员权限
 											//if (!IsRunningAsAdmin()) {
-											//	Console.WriteLine( "请以管理员身份运行程序" );
+											//	MessageBox.Show( "请以管理员身份运行程序" );
 											//	RestartAsAdmin();
 											//	return;
 											//}
@@ -1111,31 +1111,31 @@ ffmpeg -ss 00:00:15.200 -to 00:00:30.500 -accurate_seek -i input.mp4 -c:v copy -
 				if(processes.Length == 0)
 				{
 
-					Console.WriteLine($"未找到进程: {processName}");
+					MessageBox.Show($"未找到进程: {processName}");
 					return;
 				}
 
-				Console.WriteLine($"发现 {processes.Length} 个{processName}进程");
+				MessageBox.Show($"发现 {processes.Length} 个{processName}进程");
 
 				// 结束所有匹配进程
 				foreach(var process in processes)
 				{
 					try
 					{
-						Console.WriteLine($"正在终止进程: {process.Id}");
+						MessageBox.Show($"正在终止进程: {process.Id}");
 						process.Kill();
 						process.WaitForExit(3000);  // 等待进程退出
-						Console.WriteLine($"成功终止: {process.Id}");
+						MessageBox.Show($"成功终止: {process.Id}");
 					}
 					catch(Exception ex)
 					{
-						Console.WriteLine($"终止失败({process.Id}): {ex.Message}");
+						MessageBox.Show($"终止失败({process.Id}): {ex.Message}");
 					}
 				}
 			}
 			catch(Exception globalEx)
 			{
-				Console.WriteLine($"全局错误: {globalEx.Message}");
+				MessageBox.Show($"全局错误: {globalEx.Message}");
 			}
 		}
 
@@ -1164,7 +1164,7 @@ ffmpeg -ss 00:00:15.200 -to 00:00:30.500 -accurate_seek -i input.mp4 -c:v copy -
 			}
 			catch(Exception ex)
 			{
-				Console.WriteLine($"重启失败: {ex.Message}");
+				MessageBox.Show($"重启失败: {ex.Message}");
 			}
 			Environment.Exit(0);
 		}

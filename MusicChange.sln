@@ -1,14 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36310.24
+VisualStudioVersion = 17.14.36310.24 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicChange", "MusicChange.csproj", "{7E009448-EAD7-4D53-BAA1-59950746BDDD}"
-	ProjectSection(ProjectDependencies) = postProject
-		{4E44A5CC-C2FD-47CB-84B7-592849B391A5} = {4E44A5CC-C2FD-47CB-84B7-592849B391A5}
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DuplicateFileFinder", "..\DuplicateFileFinder\DuplicateFileFinder.csproj", "{4E44A5CC-C2FD-47CB-84B7-592849B391A5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,10 +15,6 @@ Global
 		{7E009448-EAD7-4D53-BAA1-59950746BDDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E009448-EAD7-4D53-BAA1-59950746BDDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E009448-EAD7-4D53-BAA1-59950746BDDD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4E44A5CC-C2FD-47CB-84B7-592849B391A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4E44A5CC-C2FD-47CB-84B7-592849B391A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4E44A5CC-C2FD-47CB-84B7-592849B391A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4E44A5CC-C2FD-47CB-84B7-592849B391A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

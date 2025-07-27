@@ -3,7 +3,12 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+//using System.Windows.Forms.Keys;
+//using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
+using System.Data.Entity;
+using System.Data.SQLite;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -15,13 +20,15 @@ using System.Security.Principal;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using DevComponents.DotNetBar;
 using LibVLCSharp.Shared;
-//using System.Windows.Forms.Keys;
-
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
+using Application = System.Windows.Application;
+using Point = System.Drawing.Point;
+//using MusicChange.SqliteDataAccess;
 
 namespace MusicChange
 {
@@ -39,7 +46,7 @@ namespace MusicChange
 		private const uint MOD_SHIFT = 0x0004;
 		// 鼠标状态变量
 		private bool isDragging = false;
-		private Point dragStartPoint;
+		private System.Drawing.Point dragStartPoint;
 		private const int borderSize = 10;
 		private FormWindowState previousWindowState;
 		[DllImport( "user32.dll" )]
@@ -68,6 +75,7 @@ namespace MusicChange
 			qrcode1.FlatAppearance.BorderSize = 0;    // 边框大小设为 0
 
 		}
+				
 
 		private void LaserEditing_Load(object sender, EventArgs e)
 		{
@@ -215,7 +223,7 @@ namespace MusicChange
 		}
 		#endregion
 		// 处理快捷键
-		private void LaserEditing_KeyDown(object sender, KeyEventArgs e)
+		private void LaserEditing_KeyDown(object sender, KeyEventArgs e, Application application)
 		{
 			Keys key = e.KeyCode;
 			//  if (e.Control != true)//如果没按Ctrl键      return;
@@ -238,7 +246,7 @@ namespace MusicChange
 				case Keys.F11:             //关闭计算机
 					break;
 				case Keys.F12:
-					Application.Exit();
+					//application.Exit();
 					this.Close();
 					break;
 
@@ -299,7 +307,7 @@ namespace MusicChange
 		#region  -------------  窗口 close, maximize, minimize  -----------------
 		private void button8_Click(object sender, EventArgs e)  //退出当前窗口
 		{
-			Application.Exit();
+			//Application.Exit();
 			this.Close();
 		}
 
@@ -330,7 +338,7 @@ namespace MusicChange
 			form.Show();
 		}
 
-		private bool IsInResizeArea(Point point)
+		private bool IsInResizeArea(System.Drawing.Point point)
 		{
 			return point.X <= borderSize ||  // 左边界
 				   point.X >= this.ClientSize.Width - borderSize ||  // 右边界
@@ -338,7 +346,7 @@ namespace MusicChange
 				   point.Y >= this.ClientSize.Height - borderSize;   // 下边界
 		}
 
-		private void SetCursorBasedOnPosition(Point point)
+		private void SetCursorBasedOnPosition(System.Drawing.Point point)
 		{
 			if (this.WindowState == FormWindowState.Maximized) {
 				this.Cursor = Cursors.Default;
@@ -479,7 +487,7 @@ namespace MusicChange
 
 		#endregion
 		//导入：视频、音频、图片
-		private void button2_Click(object sender, EventArgs e) 
+		private void button2_Click(object sender, EventArgs e)
 		{
 			//button2.Visible = false;
 			//qrcode1.Visible = false;
@@ -547,30 +555,26 @@ try
     if (Directory.Exists(subDirectory))
     {
         Directory.Delete(subDirectory, recursive: true); // recursive: true 表示删除所有子文件和子目录
-        Console.WriteLine("子目录删除成功");
+        MessageBox.Show("子目录删除成功");
     }
 }
 catch (Exception ex)
 {
-    Console.WriteLine("删除子目录失败: " + ex.Message);
+    MessageBox.Show("删除子目录失败: " + ex.Message);
 }*/
-		//全局设置
-		private void buttonx11_Click(object sender, EventArgs e)
-		{
 
-		}
 
 		private void panel4_SizeChanged(object sender, EventArgs e)
 		{
 			// 调整按钮位置
 			button2.Left = (panel4.Width - button2.Width) / 2; // 水平居中
 			button2.Top = (panel4.Height - button2.Height) / 2; // 垂直居中
-			qrcode1.Left = button2.Left+250; // 水平居中	
+			qrcode1.Left = button2.Left + 250; // 水平居中	
 
 
 		}
 		//QRCode 二维码 
-		private void buttonX12_Click(object sender, EventArgs e)  
+		private void buttonX12_Click(object sender, EventArgs e)
 		{
 			// 显示二维码生成界面
 			QRCode form = new QRCode();
@@ -578,8 +582,24 @@ catch (Exception ex)
 			// 隐藏当前界面			this.Hide();
 
 		}
-	}
+		//全局设置
+		private void buttonx11_Click(object sender, EventArgs e)
+		{
+			string dbPath = $"D:\\Documents\\Visual Studio 2022\\MusicChange\\LaserEditing.db";
+			db dbAccess = new db( dbPath );
+			//dbAccess.RunData();
+			//dbAccess.InitDatabase();   //创建用户表
+			dbAccess.InitializeDatabase();
+
+		}
+
 }
+
+
+	
+
+}
+
 
 
 
