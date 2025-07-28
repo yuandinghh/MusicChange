@@ -1,31 +1,12 @@
 ﻿
 #region ------------- 系统加载部分  无需改变的变量 -------------
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 //using System.Windows.Forms.Keys;
 //using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
-using System.Data;
-using System.Data.Entity;
-using System.Data.SQLite;
-using System.Diagnostics;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Media;
-using System.Net.Http;
 using System.Runtime.InteropServices;
-using System.Security.Principal;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Forms;
-using System.Xml.Linq;
-using DevComponents.DotNetBar;
 using LibVLCSharp.Shared;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 using Application = System.Windows.Application;
 using Point = System.Drawing.Point;
 //using MusicChange.SqliteDataAccess;
@@ -57,14 +38,13 @@ namespace MusicChange
 		private const int HTCAPTION = 0x2;
 		private LibVLC _libVLC;
 		private const int HT_CAPTION = 0x2;
-		#endregion
+	#endregion
 
 		private bool splitContainer5mouseDown;
 		int count = 0;
-
 		bool IsOfficialMaterialSwitch = false; //官方素材开关
 		bool Ismaterial = true;
-		string importfile;  //import a file
+		string importfile;  //imøport a file
 
 		public LaserEditing( )
 		{
@@ -96,7 +76,7 @@ namespace MusicChange
 
 
 		}
-		#region ----------- 鼠标拖动窗口和改变大小问题 还没解决-------------------
+		#region ----------- 鼠标拖动窗口和改变大小问题 快捷键  还没解决-------------------
 		private void panelEx4_MouseDown(object sender, MouseEventArgs e)
 		{
 			if (e.Button == MouseButtons.Left) {
@@ -221,11 +201,11 @@ namespace MusicChange
 
 			base.WndProc( ref m );
 		}
-		#endregion
+	
 		// 处理快捷键
-		private void LaserEditing_KeyDown(object sender, KeyEventArgs e, Application application)
+		private void LaserEditing_KeyDown(object sender, KeyEventArgs e)
 		{
-			Keys key = e.KeyCode;
+		Keys key = e.KeyCode;
 			//  if (e.Control != true)//如果没按Ctrl键      return;
 			switch (key) {
 				case Keys.F1:
@@ -252,7 +232,10 @@ namespace MusicChange
 
 			}
 		}
-		#region 没用的程序
+		#endregion
+
+		#region ------------- 没用的程序  -------------
+
 		private void splitContainer5_MouseDown(object sender, MouseEventArgs e)
 		{
 			splitContainer5mouseDown = true;
@@ -404,6 +387,17 @@ namespace MusicChange
 			SetCursorBasedOnPosition( e.Location );
 		}
 
+		/// <summary>
+		/// QRCode 二维码 
+		/// </summary>
+		private void buttonX12_Click(object sender, EventArgs e)
+		{
+			// 显示二维码生成界面
+			QRCode form = new QRCode();
+			form.Show();
+			// 隐藏当前界面			this.Hide();
+
+		}
 		#endregion
 
 		#region ----------  素材  Material  -------------------
@@ -486,7 +480,10 @@ namespace MusicChange
 		}
 
 		#endregion
-		//导入：视频、音频、图片
+	
+		/// <summary>
+		/// 导入：视频、音频、图片
+		/// </summary>
 		private void button2_Click(object sender, EventArgs e)
 		{
 			//button2.Visible = false;
@@ -516,13 +513,10 @@ namespace MusicChange
 			//所有音频文件
 			ofd.Title = "请选择要导入的音频、视频或图片文件";
 			//设置缺省文档目录
-
-			ofd.InitialDirectory = subDirectory;
-			//ofd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic); //默认打开音乐文件夹
+			ofd.InitialDirectory = subDirectory;			//ofd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic); //默认打开音乐文件夹
 			ofd.Multiselect = true; //允许多选
 			ofd.Filter = "素材|*.mp3;*.wav;*.wma;*.flac;*.aac;*.ogg;*.mp4;*.avi;*.wmv;*.mov;*.jpg;*.jpeg;*.png;*.bmp;*.gif";
-			if (ofd.ShowDialog() == DialogResult.OK) {
-				//获取所有的选中文件存入string数组
+			if (ofd.ShowDialog() == DialogResult.OK) { //获取所有的选中文件存入string数组
 				string[] selectedFiles = ofd.FileNames;
 			}
 			if (ofd.FileNames.Length > 0) {
@@ -546,6 +540,7 @@ namespace MusicChange
 				temp1.Text = "未选择任何文件";
 				//button2.Visible = true;				qrcode1.Visible = true;
 				panel4.Visible = true;
+
 			}
 
 		}
@@ -573,15 +568,7 @@ catch (Exception ex)
 
 
 		}
-		//QRCode 二维码 
-		private void buttonX12_Click(object sender, EventArgs e)
-		{
-			// 显示二维码生成界面
-			QRCode form = new QRCode();
-			form.Show();
-			// 隐藏当前界面			this.Hide();
-
-		}
+	
 		//全局设置
 		private void buttonx11_Click(object sender, EventArgs e)
 		{
@@ -594,6 +581,7 @@ catch (Exception ex)
 
 		}
 
+	
 	}
 
 

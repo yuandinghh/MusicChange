@@ -339,7 +339,7 @@ namespace MusicChange
 			// 
 			// panel3
 			// 
-			this.panel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+			this.panel3.BackColor = System.Drawing.Color.DimGray;
 			this.panel3.Controls.Add(this.panel4);
 			this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.panel3.Location = new System.Drawing.Point(127, 110);
@@ -394,7 +394,7 @@ namespace MusicChange
 			// 
 			// dG
 			// 
-			this.dG.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+			this.dG.BackgroundColor = System.Drawing.Color.DimGray;
 			dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
 			dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
 			dataGridViewCellStyle1.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -783,6 +783,7 @@ namespace MusicChange
 			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
 			this.Load += new System.EventHandler(this.LaserEditing_Load);
+			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.LaserEditing_KeyDown);
 			this.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.LaserEditing_MouseDoubleClick);
 			this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.LaserEditing_MouseDown);
 			this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.LaserEditing_MouseMove);

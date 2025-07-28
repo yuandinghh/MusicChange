@@ -369,6 +369,7 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="README.md" />
     <None Include="后退.png" />
   </ItemGroup>
   <ItemGroup>
