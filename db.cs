@@ -1,26 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 //using MusicChange.Database.Models;
-using System.Windows.Controls;
 
 namespace MusicChange
 {
-	#region --------- User 表 处理  ------------
 	// 数据库操作封装类
 	public class db
 	{
 		// 数据库连接字符串（建议使用绝对路径避免路径问题）
+		private string dbPath = "D:\\Documents\\Visual Studio 2022\\MusicChange\\LaserEditing.db";
 		private string _connectionString;
-
 		public db(string dbPath)
 		{
 			_connectionString = $"Data Source={dbPath};Version=3;";
 		}
+
 
 		// 1. 初始化数据库（创建表）
 		public void InitDatabase( )
@@ -43,8 +39,6 @@ namespace MusicChange
 					}
 				}
 			}
-
-
 			try {
 				using (var connection = new SQLiteConnection( _connectionString )) {
 					connection.Open();
@@ -67,180 +61,8 @@ namespace MusicChange
 			}
 		}
 
-		// 2. 新增数据（Create）
-		public bool InsertUser(User user)
-		{
-			try {
-				using (var connection = new SQLiteConnection( _connectionString )) {
-					connection.Open();
-					string insertSql = "INSERT INTO Users (Name, Age, Address) VALUES (@Name, @Age, @Address)";
-					using (var command = new SQLiteCommand( insertSql, connection )) {
-						// 参数化查询（防止SQL注入）
-						command.Parameters.AddWithValue( "@Name", user.Name );
-						command.Parameters.AddWithValue( "@Age", user.Age );
-						command.Parameters.AddWithValue( "@Address", user.Address );
-						int rowsAffected = command.ExecuteNonQuery();
-						return rowsAffected > 0; // 插入成功返回true
-					}
-				}
-			}
-			catch (Exception ex) {
-				MessageBox.Show( $"插入失败：{ex.Message}" );
-				return false;
-			}
-		}
-		/// <summary>
-		///  3. 查询所有Users表数据（Read All）
-		/// </summary>
-		public void GetAllUsers( )
-		{
-			try {
-				using (var connection = new SQLiteConnection( _connectionString )) {
-					connection.Open();
-					string selectSql = "SELECT Id, Name, Age, Address FROM Users";
-					using (var command = new SQLiteCommand( selectSql, connection )) {
-						using (var reader = command.ExecuteReader()) {
-							MessageBox.Show( "\n所有用户数据：" );
-							while (reader.Read()) {
-								var user = new User
-								{
-									Id = reader.GetInt32( 0 ),
-									Name = reader.GetString( 1 ),
-									Age = reader.GetInt32( 2 ),
-									Address = reader.IsDBNull( 3 ) ? "未填写" : reader.GetString( 3 )
-								};
-								MessageBox.Show( $"ID: {user.Id}, 姓名: {user.Name}, 年龄: {user.Age}, 地址: {user.Address}" );
-							}
-						}
-					}
-				}
-			}
-			catch (Exception ex) {
-				MessageBox.Show( $"查询失败：{ex.Message}" );
-			}
-		}
-		/// <summary>
-		///  4. 查询单条数据（Read Single）
-		/// </summary>
-		/// <param name="id"></param>
-		/// <returns></returns>
-		public User GetUserById(int id)
-		{
-			try {
-				using (var connection = new SQLiteConnection( _connectionString )) {
-					connection.Open();
-					string selectSql = "SELECT Id, Name, Age, Address FROM Users WHERE Id = @Id";
-					using (var command = new SQLiteCommand( selectSql, connection )) {
-						command.Parameters.AddWithValue( "@Id", id );
-						using (var reader = command.ExecuteReader()) {
-							if (reader.Read()) {
-								return new User
-								{
-									Id = reader.GetInt32( 0 ),
-									Name = reader.GetString( 1 ),
-									Age = reader.GetInt32( 2 ),
-									Address = reader.IsDBNull( 3 ) ? "未填写" : reader.GetString( 3 )
-								};
-							}
-							return null; // 未找到数据
-						}
-					}
-				}
-			}
-			catch (Exception ex) {
-				MessageBox.Show( $"查询失败：{ex.Message}" );
-				return null;
-			}
-		}
-		/// <summary>
-		///  5. 更新数据（Update）
-		/// </summary>
-		/// <param name="user"></param>
-		/// <returns></returns>
-		public bool UpdateUser(User user)
-		{
-			try {
-				using (var connection = new SQLiteConnection( _connectionString )) {
-					connection.Open();
-					string updateSql = "UPDATE Users SET Name = @Name, Age = @Age, Address = @Address WHERE Id = @Id";
-					using (var command = new SQLiteCommand( updateSql, connection )) {
-						command.Parameters.AddWithValue( "@Id", user.Id );
-						command.Parameters.AddWithValue( "@Name", user.Name );
-						command.Parameters.AddWithValue( "@Age", user.Age );
-						command.Parameters.AddWithValue( "@Address", user.Address );
-						int rowsAffected = command.ExecuteNonQuery();
-						return rowsAffected > 0; // 更新成功返回true
-					}
-				}
-			}
-			catch (Exception ex) {
-				MessageBox.Show( $"更新失败：{ex.Message}" );
-				return false;
-			}
-		}
 
-		// 6. 删除数据（Delete）
-		public bool DeleteUser(int id)
-		{
-			try {
-				using (var connection = new SQLiteConnection( _connectionString )) {
-					connection.Open();
-					string deleteSql = "DELETE FROM Users WHERE Id = @Id";
-					using (var command = new SQLiteCommand( deleteSql, connection )) {
-						command.Parameters.AddWithValue( "@Id", id );
-						int rowsAffected = command.ExecuteNonQuery();
-						return rowsAffected > 0; // 删除成功返回true
-					}
-				}
-			}
-			catch (Exception ex) {
-				MessageBox.Show( $"删除失败：{ex.Message}" );
-				return false;
-			}
-		}
-		/// <summary>
-		///  主程序入口
-		/// </summary>
-		public void RunData( )
-		{
-
-			// 数据库文件路径（建议使用绝对路径，例如：@"C:\Data\TestDB.db"）
-			string dbPath = $"D:\\Documents\\Visual Studio 2022\\MusicChange\\LaserEditing.db";
-			var dbAccess = new db( dbPath );
-
-			// 初始化数据库
-			dbAccess.InitDatabase();
-
-			// 测试新增
-			var user1 = new User { Name = "张三", Age = 28, Address = "广州" };
-			bool isInserted = dbAccess.InsertUser( user1 );
-			MessageBox.Show( $"新增结果：{(isInserted ? "成功" : "失败")}", "警告", MessageBoxButton.OK, MessageBoxImage.Warning );
-			var user2 = new User { Name = "李四", Age = 32, Address = "成都" };
-			dbAccess.InsertUser( user2 );
-			// 测试查询所有
-			dbAccess.GetAllUsers();
-			// 测试查询单条
-			var user = dbAccess.GetUserById( 1 );
-			if (user != null) {
-				MessageBox.Show( $"\n查询ID=1的用户：{user.Name}，{user.Age}岁" );
-			}
-			// 测试更新
-			if (user != null) {
-				user.Age = 29; // 修改年龄
-				user.Address = "深圳"; // 修改地址
-				bool isUpdated = dbAccess.UpdateUser( user );
-				MessageBox.Show( $"更新结果：{(isUpdated ? "成功" : "失败")}" );
-			}
-			// 再次查询所有（查看更新后的数据）
-			dbAccess.GetAllUsers();
-			// 测试删除
-			bool isDeleted = dbAccess.DeleteUser( 2 );
-			MessageBox.Show( $"删除ID=2的结果：{(isDeleted ? "成功" : "失败")}" );
-			// 最终数据
-			dbAccess.GetAllUsers();
-			MessageBox.Show( "\n操作完成，按任意键退出..." );
-		}
-		#endregion
+		#region ---------创建一个 clip 剪辑数据库的详细表，并给出c# sqlite 程序  ------------
 
 		/*
         1.	clips - 存储音频剪辑的基本信息
@@ -252,8 +74,6 @@ namespace MusicChange
         3.	更新(Update): UpdateProject, UpdateClip, UpdateClipEffect
         4.	删除(Delete): DeleteProject, DeleteClip, DeleteClipEffect
         */
-
-		#region ---------创建一个 剪辑数据库的详细表，并给出c# sqlite 程序  ------------
 		/// <summary>
 		/// InitializeDatabase  创建数据库，创建表
 		/// </summary>
@@ -307,7 +127,6 @@ namespace MusicChange
                         created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
                         FOREIGN KEY (clip_id) REFERENCES clips (id)
                     )";
-
 				using (var command = new SQLiteCommand( createClipEffectsTable, connection )) {
 					command.ExecuteNonQuery();
 				}
@@ -322,7 +141,6 @@ namespace MusicChange
 		{
 			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
-
 				string sql = @"
                     INSERT INTO projects (name, description, created_at, updated_at)
                     VALUES (@name, @description, @created_at, @updated_at);
@@ -346,7 +164,6 @@ namespace MusicChange
 		/// <param name="id">The unique identifier of the project to retrieve. Must be a positive integer.</param>
 		/// <returns>The <see cref="Project"/> object corresponding to the specified <paramref name="id"/>,  or <see langword="null"/>
 		/// if no project with the given ID exists.</returns>
-
 		public Project GetProjectById(int id)
 		{
 			using (var connection = new SQLiteConnection( _connectionString )) {
@@ -368,7 +185,6 @@ namespace MusicChange
 					}
 				}
 			}
-
 			return null;
 		}
 		/// <summary>
@@ -395,14 +211,12 @@ namespace MusicChange
 					}
 				}
 			}
-
 			return projects;
 		}
 		/// <summary>
 		/// Updates an existing project in the database.
 		/// <param name="project"></param>
 		/// </summary>
-
 		public bool UpdateProject(Project project)
 		{
 			using (var connection = new SQLiteConnection( _connectionString )) {
@@ -454,7 +268,6 @@ namespace MusicChange
                     INSERT INTO clips (name, type,file_path, project_id, start_position, end_position, speed, pitch, created_at, updated_at)
                     VALUES (@name, @file_path, @project_id, @start_position, @end_position, @speed, @pitch, @created_at, @updated_at);
                     SELECT last_insert_rowid();";
-
 				using (var command = new SQLiteCommand( sql, connection )) {
 					command.Parameters.AddWithValue( "@name", clip.Name );
 					command.Parameters.AddWithValue( "@file_path", clip.FilePath );
@@ -470,17 +283,18 @@ namespace MusicChange
 				}
 			}
 		}
-
+		/// <summary>
+		/// 获取 Clip by Id
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns></returns>
 		public Clip GetClipById(int id)
 		{
 			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
-
 				string sql = "SELECT * FROM clips WHERE id = @id";
-
 				using (var command = new SQLiteCommand( sql, connection )) {
 					command.Parameters.AddWithValue( "@id", id );
-
 					using (var reader = command.ExecuteReader()) {
 						if (reader.Read()) {
 							return new Clip
@@ -501,22 +315,21 @@ namespace MusicChange
 					}
 				}
 			}
-
 			return null;
 		}
-
+		/// <summary>
+		/// 存储剪辑效果设置 id
+		/// </summary>
+		/// <param name="projectId"></param>
+		/// <returns></returns>
 		public List<Clip> GetClipsByProjectId(int projectId)
 		{
 			var clips = new List<Clip>();
-
 			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
-
 				string sql = "SELECT * FROM clips WHERE project_id = @project_id ORDER BY created_at DESC";
-
 				using (var command = new SQLiteCommand( sql, connection )) {
 					command.Parameters.AddWithValue( "@project_id", projectId );
-
 					using (var reader = command.ExecuteReader()) {
 						while (reader.Read()) {
 							clips.Add( new Clip
@@ -540,16 +353,17 @@ namespace MusicChange
 
 			return clips;
 		}
-
+		/// <summary>
+		/// 获取所有 Clips 列表
+		/// </summary>
+		/// <returns></returns>
 		public List<Clip> GetAllClips( )
 		{
 			var clips = new List<Clip>();
 
 			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
-
 				string sql = "SELECT * FROM clips ORDER BY created_at DESC";
-
 				using (var command = new SQLiteCommand( sql, connection ))
 				using (var reader = command.ExecuteReader()) {
 					while (reader.Read()) {
@@ -570,10 +384,13 @@ namespace MusicChange
 					}
 				}
 			}
-
 			return clips;
 		}
-
+		/// <summary>
+		/// 更新 Clip 信息
+		/// </summary>
+		/// <param name="clip"></param>
+		/// <returns></returns>
 		public bool UpdateClip(Clip clip)
 		{
 			using (var connection = new SQLiteConnection( _connectionString )) {
@@ -602,7 +419,11 @@ namespace MusicChange
 				}
 			}
 		}
-
+		/// <summary>
+		/// 删除 Clip
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns></returns>
 		public bool DeleteClip(int id)
 		{
 			using (var connection = new SQLiteConnection( _connectionString )) {
@@ -623,18 +444,20 @@ namespace MusicChange
 				}
 			}
 		}
-
+		/// <summary>
+		///  ClipEffects 表操作 存储剪辑效果设置
+		/// </summary>
+		/// <param name="effect"></param>
+		/// <returns></returns>
 		// ClipEffects 表操作
 		public int InsertClipEffect(ClipEffect effect)
 		{
 			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
-
 				string sql = @"
                     INSERT INTO clip_effects (clip_id, effect_type, value, created_at)
                     VALUES (@clip_id, @effect_type, @value, @created_at);
                     SELECT last_insert_rowid();";
-
 				using (var command = new SQLiteCommand( sql, connection )) {
 					command.Parameters.AddWithValue( "@clip_id", effect.ClipId );
 					command.Parameters.AddWithValue( "@effect_type", effect.EffectType );
@@ -645,7 +468,11 @@ namespace MusicChange
 				}
 			}
 		}
-
+		/// <summary>
+		///获取 ClipEffect by Id
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns></returns>
 		public ClipEffect GetClipEffectById(int id)
 		{
 			using (var connection = new SQLiteConnection( _connectionString )) {
@@ -700,10 +527,13 @@ namespace MusicChange
 					}
 				}
 			}
-
 			return effects;
 		}
-
+		/// <summary>
+		///	更新 ClipEffect
+		/// </summary>
+		/// <param name="effect"></param>
+		/// <returns></returns>
 		public bool UpdateClipEffect(ClipEffect effect)
 		{
 			using (var connection = new SQLiteConnection( _connectionString )) {
@@ -739,119 +569,117 @@ namespace MusicChange
 			}
 		}
 
-	}
-	#endregion
+		#endregion
 
-	#region -------- User 表 处理  ------------
+		#region -------剪辑 User 表 处理  ------------
 
-	/* 
-	数据库表关系图
- 
-这个设计提供了完整的用户管理功能，包括：
-1.	基础用户信息 (users) - 存储用户的基本账户信息
-2.	用户配置文件 (user_profiles) - 存储用户的个性化设置
-3.	用户会话 (user_sessions) - 管理用户登录会话
-4.	用户偏好 (user_preferences) - 存储用户的详细偏好设置
-5.	 (user_logintime)   - 记录用户登录时间
-特点：
-•	使用外键约束保证数据完整性
-•	创建索引提高查询性能
-•	使用触发器自动更新时间戳
-•	支持级联删除，当用户被删除时相关数据也会被自动清理
-•	提供默认数据插入功能
-	数据库表结构设计
+		/* 
+		数据库表关系图
 
-1. users 表 - 用户信息表
-列名	类型	约束	描述
-id	INTEGER	PRIMARY KEY AUTOINCREMENT	用户ID
-username	TEXT	NOT NULL UNIQUE	用户名
-email	TEXT	NOT NULL UNIQUE	邮箱
-password_hash	TEXT	NOT NULL	密码哈希值
-full_name	TEXT		真实姓名
-avatar_path	TEXT		头像路径
-is_active	INTEGER	NOT NULL DEFAULT 1	是否激活
-created_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
-updated_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	更新时间
-
-2. user_profiles 表 - 用户详细信息表
-列名	类型	约束	描述
-id	INTEGER	PRIMARY KEY AUTOINCREMENT	配置ID
-user_id	INTEGER	NOT NULL UNIQUE, FOREIGN KEY REFERENCES users(id)	用户ID
-preferred_language	TEXT		偏好语言
-theme	TEXT		主题设置
-default_project_location	TEXT		默认项目保存位置
-auto_save_interval	INTEGER		自动保存间隔（分钟）
-max_undo_steps	INTEGER		最大撤销步数
-created_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
-updated_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	更新时间
-
-3. user_sessions 表 - 用户会话表
-列名	类型	约束	描述
-id	INTEGER	PRIMARY KEY AUTOINCREMENT	会话ID
-user_id	INTEGER	NOT NULL, FOREIGN KEY REFERENCES users(id)	用户ID
-session_token	TEXT	NOT NULL UNIQUE	会话令牌
-ip_address	TEXT		IP地址
-user_agent	TEXT		用户代理
-expires_at	DATETIME	NOT NULL	过期时间
-created_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
-
-4. user_preferences 表 - 用户偏好设置表
-列名	类型	约束	描述
-id	INTEGER	PRIMARY KEY AUTOINCREMENT	偏好ID
-user_id	INTEGER	NOT NULL, FOREIGN KEY REFERENCES users(id)	用户ID
-preference_key	TEXT	NOT NULL	偏好键名
-preference_value	TEXT	NOT NULL	偏好值
-created_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
-updated_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	更新时间
-
-5. userslogintime 表 - 用户登录时间表
-列名	类型	约束	描述
-id	INTEGER	PRIMARY KEY AUTOINCREMENT	用户ID
-iduser	INTEGER	NOT NULL UNIQUE, FOREIGN KEY REFERENCES users(id)	用户ID
-	login_time	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	登录时间
-	end_time	DATETIME		登出时间
+	这个设计提供了完整的用户管理功能，包括：
+	1.	基础用户信息 (users) - 存储用户的基本账户信息
+	2.	用户配置文件 (user_profiles) - 存储用户的个性化设置
+	3.	用户会话 (user_sessions) - 管理用户登录会话
+	4.	用户偏好 (user_preferences) - 存储用户的详细偏好设置
+	5.	 (user_logintime)   - 记录用户登录时间
+	特点：
+	•	使用外键约束保证数据完整性
+	•	创建索引提高查询性能
+	•	使用触发器自动更新时间戳
+	•	支持级联删除，当用户被删除时相关数据也会被自动清理
+	•	提供默认数据插入功能
+		数据库表结构设计
+	-----------------------------------------------
+	1. users 表 - 用户信息表
+	列名		类型	约束	描述
+	id			INTEGER	PRIMARY KEY AUTOINCREMENT	用户ID
+	username	TEXT	NOT NULL UNIQUE	用户名
+	email		TEXT	NOT NULL UNIQUE	邮箱
+	password_hash	TEXT	NOT NULL	密码哈希值
+	full_name	TEXT					真实姓名
+	avatar_path	TEXT					头像路径
+	is_active	INTEGER	NOT NULL DEFAULT 1	是否激活
 	created_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
-	count 	INTEGER	NOT NULL DEFAULT 1	登录次数
-	timelength	INTEGER	NOT NULL DEFAULT 0	在线时长（秒）
+	updated_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	更新时间
+	annotations TEXT										用户注释信息		
+	2. user_profiles 表 - 用户详细信息表
+	列名	类型	约束	描述
+	id	INTEGER	PRIMARY KEY AUTOINCREMENT	配置ID
+	user_id	INTEGER	NOT NULL UNIQUE, FOREIGN KEY REFERENCES users(id)	用户ID
+	preferred_language	TEXT		偏好语言
+	theme	TEXT		主题设置
+	default_project_location	TEXT		默认项目保存位置
+	auto_save_interval	INTEGER		自动保存间隔（分钟）
+	max_undo_steps	INTEGER		最大撤销步数
+	created_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
+	updated_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	更新时间
 
-	*/
+	3. user_sessions 表 - 用户会话表
+	列名	类型	约束	描述
+	id	INTEGER	PRIMARY KEY AUTOINCREMENT	会话ID
+	user_id	INTEGER	NOT NULL, FOREIGN KEY REFERENCES users(id)	用户ID
+	session_token	TEXT	NOT NULL UNIQUE	会话令牌
+	ip_address	TEXT		IP地址
+	user_agent	TEXT		用户代理
+	expires_at	DATETIME	NOT NULL	过期时间
+	created_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
 
-	/// <summary>
-	/// 用户数据库表设置
-	/// </summary>
-	public class UserDatabaseSetup
-	{
-		private readonly string _connectionString;
+	4. user_preferences 表 - 用户偏好设置表
+	列名	类型	约束	描述
+	id	INTEGER	PRIMARY KEY AUTOINCREMENT	偏好ID
+	user_id	INTEGER	NOT NULL, FOREIGN KEY REFERENCES users(id)	用户ID
+	preference_key	TEXT	NOT NULL	偏好键名
+	preference_value	TEXT	NOT NULL	偏好值
+	created_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
+	updated_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	更新时间
 
-		public UserDatabaseSetup(string databasePath)
-		{
-			_connectionString = $"Data Source={databasePath};Version=3;";
-		}
+	5. userslogintime 表 - 用户登录时间表
+	列名	类型	约束	描述
+	id	INTEGER	PRIMARY KEY AUTOINCREMENT	用户ID
+	iduser	INTEGER	NOT NULL UNIQUE, FOREIGN KEY REFERENCES users(id)	用户ID
+		login_time	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	登录时间
+		end_time	DATETIME		登出时间
+		created_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
+		count 	INTEGER	NOT NULL DEFAULT 1	登录次数
+		timelength	INTEGER	NOT NULL DEFAULT 0	在线时长（秒）
+
+		*/
+
+		/// <summary>
+		/// 用户数据库表设置
+		/// </summary>
+		//public class UserDatabaseSetup
+		//{
+		//private readonly string _connectionString;
+		//private string databasePath = "D:\\Documents\\Visual Studio 2022\\MusicChange\\LaserEditing.db";
+		////public UserDatabaseSetup(string databasePath)
+		////{
+		//	_connectionString = $"Data Source={databasePath};Version=3;";
+		//}
+
 		/// <summary>
 		/// testuser 测试用户数据库初始化
 		/// </summary>
-		private void testuser( )
+		public void testuser( )
 		{
 			try {
-				// 初始化用户数据库
-				var dbSetup = new UserDatabaseSetup( "user_database.db" );
-
+				// 初始化用户数据库				//var dbSetup = new dbPath( "LaserEditing.db" );
+				var dbAccess = new db( dbPath );
 				// 创建表结构
-				dbSetup.CreateDatabaseTables();
-
+				dbAccess.CreateDatabaseTables();
 				// 创建触发器
-				dbSetup.CreateTriggers();
-
+				dbAccess.CreateTriggers();
 				// 插入默认数据
-				dbSetup.InsertDefaultData();
-
+				dbAccess.InsertDefaultData();
 				Console.WriteLine( "用户数据库初始化完成！" );
 			}
 			catch (Exception ex) {
 				Console.WriteLine( $"数据库初始化失败: {ex.Message}" );
 			}
 		}
-
+		/// <summary>
+		/// 创建数据库表
+		/// </summary>
 		public void CreateDatabaseTables( )
 		{
 			using (var connection = new SQLiteConnection( _connectionString )) {
@@ -861,6 +689,7 @@ iduser	INTEGER	NOT NULL UNIQUE, FOREIGN KEY REFERENCES users(id)	用户ID
 				CreateUserProfileTable( connection );
 				CreateUserSessionTable( connection );
 				CreateUserPreferencesTable( connection );
+				CreateUserLoginTable( connection );
 
 				Console.WriteLine( "用户数据库表创建完成" );
 			}
@@ -878,7 +707,8 @@ iduser	INTEGER	NOT NULL UNIQUE, FOREIGN KEY REFERENCES users(id)	用户ID
                     avatar_path TEXT,
                     is_active INTEGER NOT NULL DEFAULT 1,
                     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+                    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+					annotations TEXT
                 )";
 
 			using (var command = new SQLiteCommand( createUsersTable, connection )) {
@@ -989,6 +819,35 @@ iduser	INTEGER	NOT NULL UNIQUE, FOREIGN KEY REFERENCES users(id)	用户ID
 			}
 		}
 
+		private void CreateUserLoginTable(SQLiteConnection connection)
+		{
+			string createPreferencesTable = @"
+                CREATE TABLE IF NOT EXISTS user_logintime (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER NOT NULL,
+                    preference_key TEXT NOT NULL,
+                    preference_value TEXT NOT NULL,
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+                )";
+
+			using (var command = new SQLiteCommand( createPreferencesTable, connection )) {
+				command.ExecuteNonQuery();
+			}
+
+			// 创建用户偏好组合索引
+			//string createUserPrefIndex = @"
+			//             CREATE INDEX IF NOT EXISTS idx_user_preferences 
+			//             ON user_preferences (user_id, preference_key)";
+			//using (var command = new SQLiteCommand( createUserPrefIndex, connection )) {
+			//	command.ExecuteNonQuery();
+		}
+
+
+		/// <summary>
+		/// InsertDefaultData 插入默认数据
+		/// </summary>
 		public void InsertDefaultData( )
 		{
 			using (var connection = new SQLiteConnection( _connectionString )) {
@@ -1100,34 +959,562 @@ iduser	INTEGER	NOT NULL UNIQUE, FOREIGN KEY REFERENCES users(id)	用户ID
 				Console.WriteLine( "触发器创建完成" );
 			}
 		}
-	}
+		#endregion
+
+		#region -----------   视频剪辑软件的 事务表 如何定义    ------------
+		/*
+		视频剪辑软件的 事务表 如何定义
+		视频剪辑软件中的事务表主要用于记录用户的操作历史、项目变更、_undo/redo_操作等。以下是如何定义视频剪辑软件的事务表结构：
+事务表结构设计
+1. ----------------------- projects 表 - 项目信息表
+列名	类型	约束	描述
+id	INTEGER	PRIMARY KEY AUTOINCREMENT	项目ID
+user_id	INTEGER	NOT NULL, FOREIGN KEY REFERENCES users(id)	用户ID
+name	TEXT	NOT NULL	项目名称
+description	TEXT		项目描述
+width	INTEGER	NOT NULL DEFAULT 1920	项目宽度
+height	INTEGER	NOT NULL DEFAULT 1080	项目高度
+framerate	REAL	NOT NULL DEFAULT 30.0	帧率
+duration	REAL	NOT NULL DEFAULT 0.0	项目时长
+thumbnail_path	TEXT		缩略图路径
+created_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
+updated_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	更新时间
+
+2. -------------------------- media_assets 表 - 媒体资源表
+列名	类型	约束	描述
+id	INTEGER	PRIMARY KEY AUTOINCREMENT	资源ID
+user_id	INTEGER	NOT NULL, FOREIGN KEY REFERENCES users(id)	用户ID
+name	TEXT	NOT NULL	资源名称
+file_path	TEXT	NOT NULL	文件路径
+file_size	INTEGER	NOT NULL	文件大小(字节)
+media_type	TEXT	NOT NULL	媒体类型(video/audio/image)
+duration	REAL		时长(秒)
+width	INTEGER		宽度
+height	INTEGER		高度
+framerate	REAL		帧率
+codec	TEXT		编解码器
+created_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
+
+3. ----------------------------- timeline_tracks 表 - 时间线轨道表
+列名	类型	约束	描述
+id	INTEGER	PRIMARY KEY AUTOINCREMENT	轨道ID
+project_id	INTEGER	NOT NULL, FOREIGN KEY REFERENCES projects(id)	项目ID
+track_type	TEXT	NOT NULL	轨道类型(video/audio)
+track_index	INTEGER	NOT NULL	轨道索引
+name	TEXT	NOT NULL	轨道名称
+is_muted	INTEGER	NOT NULL DEFAULT 0	是否静音
+is_locked	INTEGER	NOT NULL DEFAULT 0	是否锁定
+volume	REAL	NOT NULL DEFAULT 1.0	音量(0.0-1.0)
+created_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
+
+4. ----------------------------- clips 表 - 剪辑片段表
+列名	类型	约束	描述
+id	INTEGER	PRIMARY KEY AUTOINCREMENT	剪辑ID
+project_id	INTEGER	NOT NULL, FOREIGN KEY REFERENCES projects(id)	项目ID
+track_id	INTEGER	NOT NULL, FOREIGN KEY REFERENCES timeline_tracks(id)	轨道ID
+media_asset_id	INTEGER	FOREIGN KEY REFERENCES media_assets(id)	媒体资源ID
+name	TEXT	NOT NULL	剪辑名称
+start_time	REAL	NOT NULL	在时间线上的开始时间
+end_time	REAL	NOT NULL	在时间线上的结束时间
+media_start_time	REAL	NOT NULL DEFAULT 0.0	在媒体中的开始时间
+media_end_time	REAL	NOT NULL	在媒体中的结束时间
+position_x	REAL	NOT NULL DEFAULT 0.0	X位置
+position_y	REAL	NOT NULL DEFAULT 0.0	Y位置
+scale_x	REAL	NOT NULL DEFAULT 1.0	X缩放
+scale_y	REAL	NOT NULL DEFAULT 1.0	Y缩放
+rotation	REAL	NOT NULL DEFAULT 0.0	旋转角度
+volume	REAL	NOT NULL DEFAULT 1.0	音量
+is_muted	INTEGER	NOT NULL DEFAULT 0	是否静音
+created_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
+updated_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	更新时间
+
+5. --------------------------- transactions 表 - 事务表
+列名	类型	约束	描述
+id	INTEGER	PRIMARY KEY AUTOINCREMENT	事务ID
+project_id	INTEGER	NOT NULL, FOREIGN KEY REFERENCES projects(id)	项目ID
+user_id	INTEGER	NOT NULL, FOREIGN KEY REFERENCES users(id)	用户ID
+transaction_type	TEXT	NOT NULL	事务类型
+description	TEXT	NOT NULL	事务描述
+timestamp	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	时间戳
+is_undone	INTEGER	NOT NULL DEFAULT 0	是否已撤销
+
+6. ----------------------- transaction_details 表 - 事务详情表
+列名	类型	约束	描述
+id	INTEGER	PRIMARY KEY AUTOINCREMENT	详情ID
+transaction_id	INTEGER	NOT NULL, FOREIGN KEY REFERENCES transactions(id)	事务ID
+operation_type	TEXT	NOT NULL	操作类型(create/update/delete)
+table_name	TEXT	NOT NULL	表名
+record_id	INTEGER	NOT NULL	记录ID
+old_values	TEXT		旧值(JSON格式)
+new_values	TEXT		新值(JSON格式)
+created_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
+
+7. ----------------------------effects 表 - 效果表
+列名	类型	约束	描述
+id	INTEGER	PRIMARY KEY AUTOINCREMENT	效果ID
+name	TEXT	NOT NULL	效果名称
+effect_type	TEXT	NOT NULL	效果类型
+description	TEXT		效果描述
+parameters	TEXT		参数定义(JSON格式)
+created_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
+
+8. ---------------------------clip_effects 表 - 剪辑效果关联表
+列名	类型	约束	描述
+id	INTEGER	PRIMARY KEY AUTOINCREMENT	关联ID
+clip_id	INTEGER	NOT NULL, FOREIGN KEY REFERENCES clips(id)	剪辑ID
+effect_id	INTEGER	NOT NULL, FOREIGN KEY REFERENCES effects(id)	效果ID
+parameters	TEXT	NOT NULL	参数值(JSON格式)
+start_time	REAL	NOT NULL DEFAULT 0.0	开始时间
+end_time	REAL	NOT NULL	结束时间
+order_index	INTEGER	NOT NULL	排序索引
+is_enabled	INTEGER	NOT NULL DEFAULT 1	是否启用
+created_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
+C# SQLite 事务表创建程序
+ 
+事务操作示例类
+ 
+这个事务表设计提供了以下功能：
+1.	完整的项目结构管理 - 包括项目、媒体资源、时间线轨道和剪辑片段
+2.	事务跟踪 - 记录所有用户操作，支持撤销/重做功能
+3.	效果系统 - 支持为剪辑添加各种效果
+4.	索引优化 - 为常用查询字段创建索引
+5.	自动时间戳 - 使用触发器自动更新时间戳
+6.	数据完整性 - 使用外键约束保证数据一致性
+通过这些表结构，视频剪辑软件可以完整地记录用户的操作历史，实现_undo/redo_功能，并且可以追踪项目的完整变更历史。
+		*/
+
+		//namespace VideoEditor.Database  	{	public class TransactionDatabaseSetup		{		
+
+		public void CreateTransactionTables( )
+		{
+			using (var connection = new SQLiteConnection( _connectionString )) {
+				connection.Open();
+
+				// 创建项目表
+				CreateProjectsTable( connection );
+
+				// 创建媒体资源表
+				CreateMediaAssetsTable( connection );
+
+				// 创建时间线轨道表
+				CreateTimelineTracksTable( connection );
+
+				// 创建剪辑片段表
+				CreateClipsTable( connection );
+
+				// 创建事务表
+				CreateTransactionsTable( connection );
+
+				// 创建事务详情表
+				CreateTransactionDetailsTable( connection );
+
+				// 创建效果表
+				CreateEffectsTable( connection );
+
+				// 创建剪辑效果关联表
+				CreateClipEffectsTable( connection );
+
+				// 创建索引
+				CreateIndexes( connection );
+
+				// 创建触发器
+				CreateTriggers( connection );
+
+				Console.WriteLine( "视频剪辑事务数据库表创建完成" );
+			}
+		}
+
+		private void CreateProjectsTable(SQLiteConnection connection)
+		{
+			string sql = @"
+                CREATE TABLE IF NOT EXISTS projects (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER NOT NULL,
+                    name TEXT NOT NULL,
+                    description TEXT,
+                    width INTEGER NOT NULL DEFAULT 1920,
+                    height INTEGER NOT NULL DEFAULT 1080,
+                    framerate REAL NOT NULL DEFAULT 30.0,
+                    duration REAL NOT NULL DEFAULT 0.0,
+                    thumbnail_path TEXT,
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (user_id) REFERENCES users (id)
+                )";
+
+			using (var command = new SQLiteCommand( sql, connection )) {
+				command.ExecuteNonQuery();
+			}
+		}
+
+		private void CreateMediaAssetsTable(SQLiteConnection connection)
+		{
+			string sql = @"
+                CREATE TABLE IF NOT EXISTS media_assets (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER NOT NULL,
+                    name TEXT NOT NULL,
+                    file_path TEXT NOT NULL,
+                    file_size INTEGER NOT NULL,
+                    media_type TEXT NOT NULL,
+                    duration REAL,
+                    width INTEGER,
+                    height INTEGER,
+                    framerate REAL,
+                    codec TEXT,
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (user_id) REFERENCES users (id)
+                )";
+
+			using (var command = new SQLiteCommand( sql, connection )) {
+				command.ExecuteNonQuery();
+			}
+		}
+
+		private void CreateTimelineTracksTable(SQLiteConnection connection)
+		{
+			string sql = @"
+                CREATE TABLE IF NOT EXISTS timeline_tracks (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    project_id INTEGER NOT NULL,
+                    track_type TEXT NOT NULL,
+                    track_index INTEGER NOT NULL,
+                    name TEXT NOT NULL,
+                    is_muted INTEGER NOT NULL DEFAULT 0,
+                    is_locked INTEGER NOT NULL DEFAULT 0,
+                    volume REAL NOT NULL DEFAULT 1.0,
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (project_id) REFERENCES projects (id)
+                )";
+
+			using (var command = new SQLiteCommand( sql, connection )) {
+				command.ExecuteNonQuery();
+			}
+		}
+
+		private void CreateClipsTable(SQLiteConnection connection)
+		{
+			string sql = @"
+                CREATE TABLE IF NOT EXISTS clips (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    project_id INTEGER NOT NULL,
+                    track_id INTEGER NOT NULL,
+                    media_asset_id INTEGER,
+                    name TEXT NOT NULL,
+                    start_time REAL NOT NULL,
+                    end_time REAL NOT NULL,
+                    media_start_time REAL NOT NULL DEFAULT 0.0,
+                    media_end_time REAL NOT NULL,
+                    position_x REAL NOT NULL DEFAULT 0.0,
+                    position_y REAL NOT NULL DEFAULT 0.0,
+                    scale_x REAL NOT NULL DEFAULT 1.0,
+                    scale_y REAL NOT NULL DEFAULT 1.0,
+                    rotation REAL NOT NULL DEFAULT 0.0,
+                    volume REAL NOT NULL DEFAULT 1.0,
+                    is_muted INTEGER NOT NULL DEFAULT 0,
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (project_id) REFERENCES projects (id),
+                    FOREIGN KEY (track_id) REFERENCES timeline_tracks (id),
+                    FOREIGN KEY (media_asset_id) REFERENCES media_assets (id)
+                )";
+
+			using (var command = new SQLiteCommand( sql, connection )) {
+				command.ExecuteNonQuery();
+			}
+		}
+
+		private void CreateTransactionsTable(SQLiteConnection connection)
+		{
+			string sql = @"
+                CREATE TABLE IF NOT EXISTS transactions (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    project_id INTEGER NOT NULL,
+                    user_id INTEGER NOT NULL,
+                    transaction_type TEXT NOT NULL,
+                    description TEXT NOT NULL,
+                    timestamp DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    is_undone INTEGER NOT NULL DEFAULT 0,
+                    FOREIGN KEY (project_id) REFERENCES projects (id),
+                    FOREIGN KEY (user_id) REFERENCES users (id)
+                )";
+
+			using (var command = new SQLiteCommand( sql, connection )) {
+				command.ExecuteNonQuery();
+			}
+		}
+
+		private void CreateTransactionDetailsTable(SQLiteConnection connection)
+		{
+			string sql = @"
+                CREATE TABLE IF NOT EXISTS transaction_details (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    transaction_id INTEGER NOT NULL,
+                    operation_type TEXT NOT NULL,
+                    table_name TEXT NOT NULL,
+                    record_id INTEGER NOT NULL,
+                    old_values TEXT,
+                    new_values TEXT,
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (transaction_id) REFERENCES transactions (id)
+                )";
+
+			using (var command = new SQLiteCommand( sql, connection )) {
+				command.ExecuteNonQuery();
+			}
+		}
+
+		private void CreateEffectsTable(SQLiteConnection connection)
+		{
+			string sql = @"
+                CREATE TABLE IF NOT EXISTS effects (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    name TEXT NOT NULL,
+                    effect_type TEXT NOT NULL,
+                    description TEXT,
+                    parameters TEXT,
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+                )";
+
+			using (var command = new SQLiteCommand( sql, connection )) {
+				command.ExecuteNonQuery();
+			}
+		}
+
+		private void CreateClipEffectsTable(SQLiteConnection connection)
+		{
+			string sql = @"
+                CREATE TABLE IF NOT EXISTS clip_effects (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    clip_id INTEGER NOT NULL,
+                    effect_id INTEGER NOT NULL,
+                    parameters TEXT NOT NULL,
+                    start_time REAL NOT NULL DEFAULT 0.0,
+                    end_time REAL NOT NULL,
+                    order_index INTEGER NOT NULL,
+                    is_enabled INTEGER NOT NULL DEFAULT 1,
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (clip_id) REFERENCES clips (id),
+                    FOREIGN KEY (effect_id) REFERENCES effects (id)
+                )";
+
+			using (var command = new SQLiteCommand( sql, connection )) {
+				command.ExecuteNonQuery();
+			}
+		}
+
+		private void CreateIndexes(SQLiteConnection connection)
+		{
+			// 项目索引
+			string projectIndex = "CREATE INDEX IF NOT EXISTS idx_projects_user ON projects (user_id)";
+			using (var command = new SQLiteCommand( projectIndex, connection )) {
+				command.ExecuteNonQuery();
+			}
+
+			// 媒体资源索引
+			string mediaIndex = "CREATE INDEX IF NOT EXISTS idx_media_assets_user ON media_assets (user_id)";
+			using (var command = new SQLiteCommand( mediaIndex, connection )) {
+				command.ExecuteNonQuery();
+			}
+
+			// 轨道索引
+			string trackIndex = "CREATE INDEX IF NOT EXISTS idx_timeline_tracks_project ON timeline_tracks (project_id)";
+			using (var command = new SQLiteCommand( trackIndex, connection )) {
+				command.ExecuteNonQuery();
+			}
+
+			// 剪辑索引
+			string clipIndex1 = "CREATE INDEX IF NOT EXISTS idx_clips_project ON clips (project_id)";
+			using (var command = new SQLiteCommand( clipIndex1, connection )) {
+				command.ExecuteNonQuery();
+			}
+
+			string clipIndex2 = "CREATE INDEX IF NOT EXISTS idx_clips_track ON clips (track_id)";
+			using (var command = new SQLiteCommand( clipIndex2, connection )) {
+				command.ExecuteNonQuery();
+			}
+
+			// 事务索引
+			string transactionIndex1 = "CREATE INDEX IF NOT EXISTS idx_transactions_project ON transactions (project_id)";
+			using (var command = new SQLiteCommand( transactionIndex1, connection )) {
+				command.ExecuteNonQuery();
+			}
+
+			string transactionIndex2 = "CREATE INDEX IF NOT EXISTS idx_transactions_user ON transactions (user_id)";
+			using (var command = new SQLiteCommand( transactionIndex2, connection )) {
+				command.ExecuteNonQuery();
+			}
+
+			// 事务详情索引
+			string detailIndex = "CREATE INDEX IF NOT EXISTS idx_transaction_details_transaction ON transaction_details (transaction_id)";
+			using (var command = new SQLiteCommand( detailIndex, connection )) {
+				command.ExecuteNonQuery();
+			}
+
+			// 剪辑效果索引
+			string clipEffectIndex1 = "CREATE INDEX IF NOT EXISTS idx_clip_effects_clip ON clip_effects (clip_id)";
+			using (var command = new SQLiteCommand( clipEffectIndex1, connection )) {
+				command.ExecuteNonQuery();
+			}
+
+			string clipEffectIndex2 = "CREATE INDEX IF NOT EXISTS idx_clip_effects_effect ON clip_effects (effect_id)";
+			using (var command = new SQLiteCommand( clipEffectIndex2, connection )) {
+				command.ExecuteNonQuery();
+			}
+		}
+
+		private void CreateTriggers(SQLiteConnection connection)
+		{
+			// 项目更新时间触发器
+			string projectTrigger = @"
+                CREATE TRIGGER IF NOT EXISTS update_projects_timestamp 
+                AFTER UPDATE ON projects
+                BEGIN
+                    UPDATE projects SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
+                END";
+			using (var command = new SQLiteCommand( projectTrigger, connection )) {
+				command.ExecuteNonQuery();
+			}
+
+			// 剪辑更新时间触发器
+			string clipTrigger = @"
+                CREATE TRIGGER IF NOT EXISTS update_clips_timestamp 
+                AFTER UPDATE ON clips
+                BEGIN
+                    UPDATE clips SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
+                END";
+			using (var command = new SQLiteCommand( clipTrigger, connection )) {
+				command.ExecuteNonQuery();
+			}
+		}
+		#endregion
+		//namespace VideoEditor.Database {public class TransactionManager		{
+		/* 
+		这个事务表设计提供了以下功能：
+1.	完整的项目结构管理 - 包括项目、媒体资源、时间线轨道和剪辑片段
+2.	事务跟踪 - 记录所有用户操作，支持撤销/重做功能
+3.	效果系统 - 支持为剪辑添加各种效果
+4.	索引优化 - 为常用查询字段创建索引
+5.	自动时间戳 - 使用触发器自动更新时间戳
+6.	数据完整性 - 使用外键约束保证数据一致性
+通过这些表结构，视频剪辑软件可以完整地记录用户的操作历史，实现_undo/redo_功能，并且可以追踪项目的完整变更历史。
+		*/
+		#region  -----------  事务操作示例类  ----------------
+
+		// 记录事务
+		public int RecordTransaction(int projectId, int userId, string transactionType, string description)
+		{
+			using (var connection = new SQLiteConnection( _connectionString )) {
+				connection.Open();
+
+				string sql = @"
+                    INSERT INTO transactions (project_id, user_id, transaction_type, description)
+                    VALUES (@project_id, @user_id, @transaction_type, @description);
+                    SELECT last_insert_rowid();";
+
+				using (var command = new SQLiteCommand( sql, connection )) {
+					command.Parameters.AddWithValue( "@project_id", projectId );
+					command.Parameters.AddWithValue( "@user_id", userId );
+					command.Parameters.AddWithValue( "@transaction_type", transactionType );
+					command.Parameters.AddWithValue( "@description", description );
+
+					return Convert.ToInt32( command.ExecuteScalar() );
+				}
+			}
+		}
+
+		// 记录事务详情
+		public void RecordTransactionDetail(int transactionId, string operationType, string tableName,
+										  int recordId, string oldValues, string newValues)
+		{
+			using (var connection = new SQLiteConnection( _connectionString )) {
+				connection.Open();
+
+				string sql = @"
+                    INSERT INTO transaction_details 
+                    (transaction_id, operation_type, table_name, record_id, old_values, new_values)
+                    VALUES (@transaction_id, @operation_type, @table_name, @record_id, @old_values, @new_values)";
+
+				using (var command = new SQLiteCommand( sql, connection )) {
+					command.Parameters.AddWithValue( "@transaction_id", transactionId );
+					command.Parameters.AddWithValue( "@operation_type", operationType );
+					command.Parameters.AddWithValue( "@table_name", tableName );
+					command.Parameters.AddWithValue( "@record_id", recordId );
+					command.Parameters.AddWithValue( "@old_values", oldValues ?? "" );
+					command.Parameters.AddWithValue( "@new_values", newValues ?? "" );
+
+					command.ExecuteNonQuery();
+				}
+			}
+		}
+
+		// 获取项目事务历史
+		public void GetProjectTransactions(int projectId)
+		{
+			using (var connection = new SQLiteConnection( _connectionString )) {
+				connection.Open();
+
+				string sql = @"
+                    SELECT t.*, u.username 
+                    FROM transactions t
+                    JOIN users u ON t.user_id = u.id
+                    WHERE t.project_id = @project_id
+                    ORDER BY t.timestamp DESC
+                    LIMIT 100";
+
+				using (var command = new SQLiteCommand( sql, connection )) {
+					command.Parameters.AddWithValue( "@project_id", projectId );
+
+					using (var reader = command.ExecuteReader()) {
+						while (reader.Read()) {
+							Console.WriteLine( $"事务: {reader["description"]}, 时间: {reader["timestamp"]}, 用户: {reader["username"]}" );
+						}
+					}
+				}
+			}
+		}
+
+		// 撤销事务
+		public bool UndoTransaction(int transactionId)
+		{
+			using (var connection = new SQLiteConnection( _connectionString )) {
+				connection.Open();
+
+				using (var transaction = connection.BeginTransaction()) {
+					try {
+						// 标记事务为已撤销
+						string updateSql = "UPDATE transactions SET is_undone = 1 WHERE id = @id";
+						using (var command = new SQLiteCommand( updateSql, connection )) {
+							command.Parameters.AddWithValue( "@id", transactionId );
+							command.ExecuteNonQuery();
+						}
+
+						// 这里可以添加实际的撤销逻辑
+						// 例如根据transaction_details中的信息恢复数据
+
+						transaction.Commit();
+						return true;
+					}
+					catch {
+						transaction.Rollback();
+						return false;
+					}
+				}
+			}
+		}
 
 
 
+	} //class  db
 }
+
+
+
 #endregion
 
-#region --------- 数据模型类（对应数据库表结构） ------------
-public class User
-{
-	public int Id
-	{
-		get; set;
-	}
-	public string Name
-	{
-		get; set;
 
-	}
-	public int Age
-	{
-		get; set;
-	}
-	public string Address
-	{
-		get; set;
-	}
-}
+
+#region --------- clip 数据模型类（对应数据库表结构） ------------
 
 public class Project
 {

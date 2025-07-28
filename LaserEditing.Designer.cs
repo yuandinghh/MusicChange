@@ -126,8 +126,8 @@ namespace MusicChange
 			// splitContainer1.Panel2
 			// 
 			this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-			this.splitContainer1.Size = new System.Drawing.Size(2332, 1153);
-			this.splitContainer1.SplitterDistance = 44;
+			this.splitContainer1.Size = new System.Drawing.Size(1882, 1033);
+			this.splitContainer1.SplitterDistance = 39;
 			this.splitContainer1.TabIndex = 0;
 			// 
 			// panelEx4
@@ -143,7 +143,7 @@ namespace MusicChange
 			this.panelEx4.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.panelEx4.Location = new System.Drawing.Point(0, 0);
 			this.panelEx4.Name = "panelEx4";
-			this.panelEx4.Size = new System.Drawing.Size(2332, 44);
+			this.panelEx4.Size = new System.Drawing.Size(1882, 39);
 			this.panelEx4.Style.Alignment = System.Drawing.StringAlignment.Center;
 			this.panelEx4.Style.BackColor1.Color = System.Drawing.Color.Black;
 			this.panelEx4.Style.BackColor2.Color = System.Drawing.Color.Black;
@@ -158,15 +158,13 @@ namespace MusicChange
 			// buttonx11
 			// 
 			this.buttonx11.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-			this.buttonx11.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
 			this.buttonx11.BackColor = System.Drawing.Color.Black;
 			this.buttonx11.ColorTable = DevComponents.DotNetBar.eButtonColor.Flat;
+			this.buttonx11.Dock = System.Windows.Forms.DockStyle.Left;
 			this.buttonx11.Font = new System.Drawing.Font("楷体", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(120)));
-			this.buttonx11.Location = new System.Drawing.Point(1258, 7);
+			this.buttonx11.Location = new System.Drawing.Point(136, 0);
 			this.buttonx11.Name = "buttonx11";
-			this.buttonx11.Size = new System.Drawing.Size(130, 33);
+			this.buttonx11.Size = new System.Drawing.Size(130, 39);
 			this.buttonx11.Style = DevComponents.DotNetBar.eDotNetBarStyle.Office2013;
 			this.buttonx11.Symbol = "";
 			this.buttonx11.SymbolColor = System.Drawing.Color.Lime;
@@ -202,9 +200,9 @@ namespace MusicChange
 			this.panel1.Controls.Add(this.button8);
 			this.panel1.Dock = System.Windows.Forms.DockStyle.Right;
 			this.panel1.ForeColor = System.Drawing.SystemColors.ControlText;
-			this.panel1.Location = new System.Drawing.Point(2161, 0);
+			this.panel1.Location = new System.Drawing.Point(1711, 0);
 			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(171, 44);
+			this.panel1.Size = new System.Drawing.Size(171, 39);
 			this.panel1.TabIndex = 2;
 			// 
 			// button42
@@ -308,8 +306,8 @@ namespace MusicChange
 			// 
 			this.splitContainer2.Panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
 			this.splitContainer2.Panel2.Controls.Add(this.splitContainer5);
-			this.splitContainer2.Size = new System.Drawing.Size(2332, 1105);
-			this.splitContainer2.SplitterDistance = 656;
+			this.splitContainer2.Size = new System.Drawing.Size(1882, 990);
+			this.splitContainer2.SplitterDistance = 587;
 			this.splitContainer2.TabIndex = 0;
 			// 
 			// sC3
@@ -333,8 +331,8 @@ namespace MusicChange
 			// 
 			this.sC3.Panel2.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
 			this.sC3.Panel2.Controls.Add(this.sC4);
-			this.sC3.Size = new System.Drawing.Size(2332, 656);
-			this.sC3.SplitterDistance = 635;
+			this.sC3.Size = new System.Drawing.Size(1882, 587);
+			this.sC3.SplitterDistance = 512;
 			this.sC3.TabIndex = 0;
 			// 
 			// panel3
@@ -344,7 +342,7 @@ namespace MusicChange
 			this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.panel3.Location = new System.Drawing.Point(127, 110);
 			this.panel3.Name = "panel3";
-			this.panel3.Size = new System.Drawing.Size(506, 544);
+			this.panel3.Size = new System.Drawing.Size(383, 475);
 			this.panel3.TabIndex = 18;
 			// 
 			// panel4
@@ -356,7 +354,7 @@ namespace MusicChange
 			this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
 			this.panel4.Location = new System.Drawing.Point(0, 0);
 			this.panel4.Name = "panel4";
-			this.panel4.Size = new System.Drawing.Size(506, 117);
+			this.panel4.Size = new System.Drawing.Size(383, 117);
 			this.panel4.TabIndex = 0;
 			this.panel4.SizeChanged += new System.EventHandler(this.panel4_SizeChanged);
 			// 
@@ -426,7 +424,7 @@ namespace MusicChange
 			this.dG.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
 			this.dG.RowHeadersWidth = 51;
 			this.dG.RowTemplate.Height = 27;
-			this.dG.Size = new System.Drawing.Size(506, 117);
+			this.dG.Size = new System.Drawing.Size(383, 117);
 			this.dG.TabIndex = 1;
 			// 
 			// panel2
@@ -438,7 +436,7 @@ namespace MusicChange
 			this.panel2.Location = new System.Drawing.Point(127, 62);
 			this.panel2.Margin = new System.Windows.Forms.Padding(6);
 			this.panel2.Name = "panel2";
-			this.panel2.Size = new System.Drawing.Size(506, 48);
+			this.panel2.Size = new System.Drawing.Size(383, 48);
 			this.panel2.TabIndex = 11;
 			this.panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
 			// 
@@ -494,7 +492,7 @@ namespace MusicChange
 			this.flowLayoutPanel2.Location = new System.Drawing.Point(2, 62);
 			this.flowLayoutPanel2.Margin = new System.Windows.Forms.Padding(5);
 			this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-			this.flowLayoutPanel2.Size = new System.Drawing.Size(125, 592);
+			this.flowLayoutPanel2.Size = new System.Drawing.Size(125, 523);
 			this.flowLayoutPanel2.TabIndex = 0;
 			this.flowLayoutPanel2.WrapContents = false;
 			this.flowLayoutPanel2.Paint += new System.Windows.Forms.PaintEventHandler(this.flowLayoutPanel2_Paint);
@@ -590,7 +588,7 @@ namespace MusicChange
 			this.panelEx3.DisabledBackColor = System.Drawing.Color.Empty;
 			this.panelEx3.Location = new System.Drawing.Point(5, 68);
 			this.panelEx3.Name = "panelEx3";
-			this.panelEx3.Size = new System.Drawing.Size(122, 583);
+			this.panelEx3.Size = new System.Drawing.Size(122, 514);
 			this.panelEx3.Style.Alignment = System.Drawing.StringAlignment.Center;
 			this.panelEx3.Style.BackColor1.Color = System.Drawing.Color.Black;
 			this.panelEx3.Style.BackColor2.Color = System.Drawing.Color.Black;
@@ -610,7 +608,7 @@ namespace MusicChange
 			this.panelEx2.Dock = System.Windows.Forms.DockStyle.Top;
 			this.panelEx2.Location = new System.Drawing.Point(2, 2);
 			this.panelEx2.Name = "panelEx2";
-			this.panelEx2.Size = new System.Drawing.Size(631, 60);
+			this.panelEx2.Size = new System.Drawing.Size(508, 60);
 			this.panelEx2.Style.Alignment = System.Drawing.StringAlignment.Center;
 			this.panelEx2.Style.BackColor1.Color = System.Drawing.Color.Black;
 			this.panelEx2.Style.BackColor2.Color = System.Drawing.Color.Black;
@@ -630,7 +628,7 @@ namespace MusicChange
 			this.flowLayoutPanel1.ForeColor = System.Drawing.SystemColors.AppWorkspace;
 			this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
 			this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-			this.flowLayoutPanel1.Size = new System.Drawing.Size(631, 60);
+			this.flowLayoutPanel1.Size = new System.Drawing.Size(508, 60);
 			this.flowLayoutPanel1.TabIndex = 0;
 			// 
 			// buttonX3
@@ -687,8 +685,8 @@ namespace MusicChange
 			this.sC4.Panel2.Controls.Add(this.temp1);
 			this.sC4.Panel2.Controls.Add(this.temp);
 			this.sC4.Panel2.Margin = new System.Windows.Forms.Padding(5);
-			this.sC4.Size = new System.Drawing.Size(1693, 656);
-			this.sC4.SplitterDistance = 503;
+			this.sC4.Size = new System.Drawing.Size(1366, 587);
+			this.sC4.SplitterDistance = 405;
 			this.sC4.TabIndex = 0;
 			// 
 			// temp1
@@ -720,8 +718,8 @@ namespace MusicChange
 			// splitContainer5.Panel2
 			// 
 			this.splitContainer5.Panel2.Controls.Add(this.splitContainer6);
-			this.splitContainer5.Size = new System.Drawing.Size(2332, 445);
-			this.splitContainer5.SplitterDistance = 33;
+			this.splitContainer5.Size = new System.Drawing.Size(1882, 399);
+			this.splitContainer5.SplitterDistance = 29;
 			this.splitContainer5.TabIndex = 0;
 			// 
 			// splitContainer6
@@ -738,8 +736,8 @@ namespace MusicChange
 			// splitContainer6.Panel2
 			// 
 			this.splitContainer6.Panel2.Controls.Add(this.panelEx1);
-			this.splitContainer6.Size = new System.Drawing.Size(2332, 408);
-			this.splitContainer6.SplitterDistance = 772;
+			this.splitContainer6.Size = new System.Drawing.Size(1882, 366);
+			this.splitContainer6.SplitterDistance = 623;
 			this.splitContainer6.TabIndex = 0;
 			this.splitContainer6.MouseMove += new System.Windows.Forms.MouseEventHandler(this.splitContainer6_MouseMove);
 			// 
@@ -752,7 +750,7 @@ namespace MusicChange
 			this.panelEx1.Location = new System.Drawing.Point(0, 0);
 			this.panelEx1.Name = "panelEx1";
 			this.panelEx1.Padding = new System.Windows.Forms.Padding(10);
-			this.panelEx1.Size = new System.Drawing.Size(1556, 408);
+			this.panelEx1.Size = new System.Drawing.Size(1255, 366);
 			this.panelEx1.Style.Alignment = System.Drawing.StringAlignment.Center;
 			this.panelEx1.Style.BackColor1.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground;
 			this.panelEx1.Style.BackColor2.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground2;
@@ -771,13 +769,13 @@ namespace MusicChange
 			this.AutoScroll = true;
 			this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
 			this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-			this.ClientSize = new System.Drawing.Size(2332, 1153);
+			this.ClientSize = new System.Drawing.Size(1882, 1033);
 			this.Controls.Add(this.splitContainer1);
 			this.DoubleBuffered = true;
 			this.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.KeyPreview = true;
-			this.Location = new System.Drawing.Point(-2420, 450);
+			this.Location = new System.Drawing.Point(-1920, 358);
 			this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.Name = "LaserEditing";
 			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;

@@ -68,7 +68,7 @@ namespace MusicChange
 			// 注册快捷键	RegisterHotKey( this.Handle, HOTKEY_ID, MOD_CONTROL | MOD_ALT, (uint)Keys.F1 );
 			// 初始化 LibVLC			Core.Initialize();			_libVLC = new LibVLC();
 			// 设置初始状态
-			this.Size = new System.Drawing.Size( 1950, 1080 ); // 设置主窗口初始大小
+			this.Size = new System.Drawing.Size( 1500, 900 ); // 设置主窗口初始大小
 			splitContainer5mouseDown = false;
 			OfficialMaterialSwitch(); // 初始化官方素材开关状态
 			sC4.SplitterDistance = 500; //上中
@@ -557,8 +557,6 @@ catch (Exception ex)
 {
     MessageBox.Show("删除子目录失败: " + ex.Message);
 }*/
-
-
 		private void panel4_SizeChanged(object sender, EventArgs e)
 		{
 			// 调整按钮位置
@@ -574,10 +572,12 @@ catch (Exception ex)
 		{
 			string dbPath = $"D:\\Documents\\Visual Studio 2022\\MusicChange\\LaserEditing.db";
 			db dbAccess = new db( dbPath );
+
 			//dbAccess.RunData();
 			//dbAccess.InitDatabase();   //创建用户表
-			dbAccess.InitializeDatabase();
+			//dbAccess.InitializeDatabase();
 			//dbAccess.CreateTable();   //创建用户表
+			dbAccess.testuser(); //测试用户表是否存在
 
 		}
 
