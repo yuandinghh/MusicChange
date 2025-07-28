@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Windows;
+using MusicChange.VideoEditor.Database.Repositories;
 //using MusicChange.Database.Models;
 
 namespace MusicChange
@@ -259,7 +260,7 @@ namespace MusicChange
 		/// </summary>
 		/// <param name="clip"></param>
 		/// <returns></returns>
-		public int InsertClip(Clip clip)
+		public int InsertClip(Clipold clip)
 		{
 			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
@@ -288,7 +289,7 @@ namespace MusicChange
 		/// </summary>
 		/// <param name="id"></param>
 		/// <returns></returns>
-		public Clip GetClipById(int id)
+		public Clipold GetClipById(int id)
 		{
 			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
@@ -297,7 +298,7 @@ namespace MusicChange
 					command.Parameters.AddWithValue( "@id", id );
 					using (var reader = command.ExecuteReader()) {
 						if (reader.Read()) {
-							return new Clip
+							return new Clipold
 							{
 								Id = Convert.ToInt32( reader["id"] ),
 								Name = reader["name"].ToString(),
@@ -322,9 +323,9 @@ namespace MusicChange
 		/// </summary>
 		/// <param name="projectId"></param>
 		/// <returns></returns>
-		public List<Clip> GetClipsByProjectId(int projectId)
+		public List<Clipold> GetClipsByProjectId(int projectId)
 		{
-			var clips = new List<Clip>();
+			var clips = new List<Clipold>();
 			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
 				string sql = "SELECT * FROM clips WHERE project_id = @project_id ORDER BY created_at DESC";
@@ -332,11 +333,11 @@ namespace MusicChange
 					command.Parameters.AddWithValue( "@project_id", projectId );
 					using (var reader = command.ExecuteReader()) {
 						while (reader.Read()) {
-							clips.Add( new Clip
+							clips.Add( new Clipold
 							{
 								Id = Convert.ToInt32( reader["id"] ),
 								Name = reader["name"].ToString(),
-								Type = reader["name"].ToString(),
+								Type = reader["type"].ToString(),
 								FilePath = reader["file_path"].ToString(),
 								ProjectId = Convert.ToInt32( reader["project_id"] ),
 								StartPosition = Convert.ToDouble( reader["start_position"] ),
@@ -346,6 +347,7 @@ namespace MusicChange
 								CreatedAt = Convert.ToDateTime( reader["created_at"] ),
 								UpdatedAt = Convert.ToDateTime( reader["updated_at"] )
 							} );
+					
 						}
 					}
 				}
@@ -357,9 +359,9 @@ namespace MusicChange
 		/// 获取所有 Clips 列表
 		/// </summary>
 		/// <returns></returns>
-		public List<Clip> GetAllClips( )
+		public List<Clipold> GetAllClips( )
 		{
-			var clips = new List<Clip>();
+			var clips = new List<Clipold>();
 
 			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
@@ -367,7 +369,7 @@ namespace MusicChange
 				using (var command = new SQLiteCommand( sql, connection ))
 				using (var reader = command.ExecuteReader()) {
 					while (reader.Read()) {
-						clips.Add( new Clip
+						clips.Add( new Clipold
 						{
 							Id = Convert.ToInt32( reader["id"] ),
 							Name = reader["name"].ToString(),
@@ -391,7 +393,7 @@ namespace MusicChange
 		/// </summary>
 		/// <param name="clip"></param>
 		/// <returns></returns>
-		public bool UpdateClip(Clip clip)
+		public bool UpdateClip(Clipold clip)
 		{
 			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
@@ -450,7 +452,7 @@ namespace MusicChange
 		/// <param name="effect"></param>
 		/// <returns></returns>
 		// ClipEffects 表操作
-		public int InsertClipEffect(ClipEffect effect)
+		public int InsertClipEffect(ClipEffectold effect)
 		{
 			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
@@ -473,7 +475,7 @@ namespace MusicChange
 		/// </summary>
 		/// <param name="id"></param>
 		/// <returns></returns>
-		public ClipEffect GetClipEffectById(int id)
+		public ClipEffectold GetClipEffectById(int id)
 		{
 			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
@@ -485,7 +487,7 @@ namespace MusicChange
 
 					using (var reader = command.ExecuteReader()) {
 						if (reader.Read()) {
-							return new ClipEffect
+							return new ClipEffectold
 							{
 								Id = Convert.ToInt32( reader["id"] ),
 								ClipId = Convert.ToInt32( reader["clip_id"] ),
@@ -501,9 +503,9 @@ namespace MusicChange
 			return null;
 		}
 
-		public List<ClipEffect> GetClipEffectsByClipId(int clipId)
+		public List<ClipEffectold> GetClipEffectsByClipId(int clipId)
 		{
-			var effects = new List<ClipEffect>();
+			var effects = new List<ClipEffectold>();
 
 			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
@@ -515,14 +517,15 @@ namespace MusicChange
 
 					using (var reader = command.ExecuteReader()) {
 						while (reader.Read()) {
-							effects.Add( new ClipEffect
+							effects.Add( new ClipEffectold
 							{
 								Id = Convert.ToInt32( reader["id"] ),
 								ClipId = Convert.ToInt32( reader["clip_id"] ),
 								EffectType = reader["effect_type"].ToString(),
 								Value = Convert.ToDouble( reader["value"] ),
 								CreatedAt = Convert.ToDateTime( reader["created_at"] )
-							} );
+							} );	
+					
 						}
 					}
 				}
@@ -534,7 +537,7 @@ namespace MusicChange
 		/// </summary>
 		/// <param name="effect"></param>
 		/// <returns></returns>
-		public bool UpdateClipEffect(ClipEffect effect)
+		public bool UpdateClipEffect(ClipEffectold effect)
 		{
 			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
@@ -967,108 +970,130 @@ namespace MusicChange
 		视频剪辑软件中的事务表主要用于记录用户的操作历史、项目变更、_undo/redo_操作等。以下是如何定义视频剪辑软件的事务表结构：
 事务表结构设计
 1. ----------------------- projects 表 - 项目信息表
-列名	类型	约束	描述
-id	INTEGER	PRIMARY KEY AUTOINCREMENT	项目ID
-user_id	INTEGER	NOT NULL, FOREIGN KEY REFERENCES users(id)	用户ID
-name	TEXT	NOT NULL	项目名称
-description	TEXT		项目描述
-width	INTEGER	NOT NULL DEFAULT 1920	项目宽度
-height	INTEGER	NOT NULL DEFAULT 1080	项目高度
-framerate	REAL	NOT NULL DEFAULT 30.0	帧率
-duration	REAL	NOT NULL DEFAULT 0.0	项目时长
-thumbnail_path	TEXT		缩略图路径
-created_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
-updated_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	更新时间
+列名			类型	约束	描述
+id				INTEGER	PRIMARY KEY AUTOINCREMENT				项目ID
+user_id			INTEGER	NOT NULL, FOREIGN KEY REFERENCES users(id)	用户ID
+name			TEXT	NOT NULL								项目名称
+description		TEXT		项目描述
+width			INTEGER	NOT NULL DEFAULT 1920				项目宽度
+height			INTEGER	NOT NULL DEFAULT 1080				项目高度
+framerate		REAL	NOT NULL DEFAULT 30.0				帧率
+duration		REAL	NOT NULL DEFAULT 0.0				项目时长
+thumbnail_path		TEXT		缩略图路径
+created_at			DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
+updated_at			DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	更新时间
+note			TEXT		备注信息
+		约束：PRIMARY KEY(id)
+		约束：FOREIGN KEY REFERENCES users(id) ON DELETE CASCADE
+		索引：UNIQUE(name, user_id)
 
-2. -------------------------- media_assets 表 - 媒体资源表
-列名	类型	约束	描述
-id	INTEGER	PRIMARY KEY AUTOINCREMENT	资源ID
-user_id	INTEGER	NOT NULL, FOREIGN KEY REFERENCES users(id)	用户ID
-name	TEXT	NOT NULL	资源名称
-file_path	TEXT	NOT NULL	文件路径
-file_size	INTEGER	NOT NULL	文件大小(字节)
-media_type	TEXT	NOT NULL	媒体类型(video/audio/image)
-duration	REAL		时长(秒)
-width	INTEGER		宽度
-height	INTEGER		高度
-framerate	REAL		帧率
-codec	TEXT		编解码器
-created_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
+2. ------------------- media_assets 表 - 媒体资源表
+列名			类型	约束	描述
+id				INTEGER	PRIMARY KEY AUTOINCREMENT	资源ID
+user_id			INTEGER	NOT NULL, FOREIGN KEY REFERENCES users(id)	用户ID
+name			TEXT	NOT NULL					资源名称
+file_path			TEXT	NOT NULL			文件路径
+file_size			INTEGER	NOT NULL				文件大小(字节)
+media_type			TEXT	NOT NULL				媒体类型(video/audio/image)
+duration			REAL		时长(秒)
+width				INTEGER		宽度
+height				INTEGER		高度
+framerate			REAL		帧率
+codec				TEXT		编解码器
+created_at			DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
+updated_at			DATETIME	 DEFAULT CURRENT_TIMESTAMP	更新时间
+note				TEXT		备注信息
 
 3. ----------------------------- timeline_tracks 表 - 时间线轨道表
-列名	类型	约束	描述
-id	INTEGER	PRIMARY KEY AUTOINCREMENT	轨道ID
-project_id	INTEGER	NOT NULL, FOREIGN KEY REFERENCES projects(id)	项目ID
-track_type	TEXT	NOT NULL	轨道类型(video/audio)
-track_index	INTEGER	NOT NULL	轨道索引
-name	TEXT	NOT NULL	轨道名称
-is_muted	INTEGER	NOT NULL DEFAULT 0	是否静音
-is_locked	INTEGER	NOT NULL DEFAULT 0	是否锁定
-volume	REAL	NOT NULL DEFAULT 1.0	音量(0.0-1.0)
-created_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
+列名			类型	约束	描述
+id				INTEGER	PRIMARY KEY AUTOINCREMENT	轨道ID
+project_id			INTEGER	NOT NULL, FOREIGN KEY REFERENCES projects(id)	项目ID
+track_type			TEXT	NOT NULL	轨道类型(video/audio)
+track_index			INTEGER	NOT NULL	轨道索引
+name				TEXT	NOT NULL	轨道名称
+is_muted			INTEGER	NOT NULL DEFAULT 0	是否静音
+is_locked			INTEGER	NOT NULL DEFAULT 0	是否锁定
+volume				REAL	NOT NULL DEFAULT 1.0	音量(0.0-1.0)
+created_at			DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
+updated_at			DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	更新时间
+note				TEXT		备注信息
 
 4. ----------------------------- clips 表 - 剪辑片段表
-列名	类型	约束	描述
-id	INTEGER	PRIMARY KEY AUTOINCREMENT	剪辑ID
-project_id	INTEGER	NOT NULL, FOREIGN KEY REFERENCES projects(id)	项目ID
-track_id	INTEGER	NOT NULL, FOREIGN KEY REFERENCES timeline_tracks(id)	轨道ID
-media_asset_id	INTEGER	FOREIGN KEY REFERENCES media_assets(id)	媒体资源ID
-name	TEXT	NOT NULL	剪辑名称
-start_time	REAL	NOT NULL	在时间线上的开始时间
-end_time	REAL	NOT NULL	在时间线上的结束时间
+列名				类型	约束	描述
+id					INTEGER	PRIMARY KEY AUTOINCREMENT	剪辑ID
+project_id			INTEGER	NOT NULL, FOREIGN KEY REFERENCES projects(id)	项目ID
+track_id			INTEGER	NOT NULL, FOREIGN KEY REFERENCES timeline_tracks(id)	轨道ID
+media_asset_id		INTEGER	FOREIGN KEY REFERENCES media_assets(id)	媒体资源ID
+name				TEXT	NOT NULL		剪辑名称
+start_time			REAL	NOT NULL		在时间线上的开始时间
+end_time			REAL	NOT NULL		在时间线上的结束时间
 media_start_time	REAL	NOT NULL DEFAULT 0.0	在媒体中的开始时间
-media_end_time	REAL	NOT NULL	在媒体中的结束时间
-position_x	REAL	NOT NULL DEFAULT 0.0	X位置
-position_y	REAL	NOT NULL DEFAULT 0.0	Y位置
-scale_x	REAL	NOT NULL DEFAULT 1.0	X缩放
-scale_y	REAL	NOT NULL DEFAULT 1.0	Y缩放
-rotation	REAL	NOT NULL DEFAULT 0.0	旋转角度
-volume	REAL	NOT NULL DEFAULT 1.0	音量
-is_muted	INTEGER	NOT NULL DEFAULT 0	是否静音
-created_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
-updated_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	更新时间
+media_end_time		REAL	NOT NULL				在媒体中的结束时间
+position_x			REAL	NOT NULL DEFAULT 0.0	X位置
+position_y			REAL	NOT NULL DEFAULT 0.0	Y位置
+scale_x				REAL	NOT NULL DEFAULT 1.0	X缩放
+scale_y				REAL	NOT NULL DEFAULT 1.0	Y缩放
+rotation			REAL	NOT NULL DEFAULT 0.0	旋转角度
+volume				REAL	NOT NULL DEFAULT 1.0	音量
+is_muted			INTEGER	NOT NULL DEFAULT 0		是否静音
+created_at			DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
+updated_at			DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	更新时间
+note				TEXT		备注信息
+
 
 5. --------------------------- transactions 表 - 事务表
-列名	类型	约束	描述
-id	INTEGER	PRIMARY KEY AUTOINCREMENT	事务ID
-project_id	INTEGER	NOT NULL, FOREIGN KEY REFERENCES projects(id)	项目ID
-user_id	INTEGER	NOT NULL, FOREIGN KEY REFERENCES users(id)	用户ID
-transaction_type	TEXT	NOT NULL	事务类型
-description	TEXT	NOT NULL	事务描述
-timestamp	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	时间戳
-is_undone	INTEGER	NOT NULL DEFAULT 0	是否已撤销
+列名				类型	约束	描述
+id					INTEGER	PRIMARY KEY AUTOINCREMENT	事务ID
+project_id			INTEGER	NOT NULL, FOREIGN KEY REFERENCES projects(id)	项目ID
+user_id				INTEGER	NOT NULL, FOREIGN KEY REFERENCES users(id)	用户ID
+transaction_type	TEXT	NOT NULL									事务类型
+description			TEXT	NOT NULL							事务描述
+timestamp			DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	时间戳
+
+is_undone			INTEGER	NOT NULL DEFAULT 0					是否已撤销
+is_redone			INTEGER	NOT NULL DEFAULT 0					是否已重做
+created_at			DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
+updated_at			DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	更新时间
+note				TEXT		备注信息
+		约束：PRIMARY KEY(id)
+		约束：FOREIGN KEY REFERENCES projects(id) ON DELETE CASCADE
+		约束：FOREIGN KEY REFERENCES users(id) ON DELETE CASCADE
 
 6. ----------------------- transaction_details 表 - 事务详情表
-列名	类型	约束	描述
+列名			类型	约束	描述
 id	INTEGER	PRIMARY KEY AUTOINCREMENT	详情ID
 transaction_id	INTEGER	NOT NULL, FOREIGN KEY REFERENCES transactions(id)	事务ID
 operation_type	TEXT	NOT NULL	操作类型(create/update/delete)
-table_name	TEXT	NOT NULL	表名
-record_id	INTEGER	NOT NULL	记录ID
-old_values	TEXT		旧值(JSON格式)
-new_values	TEXT		新值(JSON格式)
-created_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
+table_name		TEXT	NOT NULL	表名
+record_id		INTEGER	NOT NULL	记录ID
+old_values		TEXT		旧值(JSON格式)
+new_values		TEXT		新值(JSON格式)
+created_at		DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
+note				TEXT		备注信息
 
 7. ----------------------------effects 表 - 效果表
-列名	类型	约束	描述
-id	INTEGER	PRIMARY KEY AUTOINCREMENT	效果ID
-name	TEXT	NOT NULL	效果名称
-effect_type	TEXT	NOT NULL	效果类型
-description	TEXT		效果描述
-parameters	TEXT		参数定义(JSON格式)
-created_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
+列名			类型	约束	描述
+id				INTEGER	PRIMARY KEY AUTOINCREMENT	效果ID
+name			TEXT	NOT NULL	效果名称
+effect_type		TEXT	NOT NULL	效果类型
+description		TEXT		效果描述
+parameters		TEXT		参数定义(JSON格式)
+created_at		DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
+note				TEXT		备注信息
 
-8. ---------------------------clip_effects 表 - 剪辑效果关联表
-列名	类型	约束	描述
-id	INTEGER	PRIMARY KEY AUTOINCREMENT	关联ID
-clip_id	INTEGER	NOT NULL, FOREIGN KEY REFERENCES clips(id)	剪辑ID
-effect_id	INTEGER	NOT NULL, FOREIGN KEY REFERENCES effects(id)	效果ID
-parameters	TEXT	NOT NULL	参数值(JSON格式)
-start_time	REAL	NOT NULL DEFAULT 0.0	开始时间
-end_time	REAL	NOT NULL	结束时间
-order_index	INTEGER	NOT NULL	排序索引
-is_enabled	INTEGER	NOT NULL DEFAULT 1	是否启用
-created_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
+8. -----------------clip_effects 表 - 剪辑效果关联表
+列名			类型	约束	描述
+id				INTEGER	PRIMARY KEY AUTOINCREMENT	关联ID
+clip_id			INTEGER	NOT NULL, FOREIGN KEY REFERENCES clips(id)	剪辑ID
+effect_id		INTEGER	NOT NULL, FOREIGN KEY REFERENCES effects(id)	效果ID
+parameters		TEXT	NOT NULL	参数值(JSON格式)
+start_time		REAL	NOT NULL DEFAULT 0.0	开始时间
+end_time		REAL	NOT NULL	结束时间
+order_index		INTEGER	NOT NULL	排序索引
+is_enabled		INTEGER	NOT NULL DEFAULT 1	是否启用
+created_at		DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
+note				TEXT		备注信息
+
 C# SQLite 事务表创建程序
  
 事务操作示例类
@@ -1139,6 +1164,7 @@ C# SQLite 事务表创建程序
                     thumbnail_path TEXT,
                     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
                     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+					note TEXT,
                     FOREIGN KEY (user_id) REFERENCES users (id)
                 )";
 
@@ -1163,6 +1189,8 @@ C# SQLite 事务表创建程序
                     framerate REAL,
                     codec TEXT,
                     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+					updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+					note TEXT,
                     FOREIGN KEY (user_id) REFERENCES users (id)
                 )";
 
@@ -1184,6 +1212,8 @@ C# SQLite 事务表创建程序
                     is_locked INTEGER NOT NULL DEFAULT 0,
                     volume REAL NOT NULL DEFAULT 1.0,
                     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+					updated_at DATETIME  DEFAULT CURRENT_TIMESTAMP,
+					note TEXT,
                     FOREIGN KEY (project_id) REFERENCES projects (id)
                 )";
 
@@ -1214,6 +1244,7 @@ C# SQLite 事务表创建程序
                     is_muted INTEGER NOT NULL DEFAULT 0,
                     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
                     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+					note TEXT,
                     FOREIGN KEY (project_id) REFERENCES projects (id),
                     FOREIGN KEY (track_id) REFERENCES timeline_tracks (id),
                     FOREIGN KEY (media_asset_id) REFERENCES media_assets (id)
@@ -1235,6 +1266,10 @@ C# SQLite 事务表创建程序
                     description TEXT NOT NULL,
                     timestamp DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
                     is_undone INTEGER NOT NULL DEFAULT 0,
+					is_redone INTEGER NOT NULL DEFAULT 0,
+					created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+					updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+					note TEXT,
                     FOREIGN KEY (project_id) REFERENCES projects (id),
                     FOREIGN KEY (user_id) REFERENCES users (id)
                 )";
@@ -1256,6 +1291,7 @@ C# SQLite 事务表创建程序
                     old_values TEXT,
                     new_values TEXT,
                     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+					note TEXT,
                     FOREIGN KEY (transaction_id) REFERENCES transactions (id)
                 )";
 
@@ -1274,6 +1310,8 @@ C# SQLite 事务表创建程序
                     description TEXT,
                     parameters TEXT,
                     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+					note TEXT
+
                 )";
 
 			using (var command = new SQLiteCommand( sql, connection )) {
@@ -1294,6 +1332,7 @@ C# SQLite 事务表创建程序
                     order_index INTEGER NOT NULL,
                     is_enabled INTEGER NOT NULL DEFAULT 1,
                     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+					note TEXT,
                     FOREIGN KEY (clip_id) REFERENCES clips (id),
                     FOREIGN KEY (effect_id) REFERENCES effects (id)
                 )";
@@ -1424,16 +1463,20 @@ C# SQLite 事务表创建程序
 		}
 
 		// 记录事务详情
+		//当前时间 怎么输入表中
+
 		public void RecordTransactionDetail(int transactionId, string operationType, string tableName,
 										  int recordId, string oldValues, string newValues)
+		//当前时间 怎么输入表中
+
 		{
 			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
 
 				string sql = @"
                     INSERT INTO transaction_details 
-                    (transaction_id, operation_type, table_name, record_id, old_values, new_values)
-                    VALUES (@transaction_id, @operation_type, @table_name, @record_id, @old_values, @new_values)";
+                    (transaction_id, operation_type, table_name, record_id, old_values, new_values, created_at,note)
+                    VALUES (@transaction_id, @operation_type, @table_name, @record_id, @old_values, @new_values,@created_at, @note)";
 
 				using (var command = new SQLiteCommand( sql, connection )) {
 					command.Parameters.AddWithValue( "@transaction_id", transactionId );
@@ -1442,7 +1485,8 @@ C# SQLite 事务表创建程序
 					command.Parameters.AddWithValue( "@record_id", recordId );
 					command.Parameters.AddWithValue( "@old_values", oldValues ?? "" );
 					command.Parameters.AddWithValue( "@new_values", newValues ?? "" );
-
+					command.Parameters.AddWithValue( "@created_at", newValues ?? "" );
+					command.Parameters.AddWithValue( "@note", newValues ?? "注释" );
 					command.ExecuteNonQuery();
 				}
 			}
@@ -1505,6 +1549,99 @@ C# SQLite 事务表创建程序
 
 
 
+	
+		public	void  transactioninit()
+			{
+				string connectionString = "Data Source=video_editor.db;Version=3;";
+
+				// 初始化各个仓库
+				var projectRepo = new ProjectRepository( connectionString );
+				var mediaAssetRepo = new MediaAssetRepository( connectionString );
+				var trackRepo = new TimelineTrackRepository( connectionString );
+				var clipRepo = new ClipRepository( connectionString );
+				var transactionRepo = new TransactionRepository( connectionString );
+				var transactionDetailRepo = new TransactionDetailRepository( connectionString );
+
+			try {
+				// 创建项目
+				var project = new Project
+				{
+					UserId = 1,
+					Name = "我的视频项目",
+					Description = "测试项目",
+					Width = 1920,
+					Height = 1080,
+					Framerate = 30.0,
+					Duration = 0.0
+				};
+
+				int projectId = projectRepo.Create( project );
+				Console.WriteLine( $"创建项目，ID: {projectId}" );
+
+				// 获取项目
+				var retrievedProject = projectRepo.GetById( projectId );
+				Console.WriteLine( $"项目名称: {retrievedProject.Name}" );
+
+				// 更新项目
+				retrievedProject.Description = "更新后的项目描述";
+				projectRepo.Update( retrievedProject );
+				Console.WriteLine( "项目已更新" );
+
+				// 创建媒体资源
+				var mediaAsset = new MediaAsset
+				{
+					UserId = 1,
+					Name = "测试视频.mp4",
+					FilePath = @"C:\Videos\test.mp4",
+					FileSize = 1024000,
+					MediaType = "video",
+					Duration = 60.0,
+					Width = 1920,
+					Height = 1080,
+					Framerate = 30.0,
+					Codec = "H.264"
+				};
+
+				int mediaAssetId = mediaAssetRepo.Create( mediaAsset );
+				Console.WriteLine( $"创建媒体资源，ID: {mediaAssetId}" );
+
+				// 创建时间线轨道
+				var track = new TimelineTrack
+				{
+					ProjectId = projectId,
+					TrackType = "video",
+					TrackIndex = 0,
+					Name = "视频轨道1",
+					IsMuted = false,
+					IsLocked = false,
+					Volume = 1.0
+				};
+
+				int trackId = trackRepo.Create( track );
+				Console.WriteLine( $"创建轨道，ID: {trackId}" );
+
+				// 创建剪辑片段
+				var clip = new Clip
+				{
+					ProjectId = projectId,
+					TrackId = trackId,
+					MediaAssetId = mediaAssetId,
+					Name = "剪辑片段1",
+					StartTime = 0.0,
+					EndTime = 10.0,
+					MediaStartTime = 0.0,
+					MediaEndTime = 10.0,
+					PositionX = 0.0,
+					PositionY = 0.0,
+					ScaleX = 1.0,
+					ScaleY = 1.0,
+					Rotation = 0.0,
+					Volume = 1.0,
+					IsMuted = false
+				};
+			}
+					//int clipId = clipRepo.Create( clip );
+	
 	} //class  db
 }
 
@@ -1516,7 +1653,412 @@ C# SQLite 事务表创建程序
 
 #region --------- clip 数据模型类（对应数据库表结构） ------------
 
-public class Project
+//namespace VideoEditor.Database.Models {
+	public class Project
+	{
+		public int Id
+		{
+			get; set;
+		}
+		public int UserId
+		{
+			get; set;
+		}
+		public string Name
+		{
+			get; set;
+		}
+		public string Description
+		{
+			get; set;
+		}
+		public int Width
+		{
+			get; set;
+		}
+		public int Height
+		{
+			get; set;
+		}
+		public double Framerate
+		{
+			get; set;
+		}
+		public double Duration
+		{
+			get; set;
+		}
+		public string ThumbnailPath
+		{
+			get; set;
+		}
+		public DateTime CreatedAt
+		{
+			get; set;
+		}
+		public DateTime UpdatedAt
+		{
+			get; set;
+		}
+	public string Note
+	{
+		get; set;
+	}
+}
+
+	public class MediaAsset
+	{
+		public int Id
+		{
+			get; set;
+		}
+		public int UserId
+		{
+			get; set;
+		}
+		public string Name
+		{
+			get; set;
+		}
+		public string FilePath
+		{
+			get; set;
+		}
+		public long FileSize
+		{
+			get; set;
+		}
+		public string MediaType
+		{
+			get; set;
+		}
+		public double? Duration
+		{
+			get; set;
+		}
+		public int? Width
+		{
+			get; set;
+		}
+		public int? Height
+		{
+			get; set;
+		}
+		public double? Framerate
+		{
+			get; set;
+		}
+		public string Codec
+		{
+			get; set;
+		}
+		public DateTime CreatedAt
+		{
+			get; set;
+		}
+	public DateTime Updated_at
+	{
+		get; set;
+	}
+	public string Note
+	{
+		get; set;
+	}
+}
+
+	public class TimelineTrack
+	{
+		public int Id
+		{
+			get; set;
+		}
+		public int ProjectId
+		{
+			get; set;
+		}
+		public string TrackType
+		{
+			get; set;
+		}
+		public int TrackIndex
+		{
+			get; set;
+		}
+		public string Name
+		{
+			get; set;
+		}
+		public bool IsMuted
+		{
+			get; set;
+		}
+		public bool IsLocked
+		{
+			get; set;
+		}
+		public double Volume
+		{
+			get; set;
+		}
+		public DateTime CreatedAt
+		{
+			get; set;
+		}
+	public DateTime Updated_at
+	{
+		get; set;
+	}
+	public string Note
+	{
+		get; set;
+	}
+}
+
+	public class Clip
+	{
+		public int Id
+		{
+			get; set;
+		}
+		public int ProjectId
+		{
+			get; set;
+		}
+		public int TrackId
+		{
+			get; set;
+		}
+		public int? MediaAssetId
+		{
+			get; set;
+		}
+		public string Name
+		{
+			get; set;
+		}
+		public double StartTime
+		{
+			get; set;
+		}
+		public double EndTime
+		{
+			get; set;
+		}
+		public double MediaStartTime
+		{
+			get; set;
+		}
+		public double MediaEndTime
+		{
+			get; set;
+		}
+		public double PositionX
+		{
+			get; set;
+		}
+		public double PositionY
+		{
+			get; set;
+		}
+		public double ScaleX
+		{
+			get; set;
+		}
+		public double ScaleY
+		{
+			get; set;
+		}
+		public double Rotation
+		{
+			get; set;
+		}
+		public double Volume
+		{
+			get; set;
+		}
+		public bool IsMuted
+		{
+			get; set;
+		}
+		public DateTime CreatedAt
+		{
+			get; set;
+		}
+		public DateTime UpdatedAt
+		{
+			get; set;
+		}
+	public string Note
+	{
+		get; set;
+	}
+}
+
+	public class Transaction
+	{
+		public int Id
+		{
+			get; set;
+		}
+		public int ProjectId
+		{
+			get; set;
+		}
+		public int UserId
+		{
+			get; set;
+		}
+		public string TransactionType
+		{
+			get; set;
+		}
+		public string Description
+		{
+			get; set;
+		}
+		public DateTime Timestamp
+		{
+			get; set;
+		}
+		public bool IsUndone
+		{
+			get; set;
+		}
+	public bool is_redone
+	{
+		get; set;
+	}
+	public DateTime CreatedAt
+	{
+		get; set;
+	}
+	public DateTime UpdatedAt
+	{
+		get; set;
+	}
+
+	public string Note
+	{
+		get; set;
+	}
+}
+
+	public class TransactionDetail
+	{
+		public int Id
+		{
+			get; set;
+		}
+		public int TransactionId
+		{
+			get; set;
+		}
+		public string OperationType
+		{
+			get; set;
+		}
+		public string TableName
+		{
+			get; set;
+		}
+		public int RecordId
+		{
+			get; set;
+		}
+		public string OldValues
+		{
+			get; set;
+		}
+		public string NewValues
+		{
+			get; set;
+		}
+		public DateTime CreatedAt
+		{
+			get; set;
+		}
+	public string Note
+	{
+		get; set;
+	}
+}
+
+	public class Effect
+	{
+		public int Id
+		{
+			get; set;
+		}
+		public string Name
+		{
+			get; set;
+		}
+		public string EffectType
+		{
+			get; set;
+		}
+		public string Description
+		{
+			get; set;
+		}
+		public string Parameters
+		{
+			get; set;
+		}
+		public DateTime CreatedAt
+		{
+			get; set;
+		}
+	public string Note
+	{
+		get; set;
+	}
+}
+
+	public class ClipEffect
+	{
+		public int Id
+		{
+			get; set;
+		}
+		public int ClipId
+		{
+			get; set;
+		}
+		public int EffectId
+		{
+			get; set;
+		}
+		public string Parameters
+		{
+			get; set;
+		}
+		public double StartTime
+		{
+			get; set;
+		}
+		public double EndTime
+		{
+			get; set;
+		}
+		public int OrderIndex
+		{
+			get; set;
+		}
+		public bool IsEnabled
+		{
+			get; set;
+		}
+		public DateTime CreatedAt
+		{
+			get; set;
+		}
+	public string Note
+	{
+		get; set;
+	}
+}
+public class Projectold	
 {
 	public int Id
 	{
@@ -1540,7 +2082,7 @@ public class Project
 	}
 }
 
-public class Clip
+public class Clipold
 {
 	public int Id
 	{
@@ -1588,7 +2130,7 @@ public class Clip
 	}
 }
 
-public class ClipEffect
+public class ClipEffectold
 {
 	public int Id
 	{

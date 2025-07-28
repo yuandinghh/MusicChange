@@ -49,14 +49,11 @@ namespace MusicChange
 		public LaserEditing( )
 		{
 			//AutoScaleMode = AutoScaleMode.Dpi; // 根据系统DPI自动缩放
-			InitializeComponent();
-			this.DoubleBuffered = true;
+			InitializeComponent();  			this.DoubleBuffered = true;
 			button2.FlatAppearance.BorderSize = 0;    // 边框大小设为 0
 			qrcode1.FlatAppearance.BorderSize = 0;    // 边框大小设为 0
 
 		}
-				
-
 		private void LaserEditing_Load(object sender, EventArgs e)
 		{
 			//splitContainer5mouseDown = false;
@@ -480,7 +477,8 @@ namespace MusicChange
 		}
 
 		#endregion
-	
+
+		#region ------------  导入：视频、音频、图片  -------------
 		/// <summary>
 		/// 导入：视频、音频、图片
 		/// </summary>
@@ -566,7 +564,8 @@ catch (Exception ex)
 
 
 		}
-	
+		#endregion
+
 		//全局设置
 		private void buttonx11_Click(object sender, EventArgs e)
 		{
