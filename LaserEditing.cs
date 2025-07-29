@@ -562,30 +562,25 @@ catch (Exception ex)
 			button2.Top = (panel4.Height - button2.Height) / 2; // 垂直居中
 			qrcode1.Left = button2.Left + 250; // 水平居中	
 
-
 		}
 		#endregion
 
-		//全局设置
+		#region ------------  全局设置  -------------
 		private void buttonx11_Click(object sender, EventArgs e)
 		{
 			string dbPath = $"D:\\Documents\\Visual Studio 2022\\MusicChange\\LaserEditing.db";
-			db dbAccess = new db( dbPath );
+			db dr = new db( dbPath );
+			//dbAccess.testuser(); //测试用户表是否存在
+			dr.transactioninit(); //初始化事务表
 
-			//dbAccess.RunData();
-			//dbAccess.InitDatabase();   //创建用户表
-			//dbAccess.InitializeDatabase();
-			//dbAccess.CreateTable();   //创建用户表
-			dbAccess.testuser(); //测试用户表是否存在
 
 		}
 
-	
-	}
+		#endregion
 
 
-	
 
+	} //class LaserEditing
 }
 
 

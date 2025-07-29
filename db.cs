@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data.SQLite;
 using System.Windows;
-using MusicChange.VideoEditor.Database.Repositories;
-//using MusicChange.Database.Models;
+using MusicChange.VideoEditor.Database;
 
 namespace MusicChange
 {
@@ -11,8 +11,8 @@ namespace MusicChange
 	public class db
 	{
 		// 数据库连接字符串（建议使用绝对路径避免路径问题）
-		private string dbPath = "D:\\Documents\\Visual Studio 2022\\MusicChange\\LaserEditing.db";
-		private string _connectionString;
+		public static string dbPath = "D:\\Documents\\Visual Studio 2022\\MusicChange\\LaserEditing.db";
+		public static string _connectionString;
 		public db(string dbPath)
 		{
 			_connectionString = $"Data Source={dbPath};Version=3;";
@@ -347,7 +347,7 @@ namespace MusicChange
 								CreatedAt = Convert.ToDateTime( reader["created_at"] ),
 								UpdatedAt = Convert.ToDateTime( reader["updated_at"] )
 							} );
-					
+
 						}
 					}
 				}
@@ -524,8 +524,8 @@ namespace MusicChange
 								EffectType = reader["effect_type"].ToString(),
 								Value = Convert.ToDouble( reader["value"] ),
 								CreatedAt = Convert.ToDateTime( reader["created_at"] )
-							} );	
-					
+							} );
+
 						}
 					}
 				}
@@ -666,7 +666,7 @@ namespace MusicChange
 		public void testuser( )
 		{
 			try {
-				// 初始化用户数据库				//var dbSetup = new dbPath( "LaserEditing.db" );
+				// 初始化用户数据库				
 				var dbAccess = new db( dbPath );
 				// 创建表结构
 				dbAccess.CreateDatabaseTables();
@@ -1465,19 +1465,16 @@ C# SQLite 事务表创建程序
 		// 记录事务详情
 		//当前时间 怎么输入表中
 
-		public void RecordTransactionDetail(int transactionId, string operationType, string tableName,
-										  int recordId, string oldValues, string newValues)
+		public void RecordTransactionDetail(int transactionId, string operationType, string tableName,int recordId, string oldValues, string newValues)
 		//当前时间 怎么输入表中
 
 		{
 			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
-
 				string sql = @"
                     INSERT INTO transaction_details 
                     (transaction_id, operation_type, table_name, record_id, old_values, new_values, created_at,note)
                     VALUES (@transaction_id, @operation_type, @table_name, @record_id, @old_values, @new_values,@created_at, @note)";
-
 				using (var command = new SQLiteCommand( sql, connection )) {
 					command.Parameters.AddWithValue( "@transaction_id", transactionId );
 					command.Parameters.AddWithValue( "@operation_type", operationType );
@@ -1497,7 +1494,6 @@ C# SQLite 事务表创建程序
 		{
 			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
-
 				string sql = @"
                     SELECT t.*, u.username 
                     FROM transactions t
@@ -1505,10 +1501,8 @@ C# SQLite 事务表创建程序
                     WHERE t.project_id = @project_id
                     ORDER BY t.timestamp DESC
                     LIMIT 100";
-
 				using (var command = new SQLiteCommand( sql, connection )) {
 					command.Parameters.AddWithValue( "@project_id", projectId );
-
 					using (var reader = command.ExecuteReader()) {
 						while (reader.Read()) {
 							Console.WriteLine( $"事务: {reader["description"]}, 时间: {reader["timestamp"]}, 用户: {reader["username"]}" );
@@ -1523,7 +1517,6 @@ C# SQLite 事务表创建程序
 		{
 			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
-
 				using (var transaction = connection.BeginTransaction()) {
 					try {
 						// 标记事务为已撤销
@@ -1532,10 +1525,8 @@ C# SQLite 事务表创建程序
 							command.Parameters.AddWithValue( "@id", transactionId );
 							command.ExecuteNonQuery();
 						}
-
 						// 这里可以添加实际的撤销逻辑
 						// 例如根据transaction_details中的信息恢复数据
-
 						transaction.Commit();
 						return true;
 					}
@@ -1547,20 +1538,16 @@ C# SQLite 事务表创建程序
 			}
 		}
 
+		public void transactioninit( )
+		{
 
-
-	
-		public	void  transactioninit()
-			{
-				string connectionString = "Data Source=video_editor.db;Version=3;";
-
-				// 初始化各个仓库
-				var projectRepo = new ProjectRepository( connectionString );
-				var mediaAssetRepo = new MediaAssetRepository( connectionString );
-				var trackRepo = new TimelineTrackRepository( connectionString );
-				var clipRepo = new ClipRepository( connectionString );
-				var transactionRepo = new TransactionRepository( connectionString );
-				var transactionDetailRepo = new TransactionDetailRepository( connectionString );
+			// 初始化各个仓库
+			var projectRepo = new ProjectRepository( _connectionString );
+			var mediaAssetRepo = new MediaAssetRepository( _connectionString );
+			var trackRepo = new TimelineTrackRepository( _connectionString );
+			var clipRepo = new ClipRepository( _connectionString );
+			var transactionRepo = new TransactionRepository( _connectionString );
+			var transactionDetailRepo = new TransactionDetailRepository( _connectionString );
 
 			try {
 				// 创建项目
@@ -1572,7 +1559,11 @@ C# SQLite 事务表创建程序
 					Width = 1920,
 					Height = 1080,
 					Framerate = 30.0,
-					Duration = 0.0
+					Duration = 0.0,
+					ThumbnailPath = @"D:\Documents\ResourceFolder\D:\Documents\ResourceFolder.jpg",
+					CreatedAt = DateTime.Now,
+					UpdatedAt = DateTime.Now,
+					Note = "这是一个测试项目"
 				};
 
 				int projectId = projectRepo.Create( project );
@@ -1639,521 +1630,1169 @@ C# SQLite 事务表创建程序
 					Volume = 1.0,
 					IsMuted = false
 				};
+
+				int clipId = clipRepo.Create( clip );
+				Console.WriteLine( $"创建剪辑片段，ID: {clipId}" );
+				// 记录事务
+				//int transactionId = transactionRepo.RecordTransaction( projectId, 1, "create_clip", "创建剪辑片段" );
+				//Console.WriteLine( $"记录事务，ID: {transactionId}" );
+				//// 记录事务详情
+				//transactionDetailRepo.RecordTransactionDetail( transactionId, "create", "clips", clipId, null, clip.ToString() );
+				Console.WriteLine( "记录事务详情" );
 			}
-					//int clipId = clipRepo.Create( clip );
+			catch (Exception ex) {
+				Console.WriteLine( $"发生错误: {ex.Message}" );
+			}
+
+			using System;
+			using VideoEditor.Database;
+
+namespace VideoEditor
+	{
+		class Program
+		{
+			static void Main(string[] args)
+			{
+				try {
+					// 初始化数据库
+					var dbInitializer = new DatabaseInitializer( "video_editor.db" );
+
+					// 创建所有表
+					dbInitializer.InitializeAllTables();
+
+					// 插入默认数据
+					dbInitializer.InsertDefaultData();
+
+					Console.WriteLine( "数据库初始化成功！" );
+
+					// 测试数据库连接
+					TestDatabaseConnection( "video_editor.db" );
+				}
+				catch (Exception ex) {
+					Console.WriteLine( $"数据库初始化失败: {ex.Message}" );
+					Console.WriteLine( $"详细信息: {ex.StackTrace}" );
+				}
+			}
+
+			static void TestDatabaseConnection(string databasePath)
+			{
+				try {
+					string connectionString = $"Data Source={databasePath};Version=3;";
+					using (var connection = new SQLiteConnection( connectionString )) {
+						connection.Open();
+
+						// 测试查询
+						string sql = "SELECT name FROM sqlite_master WHERE type='table'";
+						using (var command = new SQLiteCommand( sql, connection ))
+						using (var reader = command.ExecuteReader()) {
+							Console.WriteLine( "\n数据库中的表:" );
+							while (reader.Read()) {
+								Console.WriteLine( $"  - {reader["name"]}" );
+							}
+						}
+					}
+				}
+				catch (Exception ex) {
+					Console.WriteLine( $"数据库连接测试失败: {ex.Message}" );
+				}
+			}
+		}
+	}using System;
+using VideoEditor.Database;
+
+namespace VideoEditor
+	{
+		class Program
+		{
+			static void Main(string[] args)
+			{
+				try {
+					// 初始化数据库
+					var dbInitializer = new DatabaseInitializer( "video_editor.db" );
+
+					// 创建所有表
+					dbInitializer.InitializeAllTables();
+
+					// 插入默认数据
+					dbInitializer.InsertDefaultData();
+
+					Console.WriteLine( "数据库初始化成功！" );
+
+					// 测试数据库连接
+					TestDatabaseConnection( "video_editor.db" );
+				}
+				catch (Exception ex) {
+					Console.WriteLine( $"数据库初始化失败: {ex.Message}" );
+					Console.WriteLine( $"详细信息: {ex.StackTrace}" );
+				}
+			}
+
+			static void TestDatabaseConnection(string databasePath)
+			{
+				try {
+					string connectionString = $"Data Source={databasePath};Version=3;";
+					using (var connection = new SQLiteConnection( connectionString )) {
+						connection.Open();
+
+						// 测试查询
+						string sql = "SELECT name FROM sqlite_master WHERE type='table'";
+						using (var command = new SQLiteCommand( sql, connection ))
+						using (var reader = command.ExecuteReader()) {
+							Console.WriteLine( "\n数据库中的表:" );
+							while (reader.Read()) {
+								Console.WriteLine( $"  - {reader["name"]}" );
+							}
+						}
+					}
+				}
+				catch (Exception ex) {
+					Console.WriteLine( $"数据库连接测试失败: {ex.Message}" );
+				}
+			}
+		}
+	}
+
+			#endregion
+			#region  ------------  1.	创建所有事务表 - 按正确的依赖顺序创建所有11个表 -------------------
+			using System;
+			using System.Data.SQLite;
+
+namespace VideoEditor.Database
+	{
+		public class DatabaseInitializer
+		{
+			private readonly string _connectionString;
+
+			public DatabaseInitializer(string databasePath)
+			{
+				_connectionString = $"Data Source={databasePath};Version=3;";
+			}
+
+			/// <summary>
+			/// 初始化所有数据库表
+			/// </summary>
+			public void InitializeAllTables( )
+			{
+				using (var connection = new SQLiteConnection( _connectionString )) {
+					connection.Open();
+
+					// 按依赖顺序创建表
+					CreateUserTable( connection );
+					CreateProjectsTable( connection );
+					CreateMediaAssetsTable( connection );
+					CreateTimelineTracksTable( connection );
+					CreateClipsTable( connection );
+					CreateTransactionsTable( connection );
+					CreateTransactionDetailsTable( connection );
+					CreateEffectsTable( connection );
+					CreateClipEffectsTable( connection );
+					CreateUserProfilesTable( connection );
+					CreateUserSessionsTable( connection );
+					CreateUserPreferencesTable( connection );
+
+					// 创建索引
+					CreateAllIndexes( connection );
+
+					// 创建触发器
+					CreateAllTriggers( connection );
+
+					Console.WriteLine( "所有数据库表初始化完成" );
+				}
+			}
+
+			#region 表创建方法
+
+			private void CreateUserTable(SQLiteConnection connection)
+			{
+				string sql = @"
+                CREATE TABLE IF NOT EXISTS users (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    username TEXT NOT NULL UNIQUE,
+                    email TEXT NOT NULL UNIQUE,
+                    password_hash TEXT NOT NULL,
+					iphone TEXT UNIQUE,
+                    full_name TEXT,
+                    avatar_path TEXT,
+                    is_active INTEGER NOT NULL DEFAULT 1,
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+					draftposition   TEXT,   //草稿位置
+					lfdm			TEXT,				//素材下载位置  Location for downloading materials
+					bm				BOOL,  //buffer management 缓存管理  true 需要缓存
+					bms				BOOL,  //self buffer management auto 缓存管理  true 需要缓存	
+					bmdate			INT,  //天数 buffer management auto 缓存管理  true 需要缓存	
+					bmd			TEXT,		//  缓存管理 路径
+					bmsize			TEXT,		//  缓存管理 大小
+					autos    BOOL,	//自动保存备份
+					pre-setsavelocation TEXT,	//预设保存位置
+					sharereview BOOL,	//分享预览
+					importtheproject TEXT,  //导入项目位置   导入工程
+					significantadjustmentofvalues TEXT,  //数值大幅调节
+					defaultdurationoftheimage TEXT,  //图片默认时长
+					targetloudness TEXT,  //目标响度  默认 - 2BLUFS
+					timelinesound BOOL,  //时间轴声音 开关（当前关闭，描述为 “拖动时间轴时，同步播放声音” ）
+					maintracklinkage TEXT,  //主轨联动：显示 “联动设置”，已联动文本、特效、贴纸、滤镜、调节、音效、文本朗读片段
+					freedomlevel TEXT,  //自由层级：勾选 “新建草稿时，默认开启自由层级”
+					defaultframerate TEXT,  // 默认帧率：30.00 帧 / 秒
+					timecodeformat TEXT,  // 时码样式：HH:MM:SS + 帧
+					exportingalertsound BOOL,  //导出提示音：开关（当前关闭，描述 “启用后导出成功或失败时有提示音效” ）
+					syncJobDreamMaterials TEXT,  // 同步职梦素材：勾选 “启用后自动同步职梦 ai 生成的素材”
+					standardizedexpression TEXT,  //规范表达：勾选 “启用规范表达提示，自动识别错别字”
+					individuation TEXT,  //个性化：勾选 “启用个性化推荐，自动分析用户偏好”
+
+					note TEXT
+                )";
+
+				using (var command = new SQLiteCommand( sql, connection )) {
+					command.ExecuteNonQuery();
+				}
+
+				// 创建索引
+				ExecuteNonQuery( connection, "CREATE INDEX IF NOT EXISTS idx_users_username ON users (username)" );
+				ExecuteNonQuery( connection, "CREATE INDEX IF NOT EXISTS idx_users_email ON users (email)" );
+			}
+
+			private void CreateProjectsTable(SQLiteConnection connection)
+			{
+				string sql = @"
+                CREATE TABLE IF NOT EXISTS projects (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER NOT NULL,
+                    name TEXT NOT NULL,
+                    description TEXT,
+                    width INTEGER NOT NULL DEFAULT 1920,
+                    height INTEGER NOT NULL DEFAULT 1080,
+                    framerate REAL NOT NULL DEFAULT 30.0,
+                    duration REAL NOT NULL DEFAULT 0.0,
+                    thumbnail_path TEXT,
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (user_id) REFERENCES users (id)
+                )";
+
+				using (var command = new SQLiteCommand( sql, connection )) {
+					command.ExecuteNonQuery();
+				}
+			}
+
+			private void CreateMediaAssetsTable(SQLiteConnection connection)
+			{
+				string sql = @"
+                CREATE TABLE IF NOT EXISTS media_assets (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER NOT NULL,
+                    name TEXT NOT NULL,
+                    file_path TEXT NOT NULL,
+                    file_size INTEGER NOT NULL,
+                    media_type TEXT NOT NULL,
+                    duration REAL,
+                    width INTEGER,
+                    height INTEGER,
+                    framerate REAL,
+                    codec TEXT,
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (user_id) REFERENCES users (id)
+                )";
+
+				using (var command = new SQLiteCommand( sql, connection )) {
+					command.ExecuteNonQuery();
+				}
+			}
+
+			private void CreateTimelineTracksTable(SQLiteConnection connection)
+			{
+				string sql = @"
+                CREATE TABLE IF NOT EXISTS timeline_tracks (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    project_id INTEGER NOT NULL,
+                    track_type TEXT NOT NULL,
+                    track_index INTEGER NOT NULL,
+                    name TEXT NOT NULL,
+                    is_muted INTEGER NOT NULL DEFAULT 0,
+                    is_locked INTEGER NOT NULL DEFAULT 0,
+                    volume REAL NOT NULL DEFAULT 1.0,
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (project_id) REFERENCES projects (id)
+                )";
+
+				using (var command = new SQLiteCommand( sql, connection )) {
+					command.ExecuteNonQuery();
+				}
+			}
+
+			private void CreateClipsTable(SQLiteConnection connection)
+			{
+				string sql = @"
+                CREATE TABLE IF NOT EXISTS clips (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    project_id INTEGER NOT NULL,
+                    track_id INTEGER NOT NULL,
+                    media_asset_id INTEGER,
+                    name TEXT NOT NULL,
+                    start_time REAL NOT NULL,
+                    end_time REAL NOT NULL,
+                    media_start_time REAL NOT NULL DEFAULT 0.0,
+                    media_end_time REAL NOT NULL,
+                    position_x REAL NOT NULL DEFAULT 0.0,
+                    position_y REAL NOT NULL DEFAULT 0.0,
+                    scale_x REAL NOT NULL DEFAULT 1.0,
+                    scale_y REAL NOT NULL DEFAULT 1.0,
+                    rotation REAL NOT NULL DEFAULT 0.0,
+                    volume REAL NOT NULL DEFAULT 1.0,
+                    is_muted INTEGER NOT NULL DEFAULT 0,
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (project_id) REFERENCES projects (id),
+                    FOREIGN KEY (track_id) REFERENCES timeline_tracks (id),
+                    FOREIGN KEY (media_asset_id) REFERENCES media_assets (id)
+                )";
+
+				using (var command = new SQLiteCommand( sql, connection )) {
+					command.ExecuteNonQuery();
+				}
+			}
+
+			private void CreateTransactionsTable(SQLiteConnection connection)
+			{
+				string sql = @"
+                CREATE TABLE IF NOT EXISTS transactions (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    project_id INTEGER NOT NULL,
+                    user_id INTEGER NOT NULL,
+                    transaction_type TEXT NOT NULL,
+                    description TEXT NOT NULL,
+                    timestamp DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    is_undone INTEGER NOT NULL DEFAULT 0,
+                    FOREIGN KEY (project_id) REFERENCES projects (id),
+                    FOREIGN KEY (user_id) REFERENCES users (id)
+                )";
+
+				using (var command = new SQLiteCommand( sql, connection )) {
+					command.ExecuteNonQuery();
+				}
+			}
+
+			private void CreateTransactionDetailsTable(SQLiteConnection connection)
+			{
+				string sql = @"
+                CREATE TABLE IF NOT EXISTS transaction_details (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    transaction_id INTEGER NOT NULL,
+                    operation_type TEXT NOT NULL,
+                    table_name TEXT NOT NULL,
+                    record_id INTEGER NOT NULL,
+                    old_values TEXT,
+                    new_values TEXT,
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (transaction_id) REFERENCES transactions (id)
+                )";
+
+				using (var command = new SQLiteCommand( sql, connection )) {
+					command.ExecuteNonQuery();
+				}
+			}
+
+			private void CreateEffectsTable(SQLiteConnection connection)
+			{
+				string sql = @"
+                CREATE TABLE IF NOT EXISTS effects (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    name TEXT NOT NULL,
+                    effect_type TEXT NOT NULL,
+                    description TEXT,
+                    parameters TEXT,
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+                )";
+
+				using (var command = new SQLiteCommand( sql, connection )) {
+					command.ExecuteNonQuery();
+				}
+			}
+
+			private void CreateClipEffectsTable(SQLiteConnection connection)
+			{
+				string sql = @"
+                CREATE TABLE IF NOT EXISTS clip_effects (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    clip_id INTEGER NOT NULL,
+                    effect_id INTEGER NOT NULL,
+                    parameters TEXT NOT NULL,
+                    start_time REAL NOT NULL DEFAULT 0.0,
+                    end_time REAL NOT NULL,
+                    order_index INTEGER NOT NULL,
+                    is_enabled INTEGER NOT NULL DEFAULT 1,
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (clip_id) REFERENCES clips (id),
+                    FOREIGN KEY (effect_id) REFERENCES effects (id)
+                )";
+
+				using (var command = new SQLiteCommand( sql, connection )) {
+					command.ExecuteNonQuery();
+				}
+			}
+
+			private void CreateUserProfilesTable(SQLiteConnection connection)
+			{
+				string sql = @"
+                CREATE TABLE IF NOT EXISTS user_profiles (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER NOT NULL UNIQUE,
+                    preferred_language TEXT,
+                    theme TEXT,
+                    default_project_location TEXT,
+                    auto_save_interval INTEGER,
+                    max_undo_steps INTEGER,
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+                )";
+
+				using (var command = new SQLiteCommand( sql, connection )) {
+					command.ExecuteNonQuery();
+				}
+			}
+
+			private void CreateUserSessionsTable(SQLiteConnection connection)
+			{
+				string sql = @"
+                CREATE TABLE IF NOT EXISTS user_sessions (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER NOT NULL,
+                    session_token TEXT NOT NULL UNIQUE,
+                    ip_address TEXT,
+                    user_agent TEXT,
+                    expires_at DATETIME NOT NULL,
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+                )";
+
+				using (var command = new SQLiteCommand( sql, connection )) {
+					command.ExecuteNonQuery();
+				}
+			}
+
+			private void CreateUserPreferencesTable(SQLiteConnection connection)
+			{
+				string sql = @"
+                CREATE TABLE IF NOT EXISTS user_preferences (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER NOT NULL,
+                    preference_key TEXT NOT NULL,
+                    preference_value TEXT NOT NULL,
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+                )";
+
+				using (var command = new SQLiteCommand( sql, connection )) {
+					command.ExecuteNonQuery();
+				}
+			}
+
+			#endregion
+
+			#region 索引创建方法
+
+			private void CreateAllIndexes(SQLiteConnection connection)
+			{
+				// 用户相关索引
+				ExecuteNonQuery( connection, "CREATE INDEX IF NOT EXISTS idx_users_username ON users (username)" );
+				ExecuteNonQuery( connection, "CREATE INDEX IF NOT EXISTS idx_users_email ON users (email)" );
+
+				// 项目相关索引
+				ExecuteNonQuery( connection, "CREATE INDEX IF NOT EXISTS idx_projects_user ON projects (user_id)" );
+
+				// 媒体资源索引
+				ExecuteNonQuery( connection, "CREATE INDEX IF NOT EXISTS idx_media_assets_user ON media_assets (user_id)" );
+
+				// 时间线轨道索引
+				ExecuteNonQuery( connection, "CREATE INDEX IF NOT EXISTS idx_timeline_tracks_project ON timeline_tracks (project_id)" );
+
+				// 剪辑索引
+				ExecuteNonQuery( connection, "CREATE INDEX IF NOT EXISTS idx_clips_project ON clips (project_id)" );
+				ExecuteNonQuery( connection, "CREATE INDEX IF NOT EXISTS idx_clips_track ON clips (track_id)" );
+
+				// 事务索引
+				ExecuteNonQuery( connection, "CREATE INDEX IF NOT EXISTS idx_transactions_project ON transactions (project_id)" );
+				ExecuteNonQuery( connection, "CREATE INDEX IF NOT EXISTS idx_transactions_user ON transactions (user_id)" );
+				ExecuteNonQuery( connection, "CREATE INDEX IF NOT EXISTS idx_transactions_timestamp ON transactions (timestamp)" );
+
+				// 事务详情索引
+				ExecuteNonQuery( connection, "CREATE INDEX IF NOT EXISTS idx_transaction_details_transaction ON transaction_details (transaction_id)" );
+
+				// 用户会话索引
+				ExecuteNonQuery( connection, "CREATE INDEX IF NOT EXISTS idx_sessions_token ON user_sessions (session_token)" );
+				ExecuteNonQuery( connection, "CREATE INDEX IF NOT EXISTS idx_sessions_expires ON user_sessions (expires_at)" );
+
+				// 用户偏好索引
+				ExecuteNonQuery( connection, "CREATE INDEX IF NOT EXISTS idx_user_preferences ON user_preferences (user_id, preference_key)" );
+
+				// 剪辑效果索引
+				ExecuteNonQuery( connection, "CREATE INDEX IF NOT EXISTS idx_clip_effects_clip ON clip_effects (clip_id)" );
+				ExecuteNonQuery( connection, "CREATE INDEX IF NOT EXISTS idx_clip_effects_effect ON clip_effects (effect_id)" );
+
+				Console.WriteLine( "所有索引创建完成" );
+			}
+
+			#endregion
+
+			#region 触发器创建方法
+
+			private void CreateAllTriggers(SQLiteConnection connection)
+			{
+				// 用户更新时间触发器
+				string userTrigger = @"
+                CREATE TRIGGER IF NOT EXISTS update_users_timestamp 
+                AFTER UPDATE ON users
+                BEGIN
+                    UPDATE users SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
+                END";
+				ExecuteNonQuery( connection, userTrigger );
+
+				// 项目更新时间触发器
+				string projectTrigger = @"
+                CREATE TRIGGER IF NOT EXISTS update_projects_timestamp 
+                AFTER UPDATE ON projects
+                BEGIN
+                    UPDATE projects SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
+                END";
+				ExecuteNonQuery( connection, projectTrigger );
+
+				// 剪辑更新时间触发器
+				string clipTrigger = @"
+                CREATE TRIGGER IF NOT EXISTS update_clips_timestamp 
+                AFTER UPDATE ON clips
+                BEGIN
+                    UPDATE clips SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
+                END";
+				ExecuteNonQuery( connection, clipTrigger );
+
+				// 用户配置更新时间触发器
+				string profileTrigger = @"
+                CREATE TRIGGER IF NOT EXISTS update_profiles_timestamp 
+                AFTER UPDATE ON user_profiles
+                BEGIN
+                    UPDATE user_profiles SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
+                END";
+				ExecuteNonQuery( connection, profileTrigger );
+
+				// 用户偏好更新时间触发器
+				string preferenceTrigger = @"
+                CREATE TRIGGER IF NOT EXISTS update_preferences_timestamp 
+                AFTER UPDATE ON user_preferences
+                BEGIN
+                    UPDATE user_preferences SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
+                END";
+				ExecuteNonQuery( connection, preferenceTrigger );
+
+				Console.WriteLine( "所有触发器创建完成" );
+			}
+
+
+
+			#endregion
+
+			#region 辅助方法
+
+			private void ExecuteNonQuery(SQLiteConnection connection, string sql)
+			{
+				using (var command = new SQLiteCommand( sql, connection )) {
+					command.ExecuteNonQuery();
+				}
+			}
+
+			/// <summary>
+			/// 插入默认数据
+			/// </summary>
+			public void InsertDefaultData( )
+			{
+				using (var connection = new SQLiteConnection( _connectionString )) {
+					connection.Open();
+
+					// 插入默认效果
+					InsertDefaultEffects( connection );
+
+					// 插入默认用户（仅用于测试）
+					InsertDefaultUser( connection );
+
+					Console.WriteLine( "默认数据插入完成" );
+				}
+			}
+
+			private void InsertDefaultEffects(SQLiteConnection connection)
+			{
+				string[] effects = {
+				"亮度调整", "对比度调整", "饱和度调整", "色调调整",
+				"模糊效果", "锐化效果", "阴影效果", "高光效果",
+				"淡入效果", "淡出效果", "缩放效果", "旋转效果"
+			};
+
+				string[] effectTypes = {
+				"brightness", "contrast", "saturation", "hue",
+				"blur", "sharpen", "shadow", "highlight",
+				"fade_in", "fade_out", "zoom", "rotate"
+			};
+
+				for (int i = 0; i < effects.Length; i++) {
+					string checkSql = "SELECT COUNT(*) FROM effects WHERE name = @name";
+					using (var checkCommand = new SQLiteCommand( checkSql, connection )) {
+						checkCommand.Parameters.AddWithValue( "@name", effects[i] );
+						var count = Convert.ToInt32( checkCommand.ExecuteScalar() );
+
+						if (count == 0) {
+							string insertSql = @"
+                            INSERT INTO effects (name, effect_type, description)
+                            VALUES (@name, @effect_type, @description)";
+
+							using (var insertCommand = new SQLiteCommand( insertSql, connection )) {
+								insertCommand.Parameters.AddWithValue( "@name", effects[i] );
+								insertCommand.Parameters.AddWithValue( "@effect_type", effectTypes[i] );
+								insertCommand.Parameters.AddWithValue( "@description", $"{effects[i]}效果" );
+								insertCommand.ExecuteNonQuery();
+							}
+						}
+					}
+				}
+			}
+
+			private void InsertDefaultUser(SQLiteConnection connection)
+			{
+				string checkSql = "SELECT COUNT(*) FROM users WHERE username = 'admin'";
+				using (var checkCommand = new SQLiteCommand( checkSql, connection )) {
+					var count = Convert.ToInt32( checkCommand.ExecuteScalar() );
+
+					if (count == 0) {
+						string insertSql = @"
+                        INSERT INTO users (username, email, password_hash, full_name)
+                        VALUES (@username, @email, @password_hash, @full_name)";
+
+						using (var insertCommand = new SQLiteCommand( insertSql, connection )) {
+							insertCommand.Parameters.AddWithValue( "@username", "admin" );
+							insertCommand.Parameters.AddWithValue( "@email", "admin@example.com" );
+							insertCommand.Parameters.AddWithValue( "@password_hash", "hashed_admin_password" );
+							insertCommand.Parameters.AddWithValue( "@full_name", "系统管理员" );
+							insertCommand.ExecuteNonQuery();
+						}
+					}
+				}
+			}
+
+			#endregion
+		}
+	}
+
+	#endregion
+
+} //class  db
+
+
+
+		#region --------- clip 数据模型类（对应数据��表结构） ------------
+
+		//namespace VideoEditor.Database.Models {
+		public class Project
+		{
+			public int Id
+			{
+				get; set;
+			}
+			public int UserId
+			{
+				get; set;
+			}
+			public string Name
+			{
+				get; set;
+			}
+			public string Description
+			{
+				get; set;
+			}
+			public int Width
+			{
+				get; set;
+			}
+			public int Height
+			{
+				get; set;
+			}
+			public double Framerate
+			{
+				get; set;
+			}
+			public double Duration
+			{
+				get; set;
+			}
+			public string ThumbnailPath    //缩略图路径
+			{
+				get; set;
+			}
+			public DateTime CreatedAt
+			{
+				get; set;
+			}
+			public DateTime UpdatedAt
+			{
+				get; set;
+			}
+			public string Note
+			{
+				get; set;
+			}
+		
 	
-	} //class  db
-}
+		}
+		public class MediaAsset
+		{
+			public int Id
+			{
+				get; set;
+			}
+			public int UserId
+			{
+				get; set;
+			}
+			public string Name
+			{
+				get; set;
+			}
+			public string FilePath
+			{
+				get; set;
+			}
+			public long FileSize
+			{
+				get; set;
+			}
+			public string MediaType
+			{
+				get; set;
+			}
+			public double? Duration
+			{
+				get; set;
+			}
+			public int? Width
+			{
+				get; set;
+			}
+			public int? Height
+			{
+				get; set;
+			}
+			public double? Framerate
+			{
+				get; set;
+			}
+			public string Codec
+			{
+				get; set;
+			}
+			public DateTime CreatedAt
+			{
+				get; set;
+			}
+			public DateTime Updated_at
+			{
+				get; set;
+			}
+			public string Note
+			{
+				get; set;
+			}
+		}
 
+		public class TimelineTrack
+		{
+			public int Id
+			{
+				get; set;
+			}
+			public int ProjectId
+			{
+				get; set;
+			}
+			public string TrackType
+			{
+				get; set;
+			}
+			public int TrackIndex
+			{
+				get; set;
+			}
+			public string Name
+			{
+				get; set;
+			}
+			public bool IsMuted
+			{
+				get; set;
+			}
+			public bool IsLocked
+			{
+				get; set;
+			}
+			public double Volume
+			{
+				get; set;
+			}
+			public DateTime CreatedAt
+			{
+				get; set;
+			}
+			public DateTime Updated_at
+			{
+				get; set;
+			}
+			public string Note
+			{
+				get; set;
+			}
+		}
 
+		public class Clip
+		{
+			public int Id
+			{
+				get; set;
+			}
+			public int ProjectId
+			{
+				get; set;
+			}
+			public int TrackId
+			{
+				get; set;
+			}
+			public int? MediaAssetId
+			{
+				get; set;
+			}
+			public string Name
+			{
+				get; set;
+			}
+			public double StartTime
+			{
+				get; set;
+			}
+			public double EndTime
+			{
+				get; set;
+			}
+			public double MediaStartTime
+			{
+				get; set;
+			}
+			public double MediaEndTime
+			{
+				get; set;
+			}
+			public double PositionX
+			{
+				get; set;
+			}
+			public double PositionY
+			{
+				get; set;
+			}
+			public double ScaleX
+			{
+				get; set;
+			}
+			public double ScaleY
+			{
+				get; set;
+			}
+			public double Rotation
+			{
+				get; set;
+			}
+			public double Volume
+			{
+				get; set;
+			}
+			public bool IsMuted
+			{
+				get; set;
+			}
+			public DateTime CreatedAt
+			{
+				get; set;
+			}
+			public DateTime UpdatedAt
+			{
+				get; set;
+			}
+			public string Note
+			{
+				get; set;
+			}
+		}
 
-#endregion
+		public class Transaction
+		{
+			public int Id
+			{
+				get; set;
+			}
+			public int ProjectId
+			{
+				get; set;
+			}
+			public int UserId
+			{
+				get; set;
+			}
+			public string TransactionType
+			{
+				get; set;
+			}
+			public string Description
+			{
+				get; set;
+			}
+			public DateTime Timestamp
+			{
+				get; set;
+			}
+			public bool IsUndone
+			{
+				get; set;
+			}
+			public bool is_redone
+			{
+				get; set;
+			}
+			public DateTime CreatedAt
+			{
+				get; set;
+			}
+			public DateTime UpdatedAt
+			{
+				get; set;
+			}
 
+			public string Note
+			{
+				get; set;
+			}
+		}
+		public class TransactionDetail
+		{
+			public int Id
+			{
+				get; set;
+			}
+			public int TransactionId
+			{
+				get; set;
+			}
+			public string OperationType
+			{
+				get; set;
+			}
+			public string TableName
+			{
+				get; set;
+			}
+			public int RecordId
+			{
+				get; set;
+			}
+			public string OldValues
+			{
+				get; set;
+			}
+			public string NewValues
+			{
+				get; set;
+			}
+			public DateTime CreatedAt
+			{
+				get; set;
+			}
+			public string Note
+			{
+				get; set;
+			}
+		}
 
+		public class Effect
+		{
+			public int Id
+			{
+				get; set;
+			}
+			public string Name
+			{
+				get; set;
+			}
+			public string EffectType
+			{
+				get; set;
+			}
+			public string Description
+			{
+				get; set;
+			}
+			public string Parameters
+			{
+				get; set;
+			}
+			public DateTime CreatedAt
+			{
+				get; set;
+			}
+			public string Note
+			{
+				get; set;
+			}
+		}
 
-#region --------- clip 数据模型类（对应数据库表结构） ------------
+		public class ClipEffect
+		{
+			public int Id
+			{
+				get; set;
+			}
+			public int ClipId
+			{
+				get; set;
+			}
+			public int EffectId
+			{
+				get; set;
+			}
+			public string Parameters
+			{
+				get; set;
+			}
+			public double StartTime
+			{
+				get; set;
+			}
+			public double EndTime
+			{
+				get; set;
+			}
+			public int OrderIndex
+			{
+				get; set;
+			}
+			public bool IsEnabled
+			{
+				get; set;
+			}
+			public DateTime CreatedAt
+			{
+				get; set;
+			}
+			public string Note
+			{
+				get; set;
+			}
+		}
+		public class Projectold
+		{
+			public int Id
+			{
+				get; set;
+			}
+			public string Name
+			{
+				get; set;
+			}
+			public string Description
+			{
+				get; set;
+			}
+			public DateTime CreatedAt
+			{
+				get; set;
+			}
+			public DateTime UpdatedAt
+			{
+				get; set;
+			}
+		}
 
-//namespace VideoEditor.Database.Models {
-	public class Project
-	{
-		public int Id
+		public class Clipold
 		{
-			get; set;
+			public int Id
+			{
+				get; set;
+			}
+			public string Name
+			{
+				get; set;
+			}
+			public string Type  // mp3, wav, etc.
+			{
+				get; set;
+			}
+			public string FilePath
+			{
+				get; set;
+			}
+			public int ProjectId
+			{
+				get; set;
+			}
+			public double StartPosition
+			{
+				get; set;
+			}
+			public double EndPosition
+			{
+				get; set;
+			}
+			public double Speed
+			{
+				get; set;
+			}
+			public double Pitch
+			{
+				get; set;
+			}
+			public DateTime CreatedAt
+			{
+				get; set;
+			}
+			public DateTime UpdatedAt
+			{
+				get; set;
+			}
 		}
-		public int UserId
-		{
-			get; set;
-		}
-		public string Name
-		{
-			get; set;
-		}
-		public string Description
-		{
-			get; set;
-		}
-		public int Width
-		{
-			get; set;
-		}
-		public int Height
-		{
-			get; set;
-		}
-		public double Framerate
-		{
-			get; set;
-		}
-		public double Duration
-		{
-			get; set;
-		}
-		public string ThumbnailPath
-		{
-			get; set;
-		}
-		public DateTime CreatedAt
-		{
-			get; set;
-		}
-		public DateTime UpdatedAt
-		{
-			get; set;
-		}
-	public string Note
-	{
-		get; set;
-	}
-}
 
-	public class MediaAsset
-	{
-		public int Id
-		{
-			get; set;
-		}
-		public int UserId
-		{
-			get; set;
-		}
-		public string Name
-		{
-			get; set;
-		}
-		public string FilePath
-		{
-			get; set;
-		}
-		public long FileSize
-		{
-			get; set;
-		}
-		public string MediaType
-		{
-			get; set;
-		}
-		public double? Duration
-		{
-			get; set;
-		}
-		public int? Width
-		{
-			get; set;
-		}
-		public int? Height
-		{
-			get; set;
-		}
-		public double? Framerate
-		{
-			get; set;
-		}
-		public string Codec
-		{
-			get; set;
-		}
-		public DateTime CreatedAt
-		{
-			get; set;
-		}
-	public DateTime Updated_at
-	{
-		get; set;
-	}
-	public string Note
-	{
-		get; set;
-	}
-}
-
-	public class TimelineTrack
-	{
-		public int Id
-		{
-			get; set;
-		}
-		public int ProjectId
-		{
-			get; set;
-		}
-		public string TrackType
-		{
-			get; set;
-		}
-		public int TrackIndex
-		{
-			get; set;
-		}
-		public string Name
-		{
-			get; set;
-		}
-		public bool IsMuted
-		{
-			get; set;
-		}
-		public bool IsLocked
-		{
-			get; set;
-		}
-		public double Volume
-		{
-			get; set;
-		}
-		public DateTime CreatedAt
-		{
-			get; set;
-		}
-	public DateTime Updated_at
-	{
-		get; set;
-	}
-	public string Note
-	{
-		get; set;
-	}
-}
-
-	public class Clip
-	{
-		public int Id
-		{
-			get; set;
-		}
-		public int ProjectId
-		{
-			get; set;
-		}
-		public int TrackId
-		{
-			get; set;
-		}
-		public int? MediaAssetId
-		{
-			get; set;
-		}
-		public string Name
-		{
-			get; set;
-		}
-		public double StartTime
-		{
-			get; set;
-		}
-		public double EndTime
-		{
-			get; set;
-		}
-		public double MediaStartTime
-		{
-			get; set;
-		}
-		public double MediaEndTime
-		{
-			get; set;
-		}
-		public double PositionX
-		{
-			get; set;
-		}
-		public double PositionY
-		{
-			get; set;
-		}
-		public double ScaleX
-		{
-			get; set;
-		}
-		public double ScaleY
-		{
-			get; set;
-		}
-		public double Rotation
-		{
-			get; set;
-		}
-		public double Volume
-		{
-			get; set;
-		}
-		public bool IsMuted
-		{
-			get; set;
-		}
-		public DateTime CreatedAt
-		{
-			get; set;
-		}
-		public DateTime UpdatedAt
-		{
-			get; set;
-		}
-	public string Note
-	{
-		get; set;
-	}
-}
-
-	public class Transaction
-	{
-		public int Id
-		{
-			get; set;
-		}
-		public int ProjectId
-		{
-			get; set;
-		}
-		public int UserId
-		{
-			get; set;
-		}
-		public string TransactionType
-		{
-			get; set;
-		}
-		public string Description
-		{
-			get; set;
-		}
-		public DateTime Timestamp
-		{
-			get; set;
-		}
-		public bool IsUndone
-		{
-			get; set;
-		}
-	public bool is_redone
-	{
-		get; set;
-	}
-	public DateTime CreatedAt
-	{
-		get; set;
-	}
-	public DateTime UpdatedAt
-	{
-		get; set;
-	}
-
-	public string Note
-	{
-		get; set;
-	}
-}
-
-	public class TransactionDetail
-	{
-		public int Id
-		{
-			get; set;
-		}
-		public int TransactionId
-		{
-			get; set;
-		}
-		public string OperationType
-		{
-			get; set;
-		}
-		public string TableName
-		{
-			get; set;
-		}
-		public int RecordId
-		{
-			get; set;
-		}
-		public string OldValues
-		{
-			get; set;
-		}
-		public string NewValues
-		{
-			get; set;
-		}
-		public DateTime CreatedAt
-		{
-			get; set;
-		}
-	public string Note
-	{
-		get; set;
-	}
-}
-
-	public class Effect
-	{
-		public int Id
-		{
-			get; set;
-		}
-		public string Name
-		{
-			get; set;
-		}
-		public string EffectType
-		{
-			get; set;
-		}
-		public string Description
-		{
-			get; set;
-		}
-		public string Parameters
-		{
-			get; set;
-		}
-		public DateTime CreatedAt
-		{
-			get; set;
-		}
-	public string Note
-	{
-		get; set;
-	}
-}
-
-	public class ClipEffect
-	{
-		public int Id
-		{
-			get; set;
-		}
-		public int ClipId
-		{
-			get; set;
-		}
-		public int EffectId
-		{
-			get; set;
-		}
-		public string Parameters
-		{
-			get; set;
-		}
-		public double StartTime
-		{
-			get; set;
-		}
-		public double EndTime
-		{
-			get; set;
-		}
-		public int OrderIndex
-		{
-			get; set;
-		}
-		public bool IsEnabled
-		{
-			get; set;
-		}
-		public DateTime CreatedAt
-		{
-			get; set;
+		public class ClipEffectold
+		{
+			public int Id
+			{
+				get; set;
+			}
+			public int ClipId
+			{
+				get; set;
+			}
+			public string EffectType
+			{
+				get; set;
+			}
+			public double Value
+			{
+				get; set;
+			}
+			public DateTime CreatedAt
+			{
+				get; set;
+			}
 		}
-	public string Note
-	{
-		get; set;
-	}
-}
-public class Projectold	
-{
-	public int Id
-	{
-		get; set;
-	}
-	public string Name
-	{
-		get; set;
-	}
-	public string Description
-	{
-		get; set;
-	}
-	public DateTime CreatedAt
-	{
-		get; set;
-	}
-	public DateTime UpdatedAt
-	{
-		get; set;
-	}
-}
-
-public class Clipold
-{
-	public int Id
-	{
-		get; set;
-	}
-	public string Name
-	{
-		get; set;
-	}
-	public string Type  // mp3, wav, etc.
-	{
-		get; set;
-	}
-	public string FilePath
-	{
-		get; set;
-	}
-	public int ProjectId
-	{
-		get; set;
-	}
-	public double StartPosition
-	{
-		get; set;
-	}
-	public double EndPosition
-	{
-		get; set;
-	}
-	public double Speed
-	{
-		get; set;
-	}
-	public double Pitch
-	{
-		get; set;
-	}
-	public DateTime CreatedAt
-	{
-		get; set;
-	}
-	public DateTime UpdatedAt
-	{
-		get; set;
 	}
 }
-
-public class ClipEffectold
-{
-	public int Id
-	{
-		get; set;
-	}
-	public int ClipId
-	{
-		get; set;
-	}
-	public string EffectType
-	{
-		get; set;
-	}
-	public double Value
-	{
-		get; set;
-	}
-	public DateTime CreatedAt
-	{
-		get; set;
-	}
-}
-#endregion
+	
+	#endregion
 
 
 

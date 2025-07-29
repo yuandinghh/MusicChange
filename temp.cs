@@ -135,6 +135,10 @@ namespace MusicChange
 {
 	internal class temp
 	{
+		//public TransactionRepository(string dbPath)
+		//{
+		//	//_connectionString = $"Data Source={dbPath};Version=3;";
+		//}
 
 	}
 	/*

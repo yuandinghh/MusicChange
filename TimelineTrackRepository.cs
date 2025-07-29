@@ -3,32 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.SQLite;
+using static MusicChange.db;
 
 namespace MusicChange
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Data.SQLite;
-	using VideoEditor.Database.Models;
-
-	namespace VideoEditor.Database.Repositories
+	public class TimelineTrackRepository
 	{
-		public class TimelineTrackRepository
+
+		public TimelineTrackRepository(string dbPath)
 		{
-			private readonly string _connectionString;
+			_connectionString = $"Data Source={dbPath};Version=3;";
+		}
 
-			public TimelineTrackRepository(string connectionString)
-			{
-				_connectionString = connectionString;
-			}
+		// 创建时间线轨道
+		public int Create(TimelineTrack track)
+		{
+			using (var connection = new SQLiteConnection( _connectionString )) {
+				connection.Open();
 
-			// 创建时间线轨道
-			public int Create(TimelineTrack track)
-			{
-				using (var connection = new SQLiteConnection( _connectionString )) {
-					connection.Open();
-
-					string sql = @"
+				string sql = @"
                     INSERT INTO timeline_tracks (
                         project_id, track_type, track_index, name, is_muted, is_locked, volume
                     ) VALUES (
@@ -36,135 +30,135 @@ namespace MusicChange
                     );
                     SELECT last_insert_rowid();";
 
-					using (var command = new SQLiteCommand( sql, connection )) {
-						command.Parameters.AddWithValue( "@project_id", track.ProjectId );
-						command.Parameters.AddWithValue( "@track_type", track.TrackType );
-						command.Parameters.AddWithValue( "@track_index", track.TrackIndex );
-						command.Parameters.AddWithValue( "@name", track.Name );
-						command.Parameters.AddWithValue( "@is_muted", track.IsMuted );
-						command.Parameters.AddWithValue( "@is_locked", track.IsLocked );
-						command.Parameters.AddWithValue( "@volume", track.Volume );
+				using (var command = new SQLiteCommand( sql, connection )) {
+					command.Parameters.AddWithValue( "@project_id", track.ProjectId );
+					command.Parameters.AddWithValue( "@track_type", track.TrackType );
+					command.Parameters.AddWithValue( "@track_index", track.TrackIndex );
+					command.Parameters.AddWithValue( "@name", track.Name );
+					command.Parameters.AddWithValue( "@is_muted", track.IsMuted );
+					command.Parameters.AddWithValue( "@is_locked", track.IsLocked );
+					command.Parameters.AddWithValue( "@volume", track.Volume );
 
-						return Convert.ToInt32( command.ExecuteScalar() );
-					}
+					return Convert.ToInt32( command.ExecuteScalar() );
 				}
 			}
+		}
 
-			// 根据ID获取时间线轨道
-			public TimelineTrack GetById(int id)
-			{
-				using (var connection = new SQLiteConnection( _connectionString )) {
-					connection.Open();
+		// 根据ID获取时间线轨道
+		public TimelineTrack GetById(int id)
+		{
+			using (var connection = new SQLiteConnection( _connectionString )) {
+				connection.Open();
 
-					string sql = @"
+				string sql = @"
                     SELECT id, project_id, track_type, track_index, name, is_muted, is_locked, volume, created_at
                     FROM timeline_tracks 
                     WHERE id = @id";
 
-					using (var command = new SQLiteCommand( sql, connection )) {
-						command.Parameters.AddWithValue( "@id", id );
+				using (var command = new SQLiteCommand( sql, connection )) {
+					command.Parameters.AddWithValue( "@id", id );
 
-						using (var reader = command.ExecuteReader()) {
-							if (reader.Read()) {
-								return new TimelineTrack
-								{
-									Id = Convert.ToInt32( reader["id"] ),
-									ProjectId = Convert.ToInt32( reader["project_id"] ),
-									TrackType = reader["track_type"].ToString(),
-									TrackIndex = Convert.ToInt32( reader["track_index"] ),
-									Name = reader["name"].ToString(),
-									IsMuted = Convert.ToBoolean( reader["is_muted"] ),
-									IsLocked = Convert.ToBoolean( reader["is_locked"] ),
-									Volume = Convert.ToDouble( reader["volume"] ),
-									CreatedAt = Convert.ToDateTime( reader["created_at"] )
-								};
-							}
+					using (var reader = command.ExecuteReader()) {
+						if (reader.Read()) {
+							return new TimelineTrack
+							{
+								Id = Convert.ToInt32( reader["id"] ),
+								ProjectId = Convert.ToInt32( reader["project_id"] ),
+								TrackType = reader["track_type"].ToString(),
+								TrackIndex = Convert.ToInt32( reader["track_index"] ),
+								Name = reader["name"].ToString(),
+								IsMuted = Convert.ToBoolean( reader["is_muted"] ),
+								IsLocked = Convert.ToBoolean( reader["is_locked"] ),
+								Volume = Convert.ToDouble( reader["volume"] ),
+								CreatedAt = Convert.ToDateTime( reader["created_at"] )
+							};
 						}
 					}
 				}
-
-				return null;
 			}
 
-			// 获取项目的所有时间线轨道
-			public List<TimelineTrack> GetByProjectId(int projectId)
-			{
-				var tracks = new List<TimelineTrack>();
+			return null;
+		}
 
-				using (var connection = new SQLiteConnection( _connectionString )) {
-					connection.Open();
+		// 获取项目的所有时间线轨道
+		public List<TimelineTrack> GetByProjectId(int projectId)
+		{
+			var tracks = new List<TimelineTrack>();
 
-					string sql = @"
+			using (var connection = new SQLiteConnection( _connectionString )) {
+				connection.Open();
+
+				string sql = @"
                     SELECT id, project_id, track_type, track_index, name, is_muted, is_locked, volume, created_at
                     FROM timeline_tracks 
                     WHERE project_id = @project_id
                     ORDER BY track_index";
 
-					using (var command = new SQLiteCommand( sql, connection )) {
-						command.Parameters.AddWithValue( "@project_id", projectId );
+				using (var command = new SQLiteCommand( sql, connection )) {
+					command.Parameters.AddWithValue( "@project_id", projectId );
 
-						using (var reader = command.ExecuteReader()) {
-							while (reader.Read()) {
-								tracks.Add( new TimelineTrack
-								{
-									Id = Convert.ToInt32( reader["id"] ),
-									ProjectId = Convert.ToInt32( reader["project_id"] ),
-									TrackType = reader["track_type"].ToString(),
-									TrackIndex = Convert.ToInt32( reader["track_index"] ),
-									Name = reader["name"].ToString(),
-									IsMuted = Convert.ToBoolean( reader["is_muted"] ),
-									IsLocked = Convert.ToBoolean( reader["is_locked"] ),
-									Volume = Convert.ToDouble( reader["volume"] ),
-									CreatedAt = Convert.ToDateTime( reader["created_at"] )
-								} );
-							}
+					using (var reader = command.ExecuteReader()) {
+						while (reader.Read()) {
+							tracks.Add( new TimelineTrack
+							{
+								Id = Convert.ToInt32( reader["id"] ),
+								ProjectId = Convert.ToInt32( reader["project_id"] ),
+								TrackType = reader["track_type"].ToString(),
+								TrackIndex = Convert.ToInt32( reader["track_index"] ),
+								Name = reader["name"].ToString(),
+								IsMuted = Convert.ToBoolean( reader["is_muted"] ),
+								IsLocked = Convert.ToBoolean( reader["is_locked"] ),
+								Volume = Convert.ToDouble( reader["volume"] ),
+								CreatedAt = Convert.ToDateTime( reader["created_at"] )
+							} );
 						}
 					}
 				}
-
-				return tracks;
 			}
 
-			// 更新时间线轨道
-			public bool Update(TimelineTrack track)
-			{
-				using (var connection = new SQLiteConnection( _connectionString )) {
-					connection.Open();
+			return tracks;
+		}
 
-					string sql = @"
+		// 更新时间线轨道
+		public bool Update(TimelineTrack track)
+		{
+			using (var connection = new SQLiteConnection( _connectionString )) {
+				connection.Open();
+
+				string sql = @"
                     UPDATE timeline_tracks 
                     SET project_id = @project_id, track_type = @track_type, track_index = @track_index, 
                         name = @name, is_muted = @is_muted, is_locked = @is_locked, volume = @volume
                     WHERE id = @id";
 
-					using (var command = new SQLiteCommand( sql, connection )) {
-						command.Parameters.AddWithValue( "@project_id", track.ProjectId );
-						command.Parameters.AddWithValue( "@track_type", track.TrackType );
-						command.Parameters.AddWithValue( "@track_index", track.TrackIndex );
-						command.Parameters.AddWithValue( "@name", track.Name );
-						command.Parameters.AddWithValue( "@is_muted", track.IsMuted );
-						command.Parameters.AddWithValue( "@is_locked", track.IsLocked );
-						command.Parameters.AddWithValue( "@volume", track.Volume );
-						command.Parameters.AddWithValue( "@id", track.Id );
+				using (var command = new SQLiteCommand( sql, connection )) {
+					command.Parameters.AddWithValue( "@project_id", track.ProjectId );
+					command.Parameters.AddWithValue( "@track_type", track.TrackType );
+					command.Parameters.AddWithValue( "@track_index", track.TrackIndex );
+					command.Parameters.AddWithValue( "@name", track.Name );
+					command.Parameters.AddWithValue( "@is_muted", track.IsMuted );
+					command.Parameters.AddWithValue( "@is_locked", track.IsLocked );
+					command.Parameters.AddWithValue( "@volume", track.Volume );
+					command.Parameters.AddWithValue( "@id", track.Id );
 
-						return command.ExecuteNonQuery() > 0;
-					}
+					return command.ExecuteNonQuery() > 0;
 				}
 			}
+		}
 
-			// 删除时间线轨道
-			public bool Delete(int id)
-			{
-				using (var connection = new SQLiteConnection( _connectionString )) {
-					connection.Open();
+		// 删除时间线轨道
+		public bool Delete(int id)
+		{
+			using (var connection = new SQLiteConnection( _connectionString )) {
+				connection.Open();
 
-					string sql = "DELETE FROM timeline_tracks WHERE id = @id";
+				string sql = "DELETE FROM timeline_tracks WHERE id = @id";
 
-					using (var command = new SQLiteCommand( sql, connection )) {
-						command.Parameters.AddWithValue( "@id", id );
-						return command.ExecuteNonQuery() > 0;
-					}
+				using (var command = new SQLiteCommand( sql, connection )) {
+					command.Parameters.AddWithValue( "@id", id );
+					return command.ExecuteNonQuery() > 0;
 				}
 			}
 		}
 	}
+}
