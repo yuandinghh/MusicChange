@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using LibVLCSharp.Shared;
 using Application = System.Windows.Application;
 using Point = System.Drawing.Point;
-//using MusicChange.SqliteDataAccess;
+using static MusicChange.db;
 
 namespace MusicChange
 {
@@ -568,10 +568,9 @@ catch (Exception ex)
 		#region ------------  全局设置  -------------
 		private void buttonx11_Click(object sender, EventArgs e)
 		{
-			string dbPath = $"D:\\Documents\\Visual Studio 2022\\MusicChange\\LaserEditing.db";
 			db dr = new db( dbPath );
-			//dbAccess.testuser(); //测试用户表是否存在
-			dr.transactioninit(); //初始化事务表
+		
+			dr.dbinit();
 
 
 		}

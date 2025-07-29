@@ -17,6 +17,7 @@ namespace MusicChange
 		{
 			_connectionString = $"Data Source={dbPath};Version=3;";
 		}
+		
 
 		//public static string dbPath = "D:\\Documents\\Visual Studio 2022\\MusicChange\\LaserEditing.db";
 		//private string _connectionString;
