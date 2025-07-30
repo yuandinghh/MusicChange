@@ -2620,20 +2620,14 @@ C# SQLite 事务表创建程序
 
 		#endregion
 
-		public void dbinit( )
+		public void dbinit( )  // 创建所有表  已做
 		{
 			try {
-				// 初始化数据库  已做
 				var dbInitializer = new db( dbPath );
-				//// 创建所有表  已做
-				//dbInitializer.InitializeAllTables();
-				// 插入默认数据  
-				//dbInitializer.InsertDefaultData();
-				//dbInitializer.InitializeDatabase();
-				//Console.WriteLine( "数据库初始化成功！" );  InsertDefaultData  插入 users
+				//dbInitializer.InsertDefaultData(); 	// 插入默认数据   		//dbInitializer.InitializeDatabase();  InsertDefaultData  插入 users
+				//Console.WriteLine( "数据库初始化成功！" );  
 				Users user = new Users();
 				user.Username = "YuanDing";
-
 				dbInitializer.InsertUser( user );
 				// 测试数据库连接  				TestDatabaseConnection( "video_editor.db" );
 			}

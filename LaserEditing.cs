@@ -38,38 +38,45 @@ namespace MusicChange
 		private const int HTCAPTION = 0x2;
 		private LibVLC _libVLC;
 		private const int HT_CAPTION = 0x2;
-	#endregion
+		#endregion
 
 		private bool splitContainer5mouseDown;
 		int count = 0;
 		bool IsOfficialMaterialSwitch = false; //官方素材开关
 		bool Ismaterial = true;
 		string importfile;  //imøport a file
+		int gwidth, gheight;// 获取屏幕工作区宽度
 
 		public LaserEditing( )
 		{
 			//AutoScaleMode = AutoScaleMode.Dpi; // 根据系统DPI自动缩放
-			InitializeComponent();  			this.DoubleBuffered = true;
+			InitializeComponent(); 		this.DoubleBuffered = true;
 			button2.FlatAppearance.BorderSize = 0;    // 边框大小设为 0
 			qrcode1.FlatAppearance.BorderSize = 0;    // 边框大小设为 0
 
 		}
 		private void LaserEditing_Load(object sender, EventArgs e)
 		{
-			//splitContainer5mouseDown = false;
-			//splitContainer1.Panel2MinSize = 400;
-			//buttonx8.BackColor = System.Drawing.Color.Gray;
+			//splitContainer5mouseDown = false;			//splitContainer1.Panel2MinSize = 400;	//buttonx8.BackColor = System.Drawing.Color.Gray;
 			Ismaterial = true;  // 默认选择当前素材
 			buttonX3_Click( null, null ); // 设置当前素材按钮样式	this.ClientSize = new System.Drawing.Size( 1900, 1080 );
 
-			// 注册快捷键	RegisterHotKey( this.Handle, HOTKEY_ID, MOD_CONTROL | MOD_ALT, (uint)Keys.F1 );
-			// 初始化 LibVLC			Core.Initialize();			_libVLC = new LibVLC();
-			// 设置初始状态
-			this.Size = new System.Drawing.Size( 1500, 900 ); // 设置主窗口初始大小
+			// 初始化 LibVLC	Core.Initialize();			_libVLC = new LibVLC();
+			
 			splitContainer5mouseDown = false;
 			OfficialMaterialSwitch(); // 初始化官方素材开关状态
 			sC4.SplitterDistance = 500; //上中
 			sC3.SplitterDistance = 750; // 上左 宽度
+			gwidth = this.Width = Screen.PrimaryScreen.WorkingArea.Width; // 获取屏幕工作区宽度
+			temp.Text = "屏幕工作区宽度: " + gwidth.ToString();
+			temp1.Text = "屏幕工作区高度: " + Screen.PrimaryScreen.WorkingArea.Height.ToString();
+			gheight =  this.Height = Screen.PrimaryScreen.WorkingArea.Height; // 获取屏幕工作区高度
+			this.Size = new System.Drawing.Size( 1550, 900 ); // 设置主窗口初始大小
+			//获得本主窗口的长宽
+
+
+			int weight = gwidth/3 ; // 设置窗口宽度
+
 
 
 		}
@@ -198,11 +205,11 @@ namespace MusicChange
 
 			base.WndProc( ref m );
 		}
-	
+
 		// 处理快捷键
 		private void LaserEditing_KeyDown(object sender, KeyEventArgs e)
 		{
-		Keys key = e.KeyCode;
+			Keys key = e.KeyCode;
 			//  if (e.Control != true)//如果没按Ctrl键      return;
 			switch (key) {
 				case Keys.F1:
@@ -511,7 +518,7 @@ namespace MusicChange
 			//所有音频文件
 			ofd.Title = "请选择要导入的音频、视频或图片文件";
 			//设置缺省文档目录
-			ofd.InitialDirectory = subDirectory;			//ofd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic); //默认打开音乐文件夹
+			ofd.InitialDirectory = subDirectory;            //ofd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic); //默认打开音乐文件夹
 			ofd.Multiselect = true; //允许多选
 			ofd.Filter = "素材|*.mp3;*.wav;*.wma;*.flac;*.aac;*.ogg;*.mp4;*.avi;*.wmv;*.mov;*.jpg;*.jpeg;*.png;*.bmp;*.gif";
 			if (ofd.ShowDialog() == DialogResult.OK) { //获取所有的选中文件存入string数组
@@ -569,7 +576,6 @@ catch (Exception ex)
 		private void buttonx11_Click(object sender, EventArgs e)
 		{
 			db dr = new db( dbPath );
-		
 			dr.dbinit();
 
 
