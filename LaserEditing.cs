@@ -45,14 +45,15 @@ namespace MusicChange
 		bool IsOfficialMaterialSwitch = false; //官方素材开关
 		bool Ismaterial = true;
 		string importfile;  //imøport a file
-		int gwidth, gheight;// 获取屏幕工作区宽度
+		int gwidth, gheight, lwidth, lheight;// 获取屏幕工作区宽度
 
 		public LaserEditing( )
 		{
 			//AutoScaleMode = AutoScaleMode.Dpi; // 根据系统DPI自动缩放
-			InitializeComponent(); 		this.DoubleBuffered = true;
-			button2.FlatAppearance.BorderSize = 0;    // 边框大小设为 0
-			qrcode1.FlatAppearance.BorderSize = 0;    // 边框大小设为 0
+			InitializeComponent();
+			this.DoubleBuffered = true;
+			//button2.FlatAppearance.BorderSize = 0;    // 边框大小设为 0
+			//qrcode1.FlatAppearance.BorderSize = 0;    // 边框大小设为 0
 
 		}
 		private void LaserEditing_Load(object sender, EventArgs e)
@@ -62,7 +63,7 @@ namespace MusicChange
 			buttonX3_Click( null, null ); // 设置当前素材按钮样式	this.ClientSize = new System.Drawing.Size( 1900, 1080 );
 
 			// 初始化 LibVLC	Core.Initialize();			_libVLC = new LibVLC();
-			
+
 			splitContainer5mouseDown = false;
 			OfficialMaterialSwitch(); // 初始化官方素材开关状态
 			sC4.SplitterDistance = 500; //上中
@@ -70,14 +71,16 @@ namespace MusicChange
 			gwidth = this.Width = Screen.PrimaryScreen.WorkingArea.Width; // 获取屏幕工作区宽度
 			temp.Text = "屏幕工作区宽度: " + gwidth.ToString();
 			temp1.Text = "屏幕工作区高度: " + Screen.PrimaryScreen.WorkingArea.Height.ToString();
-			gheight =  this.Height = Screen.PrimaryScreen.WorkingArea.Height; // 获取屏幕工作区高度
+			gheight = this.Height = Screen.PrimaryScreen.WorkingArea.Height; // 获取屏幕工作区高度
 			this.Size = new System.Drawing.Size( 1550, 900 ); // 设置主窗口初始大小
-			//获得本主窗口的长宽
+			lwidth = this.Size.Width;
+			lheight = this.Size.Height;
+			int weight = lwidth / 3; // 设置窗口宽度
+			// 可选：设置 Panel2 的最小尺寸
+			this.sC3.Panel1MinSize = 300;
 
-
-			int weight = gwidth/3 ; // 设置窗口宽度
-
-
+			sC3.SplitterDistance = weight+70; // 上左
+			sC4.SplitterDistance = weight+50; //上中
 
 		}
 		#region ----------- 鼠标拖动窗口和改变大小问题 快捷键  还没解决-------------------
@@ -332,55 +335,56 @@ namespace MusicChange
 				   point.Y <= borderSize ||  // 上边界
 				   point.Y >= this.ClientSize.Height - borderSize;   // 下边界
 		}
-
+		// 是一个根据鼠标位置设置光标类型的函数。在视频编辑软件中，这通常用于根据鼠标在时间轴上的位置来改变光标样式，以提供更好的用户体验。
 		private void SetCursorBasedOnPosition(System.Drawing.Point point)
 		{
-			if (this.WindowState == FormWindowState.Maximized) {
-				this.Cursor = Cursors.Default;
-				return;
-			}
-
-			// 右下角
-			if (point.X >= this.ClientSize.Width - borderSize &&
-				point.Y >= this.ClientSize.Height - borderSize) {
-				this.Cursor = Cursors.SizeNWSE;
-			}
-			// 左下角
-			else if (point.X <= borderSize &&
-					 point.Y >= this.ClientSize.Height - borderSize) {
-				this.Cursor = Cursors.SizeNESW;
-			}
-			// 右上角
-			else if (point.X >= this.ClientSize.Width - borderSize &&
-					 point.Y <= borderSize) {
-				this.Cursor = Cursors.SizeNESW;
-			}
-			// 左上角
-			else if (point.X <= borderSize &&
-					 point.Y <= borderSize) {
-				this.Cursor = Cursors.SizeNWSE;
-			}
-			// 左边框
-			else if (point.X <= borderSize) {
-				this.Cursor = Cursors.SizeWE;
-			}
-			// 右边框
-			else if (point.X >= this.ClientSize.Width - borderSize) {
-				this.Cursor = Cursors.SizeWE;
-			}
-			// 上边框
-			else if (point.Y <= borderSize) {
-				this.Cursor = Cursors.SizeNS;
-			}
-			// 下边框
-			else if (point.Y >= this.ClientSize.Height - borderSize) {
-				this.Cursor = Cursors.SizeNS;
-			}
-			// 窗体内部
-			else {
-				this.Cursor = Cursors.Default;
-			}
 		}
+			//if (this.WindowState == FormWindowState.Maximized) {
+			//	this.Cursor = Cursors.Default;
+			//	return;
+			//}
+
+			//// 右下角
+			//if (point.X >= this.ClientSize.Width - borderSize &&
+			//	point.Y >= this.ClientSize.Height - borderSize) {
+			//	this.Cursor = Cursors.SizeNWSE;
+			//}
+			//// 左下角
+			//else if (point.X <= borderSize &&
+			//		 point.Y >= this.ClientSize.Height - borderSize) {
+			//	this.Cursor = Cursors.SizeNESW;
+			//}
+			//// 右上角
+			//else if (point.X >= this.ClientSize.Width - borderSize &&
+			//		 point.Y <= borderSize) {
+			//	this.Cursor = Cursors.SizeNESW;
+			//}
+			//// 左上角
+			//else if (point.X <= borderSize &&
+			//		 point.Y <= borderSize) {
+			//	this.Cursor = Cursors.SizeNWSE;
+			//}
+			//// 左边框
+			//else if (point.X <= borderSize) {
+			//	this.Cursor = Cursors.SizeWE;
+			//}
+			//// 右边框
+			//else if (point.X >= this.ClientSize.Width - borderSize) {
+			//	this.Cursor = Cursors.SizeWE;
+			//}
+			//// 上边框
+			//else if (point.Y <= borderSize) {
+			//	this.Cursor = Cursors.SizeNS;
+			//}
+			//// 下边框
+			//else if (point.Y >= this.ClientSize.Height - borderSize) {
+			//	this.Cursor = Cursors.SizeNS;
+			//}
+			//// 窗体内部
+			//else {
+			//	this.Cursor = Cursors.Default;
+			//}
+		//}
 
 		private void splitContainer6_MouseMove(object sender, MouseEventArgs e)
 		{
@@ -483,6 +487,11 @@ namespace MusicChange
 			button2.Visible = true;
 		}
 
+		private void sC3_SplitterMoved(object sender, SplitterEventArgs e)
+		{
+
+		}
+
 		#endregion
 
 		#region ------------  导入：视频、音频、图片  -------------
@@ -562,14 +571,23 @@ catch (Exception ex)
 {
     MessageBox.Show("删除子目录失败: " + ex.Message);
 }*/
-		private void panel4_SizeChanged(object sender, EventArgs e)
+		private void panel4_SizeChanged(object sender, EventArgs e)  // 导入 。。dynamic resize
 		{
-			// 调整按钮位置
-			button2.Left = (panel4.Width - button2.Width) / 2; // 水平居中
-			button2.Top = (panel4.Height - button2.Height) / 2; // 垂直居中
-			qrcode1.Left = button2.Left + 250; // 水平居中	
-
+			if (panel4.Visible) {
+				// 调整按钮和二维码的位置
+				button2.Left = (panel4.Width - button2.Width) / 2-20; // 水平居中
+				button2.Top = (panel4.Height - button2.Height) / 2; // 垂直居中
+				qrcode1.Left = button2.Left + 290; // 水平居中	
+				qrcode1.Top = (panel4.Height - qrcode1.Height) / 2; // 水平居中	
+			}
 		}
+		//{
+		//	// 调整按钮位置
+		//	button2.Left = (panel4.Width - button2.Width) / 2; // 水平居中
+		//	button2.Top = (panel4.Height - button2.Height) / 2; // 垂直居中
+		//	qrcode1.Left = button2.Left + 250; // 水平居中	
+
+		//}
 		#endregion
 
 		#region ------------  全局设置  -------------
