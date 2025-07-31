@@ -8,6 +8,18 @@
 命名空间“MusicChange”中不存在类型或命名空间名“VideoEditor”(是否缺少程序集引用?)
 
 splitContainer.Panel1 如何使 宽度固定并不能拉伸
+初始化 LibVLC。
+
+ <!--<package id="Vlc.DotNet.Core" version="3.1.0" targetFramework="net472" />
+  <package id="Vlc.DotNet.Core.Interops" version="3.1.0" targetFramework="net472" />
+  <package id="Vlc.DotNet.Forms" version="3.1.0" targetFramework="net472" />-->
+   <!--<package id="Vlc.DotNet.Core" version="3.9.3" targetFramework="net472" />
+  <package id="Vlc.DotNet.Core.Interops" version="3.9.3" targetFramework="net472" />
+  <package id="Vlc.DotNet.Forms" version="3.9.3" targetFramework="net472" />-->
+
+    <package id="Vlc.DotNet.Core" version="3.9.3" targetFramework="net472" />
+  <package id="Vlc.DotNet.Core.Interops" version="3.9.3" targetFramework="net472" />
+  <package id="Vlc.DotNet.Forms" version="3.9.3" targetFramework="net472" />
 
 
 1.	clips - 存储音频剪辑的基本信息

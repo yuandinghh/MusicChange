@@ -333,13 +333,13 @@ namespace MusicChange
 							{
 								if (!string.IsNullOrEmpty( args.Data )) {
 									outputBuilder.AppendLine( args.Data );
-									string timeInfo = Cut.ParseProgress( args.Data );
-									if (!string.IsNullOrEmpty( timeInfo )) { // 跨线程安全更新UI
-										this.Invoke( (MethodInvoker)delegate
-									   {
-										   textBox1.Text = $"时间: {timeInfo}";
-									   } );
-									}
+									//string timeInfo = Cut.ParseProgress( args.Data );
+									//if (!string.IsNullOrEmpty( timeInfo )) { // 跨线程安全更新UI
+									//	this.Invoke( (MethodInvoker)delegate
+									//   {
+									//	   textBox1.Text = $"时间: {timeInfo}";
+									//   } );
+									//}
 								}
 							};
 							ffmpegProcess.ErrorDataReceived += (eventSender, args) =>

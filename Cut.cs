@@ -13,6 +13,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using LibVLCSharp.Shared;
+using LibVLCSharp.WinForms;
 
 namespace MusicChange
 {
@@ -1296,9 +1297,7 @@ bilinear=1：使用双线性插值提高旋转后的画质
 		private void button41_Click(object sender, EventArgs e)
 		{
 			button9_Click(null, null); // 调用播放按钮事件
-			_mediaPlayer.Mute = true; // 静音
-									  //_mediaPlayer.uiMode = "full"; // 或 "mini"
-			_mediaPlayer.Mute = false; // 取消静音
+			_mediaPlayer.Mute = true; // 静音 		  //_mediaPlayer.uiMode = "full"; // 或 "mini"			_mediaPlayer.Mute = false; // 取消静音
 			PlayVideo(textBox1.Text);
 			timer1.Start(); // 播放时启动定时器
 		}

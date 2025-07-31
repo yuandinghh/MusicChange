@@ -1830,7 +1830,6 @@
 		private System.Windows.Forms.Label label23;
 		private System.Windows.Forms.Button button3;
 		private System.Windows.Forms.Button button42;
-		//private LibVLCSharp.WinForms.VideoView videoView1;
 		private DevComponents.DotNetBar.ButtonX buttonX1;
 		private DevComponents.DotNetBar.Controls.CheckBoxX checkBoxX1;
 		private DevComponents.DotNetBar.Controls.ComboBoxEx comboBoxEx1;
