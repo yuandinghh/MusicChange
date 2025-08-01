@@ -1,19 +1,21 @@
 ﻿
 #region ------------- 系统加载部分  无需改变的变量 -------------
 using System;
+using LibVLCSharp.WinForms;
+using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Windows.Media;
 using LibVLCSharp.Shared;
-using LibVLCSharp.WinForms;
+
 using SharpCompress.Common;
 using static MusicChange.db;
 using Application = System.Windows.Application;
 using MediaPlayer = LibVLCSharp.Shared.MediaPlayer;
 using Point = System.Drawing.Point;
-
-//using DevComponents.DotNetBar;  using LibVLCSharp.WinForms; 和 using LibVLCSharp.Shared;
+//using DevComponents.DotNetBar;  //using LibVLCSharp.WinForms; 和 using LibVLCSharp.Shared;
+using System.Reflection;
 
 
 #endregion
@@ -51,7 +53,10 @@ namespace MusicChange
 		string importfile;  //imøport a file
 		int gwidth, gheight, lwidth, lheight;// 获取屏幕工作区宽度
 		#endregion
-
+		private Assembly libVLCSharpWinFormsAssembly;
+		private Type videoViewType;
+		private object videoViewInstance;
+		private VideoView _videoView;
 		private LibVLC _libVLC;
 		private string filePath = $"F:\\newipad\\sex.MP4";
 		private MediaPlayer _mediaPlayer;
@@ -82,11 +87,42 @@ namespace MusicChange
 			this.sC3.Panel1MinSize = 300;
 			sC3.SplitterDistance = weight + 80; // 上左
 			sC4.SplitterDistance = weight + 50; //上中
+			//LoadLibVLCSharpDynamically();
 			InitializeLibVLC(); // 初始化 LibVLC
-
+			//InitializeUIControls();
+			
 
 		}
+
+		#region   ------------动态加载 LibVLCSharp.WinForms	 -----------------	
+		private void LoadLibVLCSharpDynamically()
+		{
+			try
+			{
+				// 动态加载 LibVLCSharp.WinForms 程序集 D:\Documents\Visual Studio 2022\MusicChange
+				//string libVLCSharpWinFormsPath = Path.Combine(Application.StartupPath, "LibVLCSharp.WinForms.dll");
+				string libVLCSharpWinFormsPath = Path.Combine($"D:\\Documents\\Visual Studio 2022\\MusicChange", "LibVLCSharp.WinForms.dll");
+
+				libVLCSharpWinFormsAssembly = Assembly.LoadFrom(libVLCSharpWinFormsPath);
+
+				// 获取 VideoView 类型
+				videoViewType = libVLCSharpWinFormsAssembly.GetType("LibVLCSharp.WinForms.VideoView");
+
+				// 创建 VideoView 实例
+				videoViewInstance = Activator.CreateInstance(videoViewType);
+
+				// 设置 MediaPlayer 属性（如果需要）
+				// 这需要使用反射来设置属性
+			}
+			catch(Exception ex)
+			{
+				MessageBox.Show($"动态加载 LibVLCSharp 失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}
+		}
+		#endregion
+
 		#region   ------------初始化 LibVLC 核心 播放视频文件 播放 继续 停止等	 -----------------	
+
 		private void InitializeLibVLC( )
 		{
 			try {
@@ -99,13 +135,13 @@ namespace MusicChange
 				Core.Initialize();
 				// 添加 VLC 界面选项
 				string[] options = {
-			"--intf", "dummy",           // 使用虚拟接口
-            "--embedded-video",          // 嵌入式视频
-            "--no-video-title-show",     // 不显示视频标题
-            "--no-stats",                // 不显示统计信息
-            "--no-sub-autodetect-file",  // 不自动检测字幕文件
-            "--verbose=0"                // 设置日志级别
-        };
+						"--intf", "dummy",           // 使用虚拟接口
+						"--embedded-video",          // 嵌入式视频
+						"--no-video-title-show",     // 不显示视频标题
+						"--no-stats",                // 不显示统计信息
+						"--no-sub-autodetect-file",  // 不自动检测字幕文件
+						"--verbose=0"                // 设置日志级别
+					  };
 				// 创建 LibVLC 实例
 				_libVLC = new LibVLC( options );
 				// 检查 LibVLC 是否创建成功
@@ -118,6 +154,7 @@ namespace MusicChange
 				if (_mediaPlayer == null) {
 					throw new InvalidOperationException( "无法创建 MediaPlayer 实例" );
 				}
+                //VideoView _videoView1 = videoViewType.GetProperty( "MediaPlayer" ).GetValue( videoViewInstance ) as VideoView;
 				// 检查 VideoView 是否创建成功
 				if (videoView1 == null) {
 					throw new InvalidOperationException( "无法创建 VideoView 实例" );
@@ -135,7 +172,7 @@ namespace MusicChange
 		/// 播放视频文件
 		/// </summary>
 		/// <param name="filePath">视频文件路径</param>
-		public void PlayVideo(string filePath)
+		public void PlayVideo1(string filePath)
 		{
 			try {
 				// 检查必要组件是否存在
@@ -282,7 +319,7 @@ namespace MusicChange
 		/// <summary>
 		/// 清理资源
 		/// </summary>
-		private void CleanupResources( )
+		private void CleanupResources1( )
 		{
 			try {
 				// 停止播放
@@ -314,14 +351,345 @@ namespace MusicChange
 			}
 		}
 
+		//protected override void OnFormClosing(FormClosingEventArgs e)
+		//{
+		//	// 清理资源
+		//	CleanupResources();
+		//	base.OnFormClosing( e );
+		//}
+
+		#endregion
+
+		#region   ------------ LibVLC  添加  播放 时间 音量 播放 继续 停止等	按钮 -----------------	
+
+		//public partial class VideoPlayerWithProgressBar : Form
+		//	{
+		//private TrackBar _progressBar; // 进度条
+		//private Timer _progressTimer; // 定时器更新进度
+		//private Label _currentTimeLabel; // 当前时间标签
+		//private Label _totalTimeLabel; // 总时间标签
+		private bool _isSeeking = false; // 是否正在拖拽进度条
+		// 订阅播放器事件
+		//_mediaPlayer.TimeChanged += OnMediaPlayerTimeChanged;
+		//_mediaPlayer.LengthChanged += OnMediaPlayerLengthChanged;
+		//_mediaPlayer.Playing += OnMediaPlayerPlaying;
+		//_mediaPlayer.Paused += OnMediaPlayerPaused;
+		//_mediaPlayer.Stopped += OnMediaPlayerStopped;
+		//_mediaPlayer.EndReached += OnMediaPlayerEndReached;
+
+		private void InitializeUIControls( )
+		{
+			// 创建底部控制面板
+			Panel controlPanel = new Panel
+			{
+				Height = 60,
+				Dock = DockStyle.Bottom,
+				BackColor = System.Drawing.Color.FromArgb( 50, 50, 50 )
+			};
+
+			// 创建进度条
+			_progressBar = new TrackBar
+			{
+				Minimum = 0,
+				Maximum = 1000, // 使用1000作为最大值以获得更平滑的控制
+				Height = 30,
+				Top = 5,
+				Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top
+			};
+			_progressBar.MouseUp += ProgressBar_MouseUp;
+			_progressBar.MouseDown += ProgressBar_MouseDown;
+			_progressBar.Scroll += ProgressBar_Scroll;
+
+			// 创建当前时间标签
+			_currentTimeLabel = new Label
+			{
+				Text = "00:00:00",
+				ForeColor = System.Drawing.Color.White,
+				Left = 10,
+				Top = 35,
+				Width = 80,
+				TextAlign = ContentAlignment.MiddleLeft
+			};
+
+			// 创建总时间标签
+			_totalTimeLabel = new Label
+			{
+				Text = "00:00:00",
+				ForeColor = System.Drawing.Color.White,
+				Anchor = AnchorStyles.Right,
+				//Right = 10,
+				Top = 35,
+				Width = 80,
+				TextAlign = ContentAlignment.MiddleRight
+			};
+
+			// 创建播放/暂停按钮
+			Button playPauseButton = new Button
+			{
+				Text = "播放",
+				Width = 60,
+				Height = 25,
+				Left = 100,
+				Top = 32
+			};
+			playPauseButton.Click += PlayPauseButton_Click;
+
+			// 创建停止按钮
+			Button stopButton = new Button
+			{
+				Text = "停止",
+				Width = 60,
+				Height = 25,
+				Left = 170,
+				Top = 32
+			};
+			stopButton.Click += StopButton_Click;
+
+			// 添加控件到控制面板
+			controlPanel.Controls.Add( _progressBar );
+			controlPanel.Controls.Add( _currentTimeLabel );
+			controlPanel.Controls.Add( _totalTimeLabel );
+			controlPanel.Controls.Add( playPauseButton );
+			controlPanel.Controls.Add( stopButton );
+
+			// 添加控制面板到窗体
+			this.Controls.Add( controlPanel );
+			_videoView.SendToBack();
+
+			// 创建定时器更新进度
+			_progressTimer = new Timer
+			{
+				Interval = 100 // 每100毫秒更新一次
+			};
+			_progressTimer.Tick += ProgressTimer_Tick;
+			_progressTimer.Start();
+		}
+
+		// 播放器事件处理
+		private void OnMediaPlayerTimeChanged(object sender, MediaPlayerTimeChangedEventArgs e)
+		{
+			// 进度更新在定时器中处理，避免频繁UI更新
+		}
+
+		private void OnMediaPlayerLengthChanged(object sender, MediaPlayerLengthChangedEventArgs e)
+		{
+			if (InvokeRequired) {
+				Invoke( new Action( ( ) => UpdateTotalTime( e.Length ) ) );
+			}
+			else {
+				UpdateTotalTime( e.Length );
+			}
+		}
+
+		private void OnMediaPlayerPlaying(object sender, EventArgs e)
+		{
+			if (InvokeRequired) {
+				Invoke( new Action( ( ) => {
+					// 更新按钮状态
+				} ) );
+			}
+		}
+
+		private void OnMediaPlayerPaused(object sender, EventArgs e)
+		{
+			if (InvokeRequired) {
+				Invoke( new Action( ( ) => {
+					// 更新按钮状态
+				} ) );
+			}
+		}
+
+		private void OnMediaPlayerStopped(object sender, EventArgs e)
+		{
+			if (InvokeRequired) {
+				Invoke( new Action( ( ) => {
+					ResetProgress();
+				} ) );
+			}
+			else {
+				ResetProgress();
+			}
+		}
+
+		private void OnMediaPlayerEndReached(object sender, EventArgs e)
+		{
+			if (InvokeRequired) {
+				Invoke( new Action( ( ) => {
+					ResetProgress();
+				} ) );
+			}
+			else {
+				ResetProgress();
+			}
+		}
+
+		// 进度条事件处理
+		private void ProgressBar_MouseDown(object sender, MouseEventArgs e)
+		{
+			_isSeeking = true;
+		}
+
+		private void ProgressBar_MouseUp(object sender, MouseEventArgs e)
+		{
+			if (_isSeeking && _mediaPlayer != null) {
+				// 计算目标时间
+				long totalTime = _mediaPlayer.Length;
+				if (totalTime > 0) {
+					long targetTime = (long)(_progressBar.Value * totalTime / 1000.0);
+					_mediaPlayer.Time = targetTime;
+				}
+			}
+			_isSeeking = false;
+		}
+
+		private void ProgressBar_Scroll(object sender, EventArgs e)
+		{
+			// 拖拽时实时更新时间显示
+			if (_mediaPlayer != null && _mediaPlayer.Length > 0) {
+				long totalTime = _mediaPlayer.Length;
+				long currentTime = (long)(_progressBar.Value * totalTime / 1000.0);
+				_currentTimeLabel.Text = FormatTime( currentTime );
+			}
+		}
+
+		// 定时器更新进度
+		private void ProgressTimer_Tick(object sender, EventArgs e)
+		{
+			if (_mediaPlayer != null && !_isSeeking) {
+				UpdateProgress();
+			}
+		}
+
+		private void UpdateProgress( )
+		{
+			if (_mediaPlayer == null)
+				return;
+
+			long currentTime = _mediaPlayer.Time;
+			long totalTime = _mediaPlayer.Length;
+
+			if (totalTime > 0) {
+				// 更新进度条
+				int progressValue = (int)(currentTime * 1000 / totalTime);
+				if (progressValue >= 0 && progressValue <= 1000) {
+					_progressBar.Value = progressValue;
+				}
+
+				// 更新时间标签
+				_currentTimeLabel.Text = FormatTime( currentTime );
+			}
+		}
+
+		private void UpdateTotalTime(long totalTime)
+		{
+			_totalTimeLabel.Text = FormatTime( totalTime );
+			if (totalTime > 0) {
+				_progressBar.Maximum = 1000;
+			}
+		}
+
+		private void ResetProgress( )
+		{
+			_progressBar.Value = 0;
+			_currentTimeLabel.Text = "00:00:00";
+		}
+
+		// 格式化时间显示 (毫秒转为 HH:MM:SS)
+		private string FormatTime(long milliseconds)
+		{
+			if (milliseconds <= 0)
+				return "00:00:00";
+
+			TimeSpan time = TimeSpan.FromMilliseconds( milliseconds );
+			return $"{time.Hours:D2}:{time.Minutes:D2}:{time.Seconds:D2}";
+		}
+
+		// 按钮事件处理
+		private void PlayPauseButton_Click(object sender, EventArgs e)
+		{
+			if (_mediaPlayer == null)
+				return;
+
+			if (_mediaPlayer.State == VLCState.Playing) {
+				_mediaPlayer.Pause();
+				((Button)sender).Text = "播放";
+			}
+			else {
+				_mediaPlayer.Play();
+				((Button)sender).Text = "暂停";
+			}
+		}
+
+		private void StopButton_Click(object sender, EventArgs e)
+		{
+			_mediaPlayer?.Stop();
+		}
+
+		// 播放视频文件
+		public void PlayVideo(string filePath)
+		{
+			try {
+				if (_libVLC == null || _mediaPlayer == null) {
+					MessageBox.Show( "播放器未正确初始化", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error );
+					return;
+				}
+
+				if (string.IsNullOrEmpty( filePath )) {
+					MessageBox.Show( "文件路径不能为空", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error );
+					return;
+				}
+
+				_mediaPlayer.Stop();
+
+				using (var media = new Media( _libVLC, filePath, FromType.FromPath )) {
+					if (media == null) {
+						throw new InvalidOperationException( "无法创建媒体对象" );
+					}
+
+					_mediaPlayer.Play( media );
+				}
+			}
+			catch (Exception ex) {
+				MessageBox.Show( $"播放视频失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error );
+			}
+		}
+
+		// 清理资源
+		private void CleanupResources( )
+		{
+			try {
+				_progressTimer?.Stop();
+
+				if (_mediaPlayer != null) {
+					_mediaPlayer.Stop();
+					_mediaPlayer.TimeChanged -= OnMediaPlayerTimeChanged;
+					_mediaPlayer.LengthChanged -= OnMediaPlayerLengthChanged;
+					_mediaPlayer.Playing -= OnMediaPlayerPlaying;
+					_mediaPlayer.Paused -= OnMediaPlayerPaused;
+					_mediaPlayer.Stopped -= OnMediaPlayerStopped;
+					_mediaPlayer.EndReached -= OnMediaPlayerEndReached;
+					_mediaPlayer.Dispose();
+					_mediaPlayer = null;
+				}
+
+				_libVLC?.Dispose();
+				_libVLC = null;
+
+				_videoView?.Dispose();
+				_videoView = null;
+			}
+			catch (Exception ex) {
+				Console.WriteLine( $"清理资源时出错: {ex.Message}" );
+			}
+		}
+
 		protected override void OnFormClosing(FormClosingEventArgs e)
 		{
-			// 清理资源
 			CleanupResources();
 			base.OnFormClosing( e );
 		}
 
-		#endregion
+#endregion
 
 		#region ----------- 鼠标拖动窗口和改变大小问题 快捷键  还没解决-------------------
 		private void panelEx4_MouseDown(object sender, MouseEventArgs e)
