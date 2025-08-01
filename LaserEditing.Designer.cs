@@ -723,10 +723,11 @@ namespace MusicChange
             // 
             this.videoView1.BackColor = System.Drawing.Color.Black;
             this.videoView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.videoView1.Location = new System.Drawing.Point(0, 55);
+            this.videoView1.Location = new System.Drawing.Point(0, 35);
+            this.videoView1.Margin = new System.Windows.Forms.Padding(5);
             this.videoView1.MediaPlayer = null;
             this.videoView1.Name = "videoView1";
-            this.videoView1.Size = new System.Drawing.Size(600, 572);
+            this.videoView1.Size = new System.Drawing.Size(600, 610);
             this.videoView1.TabIndex = 2;
             this.videoView1.Text = "videoView1";
             // 
@@ -735,9 +736,9 @@ namespace MusicChange
             this.panel6.BackColor = System.Drawing.Color.DimGray;
             this.panel6.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel6.ForeColor = System.Drawing.Color.White;
-            this.panel6.Location = new System.Drawing.Point(0, 627);
+            this.panel6.Location = new System.Drawing.Point(0, 645);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(600, 53);
+            this.panel6.Size = new System.Drawing.Size(600, 35);
             this.panel6.TabIndex = 1;
             // 
             // panel5
@@ -746,7 +747,7 @@ namespace MusicChange
             this.panel5.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel5.Location = new System.Drawing.Point(0, 0);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(600, 55);
+            this.panel5.Size = new System.Drawing.Size(600, 35);
             this.panel5.TabIndex = 0;
             // 
             // button5
