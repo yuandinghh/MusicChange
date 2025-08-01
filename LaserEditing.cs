@@ -17,8 +17,8 @@ using Point = System.Drawing.Point;
 //using DevComponents.DotNetBar;  //using LibVLCSharp.WinForms; 和 using LibVLCSharp.Shared;
 using System.Reflection;
 
-
 #endregion
+
 #region  ------------- 全局变量 -------------
 namespace MusicChange
 {
@@ -54,8 +54,7 @@ namespace MusicChange
 		int gwidth, gheight, lwidth, lheight;// 获取屏幕工作区宽度
 		#endregion
 		private Assembly libVLCSharpWinFormsAssembly;
-		private Type videoViewType;
-		private object videoViewInstance;
+		private Type videoViewType;  //		private object videoViewInstance;
 		private VideoView _videoView;
 		private LibVLC _libVLC;
 		private string filePath = $"F:\\newipad\\sex.MP4";
@@ -86,8 +85,7 @@ namespace MusicChange
 			int weight = lwidth / 3; // 设置窗口宽度  
 			this.sC3.Panel1MinSize = 300;
 			sC3.SplitterDistance = weight + 80; // 上左
-			sC4.SplitterDistance = weight + 50; //上中
-			//LoadLibVLCSharpDynamically();
+			sC4.SplitterDistance = weight + 50; //上中			//LoadLibVLCSharpDynamically();
 			InitializeLibVLC(); // 初始化 LibVLC
 			//InitializeUIControls();
 			
@@ -379,60 +377,14 @@ namespace MusicChange
 
 		private void InitializeUIControls( )
 		{
-			// 创建底部控制面板
-			Panel controlPanel = new Panel
-			{
-				Height = 60,
-				Dock = DockStyle.Bottom,
-				BackColor = System.Drawing.Color.FromArgb( 50, 50, 50 )
-			};
+			// 创建底部控制面板 Panel controlPanel = new Panel	{Height = 60,Dock = DockStyle.Bottom, BackColor = System.Drawing.Color.FromArgb( 50, 50, 50 )	};
+			// 创建进度条			_progressBar = new TrackBar			{				Minimum = 0,				Maximum = 1000, // 使用1000作为最大值以获得更平滑的控制				Height = 30,				Top = 5,				Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top			};			progressBar.MouseUp += ProgressBar_MouseUp;			_progressBar.MouseDown += ProgressBar_MouseDown;			_progressBar.Scroll += ProgressBar_Scroll;
 
-			// 创建进度条
-			_progressBar = new TrackBar
-			{
-				Minimum = 0,
-				Maximum = 1000, // 使用1000作为最大值以获得更平滑的控制
-				Height = 30,
-				Top = 5,
-				Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top
-			};
-			_progressBar.MouseUp += ProgressBar_MouseUp;
-			_progressBar.MouseDown += ProgressBar_MouseDown;
-			_progressBar.Scroll += ProgressBar_Scroll;
+			// 创建当前时间标签			_currentTimeLabel = new Label			{				Text = "00:00:00",				ForeColor = System.Drawing.Color.White,			Left = 10,				Top = 35,				Width = 80,				TextAlign = ContentAlignment.MiddleLeft			};
+			// 创建总时间标签			_totalTimeLabel = new Label			{				Text = "00:00:00",				ForeColor = System.Drawing.Color.White,			Anchor = AnchorStyles.Right,				//Right = 10,				Top = 35,				Width = 80,				TextAlign = ontentAlignment.MiddleRight			};
 
-			// 创建当前时间标签
-			_currentTimeLabel = new Label
-			{
-				Text = "00:00:00",
-				ForeColor = System.Drawing.Color.White,
-				Left = 10,
-				Top = 35,
-				Width = 80,
-				TextAlign = ContentAlignment.MiddleLeft
-			};
-
-			// 创建总时间标签
-			_totalTimeLabel = new Label
-			{
-				Text = "00:00:00",
-				ForeColor = System.Drawing.Color.White,
-				Anchor = AnchorStyles.Right,
-				//Right = 10,
-				Top = 35,
-				Width = 80,
-				TextAlign = ContentAlignment.MiddleRight
-			};
-
-			// 创建播放/暂停按钮
-			Button playPauseButton = new Button
-			{
-				Text = "播放",
-				Width = 60,
-				Height = 25,
-				Left = 100,
-				Top = 32
-			};
-			playPauseButton.Click += PlayPauseButton_Click;
+			// 创建播放/暂停按钮	Button playPauseButton = new Button			{				Text = "播放",				Width = 60,				Height = 25,			Left = 100,				Top = 32			};
+		//	playPauseButton.Click += PlayPauseButton_Click;
 
 			// 创建停止按钮
 			Button stopButton = new Button
@@ -446,14 +398,14 @@ namespace MusicChange
 			stopButton.Click += StopButton_Click;
 
 			// 添加控件到控制面板
-			controlPanel.Controls.Add( _progressBar );
-			controlPanel.Controls.Add( _currentTimeLabel );
-			controlPanel.Controls.Add( _totalTimeLabel );
-			controlPanel.Controls.Add( playPauseButton );
-			controlPanel.Controls.Add( stopButton );
+			//controlPanel.Controls.Add( _progressBar );
+			//controlPanel.Controls.Add( _currentTimeLabel );
+			//controlPanel.Controls.Add( _totalTimeLabel );
+			//controlPanel.Controls.Add( playPauseButton );
+			//controlPanel.Controls.Add( stopButton );
 
-			// 添加控制面板到窗体
-			this.Controls.Add( controlPanel );
+			//// 添加控制面板到窗体
+			//this.Controls.Add( controlPanel );
 			_videoView.SendToBack();
 
 			// 创建定时器更新进度
@@ -524,12 +476,12 @@ namespace MusicChange
 		}
 
 		// 进度条事件处理
-		private void ProgressBar_MouseDown(object sender, MouseEventArgs e)
+		private void _progressBar_MouseDown(object sender, MouseEventArgs e)
 		{
 			_isSeeking = true;
 		}
 
-		private void ProgressBar_MouseUp(object sender, MouseEventArgs e)
+		private void _progressBar_MouseUp(object sender, MouseEventArgs e)
 		{
 			if (_isSeeking && _mediaPlayer != null) {
 				// 计算目标时间
@@ -542,7 +494,7 @@ namespace MusicChange
 			_isSeeking = false;
 		}
 
-		private void ProgressBar_Scroll(object sender, EventArgs e)
+		private void _progressBar_Scroll(object sender, EventArgs e)
 		{
 			// 拖拽时实时更新时间显示
 			if (_mediaPlayer != null && _mediaPlayer.Length > 0) {
@@ -605,7 +557,7 @@ namespace MusicChange
 		}
 
 		// 按钮事件处理
-		private void PlayPauseButton_Click(object sender, EventArgs e)
+		private void playPauseButton_Click_1(object sender, EventArgs e)
 		{
 			if (_mediaPlayer == null)
 				return;
@@ -1177,6 +1129,13 @@ namespace MusicChange
 		{
 			Stop();
 		}
+
+		private void playPauseButton_Click_1(object sender, EventArgs e)
+		{
+
+		}
+
+
 
 		/*// 递归删除子目录及其所有内容
 try

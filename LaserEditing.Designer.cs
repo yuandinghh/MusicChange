@@ -90,6 +90,7 @@ namespace MusicChange
 			this.fontDialog1 = new System.Windows.Forms.FontDialog();
 			this._progressTimer = new System.Windows.Forms.Timer(this.components);
 			this.button4 = new System.Windows.Forms.Button();
+			this.playPauseButton = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -730,21 +731,29 @@ namespace MusicChange
 			this.videoView1.Location = new System.Drawing.Point(0, 35);
 			this.videoView1.MediaPlayer = null;
 			this.videoView1.Name = "videoView1";
-			this.videoView1.Size = new System.Drawing.Size(600, 554);
+			this.videoView1.Size = new System.Drawing.Size(600, 580);
 			this.videoView1.TabIndex = 3;
 			this.videoView1.Text = "videoView2";
 			// 
 			// _progressBar
 			// 
+			this._progressBar.AutoSize = false;
 			this._progressBar.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this._progressBar.Location = new System.Drawing.Point(0, 589);
+			this._progressBar.Location = new System.Drawing.Point(0, 615);
+			this._progressBar.Margin = new System.Windows.Forms.Padding(0, 5, 0, 0);
+			this._progressBar.Maximum = 1000;
 			this._progressBar.Name = "_progressBar";
-			this._progressBar.Size = new System.Drawing.Size(600, 56);
+			this._progressBar.RightToLeft = System.Windows.Forms.RightToLeft.No;
+			this._progressBar.Size = new System.Drawing.Size(600, 30);
 			this._progressBar.TabIndex = 2;
+			this._progressBar.Scroll += new System.EventHandler(this._progressBar_Scroll);
+			this._progressBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this._progressBar_MouseDown);
+			this._progressBar.MouseUp += new System.Windows.Forms.MouseEventHandler(this._progressBar_MouseUp);
 			// 
 			// panel6
 			// 
-			this.panel6.BackColor = System.Drawing.Color.DimGray;
+			this.panel6.BackColor = System.Drawing.Color.Black;
+			this.panel6.Controls.Add(this.playPauseButton);
 			this.panel6.Controls.Add(this._totalTimeLabel);
 			this.panel6.Controls.Add(this._currentTimeLabel);
 			this.panel6.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -775,6 +784,7 @@ namespace MusicChange
 			this._currentTimeLabel.Size = new System.Drawing.Size(71, 15);
 			this._currentTimeLabel.TabIndex = 0;
 			this._currentTimeLabel.Text = "00:00:00";
+			this._currentTimeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// panel5
 			// 
@@ -869,7 +879,7 @@ namespace MusicChange
 			// 
 			this.splitContainer6.Panel2.Controls.Add(this.panelEx1);
 			this.splitContainer6.Size = new System.Drawing.Size(1882, 285);
-			this.splitContainer6.SplitterDistance = 300;
+			this.splitContainer6.SplitterDistance = 200;
 			this.splitContainer6.TabIndex = 0;
 			this.splitContainer6.MouseMove += new System.Windows.Forms.MouseEventHandler(this.splitContainer6_MouseMove);
 			// 
@@ -882,7 +892,7 @@ namespace MusicChange
 			this.panelEx1.Location = new System.Drawing.Point(0, 0);
 			this.panelEx1.Name = "panelEx1";
 			this.panelEx1.Padding = new System.Windows.Forms.Padding(10);
-			this.panelEx1.Size = new System.Drawing.Size(1578, 285);
+			this.panelEx1.Size = new System.Drawing.Size(1678, 285);
 			this.panelEx1.Style.Alignment = System.Drawing.StringAlignment.Center;
 			this.panelEx1.Style.BackColor1.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground;
 			this.panelEx1.Style.BackColor2.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground2;
@@ -903,6 +913,20 @@ namespace MusicChange
 			this.button4.Text = "button4";
 			this.button4.UseVisualStyleBackColor = true;
 			this.button4.Click += new System.EventHandler(this.button4_Click);
+			// 
+			// playPauseButton
+			// 
+			this.playPauseButton.AutoSize = true;
+			this.playPauseButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+			this.playPauseButton.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.playPauseButton.ForeColor = System.Drawing.Color.DarkRed;
+			this.playPauseButton.Location = new System.Drawing.Point(205, 9);
+			this.playPauseButton.Name = "playPauseButton";
+			this.playPauseButton.Size = new System.Drawing.Size(52, 27);
+			this.playPauseButton.TabIndex = 4;
+			this.playPauseButton.Text = "播放";
+			this.playPauseButton.UseVisualStyleBackColor = true;
+			this.playPauseButton.Click += new System.EventHandler(this.playPauseButton_Click_1);
 			// 
 			// LaserEditing
 			// 
@@ -953,7 +977,6 @@ namespace MusicChange
 			this.panelEx2.ResumeLayout(false);
 			this.flowLayoutPanel1.ResumeLayout(false);
 			this.sC4.Panel1.ResumeLayout(false);
-			this.sC4.Panel1.PerformLayout();
 			this.sC4.Panel2.ResumeLayout(false);
 			this.sC4.Panel2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.sC4)).EndInit();
@@ -1021,5 +1044,6 @@ namespace MusicChange
 		private System.Windows.Forms.Label _totalTimeLabel;
 		private System.Windows.Forms.Label _currentTimeLabel;
 		private LibVLCSharp.WinForms.VideoView videoView1;
+		private System.Windows.Forms.Button playPauseButton;
 	}
 }
