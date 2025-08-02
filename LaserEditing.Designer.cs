@@ -49,17 +49,12 @@ namespace MusicChange
 			this.buttonx11 = new DevComponents.DotNetBar.ButtonX();
 			this.Modifythephoto = new DevComponents.DotNetBar.ButtonX();
 			this.panel1 = new System.Windows.Forms.Panel();
-			this.button42 = new System.Windows.Forms.Button();
-			this.button3 = new System.Windows.Forms.Button();
 			this.button8 = new System.Windows.Forms.Button();
-			this.buttonX1 = new DevComponents.DotNetBar.ButtonX();
 			this.buttonx6 = new DevComponents.DotNetBar.ButtonX();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
 			this.sC3 = new System.Windows.Forms.SplitContainer();
 			this.panel3 = new System.Windows.Forms.Panel();
 			this.panel4 = new System.Windows.Forms.Panel();
-			this.qrcode1 = new System.Windows.Forms.Button();
-			this.button2 = new System.Windows.Forms.Button();
 			this.dG = new DevComponents.DotNetBar.Controls.DataGridViewX();
 			this.panel2 = new System.Windows.Forms.Panel();
 			this.buttonx9 = new DevComponents.DotNetBar.ButtonX();
@@ -81,6 +76,7 @@ namespace MusicChange
 			this._totalTimeLabel = new System.Windows.Forms.Label();
 			this._currentTimeLabel = new System.Windows.Forms.Label();
 			this.panel5 = new System.Windows.Forms.Panel();
+			this.button4 = new System.Windows.Forms.Button();
 			this.dataGridView1 = new System.Windows.Forms.DataGridView();
 			this.temp1 = new System.Windows.Forms.TextBox();
 			this.temp = new System.Windows.Forms.TextBox();
@@ -89,7 +85,13 @@ namespace MusicChange
 			this.panelEx1 = new DevComponents.DotNetBar.PanelEx();
 			this.fontDialog1 = new System.Windows.Forms.FontDialog();
 			this._progressTimer = new System.Windows.Forms.Timer(this.components);
-			this.button4 = new System.Windows.Forms.Button();
+			this.listViewArray1 = new Microsoft.VisualBasic.Compatibility.VB6.ListViewArray(this.components);
+			this.button42 = new System.Windows.Forms.Button();
+			this.button3 = new System.Windows.Forms.Button();
+			this.buttonX1 = new DevComponents.DotNetBar.ButtonX();
+			this.qrcode1 = new System.Windows.Forms.Button();
+			this.button2 = new System.Windows.Forms.Button();
+			this.stopButton = new System.Windows.Forms.Button();
 			this.playPauseButton = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
@@ -126,6 +128,7 @@ namespace MusicChange
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer6)).BeginInit();
 			this.splitContainer6.Panel2.SuspendLayout();
 			this.splitContainer6.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.listViewArray1)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// splitContainer1
@@ -226,37 +229,6 @@ namespace MusicChange
 			this.panel1.Size = new System.Drawing.Size(171, 28);
 			this.panel1.TabIndex = 2;
 			// 
-			// button42
-			// 
-			this.button42.AutoSize = true;
-			this.button42.BackColor = System.Drawing.Color.Black;
-			this.button42.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-			this.button42.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.button42.ForeColor = System.Drawing.Color.White;
-			this.button42.Image = global::MusicChange.Properties.Resources.最小化;
-			this.button42.Location = new System.Drawing.Point(13, 7);
-			this.button42.Name = "button42";
-			this.button42.Size = new System.Drawing.Size(61, 30);
-			this.button42.TabIndex = 27;
-			this.button42.UseVisualStyleBackColor = false;
-			this.button42.Click += new System.EventHandler(this.button42_Click);
-			// 
-			// button3
-			// 
-			this.button3.AutoSize = true;
-			this.button3.BackColor = System.Drawing.Color.Black;
-			this.button3.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-			this.button3.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.button3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-			this.button3.Image = global::MusicChange.Properties.Resources.最大化;
-			this.button3.Location = new System.Drawing.Point(59, 7);
-			this.button3.Name = "button3";
-			this.button3.Size = new System.Drawing.Size(61, 30);
-			this.button3.TabIndex = 26;
-			this.button3.UseVisualStyleBackColor = false;
-			this.button3.Click += new System.EventHandler(this.button3_Click);
-			// 
 			// button8
 			// 
 			this.button8.AutoSize = true;
@@ -272,25 +244,6 @@ namespace MusicChange
 			this.button8.Text = "退出";
 			this.button8.UseVisualStyleBackColor = false;
 			this.button8.Click += new System.EventHandler(this.button8_Click);
-			// 
-			// buttonX1
-			// 
-			this.buttonX1.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-			this.buttonX1.AutoSize = true;
-			this.buttonX1.BackColor = System.Drawing.Color.Black;
-			this.buttonX1.ColorTable = DevComponents.DotNetBar.eButtonColor.Blue;
-			this.buttonX1.Dock = System.Windows.Forms.DockStyle.Left;
-			this.buttonX1.Font = new System.Drawing.Font("宋体", 13F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(138)));
-			this.buttonX1.Image = global::MusicChange.Properties.Resources.ico1;
-			this.buttonX1.Location = new System.Drawing.Point(0, 0);
-			this.buttonX1.Name = "buttonX1";
-			this.buttonX1.Size = new System.Drawing.Size(136, 34);
-			this.buttonX1.Style = DevComponents.DotNetBar.eDotNetBarStyle.Office2013;
-			this.buttonX1.SymbolColor = System.Drawing.Color.White;
-			this.buttonX1.TabIndex = 1;
-			this.buttonX1.Text = "激光快剪";
-			this.buttonX1.TextAlignment = DevComponents.DotNetBar.eButtonTextAlignment.Left;
-			this.buttonX1.TextColor = System.Drawing.Color.White;
 			// 
 			// buttonx6
 			// 
@@ -383,38 +336,6 @@ namespace MusicChange
 			this.panel4.Size = new System.Drawing.Size(556, 90);
 			this.panel4.TabIndex = 0;
 			this.panel4.SizeChanged += new System.EventHandler(this.panel4_SizeChanged);
-			// 
-			// qrcode1
-			// 
-			this.qrcode1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-			this.qrcode1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.qrcode1.Image = global::MusicChange.Properties.Resources.QRcode;
-			this.qrcode1.Location = new System.Drawing.Point(315, 0);
-			this.qrcode1.Margin = new System.Windows.Forms.Padding(0);
-			this.qrcode1.Name = "qrcode1";
-			this.qrcode1.Size = new System.Drawing.Size(70, 80);
-			this.qrcode1.TabIndex = 2;
-			this.qrcode1.UseVisualStyleBackColor = true;
-			this.qrcode1.Click += new System.EventHandler(this.buttonX12_Click);
-			// 
-			// button2
-			// 
-			this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-			this.button2.BackColor = System.Drawing.Color.DimGray;
-			this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.button2.Font = new System.Drawing.Font("楷体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.button2.ForeColor = System.Drawing.Color.White;
-			this.button2.Image = global::MusicChange.Properties.Resources.loading;
-			this.button2.Location = new System.Drawing.Point(22, 3);
-			this.button2.Margin = new System.Windows.Forms.Padding(0, 3, 3, 3);
-			this.button2.Name = "button2";
-			this.button2.RightToLeft = System.Windows.Forms.RightToLeft.No;
-			this.button2.Size = new System.Drawing.Size(246, 80);
-			this.button2.TabIndex = 1;
-			this.button2.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-			this.button2.UseVisualStyleBackColor = false;
-			this.button2.Click += new System.EventHandler(this.button2_Click);
 			// 
 			// dG
 			// 
@@ -716,6 +637,7 @@ namespace MusicChange
 			// sC4.Panel2
 			// 
 			this.sC4.Panel2.BackColor = System.Drawing.Color.DimGray;
+			this.sC4.Panel2.Controls.Add(this.button4);
 			this.sC4.Panel2.Controls.Add(this.dataGridView1);
 			this.sC4.Panel2.Controls.Add(this.temp1);
 			this.sC4.Panel2.Controls.Add(this.temp);
@@ -731,7 +653,7 @@ namespace MusicChange
 			this.videoView1.Location = new System.Drawing.Point(0, 35);
 			this.videoView1.MediaPlayer = null;
 			this.videoView1.Name = "videoView1";
-			this.videoView1.Size = new System.Drawing.Size(600, 580);
+			this.videoView1.Size = new System.Drawing.Size(600, 577);
 			this.videoView1.TabIndex = 3;
 			this.videoView1.Text = "videoView2";
 			// 
@@ -739,7 +661,7 @@ namespace MusicChange
 			// 
 			this._progressBar.AutoSize = false;
 			this._progressBar.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this._progressBar.Location = new System.Drawing.Point(0, 615);
+			this._progressBar.Location = new System.Drawing.Point(0, 612);
 			this._progressBar.Margin = new System.Windows.Forms.Padding(0, 5, 0, 0);
 			this._progressBar.Maximum = 1000;
 			this._progressBar.Name = "_progressBar";
@@ -753,14 +675,15 @@ namespace MusicChange
 			// panel6
 			// 
 			this.panel6.BackColor = System.Drawing.Color.Black;
+			this.panel6.Controls.Add(this.stopButton);
 			this.panel6.Controls.Add(this.playPauseButton);
 			this.panel6.Controls.Add(this._totalTimeLabel);
 			this.panel6.Controls.Add(this._currentTimeLabel);
 			this.panel6.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.panel6.ForeColor = System.Drawing.Color.White;
-			this.panel6.Location = new System.Drawing.Point(0, 645);
+			this.panel6.Location = new System.Drawing.Point(0, 642);
 			this.panel6.Name = "panel6";
-			this.panel6.Size = new System.Drawing.Size(600, 35);
+			this.panel6.Size = new System.Drawing.Size(600, 38);
 			this.panel6.TabIndex = 1;
 			// 
 			// _totalTimeLabel
@@ -794,6 +717,15 @@ namespace MusicChange
 			this.panel5.Name = "panel5";
 			this.panel5.Size = new System.Drawing.Size(600, 35);
 			this.panel5.TabIndex = 0;
+			// 
+			// button4
+			// 
+			this.button4.Location = new System.Drawing.Point(78, 164);
+			this.button4.Name = "button4";
+			this.button4.Size = new System.Drawing.Size(75, 23);
+			this.button4.TabIndex = 1;
+			this.button4.Text = "button4";
+			this.button4.UseVisualStyleBackColor = true;
 			// 
 			// dataGridView1
 			// 
@@ -904,27 +836,118 @@ namespace MusicChange
 			this.panelEx1.Text = "panelEx1";
 			this.panelEx1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panelEx1_MouseMove);
 			// 
-			// button4
+			// _progressTimer
 			// 
-			this.button4.Location = new System.Drawing.Point(1322, 0);
-			this.button4.Name = "button4";
-			this.button4.Size = new System.Drawing.Size(75, 23);
-			this.button4.TabIndex = 1;
-			this.button4.Text = "button4";
-			this.button4.UseVisualStyleBackColor = true;
-			this.button4.Click += new System.EventHandler(this.button4_Click);
+			this._progressTimer.Tick += new System.EventHandler(this.ProgressTimer_Tick);
+			// 
+			// button42
+			// 
+			this.button42.AutoSize = true;
+			this.button42.BackColor = System.Drawing.Color.Black;
+			this.button42.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+			this.button42.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.button42.ForeColor = System.Drawing.Color.White;
+			this.button42.Image = global::MusicChange.Properties.Resources.最小化;
+			this.button42.Location = new System.Drawing.Point(13, 7);
+			this.button42.Name = "button42";
+			this.button42.Size = new System.Drawing.Size(61, 30);
+			this.button42.TabIndex = 27;
+			this.button42.UseVisualStyleBackColor = false;
+			this.button42.Click += new System.EventHandler(this.button42_Click);
+			// 
+			// button3
+			// 
+			this.button3.AutoSize = true;
+			this.button3.BackColor = System.Drawing.Color.Black;
+			this.button3.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+			this.button3.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.button3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			this.button3.Image = global::MusicChange.Properties.Resources.最大化;
+			this.button3.Location = new System.Drawing.Point(59, 7);
+			this.button3.Name = "button3";
+			this.button3.Size = new System.Drawing.Size(61, 30);
+			this.button3.TabIndex = 26;
+			this.button3.UseVisualStyleBackColor = false;
+			this.button3.Click += new System.EventHandler(this.button3_Click);
+			// 
+			// buttonX1
+			// 
+			this.buttonX1.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+			this.buttonX1.AutoSize = true;
+			this.buttonX1.BackColor = System.Drawing.Color.Black;
+			this.buttonX1.ColorTable = DevComponents.DotNetBar.eButtonColor.Blue;
+			this.buttonX1.Dock = System.Windows.Forms.DockStyle.Left;
+			this.buttonX1.Font = new System.Drawing.Font("宋体", 13F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(138)));
+			this.buttonX1.Image = global::MusicChange.Properties.Resources.ico1;
+			this.buttonX1.Location = new System.Drawing.Point(0, 0);
+			this.buttonX1.Name = "buttonX1";
+			this.buttonX1.Size = new System.Drawing.Size(136, 34);
+			this.buttonX1.Style = DevComponents.DotNetBar.eDotNetBarStyle.Office2013;
+			this.buttonX1.SymbolColor = System.Drawing.Color.White;
+			this.buttonX1.TabIndex = 1;
+			this.buttonX1.Text = "激光快剪";
+			this.buttonX1.TextAlignment = DevComponents.DotNetBar.eButtonTextAlignment.Left;
+			this.buttonX1.TextColor = System.Drawing.Color.White;
+			// 
+			// qrcode1
+			// 
+			this.qrcode1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+			this.qrcode1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.qrcode1.Image = global::MusicChange.Properties.Resources.QRcode;
+			this.qrcode1.Location = new System.Drawing.Point(315, 0);
+			this.qrcode1.Margin = new System.Windows.Forms.Padding(0);
+			this.qrcode1.Name = "qrcode1";
+			this.qrcode1.Size = new System.Drawing.Size(70, 80);
+			this.qrcode1.TabIndex = 2;
+			this.qrcode1.UseVisualStyleBackColor = true;
+			this.qrcode1.Click += new System.EventHandler(this.buttonX12_Click);
+			// 
+			// button2
+			// 
+			this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+			this.button2.BackColor = System.Drawing.Color.DimGray;
+			this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.button2.Font = new System.Drawing.Font("楷体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.button2.ForeColor = System.Drawing.Color.White;
+			this.button2.Image = global::MusicChange.Properties.Resources.loading;
+			this.button2.Location = new System.Drawing.Point(22, 3);
+			this.button2.Margin = new System.Windows.Forms.Padding(0, 3, 3, 3);
+			this.button2.Name = "button2";
+			this.button2.RightToLeft = System.Windows.Forms.RightToLeft.No;
+			this.button2.Size = new System.Drawing.Size(246, 80);
+			this.button2.TabIndex = 1;
+			this.button2.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+			this.button2.UseVisualStyleBackColor = false;
+			this.button2.Click += new System.EventHandler(this.button2_Click);
+			// 
+			// stopButton
+			// 
+			this.stopButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+			this.stopButton.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.stopButton.ForeColor = System.Drawing.Color.Black;
+			this.stopButton.Image = global::MusicChange.Properties.Resources.stop;
+			this.stopButton.Location = new System.Drawing.Point(334, 6);
+			this.stopButton.Name = "stopButton";
+			this.stopButton.Size = new System.Drawing.Size(35, 35);
+			this.stopButton.TabIndex = 5;
+			this.stopButton.UseVisualStyleBackColor = true;
+			this.stopButton.Click += new System.EventHandler(this.StopButton_Click);
 			// 
 			// playPauseButton
 			// 
-			this.playPauseButton.AutoSize = true;
+			this.playPauseButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
 			this.playPauseButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-			this.playPauseButton.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.playPauseButton.ForeColor = System.Drawing.Color.DarkRed;
-			this.playPauseButton.Location = new System.Drawing.Point(205, 9);
+			this.playPauseButton.Font = new System.Drawing.Font("宋体", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.playPauseButton.ForeColor = System.Drawing.Color.Black;
+			this.playPauseButton.Image = global::MusicChange.Properties.Resources.start;
+			this.playPauseButton.Location = new System.Drawing.Point(262, 8);
+			this.playPauseButton.Margin = new System.Windows.Forms.Padding(5);
 			this.playPauseButton.Name = "playPauseButton";
-			this.playPauseButton.Size = new System.Drawing.Size(52, 27);
+			this.playPauseButton.Size = new System.Drawing.Size(35, 35);
 			this.playPauseButton.TabIndex = 4;
-			this.playPauseButton.Text = "播放";
 			this.playPauseButton.UseVisualStyleBackColor = true;
 			this.playPauseButton.Click += new System.EventHandler(this.playPauseButton_Click_1);
 			// 
@@ -934,7 +957,6 @@ namespace MusicChange
 			this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
 			this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
 			this.ClientSize = new System.Drawing.Size(1882, 1033);
-			this.Controls.Add(this.button4);
 			this.Controls.Add(this.splitContainer1);
 			this.DoubleBuffered = true;
 			this.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -992,6 +1014,7 @@ namespace MusicChange
 			this.splitContainer6.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer6)).EndInit();
 			this.splitContainer6.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.listViewArray1)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -1045,5 +1068,7 @@ namespace MusicChange
 		private System.Windows.Forms.Label _currentTimeLabel;
 		private LibVLCSharp.WinForms.VideoView videoView1;
 		private System.Windows.Forms.Button playPauseButton;
+		private System.Windows.Forms.Button stopButton;
+		private Microsoft.VisualBasic.Compatibility.VB6.ListViewArray listViewArray1;
 	}
 }
