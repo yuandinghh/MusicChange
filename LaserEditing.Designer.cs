@@ -57,10 +57,9 @@ namespace MusicChange
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
 			this.sC3 = new System.Windows.Forms.SplitContainer();
 			this.panel3 = new System.Windows.Forms.Panel();
-			this._volumeControlPanel = new System.Windows.Forms.Panel();
 			this.panel4 = new System.Windows.Forms.Panel();
 			this.qrcode1 = new System.Windows.Forms.Button();
-			this.button2 = new System.Windows.Forms.Button();
+			this.openfile = new System.Windows.Forms.Button();
 			this.dG = new DevComponents.DotNetBar.Controls.DataGridViewX();
 			this.panel2 = new System.Windows.Forms.Panel();
 			this.buttonx9 = new DevComponents.DotNetBar.ButtonX();
@@ -78,12 +77,14 @@ namespace MusicChange
 			this.sC4 = new System.Windows.Forms.SplitContainer();
 			this.videoView1 = new LibVLCSharp.WinForms.VideoView();
 			this._progressBar = new System.Windows.Forms.TrackBar();
-			this.panel6 = new System.Windows.Forms.Panel();
+			this.panel5 = new System.Windows.Forms.Panel();
+			this._volumeControlPanel = new System.Windows.Forms.Panel();
+			this._volumeBarIndicator = new System.Windows.Forms.Panel();
+			this._muteButton = new DevComponents.DotNetBar.ButtonX();
 			this.stopButton = new System.Windows.Forms.Button();
 			this.playPauseButton = new System.Windows.Forms.Button();
 			this._totalTimeLabel = new System.Windows.Forms.Label();
 			this._currentTimeLabel = new System.Windows.Forms.Label();
-			this.panel5 = new System.Windows.Forms.Panel();
 			this.button4 = new System.Windows.Forms.Button();
 			this.dataGridView1 = new System.Windows.Forms.DataGridView();
 			this.temp1 = new System.Windows.Forms.TextBox();
@@ -119,7 +120,7 @@ namespace MusicChange
 			this.sC4.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.videoView1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this._progressBar)).BeginInit();
-			this.panel6.SuspendLayout();
+			this._volumeControlPanel.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer5)).BeginInit();
 			this.splitContainer5.Panel2.SuspendLayout();
@@ -281,7 +282,6 @@ namespace MusicChange
 			this.buttonX1.ColorTable = DevComponents.DotNetBar.eButtonColor.Blue;
 			this.buttonX1.Dock = System.Windows.Forms.DockStyle.Left;
 			this.buttonX1.Font = new System.Drawing.Font("宋体", 13F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(138)));
-			this.buttonX1.Image = global::MusicChange.Properties.Resources.ico1;
 			this.buttonX1.Location = new System.Drawing.Point(0, 0);
 			this.buttonX1.Name = "buttonX1";
 			this.buttonX1.Size = new System.Drawing.Size(136, 34);
@@ -363,7 +363,6 @@ namespace MusicChange
 			// panel3
 			// 
 			this.panel3.BackColor = System.Drawing.Color.DimGray;
-			this.panel3.Controls.Add(this._volumeControlPanel);
 			this.panel3.Controls.Add(this.panel4);
 			this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.panel3.Location = new System.Drawing.Point(82, 97);
@@ -371,21 +370,11 @@ namespace MusicChange
 			this.panel3.Size = new System.Drawing.Size(556, 581);
 			this.panel3.TabIndex = 18;
 			// 
-			// _volumeControlPanel
-			// 
-			this._volumeControlPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this._volumeControlPanel.BackColor = System.Drawing.Color.White;
-			this._volumeControlPanel.Location = new System.Drawing.Point(54, 235);
-			this._volumeControlPanel.Name = "_volumeControlPanel";
-			this._volumeControlPanel.Size = new System.Drawing.Size(458, 100);
-			this._volumeControlPanel.TabIndex = 0;
-			// 
 			// panel4
 			// 
 			this.panel4.BackColor = System.Drawing.Color.DimGray;
 			this.panel4.Controls.Add(this.qrcode1);
-			this.panel4.Controls.Add(this.button2);
+			this.panel4.Controls.Add(this.openfile);
 			this.panel4.Controls.Add(this.dG);
 			this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
 			this.panel4.Location = new System.Drawing.Point(0, 0);
@@ -408,24 +397,24 @@ namespace MusicChange
 			this.qrcode1.UseVisualStyleBackColor = true;
 			this.qrcode1.Click += new System.EventHandler(this.buttonX12_Click);
 			// 
-			// button2
+			// openfile
 			// 
-			this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+			this.openfile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-			this.button2.BackColor = System.Drawing.Color.DimGray;
-			this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.button2.Font = new System.Drawing.Font("楷体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.button2.ForeColor = System.Drawing.Color.White;
-			this.button2.Image = global::MusicChange.Properties.Resources.loading;
-			this.button2.Location = new System.Drawing.Point(22, 3);
-			this.button2.Margin = new System.Windows.Forms.Padding(0, 3, 3, 3);
-			this.button2.Name = "button2";
-			this.button2.RightToLeft = System.Windows.Forms.RightToLeft.No;
-			this.button2.Size = new System.Drawing.Size(246, 80);
-			this.button2.TabIndex = 1;
-			this.button2.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-			this.button2.UseVisualStyleBackColor = false;
-			this.button2.Click += new System.EventHandler(this.button2_Click);
+			this.openfile.BackColor = System.Drawing.Color.DimGray;
+			this.openfile.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.openfile.Font = new System.Drawing.Font("楷体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.openfile.ForeColor = System.Drawing.Color.White;
+			this.openfile.Image = global::MusicChange.Properties.Resources.loading;
+			this.openfile.Location = new System.Drawing.Point(22, 3);
+			this.openfile.Margin = new System.Windows.Forms.Padding(0, 3, 3, 3);
+			this.openfile.Name = "openfile";
+			this.openfile.RightToLeft = System.Windows.Forms.RightToLeft.No;
+			this.openfile.Size = new System.Drawing.Size(246, 80);
+			this.openfile.TabIndex = 1;
+			this.openfile.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+			this.openfile.UseVisualStyleBackColor = false;
+			this.openfile.Click += new System.EventHandler(this.button2_Click);
 			// 
 			// dG
 			// 
@@ -721,8 +710,8 @@ namespace MusicChange
 			// 
 			this.sC4.Panel1.Controls.Add(this.videoView1);
 			this.sC4.Panel1.Controls.Add(this._progressBar);
-			this.sC4.Panel1.Controls.Add(this.panel6);
 			this.sC4.Panel1.Controls.Add(this.panel5);
+			this.sC4.Panel1.Controls.Add(this._volumeControlPanel);
 			// 
 			// sC4.Panel2
 			// 
@@ -761,19 +750,52 @@ namespace MusicChange
 			this._progressBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this._progressBar_MouseDown);
 			this._progressBar.MouseUp += new System.Windows.Forms.MouseEventHandler(this._progressBar_MouseUp);
 			// 
-			// panel6
+			// panel5
 			// 
-			this.panel6.BackColor = System.Drawing.Color.Black;
-			this.panel6.Controls.Add(this.stopButton);
-			this.panel6.Controls.Add(this.playPauseButton);
-			this.panel6.Controls.Add(this._totalTimeLabel);
-			this.panel6.Controls.Add(this._currentTimeLabel);
-			this.panel6.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.panel6.ForeColor = System.Drawing.Color.White;
-			this.panel6.Location = new System.Drawing.Point(0, 642);
-			this.panel6.Name = "panel6";
-			this.panel6.Size = new System.Drawing.Size(600, 38);
-			this.panel6.TabIndex = 1;
+			this.panel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+			this.panel5.Dock = System.Windows.Forms.DockStyle.Top;
+			this.panel5.Location = new System.Drawing.Point(0, 0);
+			this.panel5.Name = "panel5";
+			this.panel5.Size = new System.Drawing.Size(600, 35);
+			this.panel5.TabIndex = 0;
+			// 
+			// _volumeControlPanel
+			// 
+			this._volumeControlPanel.BackColor = System.Drawing.Color.Black;
+			this._volumeControlPanel.Controls.Add(this._volumeBarIndicator);
+			this._volumeControlPanel.Controls.Add(this._muteButton);
+			this._volumeControlPanel.Controls.Add(this.stopButton);
+			this._volumeControlPanel.Controls.Add(this.playPauseButton);
+			this._volumeControlPanel.Controls.Add(this._totalTimeLabel);
+			this._volumeControlPanel.Controls.Add(this._currentTimeLabel);
+			this._volumeControlPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this._volumeControlPanel.ForeColor = System.Drawing.Color.White;
+			this._volumeControlPanel.Location = new System.Drawing.Point(0, 642);
+			this._volumeControlPanel.Name = "_volumeControlPanel";
+			this._volumeControlPanel.Size = new System.Drawing.Size(600, 38);
+			this._volumeControlPanel.TabIndex = 1;
+			// 
+			// _volumeBarIndicator
+			// 
+			this._volumeBarIndicator.BackColor = System.Drawing.Color.Black;
+			this._volumeBarIndicator.Location = new System.Drawing.Point(225, 9);
+			this._volumeBarIndicator.Name = "_volumeBarIndicator";
+			this._volumeBarIndicator.Size = new System.Drawing.Size(104, 26);
+			this._volumeBarIndicator.TabIndex = 6;
+			// 
+			// _muteButton
+			// 
+			this._muteButton.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+			this._muteButton.ColorTable = DevComponents.DotNetBar.eButtonColor.Flat;
+			this._muteButton.Location = new System.Drawing.Point(180, 9);
+			this._muteButton.Name = "_muteButton";
+			this._muteButton.Size = new System.Drawing.Size(26, 26);
+			this._muteButton.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+			this._muteButton.Symbol = "";
+			this._muteButton.SymbolColor = System.Drawing.Color.Salmon;
+			this._muteButton.SymbolSize = 14F;
+			this._muteButton.TabIndex = 3;
+			this._muteButton.Click += new System.EventHandler(this.MuteButton_Click);
 			// 
 			// stopButton
 			// 
@@ -781,9 +803,9 @@ namespace MusicChange
 			this.stopButton.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.stopButton.ForeColor = System.Drawing.Color.Black;
 			this.stopButton.Image = global::MusicChange.Properties.Resources.stop;
-			this.stopButton.Location = new System.Drawing.Point(334, 6);
+			this.stopButton.Location = new System.Drawing.Point(395, 6);
 			this.stopButton.Name = "stopButton";
-			this.stopButton.Size = new System.Drawing.Size(35, 35);
+			this.stopButton.Size = new System.Drawing.Size(26, 26);
 			this.stopButton.TabIndex = 5;
 			this.stopButton.UseVisualStyleBackColor = true;
 			this.stopButton.Click += new System.EventHandler(this.StopButton_Click);
@@ -796,10 +818,10 @@ namespace MusicChange
 			this.playPauseButton.Font = new System.Drawing.Font("宋体", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.playPauseButton.ForeColor = System.Drawing.Color.Black;
 			this.playPauseButton.Image = global::MusicChange.Properties.Resources.start;
-			this.playPauseButton.Location = new System.Drawing.Point(262, 8);
+			this.playPauseButton.Location = new System.Drawing.Point(348, 8);
 			this.playPauseButton.Margin = new System.Windows.Forms.Padding(5);
 			this.playPauseButton.Name = "playPauseButton";
-			this.playPauseButton.Size = new System.Drawing.Size(35, 35);
+			this.playPauseButton.Size = new System.Drawing.Size(26, 26);
 			this.playPauseButton.TabIndex = 4;
 			this.playPauseButton.UseVisualStyleBackColor = true;
 			this.playPauseButton.Click += new System.EventHandler(this.playPauseButton_Click_1);
@@ -809,7 +831,7 @@ namespace MusicChange
 			this._totalTimeLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
 			this._totalTimeLabel.AutoSize = true;
-			this._totalTimeLabel.Location = new System.Drawing.Point(108, 18);
+			this._totalTimeLabel.Location = new System.Drawing.Point(103, 15);
 			this._totalTimeLabel.Name = "_totalTimeLabel";
 			this._totalTimeLabel.Size = new System.Drawing.Size(71, 15);
 			this._totalTimeLabel.TabIndex = 1;
@@ -820,21 +842,12 @@ namespace MusicChange
 			this._currentTimeLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
 			this._currentTimeLabel.AutoSize = true;
-			this._currentTimeLabel.Location = new System.Drawing.Point(21, 18);
+			this._currentTimeLabel.Location = new System.Drawing.Point(14, 15);
 			this._currentTimeLabel.Name = "_currentTimeLabel";
 			this._currentTimeLabel.Size = new System.Drawing.Size(71, 15);
 			this._currentTimeLabel.TabIndex = 0;
 			this._currentTimeLabel.Text = "00:00:00";
 			this._currentTimeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// panel5
-			// 
-			this.panel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-			this.panel5.Dock = System.Windows.Forms.DockStyle.Top;
-			this.panel5.Location = new System.Drawing.Point(0, 0);
-			this.panel5.Name = "panel5";
-			this.panel5.Size = new System.Drawing.Size(600, 35);
-			this.panel5.TabIndex = 0;
 			// 
 			// button4
 			// 
@@ -987,8 +1000,8 @@ namespace MusicChange
 			this.sC4.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.videoView1)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this._progressBar)).EndInit();
-			this.panel6.ResumeLayout(false);
-			this.panel6.PerformLayout();
+			this._volumeControlPanel.ResumeLayout(false);
+			this._volumeControlPanel.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
 			this.splitContainer5.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer5)).EndInit();
@@ -1034,11 +1047,10 @@ namespace MusicChange
 		private System.Windows.Forms.FontDialog fontDialog1;
 		private System.Windows.Forms.TextBox temp;
 		private System.Windows.Forms.TextBox temp1;
-		private System.Windows.Forms.Button button2;
+		private System.Windows.Forms.Button openfile;
 		private System.Windows.Forms.Button qrcode1;
 		private DevComponents.DotNetBar.Controls.DataGridViewX dG;
 		private System.Windows.Forms.Panel panel5;
-		private System.Windows.Forms.Panel panel6;
 		private System.Windows.Forms.DataGridView dataGridView1;
 		private System.Windows.Forms.Timer _progressTimer;
 		private System.Windows.Forms.Button button4;
@@ -1049,5 +1061,7 @@ namespace MusicChange
 		private System.Windows.Forms.Button playPauseButton;
 		private System.Windows.Forms.Button stopButton;
 		private System.Windows.Forms.Panel _volumeControlPanel;
+		private DevComponents.DotNetBar.ButtonX _muteButton;
+		private System.Windows.Forms.Panel _volumeBarIndicator;
 	}
 }
