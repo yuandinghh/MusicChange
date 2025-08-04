@@ -45,46 +45,46 @@ namespace MusicChange
 			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LaserEditing));
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-			this.panelEx4 = new DevComponents.DotNetBar.PanelEx();
-			this.buttonx11 = new DevComponents.DotNetBar.ButtonX();
+			this.Ptop = new DevComponents.DotNetBar.PanelEx();
+			this.globalsetting = new DevComponents.DotNetBar.ButtonX();
 			this.Modifythephoto = new DevComponents.DotNetBar.ButtonX();
-			this.panel1 = new System.Windows.Forms.Panel();
-			this.button42 = new System.Windows.Forms.Button();
-			this.button3 = new System.Windows.Forms.Button();
-			this.button8 = new System.Windows.Forms.Button();
-			this.buttonX1 = new DevComponents.DotNetBar.ButtonX();
-			this.buttonx6 = new DevComponents.DotNetBar.ButtonX();
+			this.topleft = new System.Windows.Forms.Panel();
+			this.min = new System.Windows.Forms.Button();
+			this.max = new System.Windows.Forms.Button();
+			this.quit = new System.Windows.Forms.Button();
+			this.logo = new DevComponents.DotNetBar.ButtonX();
+			this.cut = new DevComponents.DotNetBar.ButtonX();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
 			this.sC3 = new System.Windows.Forms.SplitContainer();
-			this.panel3 = new System.Windows.Forms.Panel();
+			this.upperleft = new System.Windows.Forms.Panel();
 			this.panel4 = new System.Windows.Forms.Panel();
 			this.qrcode1 = new System.Windows.Forms.Button();
 			this.openfile = new System.Windows.Forms.Button();
 			this.dG = new DevComponents.DotNetBar.Controls.DataGridViewX();
-			this.panel2 = new System.Windows.Forms.Panel();
-			this.buttonx9 = new DevComponents.DotNetBar.ButtonX();
-			this.buttonx7 = new DevComponents.DotNetBar.ButtonX();
+			this.lefttopfile = new System.Windows.Forms.Panel();
+			this.qrcode0 = new DevComponents.DotNetBar.ButtonX();
+			this.importdata = new DevComponents.DotNetBar.ButtonX();
 			this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
-			this.buttonx8 = new DevComponents.DotNetBar.ButtonX();
-			this.buttonx4 = new DevComponents.DotNetBar.ButtonX();
-			this.buttonx5 = new DevComponents.DotNetBar.ButtonX();
-			this.button1 = new System.Windows.Forms.Button();
-			this.panelEx3 = new DevComponents.DotNetBar.PanelEx();
-			this.panelEx2 = new DevComponents.DotNetBar.PanelEx();
+			this.inoutmatiral = new DevComponents.DotNetBar.ButtonX();
+			this.personalcollection = new DevComponents.DotNetBar.ButtonX();
+			this.personaMcollection = new DevComponents.DotNetBar.ButtonX();
+			this.hot = new System.Windows.Forms.Button();
+			this.leftmaitrial = new DevComponents.DotNetBar.PanelEx();
+			this.leftmatrial = new DevComponents.DotNetBar.PanelEx();
 			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-			this.buttonX3 = new DevComponents.DotNetBar.ButtonX();
-			this.buttonX2 = new DevComponents.DotNetBar.ButtonX();
+			this.material = new DevComponents.DotNetBar.ButtonX();
+			this.audio = new DevComponents.DotNetBar.ButtonX();
 			this.sC4 = new System.Windows.Forms.SplitContainer();
 			this.videoView1 = new LibVLCSharp.WinForms.VideoView();
 			this._progressBar = new System.Windows.Forms.TrackBar();
-			this.panel5 = new System.Windows.Forms.Panel();
+			this.Paboveaverage = new System.Windows.Forms.Panel();
 			this._volumeControlPanel = new System.Windows.Forms.Panel();
-			this._volumeBarIndicator = new System.Windows.Forms.Panel();
 			this._muteButton = new DevComponents.DotNetBar.ButtonX();
 			this.stopButton = new System.Windows.Forms.Button();
 			this.playPauseButton = new System.Windows.Forms.Button();
 			this._totalTimeLabel = new System.Windows.Forms.Label();
 			this._currentTimeLabel = new System.Windows.Forms.Label();
+			this.buttonX10 = new DevComponents.DotNetBar.ButtonX();
 			this.button4 = new System.Windows.Forms.Button();
 			this.dataGridView1 = new System.Windows.Forms.DataGridView();
 			this.temp1 = new System.Windows.Forms.TextBox();
@@ -97,8 +97,8 @@ namespace MusicChange
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
-			this.panelEx4.SuspendLayout();
-			this.panel1.SuspendLayout();
+			this.Ptop.SuspendLayout();
+			this.topleft.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
 			this.splitContainer2.Panel1.SuspendLayout();
 			this.splitContainer2.Panel2.SuspendLayout();
@@ -107,12 +107,12 @@ namespace MusicChange
 			this.sC3.Panel1.SuspendLayout();
 			this.sC3.Panel2.SuspendLayout();
 			this.sC3.SuspendLayout();
-			this.panel3.SuspendLayout();
+			this.upperleft.SuspendLayout();
 			this.panel4.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dG)).BeginInit();
-			this.panel2.SuspendLayout();
+			this.lefttopfile.SuspendLayout();
 			this.flowLayoutPanel2.SuspendLayout();
-			this.panelEx2.SuspendLayout();
+			this.leftmatrial.SuspendLayout();
 			this.flowLayoutPanel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.sC4)).BeginInit();
 			this.sC4.Panel1.SuspendLayout();
@@ -142,58 +142,59 @@ namespace MusicChange
 			// splitContainer1.Panel1
 			// 
 			this.splitContainer1.Panel1.BackColor = System.Drawing.Color.Black;
-			this.splitContainer1.Panel1.Controls.Add(this.panelEx4);
+			this.splitContainer1.Panel1.Controls.Add(this.Ptop);
 			// 
 			// splitContainer1.Panel2
 			// 
 			this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-			this.splitContainer1.Size = new System.Drawing.Size(1882, 1033);
+			this.splitContainer1.Size = new System.Drawing.Size(1842, 1033);
 			this.splitContainer1.SplitterDistance = 28;
 			this.splitContainer1.TabIndex = 0;
 			// 
-			// panelEx4
+			// Ptop
 			// 
-			this.panelEx4.CanvasColor = System.Drawing.SystemColors.Control;
-			this.panelEx4.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.VS2005;
-			this.panelEx4.Controls.Add(this.buttonx11);
-			this.panelEx4.Controls.Add(this.Modifythephoto);
-			this.panelEx4.Controls.Add(this.panel1);
-			this.panelEx4.Controls.Add(this.buttonX1);
-			this.panelEx4.Controls.Add(this.buttonx6);
-			this.panelEx4.DisabledBackColor = System.Drawing.Color.Empty;
-			this.panelEx4.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.panelEx4.Location = new System.Drawing.Point(0, 0);
-			this.panelEx4.Name = "panelEx4";
-			this.panelEx4.Size = new System.Drawing.Size(1882, 28);
-			this.panelEx4.Style.Alignment = System.Drawing.StringAlignment.Center;
-			this.panelEx4.Style.BackColor1.Color = System.Drawing.Color.Black;
-			this.panelEx4.Style.BackColor2.Color = System.Drawing.Color.Black;
-			this.panelEx4.Style.Border = DevComponents.DotNetBar.eBorderType.SingleLine;
-			this.panelEx4.Style.BorderColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBorder;
-			this.panelEx4.Style.ForeColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelText;
-			this.panelEx4.Style.GradientAngle = 90;
-			this.panelEx4.TabIndex = 3;
-			this.panelEx4.Text = "panelEx4";
-			this.panelEx4.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelEx4_MouseDown);
+			this.Ptop.CanvasColor = System.Drawing.SystemColors.Control;
+			this.Ptop.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.VS2005;
+			this.Ptop.Controls.Add(this.globalsetting);
+			this.Ptop.Controls.Add(this.Modifythephoto);
+			this.Ptop.Controls.Add(this.topleft);
+			this.Ptop.Controls.Add(this.logo);
+			this.Ptop.Controls.Add(this.cut);
+			this.Ptop.DisabledBackColor = System.Drawing.Color.Empty;
+			this.Ptop.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.Ptop.Location = new System.Drawing.Point(0, 0);
+			this.Ptop.Name = "Ptop";
+			this.Ptop.Size = new System.Drawing.Size(1842, 28);
+			this.Ptop.Style.Alignment = System.Drawing.StringAlignment.Center;
+			this.Ptop.Style.BackColor1.Color = System.Drawing.Color.Black;
+			this.Ptop.Style.BackColor2.Color = System.Drawing.Color.Black;
+			this.Ptop.Style.Border = DevComponents.DotNetBar.eBorderType.SingleLine;
+			this.Ptop.Style.BorderColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBorder;
+			this.Ptop.Style.ForeColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelText;
+			this.Ptop.Style.GradientAngle = 90;
+			this.Ptop.TabIndex = 3;
+			this.Ptop.Text = "panelEx4";
+			this.Ptop.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelEx4_MouseDown);
 			// 
-			// buttonx11
+			// globalsetting
 			// 
-			this.buttonx11.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-			this.buttonx11.BackColor = System.Drawing.Color.Black;
-			this.buttonx11.ColorTable = DevComponents.DotNetBar.eButtonColor.Flat;
-			this.buttonx11.Dock = System.Windows.Forms.DockStyle.Right;
-			this.buttonx11.Font = new System.Drawing.Font("楷体", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(120)));
-			this.buttonx11.Location = new System.Drawing.Point(1581, 0);
-			this.buttonx11.Name = "buttonx11";
-			this.buttonx11.Size = new System.Drawing.Size(130, 28);
-			this.buttonx11.Style = DevComponents.DotNetBar.eDotNetBarStyle.Office2013;
-			this.buttonx11.Symbol = "";
-			this.buttonx11.SymbolColor = System.Drawing.Color.Lime;
-			this.buttonx11.SymbolSize = 12F;
-			this.buttonx11.TabIndex = 1;
-			this.buttonx11.Text = "全局设置";
-			this.buttonx11.TextColor = System.Drawing.Color.White;
-			this.buttonx11.Click += new System.EventHandler(this.buttonx11_Click);
+			this.globalsetting.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+			this.globalsetting.AutoSize = true;
+			this.globalsetting.BackColor = System.Drawing.Color.Black;
+			this.globalsetting.ColorTable = DevComponents.DotNetBar.eButtonColor.Flat;
+			this.globalsetting.Dock = System.Windows.Forms.DockStyle.Right;
+			this.globalsetting.Font = new System.Drawing.Font("楷体", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(120)));
+			this.globalsetting.Location = new System.Drawing.Point(1541, 0);
+			this.globalsetting.Name = "globalsetting";
+			this.globalsetting.Size = new System.Drawing.Size(130, 28);
+			this.globalsetting.Style = DevComponents.DotNetBar.eDotNetBarStyle.Office2013;
+			this.globalsetting.Symbol = "";
+			this.globalsetting.SymbolColor = System.Drawing.Color.Lime;
+			this.globalsetting.SymbolSize = 12F;
+			this.globalsetting.TabIndex = 1;
+			this.globalsetting.Text = "全局设置";
+			this.globalsetting.TextColor = System.Drawing.Color.White;
+			this.globalsetting.Click += new System.EventHandler(this.buttonx11_Click);
 			// 
 			// Modifythephoto
 			// 
@@ -215,101 +216,103 @@ namespace MusicChange
 			this.Modifythephoto.TextColor = System.Drawing.Color.Black;
 			this.Modifythephoto.Click += new System.EventHandler(this.修改图片_Click);
 			// 
-			// panel1
+			// topleft
 			// 
-			this.panel1.Controls.Add(this.button42);
-			this.panel1.Controls.Add(this.button3);
-			this.panel1.Controls.Add(this.button8);
-			this.panel1.Dock = System.Windows.Forms.DockStyle.Right;
-			this.panel1.ForeColor = System.Drawing.SystemColors.ControlText;
-			this.panel1.Location = new System.Drawing.Point(1711, 0);
-			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(171, 28);
-			this.panel1.TabIndex = 2;
+			this.topleft.Controls.Add(this.min);
+			this.topleft.Controls.Add(this.max);
+			this.topleft.Controls.Add(this.quit);
+			this.topleft.Dock = System.Windows.Forms.DockStyle.Right;
+			this.topleft.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.topleft.Location = new System.Drawing.Point(1671, 0);
+			this.topleft.Name = "topleft";
+			this.topleft.Size = new System.Drawing.Size(171, 28);
+			this.topleft.TabIndex = 2;
 			// 
-			// button42
+			// min
 			// 
-			this.button42.AutoSize = true;
-			this.button42.BackColor = System.Drawing.Color.Black;
-			this.button42.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-			this.button42.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.button42.ForeColor = System.Drawing.Color.White;
-			this.button42.Image = global::MusicChange.Properties.Resources.最小化;
-			this.button42.Location = new System.Drawing.Point(13, 7);
-			this.button42.Name = "button42";
-			this.button42.Size = new System.Drawing.Size(61, 30);
-			this.button42.TabIndex = 27;
-			this.button42.UseVisualStyleBackColor = false;
-			this.button42.Click += new System.EventHandler(this.button42_Click);
+			this.min.AutoSize = true;
+			this.min.BackColor = System.Drawing.Color.Black;
+			this.min.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+			this.min.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.min.ForeColor = System.Drawing.Color.White;
+			this.min.Image = global::MusicChange.Properties.Resources.最小化;
+			this.min.Location = new System.Drawing.Point(13, 7);
+			this.min.Name = "min";
+			this.min.Size = new System.Drawing.Size(61, 30);
+			this.min.TabIndex = 27;
+			this.min.UseVisualStyleBackColor = false;
+			this.min.Click += new System.EventHandler(this.button42_Click);
 			// 
-			// button3
+			// max
 			// 
-			this.button3.AutoSize = true;
-			this.button3.BackColor = System.Drawing.Color.Black;
-			this.button3.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-			this.button3.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.button3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-			this.button3.Image = global::MusicChange.Properties.Resources.最大化;
-			this.button3.Location = new System.Drawing.Point(59, 7);
-			this.button3.Name = "button3";
-			this.button3.Size = new System.Drawing.Size(61, 30);
-			this.button3.TabIndex = 26;
-			this.button3.UseVisualStyleBackColor = false;
-			this.button3.Click += new System.EventHandler(this.button3_Click);
+			this.max.Anchor = System.Windows.Forms.AnchorStyles.Right;
+			this.max.AutoSize = true;
+			this.max.BackColor = System.Drawing.Color.Black;
+			this.max.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			this.max.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+			this.max.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.max.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			this.max.Image = global::MusicChange.Properties.Resources.最大化;
+			this.max.Location = new System.Drawing.Point(59, 7);
+			this.max.Name = "max";
+			this.max.Size = new System.Drawing.Size(61, 30);
+			this.max.TabIndex = 26;
+			this.max.UseVisualStyleBackColor = false;
+			this.max.Click += new System.EventHandler(this.button3_Click);
 			// 
-			// button8
+			// quit
 			// 
-			this.button8.AutoSize = true;
-			this.button8.BackColor = System.Drawing.Color.Black;
-			this.button8.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-			this.button8.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.button8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-			this.button8.Location = new System.Drawing.Point(110, 7);
-			this.button8.Margin = new System.Windows.Forms.Padding(6, 3, 3, 3);
-			this.button8.Name = "button8";
-			this.button8.Size = new System.Drawing.Size(61, 30);
-			this.button8.TabIndex = 25;
-			this.button8.Text = "退出";
-			this.button8.UseVisualStyleBackColor = false;
-			this.button8.Click += new System.EventHandler(this.button8_Click);
+			this.quit.AutoSize = true;
+			this.quit.BackColor = System.Drawing.Color.Black;
+			this.quit.Dock = System.Windows.Forms.DockStyle.Right;
+			this.quit.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+			this.quit.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.quit.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+			this.quit.Location = new System.Drawing.Point(110, 0);
+			this.quit.Margin = new System.Windows.Forms.Padding(6, 3, 3, 3);
+			this.quit.Name = "quit";
+			this.quit.Size = new System.Drawing.Size(61, 28);
+			this.quit.TabIndex = 25;
+			this.quit.Text = "退出";
+			this.quit.UseVisualStyleBackColor = false;
+			this.quit.Click += new System.EventHandler(this.button8_Click);
 			// 
-			// buttonX1
+			// logo
 			// 
-			this.buttonX1.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-			this.buttonX1.AutoSize = true;
-			this.buttonX1.BackColor = System.Drawing.Color.Black;
-			this.buttonX1.ColorTable = DevComponents.DotNetBar.eButtonColor.Blue;
-			this.buttonX1.Dock = System.Windows.Forms.DockStyle.Left;
-			this.buttonX1.Font = new System.Drawing.Font("宋体", 13F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(138)));
-			this.buttonX1.Location = new System.Drawing.Point(0, 0);
-			this.buttonX1.Name = "buttonX1";
-			this.buttonX1.Size = new System.Drawing.Size(136, 34);
-			this.buttonX1.Style = DevComponents.DotNetBar.eDotNetBarStyle.Office2013;
-			this.buttonX1.SymbolColor = System.Drawing.Color.White;
-			this.buttonX1.TabIndex = 1;
-			this.buttonX1.Text = "激光快剪";
-			this.buttonX1.TextAlignment = DevComponents.DotNetBar.eButtonTextAlignment.Left;
-			this.buttonX1.TextColor = System.Drawing.Color.White;
+			this.logo.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+			this.logo.AutoSize = true;
+			this.logo.BackColor = System.Drawing.Color.Black;
+			this.logo.ColorTable = DevComponents.DotNetBar.eButtonColor.Blue;
+			this.logo.Dock = System.Windows.Forms.DockStyle.Left;
+			this.logo.Font = new System.Drawing.Font("宋体", 13F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(138)));
+			this.logo.Location = new System.Drawing.Point(0, 0);
+			this.logo.Name = "logo";
+			this.logo.Size = new System.Drawing.Size(136, 34);
+			this.logo.Style = DevComponents.DotNetBar.eDotNetBarStyle.Office2013;
+			this.logo.SymbolColor = System.Drawing.Color.White;
+			this.logo.TabIndex = 1;
+			this.logo.Text = "激光快剪";
+			this.logo.TextAlignment = DevComponents.DotNetBar.eButtonTextAlignment.Left;
+			this.logo.TextColor = System.Drawing.Color.White;
 			// 
-			// buttonx6
+			// cut
 			// 
-			this.buttonx6.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-			this.buttonx6.BackColor = System.Drawing.Color.Green;
-			this.buttonx6.ColorTable = DevComponents.DotNetBar.eButtonColor.Office2007WithBackground;
-			this.buttonx6.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(120)));
-			this.buttonx6.Location = new System.Drawing.Point(321, 3);
-			this.buttonx6.Name = "buttonx6";
-			this.buttonx6.Size = new System.Drawing.Size(81, 28);
-			this.buttonx6.Style = DevComponents.DotNetBar.eDotNetBarStyle.Office2013;
-			this.buttonx6.Symbol = "";
-			this.buttonx6.SymbolColor = System.Drawing.Color.Maroon;
-			this.buttonx6.SymbolSize = 1F;
-			this.buttonx6.TabIndex = 1;
-			this.buttonx6.Text = "Cut";
-			this.buttonx6.TextAlignment = DevComponents.DotNetBar.eButtonTextAlignment.Left;
-			this.buttonx6.TextColor = System.Drawing.Color.Black;
-			this.buttonx6.Click += new System.EventHandler(this.buttonx6_Click);
+			this.cut.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+			this.cut.BackColor = System.Drawing.Color.Green;
+			this.cut.ColorTable = DevComponents.DotNetBar.eButtonColor.Office2007WithBackground;
+			this.cut.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(120)));
+			this.cut.Location = new System.Drawing.Point(321, 3);
+			this.cut.Name = "cut";
+			this.cut.Size = new System.Drawing.Size(81, 28);
+			this.cut.Style = DevComponents.DotNetBar.eDotNetBarStyle.Office2013;
+			this.cut.Symbol = "";
+			this.cut.SymbolColor = System.Drawing.Color.Maroon;
+			this.cut.SymbolSize = 1F;
+			this.cut.TabIndex = 1;
+			this.cut.Text = "Cut";
+			this.cut.TextAlignment = DevComponents.DotNetBar.eButtonTextAlignment.Left;
+			this.cut.TextColor = System.Drawing.Color.Black;
+			this.cut.Click += new System.EventHandler(this.buttonx6_Click);
 			// 
 			// splitContainer2
 			// 
@@ -327,7 +330,7 @@ namespace MusicChange
 			// 
 			this.splitContainer2.Panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
 			this.splitContainer2.Panel2.Controls.Add(this.splitContainer5);
-			this.splitContainer2.Size = new System.Drawing.Size(1882, 1001);
+			this.splitContainer2.Size = new System.Drawing.Size(1842, 1001);
 			this.splitContainer2.SplitterDistance = 680;
 			this.splitContainer2.TabIndex = 0;
 			// 
@@ -341,11 +344,11 @@ namespace MusicChange
 			// sC3.Panel1
 			// 
 			this.sC3.Panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-			this.sC3.Panel1.Controls.Add(this.panel3);
-			this.sC3.Panel1.Controls.Add(this.panel2);
+			this.sC3.Panel1.Controls.Add(this.upperleft);
+			this.sC3.Panel1.Controls.Add(this.lefttopfile);
 			this.sC3.Panel1.Controls.Add(this.flowLayoutPanel2);
-			this.sC3.Panel1.Controls.Add(this.panelEx3);
-			this.sC3.Panel1.Controls.Add(this.panelEx2);
+			this.sC3.Panel1.Controls.Add(this.leftmaitrial);
+			this.sC3.Panel1.Controls.Add(this.leftmatrial);
 			this.sC3.Panel1.Margin = new System.Windows.Forms.Padding(5);
 			this.sC3.Panel1.Padding = new System.Windows.Forms.Padding(2);
 			this.sC3.Panel1MinSize = 200;
@@ -355,20 +358,20 @@ namespace MusicChange
 			this.sC3.Panel2.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
 			this.sC3.Panel2.Controls.Add(this.sC4);
 			this.sC3.Panel2MinSize = 300;
-			this.sC3.Size = new System.Drawing.Size(1882, 680);
+			this.sC3.Size = new System.Drawing.Size(1842, 680);
 			this.sC3.SplitterDistance = 640;
 			this.sC3.TabIndex = 0;
 			this.sC3.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.sC3_SplitterMoved);
 			// 
-			// panel3
+			// upperleft
 			// 
-			this.panel3.BackColor = System.Drawing.Color.DimGray;
-			this.panel3.Controls.Add(this.panel4);
-			this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.panel3.Location = new System.Drawing.Point(82, 97);
-			this.panel3.Name = "panel3";
-			this.panel3.Size = new System.Drawing.Size(556, 581);
-			this.panel3.TabIndex = 18;
+			this.upperleft.BackColor = System.Drawing.Color.DimGray;
+			this.upperleft.Controls.Add(this.panel4);
+			this.upperleft.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.upperleft.Location = new System.Drawing.Point(82, 97);
+			this.upperleft.Name = "upperleft";
+			this.upperleft.Size = new System.Drawing.Size(556, 581);
+			this.upperleft.TabIndex = 18;
 			// 
 			// panel4
 			// 
@@ -453,67 +456,67 @@ namespace MusicChange
 			this.dG.Size = new System.Drawing.Size(556, 90);
 			this.dG.TabIndex = 1;
 			// 
-			// panel2
+			// lefttopfile
 			// 
-			this.panel2.BackColor = System.Drawing.Color.Black;
-			this.panel2.Controls.Add(this.buttonx9);
-			this.panel2.Controls.Add(this.buttonx7);
-			this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
-			this.panel2.Location = new System.Drawing.Point(82, 62);
-			this.panel2.Margin = new System.Windows.Forms.Padding(6);
-			this.panel2.Name = "panel2";
-			this.panel2.Size = new System.Drawing.Size(556, 35);
-			this.panel2.TabIndex = 11;
-			this.panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
+			this.lefttopfile.BackColor = System.Drawing.Color.Black;
+			this.lefttopfile.Controls.Add(this.qrcode0);
+			this.lefttopfile.Controls.Add(this.importdata);
+			this.lefttopfile.Dock = System.Windows.Forms.DockStyle.Top;
+			this.lefttopfile.Location = new System.Drawing.Point(82, 62);
+			this.lefttopfile.Margin = new System.Windows.Forms.Padding(6);
+			this.lefttopfile.Name = "lefttopfile";
+			this.lefttopfile.Size = new System.Drawing.Size(556, 35);
+			this.lefttopfile.TabIndex = 11;
+			this.lefttopfile.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
 			// 
-			// buttonx9
+			// qrcode0
 			// 
-			this.buttonx9.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-			this.buttonx9.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+			this.qrcode0.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+			this.qrcode0.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-			this.buttonx9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-			this.buttonx9.ColorTable = DevComponents.DotNetBar.eButtonColor.Flat;
-			this.buttonx9.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(120)));
-			this.buttonx9.Location = new System.Drawing.Point(95, 5);
-			this.buttonx9.Name = "buttonx9";
-			this.buttonx9.Size = new System.Drawing.Size(30, 26);
-			this.buttonx9.Style = DevComponents.DotNetBar.eDotNetBarStyle.Office2013;
-			this.buttonx9.Symbol = "";
-			this.buttonx9.SymbolColor = System.Drawing.Color.White;
-			this.buttonx9.SymbolSize = 14F;
-			this.buttonx9.TabIndex = 2;
-			this.buttonx9.TextAlignment = DevComponents.DotNetBar.eButtonTextAlignment.Left;
-			this.buttonx9.TextColor = System.Drawing.Color.Transparent;
+			this.qrcode0.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+			this.qrcode0.ColorTable = DevComponents.DotNetBar.eButtonColor.Flat;
+			this.qrcode0.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(120)));
+			this.qrcode0.Location = new System.Drawing.Point(95, 5);
+			this.qrcode0.Name = "qrcode0";
+			this.qrcode0.Size = new System.Drawing.Size(30, 26);
+			this.qrcode0.Style = DevComponents.DotNetBar.eDotNetBarStyle.Office2013;
+			this.qrcode0.Symbol = "";
+			this.qrcode0.SymbolColor = System.Drawing.Color.White;
+			this.qrcode0.SymbolSize = 14F;
+			this.qrcode0.TabIndex = 2;
+			this.qrcode0.TextAlignment = DevComponents.DotNetBar.eButtonTextAlignment.Left;
+			this.qrcode0.TextColor = System.Drawing.Color.Transparent;
 			// 
-			// buttonx7
+			// importdata
 			// 
-			this.buttonx7.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-			this.buttonx7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+			this.importdata.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+			this.importdata.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-			this.buttonx7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-			this.buttonx7.ColorTable = DevComponents.DotNetBar.eButtonColor.Flat;
-			this.buttonx7.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(120)));
-			this.buttonx7.Location = new System.Drawing.Point(5, 4);
-			this.buttonx7.Name = "buttonx7";
-			this.buttonx7.Size = new System.Drawing.Size(75, 26);
-			this.buttonx7.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-			this.buttonx7.Symbol = "";
-			this.buttonx7.SymbolColor = System.Drawing.Color.Lime;
-			this.buttonx7.SymbolSize = 12F;
-			this.buttonx7.TabIndex = 2;
-			this.buttonx7.Text = "导入";
-			this.buttonx7.TextAlignment = DevComponents.DotNetBar.eButtonTextAlignment.Left;
-			this.buttonx7.TextColor = System.Drawing.Color.White;
-			this.buttonx7.ThemeAware = true;
-			this.buttonx7.Click += new System.EventHandler(this.buttonx7_Click);
+			this.importdata.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+			this.importdata.ColorTable = DevComponents.DotNetBar.eButtonColor.Flat;
+			this.importdata.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(120)));
+			this.importdata.Location = new System.Drawing.Point(5, 4);
+			this.importdata.Name = "importdata";
+			this.importdata.Size = new System.Drawing.Size(75, 26);
+			this.importdata.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+			this.importdata.Symbol = "";
+			this.importdata.SymbolColor = System.Drawing.Color.Lime;
+			this.importdata.SymbolSize = 12F;
+			this.importdata.TabIndex = 2;
+			this.importdata.Text = "导入";
+			this.importdata.TextAlignment = DevComponents.DotNetBar.eButtonTextAlignment.Left;
+			this.importdata.TextColor = System.Drawing.Color.White;
+			this.importdata.ThemeAware = true;
+			this.importdata.Click += new System.EventHandler(this.buttonx7_Click);
 			// 
 			// flowLayoutPanel2
 			// 
 			this.flowLayoutPanel2.BackColor = System.Drawing.Color.Black;
-			this.flowLayoutPanel2.Controls.Add(this.buttonx8);
-			this.flowLayoutPanel2.Controls.Add(this.buttonx4);
-			this.flowLayoutPanel2.Controls.Add(this.buttonx5);
-			this.flowLayoutPanel2.Controls.Add(this.button1);
+			this.flowLayoutPanel2.Controls.Add(this.inoutmatiral);
+			this.flowLayoutPanel2.Controls.Add(this.personalcollection);
+			this.flowLayoutPanel2.Controls.Add(this.personaMcollection);
+			this.flowLayoutPanel2.Controls.Add(this.hot);
 			this.flowLayoutPanel2.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
 			this.flowLayoutPanel2.Location = new System.Drawing.Point(2, 62);
 			this.flowLayoutPanel2.Margin = new System.Windows.Forms.Padding(5);
@@ -524,133 +527,133 @@ namespace MusicChange
 			this.flowLayoutPanel2.WrapContents = false;
 			this.flowLayoutPanel2.Paint += new System.Windows.Forms.PaintEventHandler(this.flowLayoutPanel2_Paint);
 			// 
-			// buttonx8
+			// inoutmatiral
 			// 
-			this.buttonx8.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-			this.buttonx8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonx8.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.buttonx8.BackColor = System.Drawing.Color.GreenYellow;
-			this.buttonx8.ColorTable = DevComponents.DotNetBar.eButtonColor.Flat;
-			this.buttonx8.Font = new System.Drawing.Font("宋体", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(120)));
-			this.buttonx8.Location = new System.Drawing.Point(8, 18);
-			this.buttonx8.Margin = new System.Windows.Forms.Padding(5, 15, 5, 5);
-			this.buttonx8.Name = "buttonx8";
-			this.buttonx8.Size = new System.Drawing.Size(70, 26);
-			this.buttonx8.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-			this.buttonx8.SymbolColor = System.Drawing.Color.Black;
-			this.buttonx8.SymbolSet = DevComponents.DotNetBar.eSymbolSet.Material;
-			this.buttonx8.SymbolSize = 1F;
-			this.buttonx8.TabIndex = 15;
-			this.buttonx8.Text = "导入素材";
-			this.buttonx8.TextAlignment = DevComponents.DotNetBar.eButtonTextAlignment.Left;
-			this.buttonx8.TextColor = System.Drawing.Color.Black;
-			this.buttonx8.UseMnemonic = false;
-			this.buttonx8.Click += new System.EventHandler(this.buttonx8_Click);
+			this.inoutmatiral.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+			this.inoutmatiral.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+			this.inoutmatiral.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.inoutmatiral.BackColor = System.Drawing.Color.GreenYellow;
+			this.inoutmatiral.ColorTable = DevComponents.DotNetBar.eButtonColor.Flat;
+			this.inoutmatiral.Font = new System.Drawing.Font("宋体", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(120)));
+			this.inoutmatiral.Location = new System.Drawing.Point(8, 18);
+			this.inoutmatiral.Margin = new System.Windows.Forms.Padding(5, 15, 5, 5);
+			this.inoutmatiral.Name = "inoutmatiral";
+			this.inoutmatiral.Size = new System.Drawing.Size(70, 26);
+			this.inoutmatiral.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+			this.inoutmatiral.SymbolColor = System.Drawing.Color.Black;
+			this.inoutmatiral.SymbolSet = DevComponents.DotNetBar.eSymbolSet.Material;
+			this.inoutmatiral.SymbolSize = 1F;
+			this.inoutmatiral.TabIndex = 15;
+			this.inoutmatiral.Text = "导入素材";
+			this.inoutmatiral.TextAlignment = DevComponents.DotNetBar.eButtonTextAlignment.Left;
+			this.inoutmatiral.TextColor = System.Drawing.Color.Black;
+			this.inoutmatiral.UseMnemonic = false;
+			this.inoutmatiral.Click += new System.EventHandler(this.buttonx8_Click);
 			// 
-			// buttonx4
+			// personalcollection
 			// 
-			this.buttonx4.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-			this.buttonx4.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.buttonx4.BackColor = System.Drawing.Color.GreenYellow;
-			this.buttonx4.ColorTable = DevComponents.DotNetBar.eButtonColor.Flat;
-			this.buttonx4.Font = new System.Drawing.Font("宋体", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(120)));
-			this.buttonx4.Location = new System.Drawing.Point(8, 54);
-			this.buttonx4.Margin = new System.Windows.Forms.Padding(5);
-			this.buttonx4.Name = "buttonx4";
-			this.buttonx4.Padding = new System.Windows.Forms.Padding(5);
-			this.buttonx4.Size = new System.Drawing.Size(70, 26);
-			this.buttonx4.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-			this.buttonx4.Symbol = "";
-			this.buttonx4.SymbolColor = System.Drawing.Color.Black;
-			this.buttonx4.SymbolSize = 1F;
-			this.buttonx4.TabIndex = 16;
-			this.buttonx4.Text = "个人收藏";
-			this.buttonx4.TextAlignment = DevComponents.DotNetBar.eButtonTextAlignment.Left;
-			this.buttonx4.TextColor = System.Drawing.Color.Black;
-			this.buttonx4.Click += new System.EventHandler(this.buttonx4_Click);
+			this.personalcollection.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+			this.personalcollection.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.personalcollection.BackColor = System.Drawing.Color.GreenYellow;
+			this.personalcollection.ColorTable = DevComponents.DotNetBar.eButtonColor.Flat;
+			this.personalcollection.Font = new System.Drawing.Font("宋体", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(120)));
+			this.personalcollection.Location = new System.Drawing.Point(8, 54);
+			this.personalcollection.Margin = new System.Windows.Forms.Padding(5);
+			this.personalcollection.Name = "personalcollection";
+			this.personalcollection.Padding = new System.Windows.Forms.Padding(5);
+			this.personalcollection.Size = new System.Drawing.Size(70, 26);
+			this.personalcollection.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+			this.personalcollection.Symbol = "";
+			this.personalcollection.SymbolColor = System.Drawing.Color.Black;
+			this.personalcollection.SymbolSize = 1F;
+			this.personalcollection.TabIndex = 16;
+			this.personalcollection.Text = "个人收藏";
+			this.personalcollection.TextAlignment = DevComponents.DotNetBar.eButtonTextAlignment.Left;
+			this.personalcollection.TextColor = System.Drawing.Color.Black;
+			this.personalcollection.Click += new System.EventHandler(this.buttonx4_Click);
 			// 
-			// buttonx5
+			// personaMcollection
 			// 
-			this.buttonx5.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-			this.buttonx5.BackColor = System.Drawing.Color.GreenYellow;
-			this.buttonx5.ColorTable = DevComponents.DotNetBar.eButtonColor.Flat;
-			this.buttonx5.Font = new System.Drawing.Font("宋体", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(120)));
-			this.buttonx5.Location = new System.Drawing.Point(8, 90);
-			this.buttonx5.Margin = new System.Windows.Forms.Padding(5);
-			this.buttonx5.Name = "buttonx5";
-			this.buttonx5.Padding = new System.Windows.Forms.Padding(5);
-			this.buttonx5.Size = new System.Drawing.Size(70, 26);
-			this.buttonx5.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-			this.buttonx5.SymbolColor = System.Drawing.Color.Black;
-			this.buttonx5.SymbolSet = DevComponents.DotNetBar.eSymbolSet.Material;
-			this.buttonx5.SymbolSize = 1F;
-			this.buttonx5.TabIndex = 16;
-			this.buttonx5.Text = "官方素材";
-			this.buttonx5.TextAlignment = DevComponents.DotNetBar.eButtonTextAlignment.Left;
-			this.buttonx5.TextColor = System.Drawing.Color.Black;
-			this.buttonx5.Click += new System.EventHandler(this.buttonx5_Click);
+			this.personaMcollection.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+			this.personaMcollection.BackColor = System.Drawing.Color.GreenYellow;
+			this.personaMcollection.ColorTable = DevComponents.DotNetBar.eButtonColor.Flat;
+			this.personaMcollection.Font = new System.Drawing.Font("宋体", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(120)));
+			this.personaMcollection.Location = new System.Drawing.Point(8, 90);
+			this.personaMcollection.Margin = new System.Windows.Forms.Padding(5);
+			this.personaMcollection.Name = "personaMcollection";
+			this.personaMcollection.Padding = new System.Windows.Forms.Padding(5);
+			this.personaMcollection.Size = new System.Drawing.Size(70, 26);
+			this.personaMcollection.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+			this.personaMcollection.SymbolColor = System.Drawing.Color.Black;
+			this.personaMcollection.SymbolSet = DevComponents.DotNetBar.eSymbolSet.Material;
+			this.personaMcollection.SymbolSize = 1F;
+			this.personaMcollection.TabIndex = 16;
+			this.personaMcollection.Text = "官方素材";
+			this.personaMcollection.TextAlignment = DevComponents.DotNetBar.eButtonTextAlignment.Left;
+			this.personaMcollection.TextColor = System.Drawing.Color.Black;
+			this.personaMcollection.Click += new System.EventHandler(this.buttonx5_Click);
 			// 
-			// button1
+			// hot
 			// 
-			this.button1.AutoSize = true;
-			this.button1.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.button1.FlatAppearance.BorderSize = 0;
-			this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.button1.Font = new System.Drawing.Font("楷体", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.button1.ForeColor = System.Drawing.Color.White;
-			this.button1.Location = new System.Drawing.Point(8, 131);
-			this.button1.Margin = new System.Windows.Forms.Padding(5, 10, 5, 5);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(70, 27);
-			this.button1.TabIndex = 17;
-			this.button1.Text = "热门";
-			this.button1.UseVisualStyleBackColor = true;
-			this.button1.Click += new System.EventHandler(this.button1_Click);
+			this.hot.AutoSize = true;
+			this.hot.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			this.hot.FlatAppearance.BorderSize = 0;
+			this.hot.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.hot.Font = new System.Drawing.Font("楷体", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.hot.ForeColor = System.Drawing.Color.White;
+			this.hot.Location = new System.Drawing.Point(8, 131);
+			this.hot.Margin = new System.Windows.Forms.Padding(5, 10, 5, 5);
+			this.hot.Name = "hot";
+			this.hot.Size = new System.Drawing.Size(70, 27);
+			this.hot.TabIndex = 17;
+			this.hot.Text = "热门";
+			this.hot.UseVisualStyleBackColor = true;
+			this.hot.Click += new System.EventHandler(this.button1_Click);
 			// 
-			// panelEx3
+			// leftmaitrial
 			// 
-			this.panelEx3.CanvasColor = System.Drawing.SystemColors.ButtonHighlight;
-			this.panelEx3.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-			this.panelEx3.DisabledBackColor = System.Drawing.Color.Empty;
-			this.panelEx3.Dock = System.Windows.Forms.DockStyle.Left;
-			this.panelEx3.Location = new System.Drawing.Point(2, 62);
-			this.panelEx3.Name = "panelEx3";
-			this.panelEx3.Size = new System.Drawing.Size(80, 616);
-			this.panelEx3.Style.Alignment = System.Drawing.StringAlignment.Center;
-			this.panelEx3.Style.BackColor1.Color = System.Drawing.Color.Black;
-			this.panelEx3.Style.BackColor2.Color = System.Drawing.Color.Black;
-			this.panelEx3.Style.Border = DevComponents.DotNetBar.eBorderType.SingleLine;
-			this.panelEx3.Style.BorderColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBorder;
-			this.panelEx3.Style.ForeColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelText;
-			this.panelEx3.Style.GradientAngle = 90;
-			this.panelEx3.TabIndex = 4;
-			this.panelEx3.Text = "panelEx3";
+			this.leftmaitrial.CanvasColor = System.Drawing.SystemColors.ButtonHighlight;
+			this.leftmaitrial.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+			this.leftmaitrial.DisabledBackColor = System.Drawing.Color.Empty;
+			this.leftmaitrial.Dock = System.Windows.Forms.DockStyle.Left;
+			this.leftmaitrial.Location = new System.Drawing.Point(2, 62);
+			this.leftmaitrial.Name = "leftmaitrial";
+			this.leftmaitrial.Size = new System.Drawing.Size(80, 616);
+			this.leftmaitrial.Style.Alignment = System.Drawing.StringAlignment.Center;
+			this.leftmaitrial.Style.BackColor1.Color = System.Drawing.Color.Black;
+			this.leftmaitrial.Style.BackColor2.Color = System.Drawing.Color.Black;
+			this.leftmaitrial.Style.Border = DevComponents.DotNetBar.eBorderType.SingleLine;
+			this.leftmaitrial.Style.BorderColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBorder;
+			this.leftmaitrial.Style.ForeColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelText;
+			this.leftmaitrial.Style.GradientAngle = 90;
+			this.leftmaitrial.TabIndex = 4;
+			this.leftmaitrial.Text = "panelEx3";
 			// 
-			// panelEx2
+			// leftmatrial
 			// 
-			this.panelEx2.CanvasColor = System.Drawing.SystemColors.Control;
-			this.panelEx2.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-			this.panelEx2.Controls.Add(this.flowLayoutPanel1);
-			this.panelEx2.DisabledBackColor = System.Drawing.Color.Empty;
-			this.panelEx2.Dock = System.Windows.Forms.DockStyle.Top;
-			this.panelEx2.Location = new System.Drawing.Point(2, 2);
-			this.panelEx2.Name = "panelEx2";
-			this.panelEx2.Size = new System.Drawing.Size(636, 60);
-			this.panelEx2.Style.Alignment = System.Drawing.StringAlignment.Center;
-			this.panelEx2.Style.BackColor1.Color = System.Drawing.Color.Black;
-			this.panelEx2.Style.BackColor2.Color = System.Drawing.Color.Black;
-			this.panelEx2.Style.Border = DevComponents.DotNetBar.eBorderType.SingleLine;
-			this.panelEx2.Style.BorderColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBorder;
-			this.panelEx2.Style.ForeColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelText;
-			this.panelEx2.Style.GradientAngle = 90;
-			this.panelEx2.TabIndex = 0;
-			this.panelEx2.Text = "panelEx2";
+			this.leftmatrial.CanvasColor = System.Drawing.SystemColors.Control;
+			this.leftmatrial.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+			this.leftmatrial.Controls.Add(this.flowLayoutPanel1);
+			this.leftmatrial.DisabledBackColor = System.Drawing.Color.Empty;
+			this.leftmatrial.Dock = System.Windows.Forms.DockStyle.Top;
+			this.leftmatrial.Location = new System.Drawing.Point(2, 2);
+			this.leftmatrial.Name = "leftmatrial";
+			this.leftmatrial.Size = new System.Drawing.Size(636, 60);
+			this.leftmatrial.Style.Alignment = System.Drawing.StringAlignment.Center;
+			this.leftmatrial.Style.BackColor1.Color = System.Drawing.Color.Black;
+			this.leftmatrial.Style.BackColor2.Color = System.Drawing.Color.Black;
+			this.leftmatrial.Style.Border = DevComponents.DotNetBar.eBorderType.SingleLine;
+			this.leftmatrial.Style.BorderColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBorder;
+			this.leftmatrial.Style.ForeColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelText;
+			this.leftmatrial.Style.GradientAngle = 90;
+			this.leftmatrial.TabIndex = 0;
+			this.leftmatrial.Text = "panelEx2";
 			// 
 			// flowLayoutPanel1
 			// 
 			this.flowLayoutPanel1.BackColor = System.Drawing.Color.Black;
-			this.flowLayoutPanel1.Controls.Add(this.buttonX3);
-			this.flowLayoutPanel1.Controls.Add(this.buttonX2);
+			this.flowLayoutPanel1.Controls.Add(this.material);
+			this.flowLayoutPanel1.Controls.Add(this.audio);
 			this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.flowLayoutPanel1.ForeColor = System.Drawing.SystemColors.AppWorkspace;
 			this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
@@ -658,47 +661,47 @@ namespace MusicChange
 			this.flowLayoutPanel1.Size = new System.Drawing.Size(636, 60);
 			this.flowLayoutPanel1.TabIndex = 0;
 			// 
-			// buttonX3
+			// material
 			// 
-			this.buttonX3.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-			this.buttonX3.BackColor = System.Drawing.Color.Black;
-			this.buttonX3.ColorTable = DevComponents.DotNetBar.eButtonColor.Flat;
-			this.buttonX3.Font = new System.Drawing.Font("楷体", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.buttonX3.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top;
-			this.buttonX3.Location = new System.Drawing.Point(3, 3);
-			this.buttonX3.Name = "buttonX3";
-			this.buttonX3.Size = new System.Drawing.Size(58, 58);
-			this.buttonX3.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-			this.buttonX3.SubItemsExpandWidth = 15;
-			this.buttonX3.Symbol = "";
-			this.buttonX3.SymbolColor = System.Drawing.Color.GreenYellow;
-			this.buttonX3.SymbolSize = 12F;
-			this.buttonX3.TabIndex = 4;
-			this.buttonX3.Text = "素材";
-			this.buttonX3.TextColor = System.Drawing.Color.White;
-			this.buttonX3.ThemeAware = true;
-			this.buttonX3.Click += new System.EventHandler(this.buttonX3_Click);
+			this.material.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+			this.material.BackColor = System.Drawing.Color.Black;
+			this.material.ColorTable = DevComponents.DotNetBar.eButtonColor.Flat;
+			this.material.Font = new System.Drawing.Font("楷体", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.material.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top;
+			this.material.Location = new System.Drawing.Point(3, 3);
+			this.material.Name = "material";
+			this.material.Size = new System.Drawing.Size(58, 58);
+			this.material.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+			this.material.SubItemsExpandWidth = 15;
+			this.material.Symbol = "";
+			this.material.SymbolColor = System.Drawing.Color.GreenYellow;
+			this.material.SymbolSize = 12F;
+			this.material.TabIndex = 4;
+			this.material.Text = "素材";
+			this.material.TextColor = System.Drawing.Color.White;
+			this.material.ThemeAware = true;
+			this.material.Click += new System.EventHandler(this.buttonX3_Click);
 			// 
-			// buttonX2
+			// audio
 			// 
-			this.buttonX2.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-			this.buttonX2.BackColor = System.Drawing.Color.Black;
-			this.buttonX2.ColorTable = DevComponents.DotNetBar.eButtonColor.Flat;
-			this.buttonX2.Font = new System.Drawing.Font("楷体", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.buttonX2.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top;
-			this.buttonX2.Location = new System.Drawing.Point(67, 3);
-			this.buttonX2.Name = "buttonX2";
-			this.buttonX2.Size = new System.Drawing.Size(58, 58);
-			this.buttonX2.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-			this.buttonX2.SubItemsExpandWidth = 15;
-			this.buttonX2.Symbol = "";
-			this.buttonX2.SymbolColor = System.Drawing.Color.DodgerBlue;
-			this.buttonX2.SymbolSize = 12F;
-			this.buttonX2.TabIndex = 0;
-			this.buttonX2.Text = "音频";
-			this.buttonX2.TextColor = System.Drawing.Color.White;
-			this.buttonX2.ThemeAware = true;
-			this.buttonX2.Click += new System.EventHandler(this.buttonX2_Click);
+			this.audio.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+			this.audio.BackColor = System.Drawing.Color.Black;
+			this.audio.ColorTable = DevComponents.DotNetBar.eButtonColor.Flat;
+			this.audio.Font = new System.Drawing.Font("楷体", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.audio.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top;
+			this.audio.Location = new System.Drawing.Point(67, 3);
+			this.audio.Name = "audio";
+			this.audio.Size = new System.Drawing.Size(58, 58);
+			this.audio.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+			this.audio.SubItemsExpandWidth = 15;
+			this.audio.Symbol = "";
+			this.audio.SymbolColor = System.Drawing.Color.DodgerBlue;
+			this.audio.SymbolSize = 12F;
+			this.audio.TabIndex = 0;
+			this.audio.Text = "音频";
+			this.audio.TextColor = System.Drawing.Color.White;
+			this.audio.ThemeAware = true;
+			this.audio.Click += new System.EventHandler(this.buttonX2_Click);
 			// 
 			// sC4
 			// 
@@ -710,19 +713,20 @@ namespace MusicChange
 			// 
 			this.sC4.Panel1.Controls.Add(this.videoView1);
 			this.sC4.Panel1.Controls.Add(this._progressBar);
-			this.sC4.Panel1.Controls.Add(this.panel5);
+			this.sC4.Panel1.Controls.Add(this.Paboveaverage);
 			this.sC4.Panel1.Controls.Add(this._volumeControlPanel);
 			// 
 			// sC4.Panel2
 			// 
 			this.sC4.Panel2.BackColor = System.Drawing.Color.DimGray;
+			this.sC4.Panel2.Controls.Add(this.buttonX10);
 			this.sC4.Panel2.Controls.Add(this.button4);
 			this.sC4.Panel2.Controls.Add(this.dataGridView1);
 			this.sC4.Panel2.Controls.Add(this.temp1);
 			this.sC4.Panel2.Controls.Add(this.temp);
 			this.sC4.Panel2.Margin = new System.Windows.Forms.Padding(5);
-			this.sC4.Size = new System.Drawing.Size(1238, 680);
-			this.sC4.SplitterDistance = 600;
+			this.sC4.Size = new System.Drawing.Size(1198, 680);
+			this.sC4.SplitterDistance = 580;
 			this.sC4.TabIndex = 0;
 			// 
 			// videoView1
@@ -732,37 +736,37 @@ namespace MusicChange
 			this.videoView1.Location = new System.Drawing.Point(0, 35);
 			this.videoView1.MediaPlayer = null;
 			this.videoView1.Name = "videoView1";
-			this.videoView1.Size = new System.Drawing.Size(600, 577);
+			this.videoView1.Size = new System.Drawing.Size(580, 585);
 			this.videoView1.TabIndex = 3;
 			// 
 			// _progressBar
 			// 
 			this._progressBar.AutoSize = false;
 			this._progressBar.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this._progressBar.Location = new System.Drawing.Point(0, 612);
+			this._progressBar.Location = new System.Drawing.Point(0, 620);
 			this._progressBar.Margin = new System.Windows.Forms.Padding(0, 5, 0, 0);
 			this._progressBar.Maximum = 1000;
 			this._progressBar.Name = "_progressBar";
 			this._progressBar.RightToLeft = System.Windows.Forms.RightToLeft.No;
-			this._progressBar.Size = new System.Drawing.Size(600, 30);
+			this._progressBar.Size = new System.Drawing.Size(580, 30);
 			this._progressBar.TabIndex = 2;
+			this._progressBar.TickStyle = System.Windows.Forms.TickStyle.None;
 			this._progressBar.Scroll += new System.EventHandler(this._progressBar_Scroll);
 			this._progressBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this._progressBar_MouseDown);
 			this._progressBar.MouseUp += new System.Windows.Forms.MouseEventHandler(this._progressBar_MouseUp);
 			// 
-			// panel5
+			// Paboveaverage
 			// 
-			this.panel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-			this.panel5.Dock = System.Windows.Forms.DockStyle.Top;
-			this.panel5.Location = new System.Drawing.Point(0, 0);
-			this.panel5.Name = "panel5";
-			this.panel5.Size = new System.Drawing.Size(600, 35);
-			this.panel5.TabIndex = 0;
+			this.Paboveaverage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+			this.Paboveaverage.Dock = System.Windows.Forms.DockStyle.Top;
+			this.Paboveaverage.Location = new System.Drawing.Point(0, 0);
+			this.Paboveaverage.Name = "Paboveaverage";
+			this.Paboveaverage.Size = new System.Drawing.Size(580, 35);
+			this.Paboveaverage.TabIndex = 0;
 			// 
 			// _volumeControlPanel
 			// 
 			this._volumeControlPanel.BackColor = System.Drawing.Color.Black;
-			this._volumeControlPanel.Controls.Add(this._volumeBarIndicator);
 			this._volumeControlPanel.Controls.Add(this._muteButton);
 			this._volumeControlPanel.Controls.Add(this.stopButton);
 			this._volumeControlPanel.Controls.Add(this.playPauseButton);
@@ -770,18 +774,10 @@ namespace MusicChange
 			this._volumeControlPanel.Controls.Add(this._currentTimeLabel);
 			this._volumeControlPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this._volumeControlPanel.ForeColor = System.Drawing.Color.White;
-			this._volumeControlPanel.Location = new System.Drawing.Point(0, 642);
+			this._volumeControlPanel.Location = new System.Drawing.Point(0, 650);
 			this._volumeControlPanel.Name = "_volumeControlPanel";
-			this._volumeControlPanel.Size = new System.Drawing.Size(600, 38);
+			this._volumeControlPanel.Size = new System.Drawing.Size(580, 30);
 			this._volumeControlPanel.TabIndex = 1;
-			// 
-			// _volumeBarIndicator
-			// 
-			this._volumeBarIndicator.BackColor = System.Drawing.Color.Black;
-			this._volumeBarIndicator.Location = new System.Drawing.Point(225, 9);
-			this._volumeBarIndicator.Name = "_volumeBarIndicator";
-			this._volumeBarIndicator.Size = new System.Drawing.Size(104, 26);
-			this._volumeBarIndicator.TabIndex = 6;
 			// 
 			// _muteButton
 			// 
@@ -821,7 +817,7 @@ namespace MusicChange
 			this.playPauseButton.Location = new System.Drawing.Point(348, 8);
 			this.playPauseButton.Margin = new System.Windows.Forms.Padding(5);
 			this.playPauseButton.Name = "playPauseButton";
-			this.playPauseButton.Size = new System.Drawing.Size(26, 26);
+			this.playPauseButton.Size = new System.Drawing.Size(26, 18);
 			this.playPauseButton.TabIndex = 4;
 			this.playPauseButton.UseVisualStyleBackColor = true;
 			this.playPauseButton.Click += new System.EventHandler(this.playPauseButton_Click_1);
@@ -848,6 +844,17 @@ namespace MusicChange
 			this._currentTimeLabel.TabIndex = 0;
 			this._currentTimeLabel.Text = "00:00:00";
 			this._currentTimeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// buttonX10
+			// 
+			this.buttonX10.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+			this.buttonX10.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
+			this.buttonX10.Location = new System.Drawing.Point(87, 324);
+			this.buttonX10.Name = "buttonX10";
+			this.buttonX10.Size = new System.Drawing.Size(75, 23);
+			this.buttonX10.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+			this.buttonX10.TabIndex = 3;
+			this.buttonX10.Text = "buttonX10";
 			// 
 			// button4
 			// 
@@ -877,7 +884,7 @@ namespace MusicChange
 			dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
 			dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
 			this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle5;
-			this.dataGridView1.Location = new System.Drawing.Point(216, 135);
+			this.dataGridView1.Location = new System.Drawing.Point(32, 410);
 			this.dataGridView1.Name = "dataGridView1";
 			dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
 			dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
@@ -896,14 +903,14 @@ namespace MusicChange
 			// 
 			this.temp1.Location = new System.Drawing.Point(69, 62);
 			this.temp1.Name = "temp1";
-			this.temp1.Size = new System.Drawing.Size(387, 25);
+			this.temp1.Size = new System.Drawing.Size(261, 25);
 			this.temp1.TabIndex = 1;
 			// 
 			// temp
 			// 
 			this.temp.Location = new System.Drawing.Point(69, 17);
 			this.temp.Name = "temp";
-			this.temp.Size = new System.Drawing.Size(387, 25);
+			this.temp.Size = new System.Drawing.Size(261, 25);
 			this.temp.TabIndex = 0;
 			// 
 			// splitContainer5
@@ -923,7 +930,7 @@ namespace MusicChange
 			// splitContainer5.Panel2
 			// 
 			this.splitContainer5.Panel2.Controls.Add(this.splitContainer6);
-			this.splitContainer5.Size = new System.Drawing.Size(1882, 317);
+			this.splitContainer5.Size = new System.Drawing.Size(1842, 317);
 			this.splitContainer5.SplitterDistance = 28;
 			this.splitContainer5.TabIndex = 0;
 			// 
@@ -937,8 +944,8 @@ namespace MusicChange
 			// splitContainer6.Panel1
 			// 
 			this.splitContainer6.Panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-			this.splitContainer6.Size = new System.Drawing.Size(1882, 285);
-			this.splitContainer6.SplitterDistance = 200;
+			this.splitContainer6.Size = new System.Drawing.Size(1842, 285);
+			this.splitContainer6.SplitterDistance = 195;
 			this.splitContainer6.TabIndex = 0;
 			this.splitContainer6.MouseMove += new System.Windows.Forms.MouseEventHandler(this.splitContainer6_MouseMove);
 			// 
@@ -951,7 +958,7 @@ namespace MusicChange
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
 			this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
 			this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-			this.ClientSize = new System.Drawing.Size(1882, 1033);
+			this.ClientSize = new System.Drawing.Size(1842, 1033);
 			this.Controls.Add(this.splitContainer1);
 			this.DoubleBuffered = true;
 			this.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -973,10 +980,10 @@ namespace MusicChange
 			this.splitContainer1.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 			this.splitContainer1.ResumeLayout(false);
-			this.panelEx4.ResumeLayout(false);
-			this.panelEx4.PerformLayout();
-			this.panel1.ResumeLayout(false);
-			this.panel1.PerformLayout();
+			this.Ptop.ResumeLayout(false);
+			this.Ptop.PerformLayout();
+			this.topleft.ResumeLayout(false);
+			this.topleft.PerformLayout();
 			this.splitContainer2.Panel1.ResumeLayout(false);
 			this.splitContainer2.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
@@ -985,13 +992,13 @@ namespace MusicChange
 			this.sC3.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.sC3)).EndInit();
 			this.sC3.ResumeLayout(false);
-			this.panel3.ResumeLayout(false);
+			this.upperleft.ResumeLayout(false);
 			this.panel4.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.dG)).EndInit();
-			this.panel2.ResumeLayout(false);
+			this.lefttopfile.ResumeLayout(false);
 			this.flowLayoutPanel2.ResumeLayout(false);
 			this.flowLayoutPanel2.PerformLayout();
-			this.panelEx2.ResumeLayout(false);
+			this.leftmatrial.ResumeLayout(false);
 			this.flowLayoutPanel1.ResumeLayout(false);
 			this.sC4.Panel1.ResumeLayout(false);
 			this.sC4.Panel2.ResumeLayout(false);
@@ -1021,36 +1028,36 @@ namespace MusicChange
 		private System.Windows.Forms.SplitContainer splitContainer5;
 		private System.Windows.Forms.SplitContainer splitContainer6;
 		private DevComponents.DotNetBar.ButtonX Modifythephoto;
-		private DevComponents.DotNetBar.ButtonX buttonX1;
-		private DevComponents.DotNetBar.PanelEx panelEx2;
-		private DevComponents.DotNetBar.ButtonX buttonX2;
+		private DevComponents.DotNetBar.ButtonX logo;
+		private DevComponents.DotNetBar.PanelEx leftmatrial;
+		private DevComponents.DotNetBar.ButtonX audio;
 		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-		private DevComponents.DotNetBar.ButtonX buttonX3;
-		private DevComponents.DotNetBar.PanelEx panelEx3;
+		private DevComponents.DotNetBar.ButtonX material;
+		private DevComponents.DotNetBar.PanelEx leftmaitrial;
 		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
-		private DevComponents.DotNetBar.ButtonX buttonx8;
-		private DevComponents.DotNetBar.ButtonX buttonx4;
-		private DevComponents.DotNetBar.ButtonX buttonx5;
-		private System.Windows.Forms.Button button42;
-		private System.Windows.Forms.Button button3;
-		private System.Windows.Forms.Button button8;
-		private System.Windows.Forms.Panel panel1;
-		private DevComponents.DotNetBar.ButtonX buttonx6;
-		private System.Windows.Forms.Button button1;
-		private DevComponents.DotNetBar.PanelEx panelEx4;
-		private System.Windows.Forms.Panel panel2;
-		private DevComponents.DotNetBar.ButtonX buttonx9;
-		private DevComponents.DotNetBar.ButtonX buttonx7;
-		private System.Windows.Forms.Panel panel3;
+		private DevComponents.DotNetBar.ButtonX inoutmatiral;
+		private DevComponents.DotNetBar.ButtonX personalcollection;
+		private DevComponents.DotNetBar.ButtonX personaMcollection;
+		private System.Windows.Forms.Button min;
+		private System.Windows.Forms.Button max;
+		private System.Windows.Forms.Button quit;
+		private System.Windows.Forms.Panel topleft;
+		private DevComponents.DotNetBar.ButtonX cut;
+		private System.Windows.Forms.Button hot;
+		private DevComponents.DotNetBar.PanelEx Ptop;
+		private System.Windows.Forms.Panel lefttopfile;
+		private DevComponents.DotNetBar.ButtonX qrcode0;
+		private DevComponents.DotNetBar.ButtonX importdata;
+		private System.Windows.Forms.Panel upperleft;
 		private System.Windows.Forms.Panel panel4;
-		private DevComponents.DotNetBar.ButtonX buttonx11;
+		private DevComponents.DotNetBar.ButtonX globalsetting;
 		private System.Windows.Forms.FontDialog fontDialog1;
 		private System.Windows.Forms.TextBox temp;
 		private System.Windows.Forms.TextBox temp1;
 		private System.Windows.Forms.Button openfile;
 		private System.Windows.Forms.Button qrcode1;
 		private DevComponents.DotNetBar.Controls.DataGridViewX dG;
-		private System.Windows.Forms.Panel panel5;
+		private System.Windows.Forms.Panel Paboveaverage;
 		private System.Windows.Forms.DataGridView dataGridView1;
 		private System.Windows.Forms.Timer _progressTimer;
 		private System.Windows.Forms.Button button4;
@@ -1062,6 +1069,6 @@ namespace MusicChange
 		private System.Windows.Forms.Button stopButton;
 		private System.Windows.Forms.Panel _volumeControlPanel;
 		private DevComponents.DotNetBar.ButtonX _muteButton;
-		private System.Windows.Forms.Panel _volumeBarIndicator;
+		private DevComponents.DotNetBar.ButtonX buttonX10;
 	}
 }

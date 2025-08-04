@@ -270,7 +270,6 @@ namespace MusicChange
 			// 设置初始音量
 			SetVolume(50);
 		}
-
 		private void VolumeTrackBar_Scroll(object sender, EventArgs e)
 		{
 			int volume = _volumeTrackBar.Value;
@@ -1013,12 +1012,12 @@ namespace MusicChange
 			AllGray();
 			//this.buttonX3.BackColor = System.Drawing.Color.Black;
 			//this.buttonX3.ColorTable = DevComponents.DotNetBar.eButtonColor.Flat;
-			this.buttonX3.SymbolColor = System.Drawing.Color.GreenYellow;
+			this.material.SymbolColor = System.Drawing.Color.GreenYellow;
 			//this.buttonX3.ThemeAware = true;  //这个属性很可能用于让按钮能够感知并自动适应应用程序的主题变化。当主题（如浅色 / 深色模式）发生改变时，设置为 ThemeAware=true 的控件会自动更新其外观（如颜色、样式等）以匹配当前主题，而无需手动编写额外的主题切换代码。
-			buttonx8.Visible = true;
-			buttonx4.Visible = true;
-			buttonx5.Visible = true;
-			this.buttonx8.BackColor = System.Drawing.Color.GreenYellow;
+			inoutmatiral.Visible = true;
+			personalcollection.Visible = true;
+			personaMcollection.Visible = true;
+			this.inoutmatiral.BackColor = System.Drawing.Color.GreenYellow;
 
 
 		}
@@ -1026,15 +1025,15 @@ namespace MusicChange
 		{
 			Ismaterial = false;
 			AllGray();
-			this.buttonX2.SymbolColor = System.Drawing.Color.YellowGreen;
-			buttonx8.Visible = false;
-			buttonx4.Visible = false;
-			buttonx5.Visible = false;
+			this.audio.SymbolColor = System.Drawing.Color.YellowGreen;
+			inoutmatiral.Visible = false;
+			personalcollection.Visible = false;
+			personaMcollection.Visible = false;
 		}
 		private void AllGray()
 		{
-			this.buttonX3.SymbolColor = System.Drawing.Color.Gray;
-			this.buttonX2.SymbolColor = System.Drawing.Color.Gray;
+			this.material.SymbolColor = System.Drawing.Color.Gray;
+			this.audio.SymbolColor = System.Drawing.Color.Gray;
 		}
 
 
@@ -1043,11 +1042,11 @@ namespace MusicChange
 		{
 			if(IsOfficialMaterialSwitch)
 			{
-				button1.Visible = true;
+				hot.Visible = true;
 			}
 			else
 			{
-				button1.Visible = false;
+				hot.Visible = false;
 			}
 		}
 		private void buttonx5_Click(object sender, EventArgs e) //官方素材
