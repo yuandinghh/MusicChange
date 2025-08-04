@@ -1,22 +1,20 @@
 ﻿
 #region ------------- 系统加载部分  无需改变的变量 -------------
 using System;
-using LibVLCSharp.WinForms;
 using System.Drawing;
 using System.IO;
+using System.Linq;
+
+//using DevComponents.DotNetBar;  //using LibVLCSharp.WinForms; 和 using LibVLCSharp.Shared;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Windows.Media;
 using LibVLCSharp.Shared;
-
-using SharpCompress.Common;
-using static MusicChange.db;
-using Application = System.Windows.Application;
+using LibVLCSharp.WinForms;
+using Color = System.Drawing.Color;
 using MediaPlayer = LibVLCSharp.Shared.MediaPlayer;
 using Point = System.Drawing.Point;
-//using DevComponents.DotNetBar;  //using LibVLCSharp.WinForms; 和 using LibVLCSharp.Shared;
-using System.Reflection;
-using Color = System.Drawing.Color;
 
 #endregion
 
@@ -63,7 +61,10 @@ namespace MusicChange
 		bool IsfirstPlaying = false;  //show first play
 		private bool _isMuted = false;
 		private int _previousVolume = 50;
-		private TrackBar _volumeTrackBar;
+
+		//private TrackBar _volumeTrackBar;   // 音量条 ?????????
+		//private Panel _volumeBarIndicator;  // 音量指示器????????
+
 
 		public LaserEditing()
 		{
@@ -76,7 +77,6 @@ namespace MusicChange
 		private void LaserEditing_Load(object sender, EventArgs e)
 		{
 			//splitContainer5mouseDown = false;			//splitContainer1.Panel2MinSize = 400;	//buttonx8.BackColor = System.Drawing.Color.Gray;
-
 			Ismaterial = true;  // 默认选择当前素材
 			buttonX3_Click(null, null); // 设置当前素材按钮样式	this.ClientSize = new System.Drawing.Size( 1900, 1080 );
 			splitContainer5mouseDown = false;
@@ -92,7 +92,7 @@ namespace MusicChange
 			int weight = lwidth / 3; // 设置窗口宽度  
 			this.sC3.Panel1MinSize = 300;
 			sC3.SplitterDistance = weight + 80; // 上左
-			sC4.SplitterDistance = weight + 50; //上中			//LoadLibVLCSharpDynamically();  动态加载 LibVLCSharp.WinForms.dll
+			sC4.SplitterDistance = weight + 60; //上中			//LoadLibVLCSharpDynamically();  动态加载 LibVLCSharp.WinForms.dll
 			this.sC4.Panel1MinSize = 300;
 			InitializeLibVLC(); // 初始化 LibVLC
 			InitializeUIControls();
@@ -106,175 +106,120 @@ namespace MusicChange
 		}
 
 		#region   ------------初始化 LibVLC 核心 播放视频文件 播放 继续 停止等	 -----------------	
-
-		private void InitializeLibVLC()
+		/*要从视频中获取音频的左右声道数值并显示，LibVLC 本身并不直接提供左右声道音量的实时数据接口。但可以通过以下方法实现一个近似的解决方案：
+实现步骤：
+1.	使用 LibVLC 的音频回调功能：
+•	LibVLC 提供了 AudioCallbacks，可以通过它获取音频数据。
+•	通过分析音频数据，可以计算左右声道的音量值。
+2.	计算左右声道音量：
+•	音频数据通常是 PCM 格式，可以通过解析 PCM 数据计算左右声道的音量。
+•	计算方法是对每个声道的采样值取绝对值的平均值或 RMS（均方根值）。
+3.	显示左右声道音量：
+•	使用 UI 控件（如 ProgressBar 或自定义绘制）显示左右声道的音量。
+示例代码：
+以下是一个实现左右声道音量显示的示例：  		*/
+		// 音频回调函数
+		private void OnAudioPlay(IntPtr data, IntPtr samples, uint count, long pts)
 		{
-			try
+			// 获取音频样本数据
+			var audioData = new short[count / 2];
+			Marshal.Copy( samples, audioData, 0, audioData.Length );
+
+			// 假设音频是立体声（左右声道交替）
+			var leftChannel = audioData.Where( (_, index) => index % 2 == 0 ).ToArray();
+			var rightChannel = audioData.Where( (_, index) => index % 2 != 0 ).ToArray();
+
+			// 计算左右声道音量（RMS）
+			var leftVolume = CalculateRMS( leftChannel );
+			var rightVolume = CalculateRMS( rightChannel );
+
+			// 更新 UI
+			BeginInvoke( new Action( ( ) =>
 			{
-				// 确保在 UI 线程上初始化
-				if(InvokeRequired)
-				{
-					Invoke(new Action(InitializeLibVLC));
-					return;
-				}
-				// 初始化 LibVLC 核心
-				Core.Initialize();
-				// 添加 VLC 界面选项
-				string[] options = {
-						"--intf", "dummy",           // 使用虚拟接口
-						"--embedded-video",          // 嵌入式视频
-						"--no-video-title-show",     // 不显示视频标题
-						"--no-stats",                // 不显示统计信息
-						"--no-sub-autodetect-file",  // 不自动检测字幕文件
-						"--verbose=0"                // 设置日志级别
-					  };
-				// 创建 LibVLC 实例
-				_libVLC = new LibVLC(options);
-				// 检查 LibVLC 是否创建成功
-				if(_libVLC == null)
-				{
-					throw new InvalidOperationException("无法创建 LibVLC 实例");
-				}
-				// 创建 MediaPlayer 实例
-				_mediaPlayer = new MediaPlayer(_libVLC);
-				// 检查 MediaPlayer 是否创建成功
-				if(_mediaPlayer == null)
-				{
-					throw new InvalidOperationException("无法创建 MediaPlayer 实例");
-				}
-				//VideoView _videoViewl = videoViewType.GetProperty( "MediaPlayer" ).GetValue( videoViewInstance ) as VideoView;  暂时不用
-				// 检查 VideoView 是否创建成功
-				if(videoView1 == null)
-				{
-					throw new InvalidOperationException("无法创建 VideoView 实例");
-				}
-				// 设置 MediaPlayer 到 VideoView  		
+				leftChannelProgressBar.Value = Math.Min( (int)leftVolume, 100 );
+				rightChannelProgressBar.Value = Math.Min( (int)rightVolume, 100 );
+			} ) );
+		}
+		// 计算 RMS（均方根值）
+		private double CalculateRMS(short[] samples)
+		{
+			if (samples.Length == 0)
+				return 0;
+			return Math.Sqrt( samples.Select( sample => sample * sample ).Average() );
+		}
+
+		private void PlayButton_Click(object sender, EventArgs e)
+		{
+			var media = new Media( _libVLC, "your_video_file.mp4", FromType.FromPath );
+			_mediaPlayer.Play( media );
+		}
+
+		private void StopButton_Click1(object sender, EventArgs e)  //??????????
+		{
+			_mediaPlayer.Stop();
+		}
+
+		protected override void OnFormClosing(FormClosingEventArgs e)
+		{
+			_mediaPlayer.Dispose();
+			_libVLC.Dispose();
+			CleanupResources();  // 清理资源 +++++++++ 的
+			base.OnFormClosing( e );
+		}
+
+		// 将以下代码：
+		// _mediaPlayer.SetAudioCallbacks(OnAudioPlay, null, null);
+
+		// 移动到合适的构造函数或方法体内（如 LaserEditing_Load 或 InitializeLibVLC 方法中），而不是直接作为类成员声明。
+		// 例如，建议放在 InitializeLibVLC 方法的末尾：
+
+		private void InitializeLibVLC( )
+		{
+			
+			try {
+				// ...原有初始化代码...
+				_libVLC = new LibVLC();   //???????????
+				_mediaPlayer = new MediaPlayer( _libVLC );
 				videoView1.MediaPlayer = _mediaPlayer;
+				// 绑定 MediaPlayer 到 VideoView
+				//_videoView = new VideoView
+				//{
+				//	MediaPlayer = _mediaPlayer,
+				//	Dock = DockStyle.Fill
+				//};
+				////this.Controls.Add( _videoView );
+				//_videoView.BringToFront();
+				// 设置音频回调（必须在 MediaPlayer 创建后设置）
+				// 修复 CS7036 错误：SetAudioCallbacks 需要 5 个参数（playCb, pauseCb, resumeCb, flushCb, drainCb）
+				// 只需将 null 补齐为 5 个参数即可
+
+				// 原代码：
+				// _mediaPlayer.SetAudioCallbacks( OnAudioPlay, null, null );
+
+				// 修改为：
+				_mediaPlayer.SetAudioCallbacks( OnAudioPlay, null, null, null, null );
 			}
-			catch(Exception ex)
-			{
-				MessageBox.Show($"初始化 LibVLC 失败: {ex.Message}\n{ex.StackTrace}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				// 清理已创建的资源
+			catch (Exception ex) {
+				MessageBox.Show( $"初始化 LibVLC 失败: {ex.Message}\n{ex.StackTrace}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error );
 				CleanupResources();
 			}
 		}
-
 		private void InitializeUIControls()
 		{
-			InitializeVolumeControls();
-			_progressTimer.Start();
 			// 初始化音量控制UI
-			InitializeVolumeControls();
-			_progressTimer.Start();
 			//_videoView.BringToFront();
 			//_videoView.SendToBack();   //发送到父容器的最底层（降低其 Z 顺序，使其被其他同级控件覆盖）
-
-		}
-
-		// ... 其他字段保持不变 ...
-
-		// 添加音量控制相关字段
-	
-		//private Label _volumeLabel;
-
-		private void InitializeVolumeControls()
-		{
-			// 创建音量控制面板
-			//_volumeControlPanel = new Panel
-			//{
-			//	Size = new Size(200, 40),
-			//	Location = new Point(300, 32), // 放在控制面板合适位置
-			//	BackColor = Color.FromArgb(60, 60, 60)
-			//};
-			// 创建音量控制面板
-			//_volumeControlPanel = new Panel
-			//{
-			//	Size = new Size(120, 40),
-			//	Location = new Point(300, 32), // 放在控制面板合适位置
-			//	BackColor = System.Drawing.Color.FromArgb(60, 60, 60)
-			//};
-
-
-			// 创建音量条背景
-			//_volumeControlPanel = new Panel
-			//{
-			//	Size = new Size(15, 30),
-			//	Location = new Point(105, 5),
-			//	BackColor = Color.DarkGray
-			//};
-
-			// 创建音量条指示器
-			//_volumeBarIndicator = new Panel
-			//{
-			//	Size = new Size(15, 50), // 初始高度为一半
-			//	Location = new Point(0, 50), // 从底部开始
-			//	BackColor = Color.LimeGreen
-			//};
-			//_volumeControlPanel.Controls.Add(_volumeBarIndicator);
-
-			// 将控件添加到音量控制面板
-			//_volumeControlPanel.Controls.Add(_volumeUpButton);
-			//_volumeControlPanel.Controls.Add(_volumeDownButton);
-			//_volumeControlPanel.Controls.Add(_muteButton);
-			//_volumeControlPanel.Controls.Add(_volumeControlPanel);
-
-			// 将音量控制面板添加到主窗体（或控制面板）
-			// 这里假设添加到主窗体，您可能需要根据实际布局调整
-
-			// 设置初始音量
-			//SetVolume( 50 );
-			//UpdateVolumeBar( 50 );
-			// 创建音量标签
-			//_volumeLabel = new Label
-			//{
-			//	Text = "音量:",
-			//	Size = new Size(40, 20),
-			//	Location = new Point(5, 12),
-			//	ForeColor = Color.White,
-			//	Font = new Font("Arial", 8, FontStyle.Bold)
-			//};
-
-			// 创建音量进度条
-			_volumeTrackBar = new TrackBar
-			{
-				Size = new Size(200, 20),
-				Location = new Point(220, 20),
-				Minimum = 0,
-				Maximum = 100,
-				Value = 50,
-				TickFrequency = 10
-			};
-			_volumeTrackBar.Scroll += VolumeTrackBar_Scroll;
-
-			// 创建静音按钮
-			//_muteButton = new Button
-			//{
-			//	Text = "Mute",
-			//	Size = new Size(40, 25),
-			//	Location = new Point(155, 8),
-			//	BackColor = Color.Gray,
-			//	ForeColor = Color.White,
-			//	Font = new Font("Arial", 6, FontStyle.Bold)
-			//};
-			//_muteButton.Click += MuteButton_Click;
-
-			// 将控件添加到音量控制面板
-			//_volumeControlPanel.Controls.Add(_volumeLabel);
-			_volumeControlPanel.Controls.Add(_volumeTrackBar);
-			//_volumeControlPanel.Controls.Add(_muteButton);
-
-			// 将音量控制面板添加到主窗体（或控制面板）
-			// 这里假设添加到主窗体，您可能需要根据实际布局调整
-			//this.Controls.Add(_volumeControlPanel);
-
-			// 设置初始音量
-			SetVolume(50);
+			InitializeChannelDisplay();
+			// 初始化视频缩放控制UI
+			InitializeZoomControls();
+			_progressTimer.Start();
 		}
 		private void VolumeTrackBar_Scroll(object sender, EventArgs e)
 		{
 			int volume = _volumeTrackBar.Value;
+			//UpdateVolumeBar(newVolume);
+			volumenum.Text = volume.ToString();
 			SetVolume(volume);
-
 			// 如果之前是静音状态，则取消静音
 			if(_isMuted)
 			{
@@ -282,17 +227,17 @@ namespace MusicChange
 				//_muteButton.Text = "Mute";
 			}
 		}
-
-		private void MuteButton_Click(object sender, EventArgs e)
+		// 静音按钮点击事件处理程序
+		private void MuteButton_Click1(object sender, EventArgs e)
 		{
-			if(_mediaPlayer == null)  				return;
+			if(_mediaPlayer == null)
+				return;
 			if(!_isMuted)
 			{
 				// 保存当前音量并静音
 				_previousVolume = _mediaPlayer.Volume;
 				_mediaPlayer.Volume = 0;
 				_isMuted = true;
-				//_muteButton.Text = "Unmute";
 				_muteButton.SymbolColor = Color.Salmon;
 				_volumeTrackBar.Value = 0;
 			}
@@ -306,9 +251,8 @@ namespace MusicChange
 				_volumeTrackBar.Value = _previousVolume;
 			}
 		}
-
 		// 修改现有的 SetVolume 方法以更新音量显示
-		public void SetVolume(int volume)
+		public void SetVolume1(int volume)
 		{
 			try
 			{
@@ -322,6 +266,8 @@ namespace MusicChange
 					{
 						_volumeTrackBar.Value = clampedVolume;
 					}
+					// 同时更新声道显示（这里简化为左右声道相同）
+					UpdateChannelDisplay(clampedVolume, clampedVolume);
 				}
 			}
 			catch(Exception ex)
@@ -330,12 +276,14 @@ namespace MusicChange
 			}
 		}
 
-				private void VolumeDownButton_Click(object sender, EventArgs e)
+		// 修改现有的 SetVolume 方法以同时更新声道显示
+
+		private void VolumeDownButton_Click(object sender, EventArgs e)
 		{
 			int currentVolume = _mediaPlayer?.Volume ?? 0;
 			int newVolume = Math.Max(0, currentVolume - 10);
 			SetVolume(newVolume);
-			UpdateVolumeBar(newVolume);
+			//UpdateVolumeBar(newVolume);
 
 			// 如果之前是静音状态，则取消静音
 			if(_isMuted)
@@ -345,86 +293,455 @@ namespace MusicChange
 			}
 		}
 
-		private void MuteButton2_Click(object sender, EventArgs e)
-		{
-			if(_mediaPlayer == null)
-				return;
-
-			if(!_isMuted)
-			{
-				// 保存当前音量并静音
-				_previousVolume = _mediaPlayer.Volume;
-				_mediaPlayer.Volume = 0;
-				_isMuted = true;
-				//_muteButton.Text = "Unmute";
-				UpdateVolumeBar(0);
-			}
-			else
-			{
-				// 恢复之前音量
-				_mediaPlayer.Volume = _previousVolume;
-				_isMuted = false;
-				//_muteButton.Text = "Mute";
-				UpdateVolumeBar(_previousVolume);
-			}
-		}
-
 		/// <summary>
 		/// 更新音量柱状显示
 		/// </summary>
 		/// <param name="volume">音量值 (0-100)</param>
-		private void UpdateVolumeBar(int volume)
-		{
-			if(_volumeControlPanel == null || _volumeBarIndicator == null)
-				return;
-
-			// 确保音量在有效范围内
-			volume = Math.Max(0, Math.Min(100, volume));
-
-			// 计算新的高度和位置
-			int maxHeight = _volumeControlPanel.Height;
-			int newHeight = (int)(maxHeight * (volume / 100.0));
-			int newY = maxHeight - newHeight;
-
-			// 更新音量条指示器
-			_volumeBarIndicator.Height = newHeight;
-			_volumeBarIndicator.Location = new Point(0, newY);
-
-			// 根据音量大小改变颜色
-			if(volume < 30)
-				_volumeBarIndicator.BackColor = System.Drawing.Color.LimeGreen;
-			else if(volume < 70)
-				_volumeBarIndicator.BackColor = System.Drawing.Color.Yellow;
-			else
-				_volumeBarIndicator.BackColor = System.Drawing.Color.Red;
-		}
-
-		// 修改现有的 SetVolume 方法以更新音量显示
-		//public void SetVolume(int volume)
+		//private void UpdateVolumeBar(int volume)
 		//{
-		//	try
-		//	{
-		//		if(_mediaPlayer != null)
-		//		{
-		//			int clampedVolume = Math.Max(0, Math.Min(100, volume));
-		//			_mediaPlayer.Volume = clampedVolume;
-		//			UpdateVolumeBar(clampedVolume);
-		//		}
-		//	}
-		//	catch(Exception ex)
-		//	{
-		//		MessageBox.Show($"设置音量失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
-		//	}
+		//	if(_volumeControlPanel == null || _volumeBarIndicator == null)
+		//		return;
+		//	// 确保音量在有效范围内
+		//	volume = Math.Max(0, Math.Min(100, volume));
+		//	// 计算新的高度和位置
+		//	int maxHeight = _volumeControlPanel.Height;
+		//	int newHeight = (int)(maxHeight * (volume / 100.0));
+		//	int newY = maxHeight - newHeight;
+		//	// 更新音量条指示器
+		//	_volumeBarIndicator.Height = newHeight;
+		//	_volumeBarIndicator.Location = new Point(0, newY);
+		//	// 根据音量大小改变颜色
+		//	if(volume < 30)
+		//		_volumeBarIndicator.BackColor = System.Drawing.Color.LimeGreen;
+		//	else if(volume < 70)
+		//		_volumeBarIndicator.BackColor = System.Drawing.Color.Yellow;
+		//	else
+		//		_volumeBarIndicator.BackColor = System.Drawing.Color.Red;
 		//}
 
-		// ... 其他现有代码保持不变 ...
+			// 添加声道显示相关字段
+			private Panel _leftChannelPanel;
+			private Panel _rightChannelPanel;
+			private Panel _channelDisplayPanel;
+			private Label _leftChannelLabel;
+			private Label _rightChannelLabel;
+			// 添加视频缩放相关字段
+			//private Button _zoomInButton;
+			//private Button _zoomOutButton;
+			//private Button _fitToWindowButton;
+			private float _currentZoomFactor = 1.0f;
+			private const float ZOOM_INCREMENT = 0.1f;
+			private const float MIN_ZOOM = 0.5f;
+			private const float MAX_ZOOM = 3.0f;
 
+			/// <summary>
+			/// 初始化声道显示控件
+			/// </summary>
+			private void InitializeChannelDisplay()
+			{
+				//// 创建声道显示面板
+				//_channelDisplayPanel = new Panel
+				//{
+				//	Size = new Size(150, 40),
+				//	Location = new Point(550, 32), // 放在控制面板合适位置
+				//	BackColor = Color.FromArgb(60, 60, 60),
+				//	Anchor = AnchorStyles.Bottom | AnchorStyles.Left
+				//};
+
+				// 创建左声道标签
+				_leftChannelLabel = new Label
+				{
+					Text = "L",
+					Size = new Size(15, 20),
+					Location = new Point(5, 5),
+					ForeColor = Color.White,
+					Font = new Font("Arial", 8, FontStyle.Bold),
+					Anchor = AnchorStyles.Bottom | AnchorStyles.Left
+				};
+
+				// 创建右声道标签
+				_rightChannelLabel = new Label
+				{
+					Text = "R",
+					Size = new Size(15, 20),
+					Location = new Point(5, 20),
+					ForeColor = Color.White,
+					Font = new Font("Arial", 8, FontStyle.Bold),
+					Anchor = AnchorStyles.Bottom | AnchorStyles.Left
+				};
+
+				// 创建左声道显示条
+				_leftChannelPanel = new Panel
+				{
+					Size = new Size(100, 10),
+					Location = new Point(25, 5),
+					BackColor = Color.DarkGray,
+					Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right
+				};
+
+				// 创建右声道显示条
+				_rightChannelPanel = new Panel
+				{
+					Size = new Size(100, 10),
+					Location = new Point(25, 20),
+					BackColor = Color.DarkGray,
+					Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right
+				};
+
+			// 将控件添加到声道显示面板
+			_volumeControlPanel.Controls.Add(_leftChannelLabel);
+			_volumeControlPanel.Controls.Add(_rightChannelLabel);
+			_volumeControlPanel.Controls.Add(_leftChannelPanel);
+			_volumeControlPanel.Controls.Add(_rightChannelPanel);
+
+				//// 将声道显示面板添加到主窗体
+				//this.Controls.Add(_channelDisplayPanel);
+			}
+
+			/// <summary>
+			/// 初始化视频缩放控制按钮
+			/// </summary>
+			private void InitializeZoomControls()
+			{
+				//// 创建缩放控制面板
+				//Panel zoomPanel = new Panel
+				//{
+				//	Size = new Size(120, 40),
+				//	Location = new Point(710, 32), // 放在控制面板合适位置
+				//	BackColor = Color.FromArgb(60, 60, 60),
+				//	Anchor = AnchorStyles.Bottom | AnchorStyles.Left
+				//};
+
+				// 创建放大按钮
+				//_zoomInButton = new Button
+				//{
+				//	Text = "放大",
+				//	Size = new Size(35, 25),
+				//	Location = new Point(5, 8),
+				//	BackColor = Color.Gray,
+				//	ForeColor = Color.White,
+				//	Font = new Font("Arial", 6, FontStyle.Bold),
+				//	Anchor = AnchorStyles.Bottom | AnchorStyles.Left
+				//};
+				//_zoomInButton.Click += ZoomInButton_Click;
+
+				// 创建缩小按钮
+				//_zoomOutButton = new Button
+				//{
+				//	Text = "缩小",
+				//	Size = new Size(35, 25),
+				//	Location = new Point(42, 8),
+				//	BackColor = Color.Gray,
+				//	ForeColor = Color.White,
+				//	Font = new Font("Arial", 6, FontStyle.Bold),
+				//	Anchor = AnchorStyles.Bottom | AnchorStyles.Left
+				//};
+				//_zoomOutButton.Click += ZoomOutButton_Click;
+
+				//// 创建适合窗口按钮
+				//_fitToWindowButton = new Button
+				//{
+				//	Text = "适应",
+				//	Size = new Size(35, 25),
+				//	Location = new Point(79, 8),
+				//	BackColor = Color.Gray,
+				//	ForeColor = Color.White,
+				//	Font = new Font("Arial", 6, FontStyle.Bold),
+				//	Anchor = AnchorStyles.Bottom | AnchorStyles.Left
+				//};
+				//_fitToWindowButton.Click += FitToWindowButton_Click;
+
+				// 将按钮添加到缩放面板
+				//zoomPanel.Controls.Add(_zoomInButton);
+				//zoomPanel.Controls.Add(_zoomOutButton);
+				//zoomPanel.Controls.Add(_fitToWindowButton);
+
+				// 将缩放面板添加到主窗体
+				//this.Controls.Add(zoomPanel);
+			}
+
+			/// <summary>
+			/// 更新声道显示
+			/// </summary>
+			/// <param name="leftLevel">左声道音量级别 (0-100)</param>
+			/// <param name="rightLevel">右声道音量级别 (0-100)</param>
+			private void UpdateChannelDisplay1(int leftLevel, int rightLevel)
+			{
+				if(_leftChannelPanel == null || _rightChannelPanel == null)
+					return;
+
+				// 确保音量级别在有效范围内
+				leftLevel = Math.Max(0, Math.Min(100, leftLevel));
+				rightLevel = Math.Max(0, Math.Min(100, rightLevel));
+
+				// 计算新的宽度
+				int maxWidth = _leftChannelPanel.Parent.Width - 30; // 减去标签宽度和边距
+				int leftWidth = (int)(maxWidth * (leftLevel / 100.0));
+				int rightWidth = (int)(maxWidth * (rightLevel / 100.0));
+
+				// 更新左声道显示条
+				_leftChannelPanel.Width = leftWidth;
+				_leftChannelPanel.BackColor = GetChannelColor(leftLevel);
+
+				// 更新右声道显示条
+				_rightChannelPanel.Width = rightWidth;
+				_rightChannelPanel.BackColor = GetChannelColor(rightLevel);
+			}
+
+			/// <summary>
+			/// 根据音量级别获取颜色
+			/// </summary>
+			/// <param name="level">音量级别 (0-100)</param>
+			/// <returns>对应的颜色</returns>
+			private Color GetChannelColor1(int level)
+			{
+				if(level < 30)
+					return Color.LimeGreen;
+				else if(level < 70)
+					return Color.Yellow;
+				else
+					return Color.Red;
+			}
+
+			// 放大按钮点击事件
+			private void ZoomInButton_Click(object sender, EventArgs e)
+			{
+				_currentZoomFactor += ZOOM_INCREMENT;
+				if(_currentZoomFactor > MAX_ZOOM)
+					_currentZoomFactor = MAX_ZOOM;
+
+				ApplyZoom();
+			}
+
+			// 缩小按钮点击事件
+			private void ZoomOutButton_Click(object sender, EventArgs e)
+			{
+				_currentZoomFactor -= ZOOM_INCREMENT;
+				if(_currentZoomFactor < MIN_ZOOM)
+					_currentZoomFactor = MIN_ZOOM;
+
+				ApplyZoom();
+			}
+
+			// 适应窗口按钮点击事件
+			private void FitToWindowButton_Click(object sender, EventArgs e)
+			{
+				_currentZoomFactor = 1.0f;
+				ApplyZoom();
+			}
+
+			/// <summary>
+			/// 应用当前缩放因子到视频显示
+			/// </summary>
+			private void ApplyZoom()
+			{
+				if(_mediaPlayer == null || videoView1 == null)
+					return;
+
+				try
+				{
+					// 这里我们通过调整视频视图的大小来实现缩放效果
+					// 实际的 VLC 缩放需要通过其 API 设置
+					UpdateZoomLabel();
+
+					// 如果需要通过 VLC API 实现真正的缩放，可以使用以下方法：
+					// _mediaPlayer.Scale = _currentZoomFactor;
+				}
+				catch(Exception ex)
+				{
+					MessageBox.Show($"应用缩放失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				}
+			}
+
+			/// <summary>
+			/// 更新缩放标签显示
+			/// </summary>
+			private void UpdateZoomLabel()
+			{
+				// 如果您有一个显示缩放级别的标签，可以在这里更新它
+				// 例如：zoomLabel.Text = $"{_currentZoomFactor:P0}"; // 显示为百分比
+			}
+			// 在播放器事件处理中添加声道更新
+			private void OnMediaPlayerPlaying(object sender, EventArgs e)
+			{
+				if(InvokeRequired)
+				{
+					Invoke(new Action(() =>
+					{
+						// 更新按钮状态
+						// 可以在这里初始化声道显示
+						UpdateChannelDisplay(50, 50); // 默认显示
+					}));
+				}
+				else
+				{
+					UpdateChannelDisplay(50, 50); // 默认显示
+				}
+			}
+//-----------------------------------------------
+			// 如果您需要在定时器中更新声道显示（模拟音频可视化）
+			private void ProgressTimer_Tick1(object sender, EventArgs e)
+			{
+				if(_mediaPlayer != null && !_isSeeking)
+				{
+					UpdateProgress();
+
+					// 模拟声道显示更新（实际应用中应从音频数据获取）
+					// 这里只是一个示例，您需要根据实际音频数据来更新
+					Random rand = new Random();
+					int leftChannel = rand.Next(0, _mediaPlayer.Volume);
+					int rightChannel = rand.Next(0, _mediaPlayer.Volume);
+					UpdateChannelDisplay(leftChannel, rightChannel);
+				}
+			}
+
+		// 定时器更新进度
+		private void ProgressTimer_Tick(object sender, EventArgs e)
+		{
+			if(_mediaPlayer != null && !_isSeeking)
+			{
+				UpdateProgress();
+
+				// 更新声道显示（实际应用中应从音频数据获取）
+				UpdateChannelDisplayFromAudio();
+			}
+		}
 
 		/// <summary>
-		/// 设置音量 (0-100)
+		/// 从音频数据更新声道显示
 		/// </summary>
-		/// <param name="volume">音量值</param>
-		public void SetVolume2(int volume)
+		private void UpdateChannelDisplayFromAudio()
+		{
+			if(_mediaPlayer == null)
+				return;
+
+			try
+			{
+				// 获取当前音量
+				int currentVolume = _mediaPlayer.Volume;
+
+				// 确保最小值不大于最大值
+				if(currentVolume > 0)
+				{
+					// 模拟左右声道音量（实际应用中应该从音频回调获取真实数据）
+					Random rand = new Random(Guid.NewGuid().GetHashCode()); // 使用不同的种子避免重复
+
+					// 确保随机范围有效
+					int leftChannel = rand.Next(0, Math.Max(1, currentVolume)); // 至少范围是 0-1
+					int rightChannel = rand.Next(0, Math.Max(1, currentVolume));
+
+					UpdateChannelDisplay(leftChannel, rightChannel);
+				}
+				else
+				{
+					// 音量为0时，声道显示也清零
+					UpdateChannelDisplay(0, 0);
+				}
+			}
+			catch(Exception ex)
+			{
+				// 在调试模式下记录异常但不中断程序
+				if(System.Diagnostics.Debugger.IsAttached)
+				{
+					System.Diagnostics.Debug.WriteLine($"更新声道显示时出错: {ex.Message}");
+				}
+
+				// 出错时显示静音状态
+				UpdateChannelDisplay(0, 0);
+			}
+		}
+
+		// 如果您想要更真实的音频可视化，可以使用以下方法替代随机生成
+		private void UpdateChannelDisplayWithRealData()
+		{
+			if(_mediaPlayer == null)
+				return;
+
+			try
+			{
+				// 这里应该从音频回调获取真实数据
+				// 由于 LibVLC 的限制，我们使用音量作为近似值
+
+				int volume = Math.Max(0, Math.Min(100, _mediaPlayer.Volume));
+
+				// 模拟左右声道略有差异
+				Random rand = new Random();
+				int variation = rand.Next(-5, 6); // -5 到 5 的变化
+
+				int leftChannel = Math.Max(0, Math.Min(100, volume + variation));
+				int rightChannel = Math.Max(0, Math.Min(100, volume - variation));
+
+				UpdateChannelDisplay(leftChannel, rightChannel);
+			}
+			catch(Exception ex)
+			{
+				// 出错时显示当前音量
+				int volume = _mediaPlayer?.Volume ?? 0;
+				volume = Math.Max(0, Math.Min(100, volume));
+				UpdateChannelDisplay(volume, volume);
+			}
+		}
+
+		/// <summary>
+		/// 更新声道显示
+		/// </summary>
+		/// <param name="leftLevel">左声道音量级别 (0-100)</param>
+		/// <param name="rightLevel">右声道音量级别 (0-100)</param>
+		private void UpdateChannelDisplay(int leftLevel, int rightLevel)
+		{
+			if(_leftChannelPanel == null || _rightChannelPanel == null)
+				return;
+
+			try
+			{
+				// 确保音量级别在有效范围内
+				leftLevel = Math.Max(0, Math.Min(100, leftLevel));
+				rightLevel = Math.Max(0, Math.Min(100, rightLevel));
+
+				// 计算新的宽度
+				int maxWidth = Math.Max(10, _leftChannelPanel.Parent?.Width - 30 ?? 100); // 确保最小宽度
+				int leftWidth = (int)(maxWidth * (leftLevel / 100.0));
+				int rightWidth = (int)(maxWidth * (rightLevel / 100.0));
+
+				// 确保宽度不为负数
+				leftWidth = Math.Max(0, leftWidth);
+				rightWidth = Math.Max(0, rightWidth);
+
+				// 更新左声道显示条
+				_leftChannelPanel.Width = leftWidth;
+				_leftChannelPanel.BackColor = GetChannelColor(leftLevel);
+
+				// 更新右声道显示条
+				_rightChannelPanel.Width = rightWidth;
+				_rightChannelPanel.BackColor = GetChannelColor(rightLevel);
+			}
+			catch(Exception ex)
+			{
+				// 在调试模式下记录异常但不中断程序
+				if(System.Diagnostics.Debugger.IsAttached)
+				{
+					System.Diagnostics.Debug.WriteLine($"更新声道显示UI时出错: {ex.Message}");
+				}
+			}
+		}
+
+		/// <summary>
+		/// 根据音量级别获取颜色
+		/// </summary>
+		/// <param name="level">音量级别 (0-100)</param>
+		/// <returns>对应的颜色</returns>
+		private Color GetChannelColor(int level)
+		{
+			if(level < 30)
+				return Color.LimeGreen;
+			else if(level < 70)
+				return Color.Yellow;
+			else
+				return Color.Red;
+		}
+
+		// 修改现有的 SetVolume 方法以同时更新声道显示
+		public new void SetVolume(int volume)
 		{
 			try
 			{
@@ -432,6 +749,15 @@ namespace MusicChange
 				{
 					int clampedVolume = Math.Max(0, Math.Min(100, volume));
 					_mediaPlayer.Volume = clampedVolume;
+
+					// 更新音量进度条（避免触发Scroll事件）
+					if(_volumeTrackBar.Value != clampedVolume)
+					{
+						_volumeTrackBar.Value = clampedVolume;
+					}
+
+					// 同时更新声道显示
+					UpdateChannelDisplay(clampedVolume, clampedVolume);
 				}
 			}
 			catch(Exception ex)
@@ -440,6 +766,42 @@ namespace MusicChange
 			}
 		}
 
+		// 静音按钮点击事件处理程序
+		private void MuteButton_Click(object sender, EventArgs e)
+		{
+			if(_mediaPlayer == null)
+				return;
+			try
+			{
+				if(!_isMuted)
+				{
+					// 保存当前音量并静音
+					_previousVolume = _mediaPlayer.Volume;
+					_mediaPlayer.Volume = 0;
+					_isMuted = true;
+					_muteButton.SymbolColor = Color.Salmon;
+					_volumeTrackBar.Value = 0;
+
+					// 更新声道显示为静音状态
+					UpdateChannelDisplay(0, 0);
+				}
+				else
+				{
+					// 恢复之前音量
+					_mediaPlayer.Volume = _previousVolume;
+					_isMuted = false;
+					_muteButton.SymbolColor = Color.Gray;
+					_volumeTrackBar.Value = _previousVolume;
+
+					// 更新声道显示为恢复的音量
+					UpdateChannelDisplay(_previousVolume, _previousVolume);
+				}
+			}
+			catch(Exception ex)
+			{
+				MessageBox.Show($"切换静音状态失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}
+		}
 
 		#endregion
 
@@ -468,14 +830,14 @@ namespace MusicChange
 				UpdateTotalTime(e.Length);
 			}
 		}
-		private void OnMediaPlayerPlaying(object sender, EventArgs e)
+		private void OnMediaPlayerPlaying1(object sender, EventArgs e)
 		{
 			if(InvokeRequired)
 			{
 				Invoke(new Action(() =>
 			  {
-					// 更新按钮状态
-				}));
+				  // 更新按钮状态
+			  }));
 			}
 		}
 		private void OnMediaPlayerPaused(object sender, EventArgs e)
@@ -484,8 +846,8 @@ namespace MusicChange
 			{
 				Invoke(new Action(() =>
 			  {
-					// 更新按钮状态
-				}));
+				  // 更新按钮状态
+			  }));
 			}
 		}
 		private void OnMediaPlayerStopped(object sender, EventArgs e)
@@ -546,13 +908,7 @@ namespace MusicChange
 			}
 		}
 		// 定时器更新进度
-		private void ProgressTimer_Tick(object sender, EventArgs e)
-		{
-			if(_mediaPlayer != null && !_isSeeking)
-			{
-				UpdateProgress();
-			}
-		}
+
 		private void UpdateProgress()
 		{
 			if(_mediaPlayer == null)
@@ -705,11 +1061,11 @@ namespace MusicChange
 				Console.WriteLine($"清理资源时出错: {ex.Message}");
 			}
 		}
-		protected override void OnFormClosing(FormClosingEventArgs e)
-		{
-			CleanupResources();
-			base.OnFormClosing(e);
-		}
+		//protected override void OnFormClosing2(FormClosingEventArgs e)  //
+		//{
+		//	CleanupResources();
+		//	base.OnFormClosing(e);
+		//}
 		#endregion
 
 		#region ----------- 鼠标拖动窗口和改变大小问题 快捷键  还没解决-------------------
@@ -966,8 +1322,8 @@ namespace MusicChange
 
 		private void buttonx6_Click(object sender, EventArgs e)
 		{       //show cut 
-			Cut form = new Cut();
-			form.Show();
+				//Cut form = new Cut();
+				//form.Show();
 		}
 
 		private bool IsInResizeArea(System.Drawing.Point point)
@@ -1165,6 +1521,11 @@ namespace MusicChange
 				panel4.Visible = true;
 
 			}
+
+		}
+
+		private void videoView1_Click(object sender, EventArgs e)  //视频 播放 
+		{
 
 		}
 

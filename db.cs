@@ -10,7 +10,9 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 namespace MusicChange
 {
 	// 数据库操作封装类
+#pragma warning disable IDE1006 // 命名样式
 	public class db
+#pragma warning restore IDE1006 // 命名样式
 	{   // 数据库连接字符串（建议使用绝对路径避免路径问题）
 		public static string dbPath = "D:\\Documents\\Visual Studio 2022\\MusicChange\\LaserEditing.db";
 		public static string _connectionString;
@@ -83,7 +85,9 @@ namespace MusicChange
 		/// <returns></returns>
 		public int InsertProject(Project project)
 		{
+#pragma warning disable IDE0063 // 使用简单的 "using" 语句
 			using (var connection = new SQLiteConnection( _connectionString )) {
+#pragma warning restore IDE0063 // 使用简单的 "using" 语句
 				connection.Open();
 				string sql = @"
                     INSERT INTO projects (name, description, created_at, updated_at)

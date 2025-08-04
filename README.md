@@ -227,3 +227,12 @@ end_time	REAL	NOT NULL	结束时间
 order_index	INTEGER	NOT NULL	排序索引
 is_enabled	INTEGER	NOT NULL DEFAULT 1	是否启用
 created_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
+
+
+错误描述：在“InitializeLibVLC”内部的“_mediaPlayer.SetAudioCallbacks(OnAudioPlay, null, null， null， null)；”这行代码中出现了“System.NullReferenceException”错误。这意味着在尝试对它调用方法时，_mediaPlayer 是空的。
+根本原因分析：
+• 该类将 _mediaPlayer 宣告为私有字段，但未显示有任何代码实际对其进行初始化（例如，_mediaPlayer = new MediaPlayer(_libVLC)；）。
+• 在“LaserEditing_Load”中调用了“InitializeLibVLC()”，但在那之前并未对 _mediaPlayer 进行初始化。
+• 对于 _libVLC 也是如此，它被声明了但使用前未显示进行初始化。
+为何会出现此错误：您出现此错误是因为在使用 _mediaPlayer 之前从未为其分配实例。直接原因是在一个空对象上调用方法，但根本原因是缺少对 _mediaPlayer（以及可能的 _libVLC）的初始化逻辑。
+建议的解决方法：在对它们调用任何方法之前，先对 _libVLC 和 _mediaPlayer 进行初始化。例如：
