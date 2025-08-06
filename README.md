@@ -12,6 +12,8 @@ waveProvider.AddSamples(audioData, 0, audioData.Length);    无法从short[] 转
 	waveOut.Resume();  未包含  Resume() 定义
 
 splitContainer.Panel1 如何使 宽度固定并不能拉伸
+
+splitContainer.Panel1 如何使 能宽度拉伸，但 不能小于某个宽度
 初始化 LibVLC。
 
  <!--<package id="Vlc.DotNet.Core" version="3.1.0" targetFramework="net472" />

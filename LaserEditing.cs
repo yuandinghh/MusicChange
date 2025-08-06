@@ -43,7 +43,7 @@ namespace MusicChange
 		public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
 		private const int WM_NCLBUTTONDOWN = 0xA1;
 		private const int HTCAPTION = 0x2;
-		private const int HT_CAPTION = 0x2;
+		//private const int HT_CAPTION = 0x2;
 		private bool splitContainer5mouseDown;
 		int count = 0;
 		bool IsOfficialMaterialSwitch = false; //官方素材开关
@@ -81,8 +81,6 @@ namespace MusicChange
 			buttonX3_Click(null, null); // 设置当前素材按钮样式	this.ClientSize = new System.Drawing.Size( 1900, 1080 );
 			splitContainer5mouseDown = false;
 			OfficialMaterialSwitch(); // 初始化官方素材开关状态
-			sC4.SplitterDistance = 500; //上中
-			sC3.SplitterDistance = 750; // 上左 宽度
 			gwidth = this.Width = Screen.PrimaryScreen.WorkingArea.Width; // 获取屏幕工作区宽度
 			temp.Text = "屏幕工作区宽度: " + gwidth.ToString();
 			temp.Text = filePath;
@@ -93,8 +91,7 @@ namespace MusicChange
 			int weight = lwidth / 3; // 设置窗口宽度  
 			this.sC3.Panel1MinSize = 300;
 			sC3.SplitterDistance = weight + 80; // 上左
-			sC4.SplitterDistance = weight + 60; //上中			//LoadLibVLCSharpDynamically();  动态加载 LibVLCSharp.WinForms.dll
-			this.sC4.Panel1MinSize = 300;
+			sC4.SplitterDistance = weight+60; //上中			//LoadLibVLCSharpDynamically();  动态加载 LibVLCSharp.WinForms.dll
 			InitializeLibVLC(); // 初始化 LibVLC
 			InitializeUIControls();
 			_mediaPlayer.TimeChanged += OnMediaPlayerTimeChanged;
@@ -519,20 +516,17 @@ namespace MusicChange
 
 			_mediaPlayer.Stop();
 
-			using(var media = new Media(_libVLC, filePath, FromType.FromPath))
-			{
+				using var media = new Media(_libVLC, filePath, FromType.FromPath);
 				if(media == null)
 				{
 					throw new InvalidOperationException("无法创建媒体对象");
 				}
 
-				_progressTimer.Start();
-					//_mediaPlayer.bringToF
-					//_videoView.BringToFront();
-					_mediaPlayer.Play(media);
-
+				progressTimer.Start();
+				//_mediaPlayer.bringToF
+				//_videoView.BringToFront();
+				_mediaPlayer.Play(media);
 			}
-		}
 		catch(Exception ex)
 		{
 			MessageBox.Show($"播放视频失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -810,7 +804,7 @@ namespace MusicChange
 	{
 		try
 		{
-			_progressTimer?.Stop();
+			progressTimer?.Stop();
 
 			// 停止并释放 NAudio 资源
 			if(waveOut != null)
@@ -900,11 +894,11 @@ namespace MusicChange
 		//InitializeChannelDisplay();
 		// 初始化视频缩放控制UI
 		//InitializeZoomControls();
-		_progressTimer.Start();
+		progressTimer.Start();
 	}
 	private void VolumeTrackBar_Scroll(object sender, EventArgs e)
 	{
-		int volume = _volumeTrackBar.Value;
+		int volume = volumeTrackBar.Value;
 		//UpdateVolumeBar(newVolume);
 		volumenum.Text = volume.ToString();
 		SetVolume(volume);
@@ -926,8 +920,8 @@ namespace MusicChange
 			_previousVolume = _mediaPlayer.Volume;
 			_mediaPlayer.Volume = 0;
 			_isMuted = true;
-			_muteButton.SymbolColor = Color.Salmon;
-			_volumeTrackBar.Value = 0;
+			muteButton.SymbolColor = Color.Salmon;
+			volumeTrackBar.Value = 0;
 		}
 		else
 		{
@@ -935,8 +929,8 @@ namespace MusicChange
 			_mediaPlayer.Volume = _previousVolume;
 			_isMuted = false;
 			//_muteButton.Text = "Mute";
-			_muteButton.SymbolColor = Color.Gray;
-			_volumeTrackBar.Value = _previousVolume;
+			muteButton.SymbolColor = Color.Gray;
+			volumeTrackBar.Value = _previousVolume;
 		}
 	}
 	// 修改现有的 SetVolume 方法以更新音量显示
@@ -950,9 +944,9 @@ namespace MusicChange
 				_mediaPlayer.Volume = clampedVolume;
 
 				// 更新音量进度条（避免触发Scroll事件）
-				if(_volumeTrackBar.Value != clampedVolume)
+				if(volumeTrackBar.Value != clampedVolume)
 				{
-					_volumeTrackBar.Value = clampedVolume;
+					volumeTrackBar.Value = clampedVolume;
 				}
 				// 同时更新声道显示（这里简化为左右声道相同）					UpdateChannelDisplay(clampedVolume, clampedVolume);
 			}
@@ -1087,9 +1081,9 @@ namespace MusicChange
 				_mediaPlayer.Volume = clampedVolume;
 
 				// 更新音量进度条（避免触发Scroll事件）
-				if(_volumeTrackBar.Value != clampedVolume)
+				if(volumeTrackBar.Value != clampedVolume)
 				{
-					_volumeTrackBar.Value = clampedVolume;
+					volumeTrackBar.Value = clampedVolume;
 				}
 
 				// 同时更新声道显示
@@ -1113,8 +1107,8 @@ namespace MusicChange
 				_previousVolume = _mediaPlayer.Volume;
 				_mediaPlayer.Volume = 0;
 				_isMuted = true;
-				_muteButton.SymbolColor = Color.Salmon;
-				_volumeTrackBar.Value = 0;
+				muteButton.SymbolColor = Color.Salmon;
+				volumeTrackBar.Value = 0;
 
 				// 更新声道显示为静音状态  					UpdateChannelDisplay(0, 0);
 			}
@@ -1123,8 +1117,8 @@ namespace MusicChange
 				// 恢复之前音量
 				_mediaPlayer.Volume = _previousVolume;
 				_isMuted = false;
-				_muteButton.SymbolColor = Color.Gray;
-				_volumeTrackBar.Value = _previousVolume;
+				muteButton.SymbolColor = Color.Gray;
+				volumeTrackBar.Value = _previousVolume;
 
 				// 更新声道显示为恢复的音量 					UpdateChannelDisplay(_previousVolume, _previousVolume);
 			}
@@ -1225,7 +1219,7 @@ namespace MusicChange
 			long totalTime = _mediaPlayer.Length;
 			if(totalTime > 0)
 			{
-				long targetTime = (long)(_progressBar.Value * totalTime / 1000.0);
+				long targetTime = (long)(progressBar.Value * totalTime / 1000.0);
 				_mediaPlayer.Time = targetTime;
 			}
 		}
@@ -1237,8 +1231,8 @@ namespace MusicChange
 		if(_mediaPlayer != null && _mediaPlayer.Length > 0)
 		{
 			long totalTime = _mediaPlayer.Length;
-			long currentTime = (long)(_progressBar.Value * totalTime / 1000.0);
-			_currentTimeLabel.Text = FormatTime(currentTime);
+			long currentTime = (long)(progressBar.Value * totalTime / 1000.0);
+			currentTimeLabel.Text = FormatTime(currentTime);
 		}
 	}
 	// 定时器更新进度
@@ -1257,25 +1251,25 @@ namespace MusicChange
 			int progressValue = (int)(currentTime * 1000 / totalTime);
 			if(progressValue >= 0 && progressValue <= 1000)
 			{
-				_progressBar.Value = progressValue;
+				progressBar.Value = progressValue;
 			}
 
 			// 更新时间标签
-			_currentTimeLabel.Text = FormatTime(currentTime);
+			currentTimeLabel.Text = FormatTime(currentTime);
 		}
 	}
 	private void UpdateTotalTime(long totalTime)
 	{
-		_totalTimeLabel.Text = FormatTime(totalTime);
+		totalTimeLabel.Text = FormatTime(totalTime);
 		if(totalTime > 0)
 		{
-			_progressBar.Maximum = 1000;
+			progressBar.Maximum = 1000;
 		}
 	}
 	private void ResetProgress()
 	{
-		_progressBar.Value = 0;
-		_currentTimeLabel.Text = "00:00:00";
+		progressBar.Value = 0;
+		currentTimeLabel.Text = "00:00:00";
 	}
 	// 格式化时间显示 (毫秒转为 HH:MM:SS)
 	private string FormatTime(long milliseconds)
@@ -1304,13 +1298,13 @@ namespace MusicChange
 			}
 			if(_mediaPlayer.State == VLCState.Playing)
 			{
-				_progressTimer.Stop();
+				progressTimer.Stop();
 				_mediaPlayer.Pause();               //添加图片
 				playPauseButton.Image = Properties.Resources.start;                 //((Button)sender).Text = "播放";
 			}
 			else
 			{
-				_progressTimer.Start();
+				progressTimer.Start();
 				_mediaPlayer.Play();
 				playPauseButton.Image = Properties.Resources.pause;                 //((Button)sender).Text = "暂停";
 					//videoView1.ba
@@ -1327,7 +1321,7 @@ namespace MusicChange
 			if(_mediaPlayer != null)
 			{
 				playPauseButton.Image = Properties.Resources.start;
-				_progressTimer.Stop();
+				progressTimer.Stop();
 				_mediaPlayer.Stop();
 			}
 		}
@@ -1352,16 +1346,14 @@ namespace MusicChange
 				return;
 			}
 			_mediaPlayer.Stop();
-			using(var media = new Media(_libVLC, filePath, FromType.FromPath))
-			{
+				using var media = new Media(_libVLC, filePath, FromType.FromPath);
 				if(media == null)
 				{
 					throw new InvalidOperationException("无法创建媒体对象");
 				}
-				_progressTimer.Start();
+				progressTimer.Start();
 				_mediaPlayer.Play(media);
 			}
-		}
 		catch(Exception ex)
 		{
 			MessageBox.Show($"播放视频失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -1372,7 +1364,7 @@ namespace MusicChange
 	{
 		try
 		{
-			_progressTimer?.Stop();
+			progressTimer?.Stop();
 
 			if(_mediaPlayer != null)
 			{
@@ -1862,21 +1854,58 @@ namespace MusicChange
 
 	}
 
+		private void sC4_SplitterMoved(object sender, SplitterEventArgs e)
+		{
+			SplitContainer sc = sender as SplitContainer;
 
-	/*// 递归删除子目录及其所有内容
-try
-{
-if (Directory.Exists(subDirectory))
-{
-Directory.Delete(subDirectory, recursive: true); // recursive: true 表示删除所有子文件和子目录
-MessageBox.Show("子目录删除成功");
-}
-}
-catch (Exception ex)
-{
-MessageBox.Show("删除子目录失败: " + ex.Message);
-}*/
-	private void panel4_SizeChanged(object sender, EventArgs e)  // 导入 。。dynamic resize
+			// 确保 Panel1 不小于最小宽度
+			if(sc.Panel1.Width < sc.Panel1MinSize)
+			{
+				sc.SplitterDistance = sc.Panel1MinSize;
+			}
+
+			// 确保 Panel2 不小于最小宽度
+			if(sc.Panel2.Width < sc.Panel2MinSize)
+			{
+				sc.SplitterDistance = sc.Width - sc.Panel2MinSize - sc.SplitterWidth;
+			}
+		}
+
+		private void sC4_SplitterMoving(object sender, SplitterCancelEventArgs e)
+		{
+			SplitContainer sc = sender as SplitContainer;
+
+			// 防止 Panel1 小于最小宽度
+			if(e.SplitX < sc.Panel1MinSize)
+			{
+				e.Cancel = true; // 取消移动
+				sc.SplitterDistance = sc.Panel1MinSize;
+			}
+
+			// 防止 Panel2 小于最小宽度
+			int panel2Width = sc.Width - e.SplitX - sc.SplitterWidth;
+			if(panel2Width < sc.Panel2MinSize)
+			{
+				e.Cancel = true; // 取消移动
+				sc.SplitterDistance = sc.Width - sc.Panel2MinSize - sc.SplitterWidth;
+			}
+		}
+
+
+		/*// 递归删除子目录及其所有内容
+	try
+	{
+	if (Directory.Exists(subDirectory))
+	{
+	Directory.Delete(subDirectory, recursive: true); // recursive: true 表示删除所有子文件和子目录
+	MessageBox.Show("子目录删除成功");
+	}
+	}
+	catch (Exception ex)
+	{
+	MessageBox.Show("删除子目录失败: " + ex.Message);
+	}*/
+		private void panel4_SizeChanged(object sender, EventArgs e)  // 导入 。。dynamic resize
 	{
 		if(panel4.Visible)
 		{

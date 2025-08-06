@@ -79,26 +79,27 @@ namespace MusicChange
 			this.sC4 = new System.Windows.Forms.SplitContainer();
 			this.videoView1 = new LibVLCSharp.WinForms.VideoView();
 			this.panel1 = new System.Windows.Forms.Panel();
-			this._progressBar = new System.Windows.Forms.TrackBar();
-			this._volumeControlPanel = new System.Windows.Forms.Panel();
+			this.progressBar = new System.Windows.Forms.TrackBar();
+			this.volumeControlPanel = new System.Windows.Forms.Panel();
+			this.vieweMax = new DevComponents.DotNetBar.ButtonX();
 			this.volumenum = new System.Windows.Forms.Label();
-			this._volumeTrackBar = new System.Windows.Forms.TrackBar();
+			this.volumeTrackBar = new System.Windows.Forms.TrackBar();
 			this.playPauseButton = new System.Windows.Forms.Button();
-			this._fitToWindowButton = new DevComponents.DotNetBar.ButtonX();
-			this._totalTimeLabel = new System.Windows.Forms.Label();
-			this._currentTimeLabel = new System.Windows.Forms.Label();
-			this._zoomInButton = new DevComponents.DotNetBar.ButtonX();
-			this._zoomOutButton = new DevComponents.DotNetBar.ButtonX();
+			this.fitToWindowButton = new DevComponents.DotNetBar.ButtonX();
+			this.totalTimeLabel = new System.Windows.Forms.Label();
+			this.currentTimeLabel = new System.Windows.Forms.Label();
+			this.zoomInButton = new DevComponents.DotNetBar.ButtonX();
+			this.zoomOutButton = new DevComponents.DotNetBar.ButtonX();
 			this.stopButton = new System.Windows.Forms.Button();
-			this._muteButton = new DevComponents.DotNetBar.ButtonX();
+			this.muteButton = new DevComponents.DotNetBar.ButtonX();
 			this.button4 = new System.Windows.Forms.Button();
 			this.dataGridView1 = new System.Windows.Forms.DataGridView();
 			this.temp1 = new System.Windows.Forms.TextBox();
 			this.temp = new System.Windows.Forms.TextBox();
-			this.splitContainer5 = new System.Windows.Forms.SplitContainer();
-			this.splitContainer6 = new System.Windows.Forms.SplitContainer();
+			this.sC5 = new System.Windows.Forms.SplitContainer();
+			this.sC6 = new System.Windows.Forms.SplitContainer();
 			this.fontDialog1 = new System.Windows.Forms.FontDialog();
-			this._progressTimer = new System.Windows.Forms.Timer(this.components);
+			this.progressTimer = new System.Windows.Forms.Timer(this.components);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -125,15 +126,15 @@ namespace MusicChange
 			this.sC4.Panel2.SuspendLayout();
 			this.sC4.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.videoView1)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this._progressBar)).BeginInit();
-			this._volumeControlPanel.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this._volumeTrackBar)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.progressBar)).BeginInit();
+			this.volumeControlPanel.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.volumeTrackBar)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.splitContainer5)).BeginInit();
-			this.splitContainer5.Panel2.SuspendLayout();
-			this.splitContainer5.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.splitContainer6)).BeginInit();
-			this.splitContainer6.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.sC5)).BeginInit();
+			this.sC5.Panel2.SuspendLayout();
+			this.sC5.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.sC6)).BeginInit();
+			this.sC6.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// splitContainer1
@@ -336,7 +337,7 @@ namespace MusicChange
 			// splitContainer2.Panel2
 			// 
 			this.splitContainer2.Panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-			this.splitContainer2.Panel2.Controls.Add(this.splitContainer5);
+			this.splitContainer2.Panel2.Controls.Add(this.sC5);
 			this.splitContainer2.Size = new System.Drawing.Size(1842, 1001);
 			this.splitContainer2.SplitterDistance = 680;
 			this.splitContainer2.TabIndex = 0;
@@ -344,7 +345,6 @@ namespace MusicChange
 			// sC3
 			// 
 			this.sC3.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.sC3.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
 			this.sC3.Location = new System.Drawing.Point(0, 0);
 			this.sC3.Name = "sC3";
 			// 
@@ -364,9 +364,9 @@ namespace MusicChange
 			// 
 			this.sC3.Panel2.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
 			this.sC3.Panel2.Controls.Add(this.sC4);
-			this.sC3.Panel2MinSize = 300;
+			this.sC3.Panel2MinSize = 800;
 			this.sC3.Size = new System.Drawing.Size(1842, 680);
-			this.sC3.SplitterDistance = 640;
+			this.sC3.SplitterDistance = 700;
 			this.sC3.TabIndex = 0;
 			this.sC3.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.sC3_SplitterMoved);
 			// 
@@ -379,7 +379,7 @@ namespace MusicChange
 			this.upperleft.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.upperleft.Location = new System.Drawing.Point(82, 97);
 			this.upperleft.Name = "upperleft";
-			this.upperleft.Size = new System.Drawing.Size(556, 581);
+			this.upperleft.Size = new System.Drawing.Size(616, 581);
 			this.upperleft.TabIndex = 18;
 			// 
 			// rightChannelProgressBar
@@ -406,7 +406,7 @@ namespace MusicChange
 			this.panel4.Location = new System.Drawing.Point(0, 0);
 			this.panel4.Margin = new System.Windows.Forms.Padding(5);
 			this.panel4.Name = "panel4";
-			this.panel4.Size = new System.Drawing.Size(556, 90);
+			this.panel4.Size = new System.Drawing.Size(616, 90);
 			this.panel4.TabIndex = 0;
 			this.panel4.SizeChanged += new System.EventHandler(this.panel4_SizeChanged);
 			// 
@@ -415,7 +415,7 @@ namespace MusicChange
 			this.qrcode1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
 			this.qrcode1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.qrcode1.Image = global::MusicChange.Properties.Resources.QRcode;
-			this.qrcode1.Location = new System.Drawing.Point(315, 0);
+			this.qrcode1.Location = new System.Drawing.Point(345, 0);
 			this.qrcode1.Margin = new System.Windows.Forms.Padding(0);
 			this.qrcode1.Name = "qrcode1";
 			this.qrcode1.Size = new System.Drawing.Size(70, 80);
@@ -476,7 +476,7 @@ namespace MusicChange
 			this.dG.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
 			this.dG.RowHeadersWidth = 51;
 			this.dG.RowTemplate.Height = 27;
-			this.dG.Size = new System.Drawing.Size(556, 90);
+			this.dG.Size = new System.Drawing.Size(616, 90);
 			this.dG.TabIndex = 1;
 			// 
 			// lefttopfile
@@ -488,7 +488,7 @@ namespace MusicChange
 			this.lefttopfile.Location = new System.Drawing.Point(82, 62);
 			this.lefttopfile.Margin = new System.Windows.Forms.Padding(6);
 			this.lefttopfile.Name = "lefttopfile";
-			this.lefttopfile.Size = new System.Drawing.Size(556, 35);
+			this.lefttopfile.Size = new System.Drawing.Size(616, 35);
 			this.lefttopfile.TabIndex = 11;
 			this.lefttopfile.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
 			// 
@@ -661,7 +661,7 @@ namespace MusicChange
 			this.leftmatrial.Dock = System.Windows.Forms.DockStyle.Top;
 			this.leftmatrial.Location = new System.Drawing.Point(2, 2);
 			this.leftmatrial.Name = "leftmatrial";
-			this.leftmatrial.Size = new System.Drawing.Size(636, 60);
+			this.leftmatrial.Size = new System.Drawing.Size(696, 60);
 			this.leftmatrial.Style.Alignment = System.Drawing.StringAlignment.Center;
 			this.leftmatrial.Style.BackColor1.Color = System.Drawing.Color.Black;
 			this.leftmatrial.Style.BackColor2.Color = System.Drawing.Color.Black;
@@ -681,7 +681,7 @@ namespace MusicChange
 			this.flowLayoutPanel1.ForeColor = System.Drawing.SystemColors.AppWorkspace;
 			this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
 			this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-			this.flowLayoutPanel1.Size = new System.Drawing.Size(636, 60);
+			this.flowLayoutPanel1.Size = new System.Drawing.Size(696, 60);
 			this.flowLayoutPanel1.TabIndex = 0;
 			// 
 			// material
@@ -734,10 +734,13 @@ namespace MusicChange
 			// 
 			// sC4.Panel1
 			// 
+			this.sC4.Panel1.AutoScroll = true;
+			this.sC4.Panel1.AutoScrollMinSize = new System.Drawing.Size(630, 0);
 			this.sC4.Panel1.Controls.Add(this.videoView1);
 			this.sC4.Panel1.Controls.Add(this.panel1);
-			this.sC4.Panel1.Controls.Add(this._progressBar);
-			this.sC4.Panel1.Controls.Add(this._volumeControlPanel);
+			this.sC4.Panel1.Controls.Add(this.progressBar);
+			this.sC4.Panel1.Controls.Add(this.volumeControlPanel);
+			this.sC4.Panel1MinSize = 630;
 			// 
 			// sC4.Panel2
 			// 
@@ -747,18 +750,22 @@ namespace MusicChange
 			this.sC4.Panel2.Controls.Add(this.temp1);
 			this.sC4.Panel2.Controls.Add(this.temp);
 			this.sC4.Panel2.Margin = new System.Windows.Forms.Padding(5);
-			this.sC4.Size = new System.Drawing.Size(1198, 680);
-			this.sC4.SplitterDistance = 698;
+			this.sC4.Panel2MinSize = 300;
+			this.sC4.Size = new System.Drawing.Size(1138, 680);
+			this.sC4.SplitterDistance = 630;
 			this.sC4.TabIndex = 0;
+			this.sC4.SplitterMoving += new System.Windows.Forms.SplitterCancelEventHandler(this.sC4_SplitterMoving);
+			this.sC4.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.sC4_SplitterMoved);
 			// 
 			// videoView1
 			// 
 			this.videoView1.BackColor = System.Drawing.Color.Teal;
 			this.videoView1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.videoView1.Location = new System.Drawing.Point(0, 30);
+			this.videoView1.Margin = new System.Windows.Forms.Padding(10);
 			this.videoView1.MediaPlayer = null;
 			this.videoView1.Name = "videoView1";
-			this.videoView1.Size = new System.Drawing.Size(698, 591);
+			this.videoView1.Size = new System.Drawing.Size(630, 594);
 			this.videoView1.TabIndex = 3;
 			this.videoView1.Text = "videoView1";
 			// 
@@ -768,70 +775,92 @@ namespace MusicChange
 			this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
 			this.panel1.Location = new System.Drawing.Point(0, 0);
 			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(698, 30);
+			this.panel1.Size = new System.Drawing.Size(630, 30);
 			this.panel1.TabIndex = 4;
 			// 
-			// _progressBar
+			// progressBar
 			// 
-			this._progressBar.AutoSize = false;
-			this._progressBar.BackColor = System.Drawing.Color.DarkGray;
-			this._progressBar.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this._progressBar.Location = new System.Drawing.Point(0, 621);
-			this._progressBar.Margin = new System.Windows.Forms.Padding(0, 5, 0, 0);
-			this._progressBar.Maximum = 1000;
-			this._progressBar.Name = "_progressBar";
-			this._progressBar.RightToLeft = System.Windows.Forms.RightToLeft.No;
-			this._progressBar.Size = new System.Drawing.Size(698, 29);
-			this._progressBar.TabIndex = 2;
-			this._progressBar.TickStyle = System.Windows.Forms.TickStyle.None;
-			this._progressBar.Scroll += new System.EventHandler(this._progressBar_Scroll);
-			this._progressBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this._progressBar_MouseDown);
-			this._progressBar.MouseUp += new System.Windows.Forms.MouseEventHandler(this._progressBar_MouseUp);
+			this.progressBar.AutoSize = false;
+			this.progressBar.BackColor = System.Drawing.Color.Gray;
+			this.progressBar.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.progressBar.Location = new System.Drawing.Point(0, 624);
+			this.progressBar.Margin = new System.Windows.Forms.Padding(0, 5, 0, 0);
+			this.progressBar.Maximum = 1000;
+			this.progressBar.Name = "progressBar";
+			this.progressBar.RightToLeft = System.Windows.Forms.RightToLeft.No;
+			this.progressBar.Size = new System.Drawing.Size(630, 26);
+			this.progressBar.TabIndex = 2;
+			this.progressBar.TickStyle = System.Windows.Forms.TickStyle.None;
+			this.progressBar.Scroll += new System.EventHandler(this._progressBar_Scroll);
+			this.progressBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this._progressBar_MouseDown);
+			this.progressBar.MouseUp += new System.Windows.Forms.MouseEventHandler(this._progressBar_MouseUp);
 			// 
-			// _volumeControlPanel
+			// volumeControlPanel
 			// 
-			this._volumeControlPanel.BackColor = System.Drawing.Color.Black;
-			this._volumeControlPanel.Controls.Add(this.volumenum);
-			this._volumeControlPanel.Controls.Add(this._volumeTrackBar);
-			this._volumeControlPanel.Controls.Add(this.playPauseButton);
-			this._volumeControlPanel.Controls.Add(this._fitToWindowButton);
-			this._volumeControlPanel.Controls.Add(this._totalTimeLabel);
-			this._volumeControlPanel.Controls.Add(this._currentTimeLabel);
-			this._volumeControlPanel.Controls.Add(this._zoomInButton);
-			this._volumeControlPanel.Controls.Add(this._zoomOutButton);
-			this._volumeControlPanel.Controls.Add(this.stopButton);
-			this._volumeControlPanel.Controls.Add(this._muteButton);
-			this._volumeControlPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this._volumeControlPanel.ForeColor = System.Drawing.Color.White;
-			this._volumeControlPanel.Location = new System.Drawing.Point(0, 650);
-			this._volumeControlPanel.Name = "_volumeControlPanel";
-			this._volumeControlPanel.Size = new System.Drawing.Size(698, 30);
-			this._volumeControlPanel.TabIndex = 1;
+			this.volumeControlPanel.BackColor = System.Drawing.Color.Black;
+			this.volumeControlPanel.Controls.Add(this.vieweMax);
+			this.volumeControlPanel.Controls.Add(this.volumenum);
+			this.volumeControlPanel.Controls.Add(this.volumeTrackBar);
+			this.volumeControlPanel.Controls.Add(this.playPauseButton);
+			this.volumeControlPanel.Controls.Add(this.fitToWindowButton);
+			this.volumeControlPanel.Controls.Add(this.totalTimeLabel);
+			this.volumeControlPanel.Controls.Add(this.currentTimeLabel);
+			this.volumeControlPanel.Controls.Add(this.zoomInButton);
+			this.volumeControlPanel.Controls.Add(this.zoomOutButton);
+			this.volumeControlPanel.Controls.Add(this.stopButton);
+			this.volumeControlPanel.Controls.Add(this.muteButton);
+			this.volumeControlPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.volumeControlPanel.ForeColor = System.Drawing.Color.White;
+			this.volumeControlPanel.Location = new System.Drawing.Point(0, 650);
+			this.volumeControlPanel.MaximumSize = new System.Drawing.Size(0, 30);
+			this.volumeControlPanel.MinimumSize = new System.Drawing.Size(0, 30);
+			this.volumeControlPanel.Name = "volumeControlPanel";
+			this.volumeControlPanel.Padding = new System.Windows.Forms.Padding(2);
+			this.volumeControlPanel.Size = new System.Drawing.Size(630, 30);
+			this.volumeControlPanel.TabIndex = 1;
+			// 
+			// vieweMax
+			// 
+			this.vieweMax.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+			this.vieweMax.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
+			this.vieweMax.Dock = System.Windows.Forms.DockStyle.Right;
+			this.vieweMax.Location = new System.Drawing.Point(602, 2);
+			this.vieweMax.Margin = new System.Windows.Forms.Padding(10, 4, 2, 2);
+			this.vieweMax.Name = "vieweMax";
+			this.vieweMax.Size = new System.Drawing.Size(26, 26);
+			this.vieweMax.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+			this.vieweMax.Symbol = "";
+			this.vieweMax.SymbolColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+			this.vieweMax.SymbolSize = 14F;
+			this.vieweMax.TabIndex = 5;
 			// 
 			// volumenum
 			// 
-			this.volumenum.AutoSize = true;
+			this.volumenum.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
 			this.volumenum.BackColor = System.Drawing.Color.Black;
 			this.volumenum.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-			this.volumenum.Location = new System.Drawing.Point(327, 0);
+			this.volumenum.Location = new System.Drawing.Point(316, 4);
+			this.volumenum.Margin = new System.Windows.Forms.Padding(4);
 			this.volumenum.Name = "volumenum";
-			this.volumenum.Size = new System.Drawing.Size(23, 15);
+			this.volumenum.Size = new System.Drawing.Size(24, 24);
 			this.volumenum.TabIndex = 4;
 			this.volumenum.Text = "50";
 			// 
-			// _volumeTrackBar
+			// volumeTrackBar
 			// 
-			this._volumeTrackBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+			this.volumeTrackBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-			this._volumeTrackBar.Location = new System.Drawing.Point(221, 4);
-			this._volumeTrackBar.Maximum = 100;
-			this._volumeTrackBar.Minimum = 1;
-			this._volumeTrackBar.Name = "_volumeTrackBar";
-			this._volumeTrackBar.Size = new System.Drawing.Size(100, 56);
-			this._volumeTrackBar.TabIndex = 4;
-			this._volumeTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
-			this._volumeTrackBar.Value = 50;
-			this._volumeTrackBar.Scroll += new System.EventHandler(this.VolumeTrackBar_Scroll);
+			this.volumeTrackBar.Location = new System.Drawing.Point(206, 4);
+			this.volumeTrackBar.Margin = new System.Windows.Forms.Padding(4);
+			this.volumeTrackBar.Maximum = 100;
+			this.volumeTrackBar.Minimum = 1;
+			this.volumeTrackBar.Name = "volumeTrackBar";
+			this.volumeTrackBar.Size = new System.Drawing.Size(100, 56);
+			this.volumeTrackBar.TabIndex = 4;
+			this.volumeTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
+			this.volumeTrackBar.Value = 50;
+			this.volumeTrackBar.Scroll += new System.EventHandler(this.VolumeTrackBar_Scroll);
 			// 
 			// playPauseButton
 			// 
@@ -841,88 +870,93 @@ namespace MusicChange
 			this.playPauseButton.Font = new System.Drawing.Font("宋体", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.playPauseButton.ForeColor = System.Drawing.Color.Black;
 			this.playPauseButton.Image = global::MusicChange.Properties.Resources.start;
-			this.playPauseButton.Location = new System.Drawing.Point(372, 2);
-			this.playPauseButton.Margin = new System.Windows.Forms.Padding(5);
+			this.playPauseButton.Location = new System.Drawing.Point(350, 2);
+			this.playPauseButton.Margin = new System.Windows.Forms.Padding(4);
 			this.playPauseButton.Name = "playPauseButton";
-			this.playPauseButton.Size = new System.Drawing.Size(26, 26);
+			this.playPauseButton.Size = new System.Drawing.Size(30, 30);
 			this.playPauseButton.TabIndex = 4;
 			this.playPauseButton.UseVisualStyleBackColor = true;
 			this.playPauseButton.Click += new System.EventHandler(this.playPauseButton_Click_1);
 			// 
-			// _fitToWindowButton
+			// fitToWindowButton
 			// 
-			this._fitToWindowButton.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-			this._fitToWindowButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+			this.fitToWindowButton.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+			this.fitToWindowButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-			this._fitToWindowButton.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-			this._fitToWindowButton.Location = new System.Drawing.Point(499, 2);
-			this._fitToWindowButton.Margin = new System.Windows.Forms.Padding(3, 3, 20, 3);
-			this._fitToWindowButton.Name = "_fitToWindowButton";
-			this._fitToWindowButton.Size = new System.Drawing.Size(30, 30);
-			this._fitToWindowButton.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-			this._fitToWindowButton.Symbol = "";
-			this._fitToWindowButton.SymbolColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-			this._fitToWindowButton.SymbolSize = 14F;
-			this._fitToWindowButton.TabIndex = 7;
-			this._fitToWindowButton.Tooltip = "适应 窗口大小";
-			this._fitToWindowButton.Click += new System.EventHandler(this.FitToWindowButton_Click);
+			this.fitToWindowButton.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
+			this.fitToWindowButton.Location = new System.Drawing.Point(426, 4);
+			this.fitToWindowButton.Margin = new System.Windows.Forms.Padding(2);
+			this.fitToWindowButton.Name = "fitToWindowButton";
+			this.fitToWindowButton.Size = new System.Drawing.Size(26, 26);
+			this.fitToWindowButton.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+			this.fitToWindowButton.Symbol = "";
+			this.fitToWindowButton.SymbolColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+			this.fitToWindowButton.SymbolSize = 14F;
+			this.fitToWindowButton.TabIndex = 7;
+			this.fitToWindowButton.Tooltip = "适应 窗口大小";
+			this.fitToWindowButton.Click += new System.EventHandler(this.FitToWindowButton_Click);
 			// 
-			// _totalTimeLabel
+			// totalTimeLabel
 			// 
-			this._totalTimeLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+			this.totalTimeLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-			this._totalTimeLabel.AutoSize = true;
-			this._totalTimeLabel.Location = new System.Drawing.Point(97, 6);
-			this._totalTimeLabel.Name = "_totalTimeLabel";
-			this._totalTimeLabel.Size = new System.Drawing.Size(71, 15);
-			this._totalTimeLabel.TabIndex = 1;
-			this._totalTimeLabel.Text = "00:00:00";
+			this.totalTimeLabel.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.totalTimeLabel.Location = new System.Drawing.Point(90, 4);
+			this.totalTimeLabel.Margin = new System.Windows.Forms.Padding(4);
+			this.totalTimeLabel.Name = "totalTimeLabel";
+			this.totalTimeLabel.Size = new System.Drawing.Size(80, 17);
+			this.totalTimeLabel.TabIndex = 1;
+			this.totalTimeLabel.Text = "00:00:00";
 			// 
-			// _currentTimeLabel
+			// currentTimeLabel
 			// 
-			this._currentTimeLabel.AutoSize = true;
-			this._currentTimeLabel.Dock = System.Windows.Forms.DockStyle.Left;
-			this._currentTimeLabel.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this._currentTimeLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
-			this._currentTimeLabel.Location = new System.Drawing.Point(0, 0);
-			this._currentTimeLabel.Name = "_currentTimeLabel";
-			this._currentTimeLabel.Size = new System.Drawing.Size(80, 17);
-			this._currentTimeLabel.TabIndex = 0;
-			this._currentTimeLabel.Text = "00:00:00";
-			this._currentTimeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.currentTimeLabel.Dock = System.Windows.Forms.DockStyle.Left;
+			this.currentTimeLabel.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.currentTimeLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+			this.currentTimeLabel.Location = new System.Drawing.Point(2, 2);
+			this.currentTimeLabel.Margin = new System.Windows.Forms.Padding(4);
+			this.currentTimeLabel.Name = "currentTimeLabel";
+			this.currentTimeLabel.Size = new System.Drawing.Size(80, 26);
+			this.currentTimeLabel.TabIndex = 0;
+			this.currentTimeLabel.Text = "00:00:00";
+			this.currentTimeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
-			// _zoomInButton
+			// zoomInButton
 			// 
-			this._zoomInButton.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-			this._zoomInButton.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-			this._zoomInButton.Location = new System.Drawing.Point(633, 2);
-			this._zoomInButton.Name = "_zoomInButton";
-			this._zoomInButton.Size = new System.Drawing.Size(26, 30);
-			this._zoomInButton.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-			this._zoomInButton.Symbol = "";
-			this._zoomInButton.SymbolColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-			this._zoomInButton.SymbolSize = 14F;
-			this._zoomInButton.TabIndex = 0;
-			this._zoomInButton.Click += new System.EventHandler(this.ZoomInButton_Click);
-			// 
-			// _zoomOutButton
-			// 
-			this._zoomOutButton.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-			this._zoomOutButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+			this.zoomInButton.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+			this.zoomInButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-			this._zoomOutButton.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-			this._zoomOutButton.Location = new System.Drawing.Point(580, 3);
-			this._zoomOutButton.Margin = new System.Windows.Forms.Padding(3, 3, 20, 3);
-			this._zoomOutButton.Name = "_zoomOutButton";
-			this._zoomOutButton.Size = new System.Drawing.Size(30, 30);
-			this._zoomOutButton.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-			this._zoomOutButton.Symbol = "58838";
-			this._zoomOutButton.SymbolColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-			this._zoomOutButton.SymbolSet = DevComponents.DotNetBar.eSymbolSet.Material;
-			this._zoomOutButton.SymbolSize = 14F;
-			this._zoomOutButton.TabIndex = 6;
-			this._zoomOutButton.Tooltip = "缩小";
-			this._zoomOutButton.Click += new System.EventHandler(this.ZoomOutButton_Click);
+			this.zoomInButton.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
+			this.zoomInButton.Location = new System.Drawing.Point(498, 4);
+			this.zoomInButton.Margin = new System.Windows.Forms.Padding(2);
+			this.zoomInButton.Name = "zoomInButton";
+			this.zoomInButton.Size = new System.Drawing.Size(26, 26);
+			this.zoomInButton.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+			this.zoomInButton.Symbol = "57539";
+			this.zoomInButton.SymbolColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+			this.zoomInButton.SymbolSet = DevComponents.DotNetBar.eSymbolSet.Material;
+			this.zoomInButton.SymbolSize = 14F;
+			this.zoomInButton.TabIndex = 0;
+			this.zoomInButton.Click += new System.EventHandler(this.ZoomInButton_Click);
+			// 
+			// zoomOutButton
+			// 
+			this.zoomOutButton.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+			this.zoomOutButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+			this.zoomOutButton.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
+			this.zoomOutButton.Location = new System.Drawing.Point(462, 4);
+			this.zoomOutButton.Margin = new System.Windows.Forms.Padding(4);
+			this.zoomOutButton.Name = "zoomOutButton";
+			this.zoomOutButton.Size = new System.Drawing.Size(26, 26);
+			this.zoomOutButton.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+			this.zoomOutButton.Symbol = "58838";
+			this.zoomOutButton.SymbolColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+			this.zoomOutButton.SymbolSet = DevComponents.DotNetBar.eSymbolSet.Material;
+			this.zoomOutButton.SymbolSize = 14F;
+			this.zoomOutButton.TabIndex = 6;
+			this.zoomOutButton.Tooltip = "缩小";
+			this.zoomOutButton.Click += new System.EventHandler(this.ZoomOutButton_Click);
 			// 
 			// stopButton
 			// 
@@ -932,28 +966,30 @@ namespace MusicChange
 			this.stopButton.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.stopButton.ForeColor = System.Drawing.Color.Black;
 			this.stopButton.Image = global::MusicChange.Properties.Resources.stop;
-			this.stopButton.Location = new System.Drawing.Point(436, 4);
+			this.stopButton.Location = new System.Drawing.Point(390, 4);
+			this.stopButton.Margin = new System.Windows.Forms.Padding(4);
 			this.stopButton.Name = "stopButton";
 			this.stopButton.Size = new System.Drawing.Size(26, 26);
 			this.stopButton.TabIndex = 5;
 			this.stopButton.UseVisualStyleBackColor = true;
 			this.stopButton.Click += new System.EventHandler(this.StopButton_Click);
 			// 
-			// _muteButton
+			// muteButton
 			// 
-			this._muteButton.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-			this._muteButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+			this.muteButton.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+			this.muteButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-			this._muteButton.ColorTable = DevComponents.DotNetBar.eButtonColor.Flat;
-			this._muteButton.Location = new System.Drawing.Point(189, 2);
-			this._muteButton.Name = "_muteButton";
-			this._muteButton.Size = new System.Drawing.Size(26, 26);
-			this._muteButton.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-			this._muteButton.Symbol = "";
-			this._muteButton.SymbolColor = System.Drawing.Color.Salmon;
-			this._muteButton.SymbolSize = 14F;
-			this._muteButton.TabIndex = 3;
-			this._muteButton.Click += new System.EventHandler(this.MuteButton_Click);
+			this.muteButton.ColorTable = DevComponents.DotNetBar.eButtonColor.Flat;
+			this.muteButton.Location = new System.Drawing.Point(180, 4);
+			this.muteButton.Margin = new System.Windows.Forms.Padding(4);
+			this.muteButton.Name = "muteButton";
+			this.muteButton.Size = new System.Drawing.Size(26, 26);
+			this.muteButton.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+			this.muteButton.Symbol = "";
+			this.muteButton.SymbolColor = System.Drawing.Color.Salmon;
+			this.muteButton.SymbolSize = 14F;
+			this.muteButton.TabIndex = 3;
+			this.muteButton.Click += new System.EventHandler(this.MuteButton_Click);
 			// 
 			// button4
 			// 
@@ -1012,45 +1048,44 @@ namespace MusicChange
 			this.temp.Size = new System.Drawing.Size(261, 25);
 			this.temp.TabIndex = 0;
 			// 
-			// splitContainer5
+			// sC5
 			// 
-			this.splitContainer5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
-			this.splitContainer5.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.splitContainer5.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-			this.splitContainer5.IsSplitterFixed = true;
-			this.splitContainer5.Location = new System.Drawing.Point(0, 0);
-			this.splitContainer5.Name = "splitContainer5";
-			this.splitContainer5.Orientation = System.Windows.Forms.Orientation.Horizontal;
+			this.sC5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+			this.sC5.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.sC5.IsSplitterFixed = true;
+			this.sC5.Location = new System.Drawing.Point(0, 0);
+			this.sC5.Name = "sC5";
+			this.sC5.Orientation = System.Windows.Forms.Orientation.Horizontal;
 			// 
-			// splitContainer5.Panel1
+			// sC5.Panel1
 			// 
-			this.splitContainer5.Panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
+			this.sC5.Panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
 			// 
-			// splitContainer5.Panel2
+			// sC5.Panel2
 			// 
-			this.splitContainer5.Panel2.Controls.Add(this.splitContainer6);
-			this.splitContainer5.Size = new System.Drawing.Size(1842, 317);
-			this.splitContainer5.SplitterDistance = 28;
-			this.splitContainer5.TabIndex = 0;
+			this.sC5.Panel2.Controls.Add(this.sC6);
+			this.sC5.Size = new System.Drawing.Size(1842, 317);
+			this.sC5.SplitterDistance = 28;
+			this.sC5.TabIndex = 0;
 			// 
-			// splitContainer6
+			// sC6
 			// 
-			this.splitContainer6.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.splitContainer6.Location = new System.Drawing.Point(0, 0);
-			this.splitContainer6.Margin = new System.Windows.Forms.Padding(5);
-			this.splitContainer6.Name = "splitContainer6";
+			this.sC6.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.sC6.Location = new System.Drawing.Point(0, 0);
+			this.sC6.Margin = new System.Windows.Forms.Padding(5);
+			this.sC6.Name = "sC6";
 			// 
-			// splitContainer6.Panel1
+			// sC6.Panel1
 			// 
-			this.splitContainer6.Panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-			this.splitContainer6.Size = new System.Drawing.Size(1842, 285);
-			this.splitContainer6.SplitterDistance = 195;
-			this.splitContainer6.TabIndex = 0;
-			this.splitContainer6.MouseMove += new System.Windows.Forms.MouseEventHandler(this.splitContainer6_MouseMove);
+			this.sC6.Panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+			this.sC6.Size = new System.Drawing.Size(100, 285);
+			this.sC6.SplitterDistance = 25;
+			this.sC6.TabIndex = 0;
+			this.sC6.MouseMove += new System.Windows.Forms.MouseEventHandler(this.splitContainer6_MouseMove);
 			// 
-			// _progressTimer
+			// progressTimer
 			// 
-			this._progressTimer.Tick += new System.EventHandler(this.ProgressTimer_Tick);
+			this.progressTimer.Tick += new System.EventHandler(this.ProgressTimer_Tick);
 			// 
 			// LaserEditing
 			// 
@@ -1065,6 +1100,7 @@ namespace MusicChange
 			this.KeyPreview = true;
 			this.Location = new System.Drawing.Point(-1920, 358);
 			this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			this.MinimumSize = new System.Drawing.Size(1800, 0);
 			this.Name = "LaserEditing";
 			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -1105,16 +1141,16 @@ namespace MusicChange
 			((System.ComponentModel.ISupportInitialize)(this.sC4)).EndInit();
 			this.sC4.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.videoView1)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this._progressBar)).EndInit();
-			this._volumeControlPanel.ResumeLayout(false);
-			this._volumeControlPanel.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this._volumeTrackBar)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.progressBar)).EndInit();
+			this.volumeControlPanel.ResumeLayout(false);
+			this.volumeControlPanel.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.volumeTrackBar)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-			this.splitContainer5.Panel2.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.splitContainer5)).EndInit();
-			this.splitContainer5.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.splitContainer6)).EndInit();
-			this.splitContainer6.ResumeLayout(false);
+			this.sC5.Panel2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.sC5)).EndInit();
+			this.sC5.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.sC6)).EndInit();
+			this.sC6.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -1125,8 +1161,8 @@ namespace MusicChange
 		private System.Windows.Forms.SplitContainer splitContainer2;
 		private System.Windows.Forms.SplitContainer sC3;
 		private System.Windows.Forms.SplitContainer sC4;
-		private System.Windows.Forms.SplitContainer splitContainer5;
-		private System.Windows.Forms.SplitContainer splitContainer6;
+		private System.Windows.Forms.SplitContainer sC5;
+		private System.Windows.Forms.SplitContainer sC6;
 		private DevComponents.DotNetBar.ButtonX Modifythephoto;
 		private DevComponents.DotNetBar.ButtonX logo;
 		private DevComponents.DotNetBar.PanelEx leftmatrial;
@@ -1158,24 +1194,25 @@ namespace MusicChange
 		private System.Windows.Forms.Button qrcode1;
 		private DevComponents.DotNetBar.Controls.DataGridViewX dG;
 		private System.Windows.Forms.DataGridView dataGridView1;
-		private System.Windows.Forms.Timer _progressTimer;
+		private System.Windows.Forms.Timer progressTimer;
 		private System.Windows.Forms.Button button4;
-		private System.Windows.Forms.TrackBar _progressBar;
-		private System.Windows.Forms.Label _totalTimeLabel;
-		private System.Windows.Forms.Label _currentTimeLabel;
+		private System.Windows.Forms.TrackBar progressBar;
+		private System.Windows.Forms.Label totalTimeLabel;
+		private System.Windows.Forms.Label currentTimeLabel;
 		private LibVLCSharp.WinForms.VideoView videoView1;
 		private System.Windows.Forms.Button playPauseButton;
 		private System.Windows.Forms.Button stopButton;
-		private System.Windows.Forms.Panel _volumeControlPanel;
-		private DevComponents.DotNetBar.ButtonX _muteButton;
-		private System.Windows.Forms.TrackBar _volumeTrackBar;
+		private System.Windows.Forms.Panel volumeControlPanel;
+		private DevComponents.DotNetBar.ButtonX muteButton;
+		private System.Windows.Forms.TrackBar volumeTrackBar;
 		private System.Windows.Forms.Label volumenum;
-		private DevComponents.DotNetBar.ButtonX _zoomInButton;
-		private DevComponents.DotNetBar.ButtonX _zoomOutButton;
-		private DevComponents.DotNetBar.ButtonX _fitToWindowButton;
+		private DevComponents.DotNetBar.ButtonX zoomInButton;
+		private DevComponents.DotNetBar.ButtonX zoomOutButton;
+		private DevComponents.DotNetBar.ButtonX fitToWindowButton;
 		private System.Windows.Forms.ProgressBar leftChannelProgressBar;
 		private System.Windows.Forms.ProgressBar rightChannelProgressBar;
 		private System.Windows.Forms.Panel panel1;
+		private DevComponents.DotNetBar.ButtonX vieweMax;
 	}
 }
 #endregion 
