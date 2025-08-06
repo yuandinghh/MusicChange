@@ -32,7 +32,7 @@ namespace MusicChange
 		
 		}
 
-		private bool _isShifting = false; // 递归拦截标志
+		//private bool _isShifting = false; // 递归拦截标志
 
 		//private void ShiftButtonsDown(int refY, int offset)
 		//{

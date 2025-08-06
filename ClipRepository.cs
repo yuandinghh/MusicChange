@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.SQLite;
-using static MusicChange.db;
+//using static MusicChange.db;
 
 namespace MusicChange
 {

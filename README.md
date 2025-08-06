@@ -7,6 +7,10 @@
 
 命名空间“MusicChange”中不存在类型或命名空间名“VideoEditor”(是否缺少程序集引用?)
 
+waveProvider.AddSamples(audioData, 0, audioData.Length);    无法从short[] 转为 byte[]
+
+	waveOut.Resume();  未包含  Resume() 定义
+
 splitContainer.Panel1 如何使 宽度固定并不能拉伸
 初始化 LibVLC。
 

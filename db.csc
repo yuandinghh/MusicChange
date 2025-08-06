@@ -10,9 +10,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 namespace MusicChange
 {
 	// 数据库操作封装类
-#pragma warning disable IDE1006 // 命名样式
 	public class db
-#pragma warning restore IDE1006 // 命名样式
 	{   // 数据库连接字符串（建议使用绝对路径避免路径问题）
 		public static string dbPath = "D:\\Documents\\Visual Studio 2022\\MusicChange\\LaserEditing.db";
 		public static string _connectionString;
@@ -85,21 +83,21 @@ namespace MusicChange
 		/// <returns></returns>
 		public int InsertProject(Project project)
 		{
-#pragma warning disable IDE0063 // 使用简单的 "using" 语句
 			using (var connection = new SQLiteConnection( _connectionString )) {
-#pragma warning restore IDE0063 // 使用简单的 "using" 语句
 				connection.Open();
 				string sql = @"
                     INSERT INTO projects (name, description, created_at, updated_at)
                     VALUES (@name, @description, @created_at, @updated_at);
                     SELECT last_insert_rowid();";
 
-				using var command = new SQLiteCommand(sql, connection);
-				command.Parameters.AddWithValue("@name", project.Name);
-				command.Parameters.AddWithValue("@description", project.Description ?? "");
-				command.Parameters.AddWithValue("@created_at", project.CreatedAt);
-				command.Parameters.AddWithValue("@updated_at", project.UpdatedAt);
-				return Convert.ToInt32(command.ExecuteScalar());
+				using (var command = new SQLiteCommand( sql, connection )) {
+					command.Parameters.AddWithValue( "@name", project.Name );
+					command.Parameters.AddWithValue( "@description", project.Description ?? "" );
+					command.Parameters.AddWithValue( "@created_at", project.CreatedAt );
+					command.Parameters.AddWithValue( "@updated_at", project.UpdatedAt );
+
+					return Convert.ToInt32( command.ExecuteScalar() );
+				}
 			}
 		}
 		/// <summary>
@@ -115,19 +113,20 @@ namespace MusicChange
 			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
 				string sql = "SELECT * FROM projects WHERE id = @id";
-				using var command = new SQLiteCommand(sql, connection);
-				command.Parameters.AddWithValue("@id", id);
-				using var reader = command.ExecuteReader();
-				if(reader.Read())
-				{
-					return new Project
-					{
-						Id = Convert.ToInt32(reader["id"]),
-						Name = reader["name"].ToString(),
-						Description = reader["description"].ToString(),
-						CreatedAt = Convert.ToDateTime(reader["created_at"]),
-						UpdatedAt = Convert.ToDateTime(reader["updated_at"])
-					};
+				using (var command = new SQLiteCommand( sql, connection )) {
+					command.Parameters.AddWithValue( "@id", id );
+					using (var reader = command.ExecuteReader()) {
+						if (reader.Read()) {
+							return new Project
+							{
+								Id = Convert.ToInt32( reader["id"] ),
+								Name = reader["name"].ToString(),
+								Description = reader["description"].ToString(),
+								CreatedAt = Convert.ToDateTime( reader["created_at"] ),
+								UpdatedAt = Convert.ToDateTime( reader["updated_at"] )
+							};
+						}
+					}
 				}
 			}
 			return null;
@@ -142,18 +141,18 @@ namespace MusicChange
 			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
 				string sql = "SELECT * FROM projects ORDER BY created_at DESC";
-				using var command = new SQLiteCommand(sql, connection);
-				using var reader = command.ExecuteReader();
-				while(reader.Read())
-				{
-					projects.Add(new Project
-					{
-						Id = Convert.ToInt32(reader["id"]),
-						Name = reader["name"].ToString(),
-						Description = reader["description"].ToString(),
-						CreatedAt = Convert.ToDateTime(reader["created_at"]),
-						UpdatedAt = Convert.ToDateTime(reader["updated_at"])
-					});
+				using (var command = new SQLiteCommand( sql, connection ))
+				using (var reader = command.ExecuteReader()) {
+					while (reader.Read()) {
+						projects.Add( new Project
+						{
+							Id = Convert.ToInt32( reader["id"] ),
+							Name = reader["name"].ToString(),
+							Description = reader["description"].ToString(),
+							CreatedAt = Convert.ToDateTime( reader["created_at"] ),
+							UpdatedAt = Convert.ToDateTime( reader["updated_at"] )
+						} );
+					}
 				}
 			}
 			return projects;
@@ -164,21 +163,23 @@ namespace MusicChange
 		/// </summary>
 		public bool UpdateProject(Project project)
 		{
-			using var connection = new SQLiteConnection(_connectionString);
-			connection.Open();
+			using (var connection = new SQLiteConnection( _connectionString )) {
+				connection.Open();
 
-			string sql = @"
+				string sql = @"
                     UPDATE projects 
                     SET name = @name, description = @description, updated_at = @updated_at
                     WHERE id = @id";
 
-			using var command = new SQLiteCommand(sql, connection);
-			command.Parameters.AddWithValue("@name", project.Name);
-			command.Parameters.AddWithValue("@description", project.Description ?? "");
-			command.Parameters.AddWithValue("@updated_at", DateTime.Now);
-			command.Parameters.AddWithValue("@id", project.Id);
+				using (var command = new SQLiteCommand( sql, connection )) {
+					command.Parameters.AddWithValue( "@name", project.Name );
+					command.Parameters.AddWithValue( "@description", project.Description ?? "" );
+					command.Parameters.AddWithValue( "@updated_at", DateTime.Now );
+					command.Parameters.AddWithValue( "@id", project.Id );
 
-			return command.ExecuteNonQuery() > 0;
+					return command.ExecuteNonQuery() > 0;
+				}
+			}
 		}
 		/// <summary>
 		/// Deletes a project from the database by its unique identifier.
@@ -188,12 +189,14 @@ namespace MusicChange
 
 		public bool DeleteProject(int id)
 		{
-			using var connection = new SQLiteConnection(_connectionString);
-			connection.Open();
-			string sql = "DELETE FROM projects WHERE id = @id";
-			using var command = new SQLiteCommand(sql, connection);
-			command.Parameters.AddWithValue("@id", id);
-			return command.ExecuteNonQuery() > 0;
+			using (var connection = new SQLiteConnection( _connectionString )) {
+				connection.Open();
+				string sql = "DELETE FROM projects WHERE id = @id";
+				using (var command = new SQLiteCommand( sql, connection )) {
+					command.Parameters.AddWithValue( "@id", id );
+					return command.ExecuteNonQuery() > 0;
+				}
+			}
 		}
 		/// <summary>
 		///  Clips 表插入操作
@@ -202,25 +205,27 @@ namespace MusicChange
 		/// <returns></returns>
 		public int InsertClip(Clipold clip)
 		{
-			using var connection = new SQLiteConnection(_connectionString);
-			connection.Open();
+			using (var connection = new SQLiteConnection( _connectionString )) {
+				connection.Open();
 
-			string sql = @"
+				string sql = @"
                     INSERT INTO clips (name, type,file_path, project_id, start_position, end_position, speed, pitch, created_at, updated_at)
                     VALUES (@name, @file_path, @project_id, @start_position, @end_position, @speed, @pitch, @created_at, @updated_at);
                     SELECT last_insert_rowid();";
-			using var command = new SQLiteCommand(sql, connection);
-			command.Parameters.AddWithValue("@name", clip.Name);
-			command.Parameters.AddWithValue("@file_path", clip.FilePath);
-			command.Parameters.AddWithValue("@project_id", clip.ProjectId);
-			command.Parameters.AddWithValue("@start_position", clip.StartPosition);
-			command.Parameters.AddWithValue("@end_position", clip.EndPosition);
-			command.Parameters.AddWithValue("@speed", clip.Speed);
-			command.Parameters.AddWithValue("@pitch", clip.Pitch);
-			command.Parameters.AddWithValue("@created_at", clip.CreatedAt);
-			command.Parameters.AddWithValue("@updated_at", clip.UpdatedAt);
+				using (var command = new SQLiteCommand( sql, connection )) {
+					command.Parameters.AddWithValue( "@name", clip.Name );
+					command.Parameters.AddWithValue( "@file_path", clip.FilePath );
+					command.Parameters.AddWithValue( "@project_id", clip.ProjectId );
+					command.Parameters.AddWithValue( "@start_position", clip.StartPosition );
+					command.Parameters.AddWithValue( "@end_position", clip.EndPosition );
+					command.Parameters.AddWithValue( "@speed", clip.Speed );
+					command.Parameters.AddWithValue( "@pitch", clip.Pitch );
+					command.Parameters.AddWithValue( "@created_at", clip.CreatedAt );
+					command.Parameters.AddWithValue( "@updated_at", clip.UpdatedAt );
 
-			return Convert.ToInt32(command.ExecuteScalar());
+					return Convert.ToInt32( command.ExecuteScalar() );
+				}
+			}
 		}
 		/// <summary>
 		/// 获取 Clip by Id
@@ -232,25 +237,26 @@ namespace MusicChange
 			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
 				string sql = "SELECT * FROM clips WHERE id = @id";
-				using var command = new SQLiteCommand(sql, connection);
-				command.Parameters.AddWithValue("@id", id);
-				using var reader = command.ExecuteReader();
-				if(reader.Read())
-				{
-					return new Clipold
-					{
-						Id = Convert.ToInt32(reader["id"]),
-						Name = reader["name"].ToString(),
-						Type = reader["type"].ToString(),
-						FilePath = reader["file_path"].ToString(),
-						ProjectId = Convert.ToInt32(reader["project_id"]),
-						StartPosition = Convert.ToDouble(reader["start_position"]),
-						EndPosition = Convert.ToDouble(reader["end_position"]),
-						Speed = Convert.ToDouble(reader["speed"]),
-						Pitch = Convert.ToDouble(reader["pitch"]),
-						CreatedAt = Convert.ToDateTime(reader["created_at"]),
-						UpdatedAt = Convert.ToDateTime(reader["updated_at"])
-					};
+				using (var command = new SQLiteCommand( sql, connection )) {
+					command.Parameters.AddWithValue( "@id", id );
+					using (var reader = command.ExecuteReader()) {
+						if (reader.Read()) {
+							return new Clipold
+							{
+								Id = Convert.ToInt32( reader["id"] ),
+								Name = reader["name"].ToString(),
+								Type = reader["type"].ToString(),
+								FilePath = reader["file_path"].ToString(),
+								ProjectId = Convert.ToInt32( reader["project_id"] ),
+								StartPosition = Convert.ToDouble( reader["start_position"] ),
+								EndPosition = Convert.ToDouble( reader["end_position"] ),
+								Speed = Convert.ToDouble( reader["speed"] ),
+								Pitch = Convert.ToDouble( reader["pitch"] ),
+								CreatedAt = Convert.ToDateTime( reader["created_at"] ),
+								UpdatedAt = Convert.ToDateTime( reader["updated_at"] )
+							};
+						}
+					}
 				}
 			}
 			return null;
@@ -266,26 +272,27 @@ namespace MusicChange
 			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
 				string sql = "SELECT * FROM clips WHERE project_id = @project_id ORDER BY created_at DESC";
-				using var command = new SQLiteCommand(sql, connection);
-				command.Parameters.AddWithValue("@project_id", projectId);
-				using var reader = command.ExecuteReader();
-				while(reader.Read())
-				{
-					clips.Add(new Clipold
-					{
-						Id = Convert.ToInt32(reader["id"]),
-						Name = reader["name"].ToString(),
-						Type = reader["type"].ToString(),
-						FilePath = reader["file_path"].ToString(),
-						ProjectId = Convert.ToInt32(reader["project_id"]),
-						StartPosition = Convert.ToDouble(reader["start_position"]),
-						EndPosition = Convert.ToDouble(reader["end_position"]),
-						Speed = Convert.ToDouble(reader["speed"]),
-						Pitch = Convert.ToDouble(reader["pitch"]),
-						CreatedAt = Convert.ToDateTime(reader["created_at"]),
-						UpdatedAt = Convert.ToDateTime(reader["updated_at"])
-					});
+				using (var command = new SQLiteCommand( sql, connection )) {
+					command.Parameters.AddWithValue( "@project_id", projectId );
+					using (var reader = command.ExecuteReader()) {
+						while (reader.Read()) {
+							clips.Add( new Clipold
+							{
+								Id = Convert.ToInt32( reader["id"] ),
+								Name = reader["name"].ToString(),
+								Type = reader["type"].ToString(),
+								FilePath = reader["file_path"].ToString(),
+								ProjectId = Convert.ToInt32( reader["project_id"] ),
+								StartPosition = Convert.ToDouble( reader["start_position"] ),
+								EndPosition = Convert.ToDouble( reader["end_position"] ),
+								Speed = Convert.ToDouble( reader["speed"] ),
+								Pitch = Convert.ToDouble( reader["pitch"] ),
+								CreatedAt = Convert.ToDateTime( reader["created_at"] ),
+								UpdatedAt = Convert.ToDateTime( reader["updated_at"] )
+							} );
 
+						}
+					}
 				}
 			}
 
@@ -302,24 +309,24 @@ namespace MusicChange
 			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
 				string sql = "SELECT * FROM clips ORDER BY created_at DESC";
-				using var command = new SQLiteCommand(sql, connection);
-				using var reader = command.ExecuteReader();
-				while(reader.Read())
-				{
-					clips.Add(new Clipold
-					{
-						Id = Convert.ToInt32(reader["id"]),
-						Name = reader["name"].ToString(),
-						Type = reader["name"].ToString(),
-						FilePath = reader["file_path"].ToString(),
-						ProjectId = Convert.ToInt32(reader["project_id"]),
-						StartPosition = Convert.ToDouble(reader["start_position"]),
-						EndPosition = Convert.ToDouble(reader["end_position"]),
-						Speed = Convert.ToDouble(reader["speed"]),
-						Pitch = Convert.ToDouble(reader["pitch"]),
-						CreatedAt = Convert.ToDateTime(reader["created_at"]),
-						UpdatedAt = Convert.ToDateTime(reader["updated_at"])
-					});
+				using (var command = new SQLiteCommand( sql, connection ))
+				using (var reader = command.ExecuteReader()) {
+					while (reader.Read()) {
+						clips.Add( new Clipold
+						{
+							Id = Convert.ToInt32( reader["id"] ),
+							Name = reader["name"].ToString(),
+							Type = reader["name"].ToString(),
+							FilePath = reader["file_path"].ToString(),
+							ProjectId = Convert.ToInt32( reader["project_id"] ),
+							StartPosition = Convert.ToDouble( reader["start_position"] ),
+							EndPosition = Convert.ToDouble( reader["end_position"] ),
+							Speed = Convert.ToDouble( reader["speed"] ),
+							Pitch = Convert.ToDouble( reader["pitch"] ),
+							CreatedAt = Convert.ToDateTime( reader["created_at"] ),
+							UpdatedAt = Convert.ToDateTime( reader["updated_at"] )
+						} );
+					}
 				}
 			}
 			return clips;
@@ -331,29 +338,31 @@ namespace MusicChange
 		/// <returns></returns>
 		public bool UpdateClip(Clipold clip)
 		{
-			using var connection = new SQLiteConnection(_connectionString);
-			connection.Open();
+			using (var connection = new SQLiteConnection( _connectionString )) {
+				connection.Open();
 
-			string sql = @"
+				string sql = @"
                     UPDATE clips 
                     SET name = @name,Type = @type,file_path = @file_path, project_id = @project_id, 
                         start_position = @start_position, end_position = @end_position,
                         speed = @speed, pitch = @pitch, updated_at = @updated_at
                     WHERE id = @id";
 
-			using var command = new SQLiteCommand(sql, connection);
-			command.Parameters.AddWithValue("@name", clip.Name);
-			command.Parameters.AddWithValue("@type", clip.Type);
-			command.Parameters.AddWithValue("@file_path", clip.FilePath);
-			command.Parameters.AddWithValue("@project_id", clip.ProjectId);
-			command.Parameters.AddWithValue("@start_position", clip.StartPosition);
-			command.Parameters.AddWithValue("@end_position", clip.EndPosition);
-			command.Parameters.AddWithValue("@speed", clip.Speed);
-			command.Parameters.AddWithValue("@pitch", clip.Pitch);
-			command.Parameters.AddWithValue("@updated_at", DateTime.Now);
-			command.Parameters.AddWithValue("@id", clip.Id);
+				using (var command = new SQLiteCommand( sql, connection )) {
+					command.Parameters.AddWithValue( "@name", clip.Name );
+					command.Parameters.AddWithValue( "@type", clip.Type );
+					command.Parameters.AddWithValue( "@file_path", clip.FilePath );
+					command.Parameters.AddWithValue( "@project_id", clip.ProjectId );
+					command.Parameters.AddWithValue( "@start_position", clip.StartPosition );
+					command.Parameters.AddWithValue( "@end_position", clip.EndPosition );
+					command.Parameters.AddWithValue( "@speed", clip.Speed );
+					command.Parameters.AddWithValue( "@pitch", clip.Pitch );
+					command.Parameters.AddWithValue( "@updated_at", DateTime.Now );
+					command.Parameters.AddWithValue( "@id", clip.Id );
 
-			return command.ExecuteNonQuery() > 0;
+					return command.ExecuteNonQuery() > 0;
+				}
+			}
 		}
 		/// <summary>
 		/// 删除 Clip
@@ -362,23 +371,22 @@ namespace MusicChange
 		/// <returns></returns>
 		public bool DeleteClip(int id)
 		{
-			using var connection = new SQLiteConnection(_connectionString);
-			connection.Open();
+			using (var connection = new SQLiteConnection( _connectionString )) {
+				connection.Open();
 
-			// 先删除相关的clip_effects
-			string deleteEffectsSql = "DELETE FROM clip_effects WHERE clip_id = @clip_id";
-			using(var command = new SQLiteCommand(deleteEffectsSql, connection))
-			{
-				command.Parameters.AddWithValue("@clip_id", id);
-				command.ExecuteNonQuery();
-			}
+				// 先删除相关的clip_effects
+				string deleteEffectsSql = "DELETE FROM clip_effects WHERE clip_id = @clip_id";
+				using (var command = new SQLiteCommand( deleteEffectsSql, connection )) {
+					command.Parameters.AddWithValue( "@clip_id", id );
+					command.ExecuteNonQuery();
+				}
 
-			// 再删除clip
-			string deleteClipSql = "DELETE FROM clips WHERE id = @id";
-			using(var command = new SQLiteCommand(deleteClipSql, connection))
-			{
-				command.Parameters.AddWithValue("@id", id);
-				return command.ExecuteNonQuery() > 0;
+				// 再删除clip
+				string deleteClipSql = "DELETE FROM clips WHERE id = @id";
+				using (var command = new SQLiteCommand( deleteClipSql, connection )) {
+					command.Parameters.AddWithValue( "@id", id );
+					return command.ExecuteNonQuery() > 0;
+				}
 			}
 		}
 		/// <summary>
@@ -389,19 +397,21 @@ namespace MusicChange
 		// ClipEffects 表操作
 		public int InsertClipEffect(ClipEffectold effect)
 		{
-			using var connection = new SQLiteConnection(_connectionString);
-			connection.Open();
-			string sql = @"
+			using (var connection = new SQLiteConnection( _connectionString )) {
+				connection.Open();
+				string sql = @"
                     INSERT INTO clip_effects (clip_id, effect_type, value, created_at)
                     VALUES (@clip_id, @effect_type, @value, @created_at);
                     SELECT last_insert_rowid();";
-			using var command = new SQLiteCommand(sql, connection);
-			command.Parameters.AddWithValue("@clip_id", effect.ClipId);
-			command.Parameters.AddWithValue("@effect_type", effect.EffectType);
-			command.Parameters.AddWithValue("@value", effect.Value);
-			command.Parameters.AddWithValue("@created_at", effect.CreatedAt);
+				using (var command = new SQLiteCommand( sql, connection )) {
+					command.Parameters.AddWithValue( "@clip_id", effect.ClipId );
+					command.Parameters.AddWithValue( "@effect_type", effect.EffectType );
+					command.Parameters.AddWithValue( "@value", effect.Value );
+					command.Parameters.AddWithValue( "@created_at", effect.CreatedAt );
 
-			return Convert.ToInt32(command.ExecuteScalar());
+					return Convert.ToInt32( command.ExecuteScalar() );
+				}
+			}
 		}
 		/// <summary>
 		///获取 ClipEffect by Id
@@ -415,20 +425,21 @@ namespace MusicChange
 
 				string sql = "SELECT * FROM clip_effects WHERE id = @id";
 
-				using var command = new SQLiteCommand(sql, connection);
-				command.Parameters.AddWithValue("@id", id);
+				using (var command = new SQLiteCommand( sql, connection )) {
+					command.Parameters.AddWithValue( "@id", id );
 
-				using var reader = command.ExecuteReader();
-				if(reader.Read())
-				{
-					return new ClipEffectold
-					{
-						Id = Convert.ToInt32(reader["id"]),
-						ClipId = Convert.ToInt32(reader["clip_id"]),
-						EffectType = reader["effect_type"].ToString(),
-						Value = Convert.ToDouble(reader["value"]),
-						CreatedAt = Convert.ToDateTime(reader["created_at"])
-					};
+					using (var reader = command.ExecuteReader()) {
+						if (reader.Read()) {
+							return new ClipEffectold
+							{
+								Id = Convert.ToInt32( reader["id"] ),
+								ClipId = Convert.ToInt32( reader["clip_id"] ),
+								EffectType = reader["effect_type"].ToString(),
+								Value = Convert.ToDouble( reader["value"] ),
+								CreatedAt = Convert.ToDateTime( reader["created_at"] )
+							};
+						}
+					}
 				}
 			}
 
@@ -444,21 +455,22 @@ namespace MusicChange
 
 				string sql = "SELECT * FROM clip_effects WHERE clip_id = @clip_id ORDER BY created_at DESC";
 
-				using var command = new SQLiteCommand(sql, connection);
-				command.Parameters.AddWithValue("@clip_id", clipId);
+				using (var command = new SQLiteCommand( sql, connection )) {
+					command.Parameters.AddWithValue( "@clip_id", clipId );
 
-				using var reader = command.ExecuteReader();
-				while(reader.Read())
-				{
-					effects.Add(new ClipEffectold
-					{
-						Id = Convert.ToInt32(reader["id"]),
-						ClipId = Convert.ToInt32(reader["clip_id"]),
-						EffectType = reader["effect_type"].ToString(),
-						Value = Convert.ToDouble(reader["value"]),
-						CreatedAt = Convert.ToDateTime(reader["created_at"])
-					});
+					using (var reader = command.ExecuteReader()) {
+						while (reader.Read()) {
+							effects.Add( new ClipEffectold
+							{
+								Id = Convert.ToInt32( reader["id"] ),
+								ClipId = Convert.ToInt32( reader["clip_id"] ),
+								EffectType = reader["effect_type"].ToString(),
+								Value = Convert.ToDouble( reader["value"] ),
+								CreatedAt = Convert.ToDateTime( reader["created_at"] )
+							} );
 
+						}
+					}
 				}
 			}
 			return effects;
@@ -470,33 +482,37 @@ namespace MusicChange
 		/// <returns></returns>
 		public bool UpdateClipEffect(ClipEffectold effect)
 		{
-			using var connection = new SQLiteConnection(_connectionString);
-			connection.Open();
+			using (var connection = new SQLiteConnection( _connectionString )) {
+				connection.Open();
 
-			string sql = @"
+				string sql = @"
                     UPDATE clip_effects 
                     SET clip_id = @clip_id, effect_type = @effect_type, value = @value
                     WHERE id = @id";
 
-			using var command = new SQLiteCommand(sql, connection);
-			command.Parameters.AddWithValue("@clip_id", effect.ClipId);
-			command.Parameters.AddWithValue("@effect_type", effect.EffectType);
-			command.Parameters.AddWithValue("@value", effect.Value);
-			command.Parameters.AddWithValue("@id", effect.Id);
+				using (var command = new SQLiteCommand( sql, connection )) {
+					command.Parameters.AddWithValue( "@clip_id", effect.ClipId );
+					command.Parameters.AddWithValue( "@effect_type", effect.EffectType );
+					command.Parameters.AddWithValue( "@value", effect.Value );
+					command.Parameters.AddWithValue( "@id", effect.Id );
 
-			return command.ExecuteNonQuery() > 0;
+					return command.ExecuteNonQuery() > 0;
+				}
+			}
 		}
 
 		public bool DeleteClipEffect(int id)
 		{
-			using var connection = new SQLiteConnection(_connectionString);
-			connection.Open();
+			using (var connection = new SQLiteConnection( _connectionString )) {
+				connection.Open();
 
-			string sql = "DELETE FROM clip_effects WHERE id = @id";
+				string sql = "DELETE FROM clip_effects WHERE id = @id";
 
-			using var command = new SQLiteCommand(sql, connection);
-			command.Parameters.AddWithValue("@id", id);
-			return command.ExecuteNonQuery() > 0;
+				using (var command = new SQLiteCommand( sql, connection )) {
+					command.Parameters.AddWithValue( "@id", id );
+					return command.ExecuteNonQuery() > 0;
+				}
+			}
 		}
 
 		#endregion
@@ -598,7 +614,7 @@ namespace MusicChange
 		/// <summary>
 		/// testuser 测试用户数据库初始化
 		/// </summary>
-		public void Testuser( )
+		public void testuser( )
 		{
 			try {
 				// 初始化用户数据库				
@@ -620,16 +636,17 @@ namespace MusicChange
 		/// </summary>
 		public void CreateDatabaseTables( )
 		{
-			using var connection = new SQLiteConnection(_connectionString);
-			connection.Open();
+			using (var connection = new SQLiteConnection( _connectionString )) {
+				connection.Open();
 
-			//CreateUserTable( connection );
-			CreateUserProfileTable(connection);
-			CreateUserSessionTable(connection);
-			CreateUserPreferencesTable(connection);
-			CreateUserLoginTable(connection);
+				//CreateUserTable( connection );
+				CreateUserProfileTable( connection );
+				CreateUserSessionTable( connection );
+				CreateUserPreferencesTable( connection );
+				CreateUserLoginTable( connection );
 
-			Console.WriteLine("用户数据库表创建完成");
+				Console.WriteLine( "用户数据库表创建完成" );
+			}
 		}
 
 		//private void CreateUserTable(SQLiteConnection connection)
@@ -685,8 +702,9 @@ namespace MusicChange
                     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
                 )";
 
-			using var command = new SQLiteCommand(createProfilesTable, connection);
-			command.ExecuteNonQuery();
+			using (var command = new SQLiteCommand( createProfilesTable, connection )) {
+				command.ExecuteNonQuery();
+			}
 		}
 
 		private void CreateUserSessionTable(SQLiteConnection connection)
@@ -766,8 +784,9 @@ namespace MusicChange
                     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
                 )";
 
-			using var command = new SQLiteCommand(createPreferencesTable, connection);
-			command.ExecuteNonQuery();
+			using (var command = new SQLiteCommand( createPreferencesTable, connection )) {
+				command.ExecuteNonQuery();
+			}
 
 			// 创建用户偏好组合索引
 			//string createUserPrefIndex = @"
@@ -783,61 +802,57 @@ namespace MusicChange
 		/// </summary>
 		public void InsertDefaultData( )
 		{
-			using var connection = new SQLiteConnection(_connectionString);
-			connection.Open();
+			using (var connection = new SQLiteConnection( _connectionString )) {
+				connection.Open();
 
-			// 插入默认用户
-			string insertDefaultUser = @"
+				// 插入默认用户
+				string insertDefaultUser = @"
                     INSERT OR IGNORE INTO users (username, email, password_hash, full_name)
                     VALUES (@username, @email, @password_hash, @full_name)";
 
-			using(var command = new SQLiteCommand(insertDefaultUser, connection))
-			{
-				command.Parameters.AddWithValue("@username", "admin");
-				command.Parameters.AddWithValue("@email", "admin@example.com");
-				command.Parameters.AddWithValue("@password_hash", " hashed_password_here ");
-				command.Parameters.AddWithValue("@full_name", "系统管理员");
-				command.ExecuteNonQuery();
-			}
-
-			// 获取默认用户ID
-			int userId = 0;
-			string getUserId = "SELECT id FROM users WHERE username = 'admin'";
-			using(var command = new SQLiteCommand(getUserId, connection))
-			{
-				var result = command.ExecuteScalar();
-				if(result != null)
-				{
-					userId = Convert.ToInt32(result);
+				using (var command = new SQLiteCommand( insertDefaultUser, connection )) {
+					command.Parameters.AddWithValue( "@username", "admin" );
+					command.Parameters.AddWithValue( "@email", "admin@example.com" );
+					command.Parameters.AddWithValue( "@password_hash", " hashed_password_here " );
+					command.Parameters.AddWithValue( "@full_name", "系统管理员" );
+					command.ExecuteNonQuery();
 				}
-			}
 
-			if(userId > 0)
-			{
-				// 插入默认用户配置
-				string insertDefaultProfile = @"
+				// 获取默认用户ID
+				int userId = 0;
+				string getUserId = "SELECT id FROM users WHERE username = 'admin'";
+				using (var command = new SQLiteCommand( getUserId, connection )) {
+					var result = command.ExecuteScalar();
+					if (result != null) {
+						userId = Convert.ToInt32( result );
+					}
+				}
+
+				if (userId > 0) {
+					// 插入默认用户配置
+					string insertDefaultProfile = @"
                         INSERT OR IGNORE INTO user_profiles 
                         (user_id, preferred_language, theme, auto_save_interval, max_undo_steps)
                         VALUES (@user_id, @language, @theme, @auto_save, @undo_steps)";
 
-				using(var command = new SQLiteCommand(insertDefaultProfile, connection))
-				{
-					command.Parameters.AddWithValue("@user_id", userId);
-					command.Parameters.AddWithValue("@language", "zh-CN");
-					command.Parameters.AddWithValue("@theme", "dark");
-					command.Parameters.AddWithValue("@auto_save", 5);
-					command.Parameters.AddWithValue("@undo_steps", 50);
-					command.ExecuteNonQuery();
+					using (var command = new SQLiteCommand( insertDefaultProfile, connection )) {
+						command.Parameters.AddWithValue( "@user_id", userId );
+						command.Parameters.AddWithValue( "@language", "zh-CN" );
+						command.Parameters.AddWithValue( "@theme", "dark" );
+						command.Parameters.AddWithValue( "@auto_save", 5 );
+						command.Parameters.AddWithValue( "@undo_steps", 50 );
+						command.ExecuteNonQuery();
+					}
+
+					// 插入默认偏好设置
+					InsertDefaultPreference( connection, userId, "video_quality", "high" );
+					InsertDefaultPreference( connection, userId, "audio_bitrate", "320" );
+					InsertDefaultPreference( connection, userId, "export_format", "mp4" );
+					InsertDefaultPreference( connection, userId, "timeline_snap", "true" );
 				}
 
-				// 插入默认偏好设置
-				InsertDefaultPreference(connection, userId, "video_quality", "high");
-				InsertDefaultPreference(connection, userId, "audio_bitrate", "320");
-				InsertDefaultPreference(connection, userId, "export_format", "mp4");
-				InsertDefaultPreference(connection, userId, "timeline_snap", "true");
+				Console.WriteLine( "默认数据插入完成" );
 			}
-
-			Console.WriteLine("默认数据插入完成");
 		}
 
 		private void InsertDefaultPreference(SQLiteConnection connection, int userId, string key, string value)
@@ -846,56 +861,55 @@ namespace MusicChange
                 INSERT OR IGNORE INTO user_preferences (user_id, preference_key, preference_value)
                 VALUES (@user_id, @key, @value)";
 
-			using var command = new SQLiteCommand(insertPreference, connection);
-			command.Parameters.AddWithValue("@user_id", userId);
-			command.Parameters.AddWithValue("@key", key);
-			command.Parameters.AddWithValue("@value", value);
-			command.ExecuteNonQuery();
+			using (var command = new SQLiteCommand( insertPreference, connection )) {
+				command.Parameters.AddWithValue( "@user_id", userId );
+				command.Parameters.AddWithValue( "@key", key );
+				command.Parameters.AddWithValue( "@value", value );
+				command.ExecuteNonQuery();
+			}
 		}
 
 		public void CreateTriggers( )
 		{
-			using var connection = new SQLiteConnection(_connectionString);
-			connection.Open();
+			using (var connection = new SQLiteConnection( _connectionString )) {
+				connection.Open();
 
-			// 创建更新时间触发器
-			string createUsersTrigger = @"
+				// 创建更新时间触发器
+				string createUsersTrigger = @"
                     CREATE TRIGGER IF NOT EXISTS update_users_timestamp 
                     AFTER UPDATE ON users
                     BEGIN
                         UPDATE users SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
                     END";
 
-			using(var command = new SQLiteCommand(createUsersTrigger, connection))
-			{
-				command.ExecuteNonQuery();
-			}
+				using (var command = new SQLiteCommand( createUsersTrigger, connection )) {
+					command.ExecuteNonQuery();
+				}
 
-			string createProfilesTrigger = @"
+				string createProfilesTrigger = @"
                     CREATE TRIGGER IF NOT EXISTS update_profiles_timestamp 
                     AFTER UPDATE ON user_profiles
                     BEGIN
                         UPDATE user_profiles SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
                     END";
 
-			using(var command = new SQLiteCommand(createProfilesTrigger, connection))
-			{
-				command.ExecuteNonQuery();
-			}
+				using (var command = new SQLiteCommand( createProfilesTrigger, connection )) {
+					command.ExecuteNonQuery();
+				}
 
-			string createPreferencesTrigger = @"
+				string createPreferencesTrigger = @"
                     CREATE TRIGGER IF NOT EXISTS update_preferences_timestamp 
                     AFTER UPDATE ON user_preferences
                     BEGIN
                         UPDATE user_preferences SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
                     END";
 
-			using(var command = new SQLiteCommand(createPreferencesTrigger, connection))
-			{
-				command.ExecuteNonQuery();
-			}
+				using (var command = new SQLiteCommand( createPreferencesTrigger, connection )) {
+					command.ExecuteNonQuery();
+				}
 
-			Console.WriteLine("触发器创建完成");
+				Console.WriteLine( "触发器创建完成" );
+			}
 		}
 		#endregion
 
@@ -1049,40 +1063,41 @@ C# SQLite 事务表创建程序
 		/// </summary>
 		public void CreateTransactionTables( )
 		{
-			using var connection = new SQLiteConnection(_connectionString);
-			connection.Open();
+			using (var connection = new SQLiteConnection( _connectionString )) {
+				connection.Open();
 
-			// 创建项目表
-			CreateProjectsTable(connection);
+				// 创建项目表
+				CreateProjectsTable( connection );
 
-			// 创建媒体资源表
-			CreateMediaAssetsTable(connection);
+				// 创建媒体资源表
+				CreateMediaAssetsTable( connection );
 
-			// 创建时间线轨道表
-			CreateTimelineTracksTable(connection);
+				// 创建时间线轨道表
+				CreateTimelineTracksTable( connection );
 
-			// 创建剪辑片段表
-			CreateClipsTable(connection);
+				// 创建剪辑片段表
+				CreateClipsTable( connection );
 
-			// 创建事务表
-			CreateTransactionsTable(connection);
+				// 创建事务表
+				CreateTransactionsTable( connection );
 
-			// 创建事务详情表
-			CreateTransactionDetailsTable(connection);
+				// 创建事务详情表
+				CreateTransactionDetailsTable( connection );
 
-			// 创建效果表
-			CreateEffectsTable(connection);
+				// 创建效果表
+				CreateEffectsTable( connection );
 
-			// 创建剪辑效果关联表
-			CreateClipEffectsTable(connection);
+				// 创建剪辑效果关联表
+				CreateClipEffectsTable( connection );
 
-			// 创建索引
-			CreateIndexes(connection);
+				// 创建索引
+				CreateIndexes( connection );
 
-			// 创建触发器
-			CreateTriggers(connection);
+				// 创建触发器
+				CreateTriggers( connection );
 
-			Console.WriteLine("视频剪辑事务数据库表创建完成");
+				Console.WriteLine( "视频剪辑事务数据库表创建完成" );
+			}
 		}
 		#region  -----------  old  clip  creat table -----------
 		//private void CreateProjectsTable(SQLiteConnection connection)
@@ -1373,21 +1388,23 @@ C# SQLite 事务表创建程序
 		// 记录事务
 		public int RecordTransaction(int projectId, int userId, string transactionType, string description)
 		{
-			using var connection = new SQLiteConnection(_connectionString);
-			connection.Open();
+			using (var connection = new SQLiteConnection( _connectionString )) {
+				connection.Open();
 
-			string sql = @"
+				string sql = @"
                     INSERT INTO transactions (project_id, user_id, transaction_type, description)
                     VALUES (@project_id, @user_id, @transaction_type, @description);
                     SELECT last_insert_rowid();";
 
-			using var command = new SQLiteCommand(sql, connection);
-			command.Parameters.AddWithValue("@project_id", projectId);
-			command.Parameters.AddWithValue("@user_id", userId);
-			command.Parameters.AddWithValue("@transaction_type", transactionType);
-			command.Parameters.AddWithValue("@description", description);
+				using (var command = new SQLiteCommand( sql, connection )) {
+					command.Parameters.AddWithValue( "@project_id", projectId );
+					command.Parameters.AddWithValue( "@user_id", userId );
+					command.Parameters.AddWithValue( "@transaction_type", transactionType );
+					command.Parameters.AddWithValue( "@description", description );
 
-			return Convert.ToInt32(command.ExecuteScalar());
+					return Convert.ToInt32( command.ExecuteScalar() );
+				}
+			}
 		}
 		// 记录事务详情
 		//当前时间 怎么输入表中
@@ -1395,68 +1412,71 @@ C# SQLite 事务表创建程序
 		//当前时间 怎么输入表中
 
 		{
-			using var connection = new SQLiteConnection(_connectionString);
-			connection.Open();
-			string sql = @"
+			using (var connection = new SQLiteConnection( _connectionString )) {
+				connection.Open();
+				string sql = @"
                     INSERT INTO transaction_details 
                     (transaction_id, operation_type, table_name, record_id, old_values, new_values, created_at,note)
                     VALUES (@transaction_id, @operation_type, @table_name, @record_id, @old_values, @new_values,@created_at, @note)";
-			using var command = new SQLiteCommand(sql, connection);
-			command.Parameters.AddWithValue("@transaction_id", transactionId);
-			command.Parameters.AddWithValue("@operation_type", operationType);
-			command.Parameters.AddWithValue("@table_name", tableName);
-			command.Parameters.AddWithValue("@record_id", recordId);
-			command.Parameters.AddWithValue("@old_values", oldValues ?? "");
-			command.Parameters.AddWithValue("@new_values", newValues ?? "");
-			command.Parameters.AddWithValue("@created_at", newValues ?? "");
-			command.Parameters.AddWithValue("@note", newValues ?? "注释");
-			command.ExecuteNonQuery();
+				using (var command = new SQLiteCommand( sql, connection )) {
+					command.Parameters.AddWithValue( "@transaction_id", transactionId );
+					command.Parameters.AddWithValue( "@operation_type", operationType );
+					command.Parameters.AddWithValue( "@table_name", tableName );
+					command.Parameters.AddWithValue( "@record_id", recordId );
+					command.Parameters.AddWithValue( "@old_values", oldValues ?? "" );
+					command.Parameters.AddWithValue( "@new_values", newValues ?? "" );
+					command.Parameters.AddWithValue( "@created_at", newValues ?? "" );
+					command.Parameters.AddWithValue( "@note", newValues ?? "注释" );
+					command.ExecuteNonQuery();
+				}
+			}
 		}
 
 		// 获取项目事务历史
 		public void GetProjectTransactions(int projectId)
 		{
-			using var connection = new SQLiteConnection(_connectionString);
-			connection.Open();
-			string sql = @"
+			using (var connection = new SQLiteConnection( _connectionString )) {
+				connection.Open();
+				string sql = @"
                     SELECT t.*, u.username 
                     FROM transactions t
                     JOIN users u ON t.user_id = u.id
                     WHERE t.project_id = @project_id
                     ORDER BY t.timestamp DESC
                     LIMIT 100";
-			using var command = new SQLiteCommand(sql, connection);
-			command.Parameters.AddWithValue("@project_id", projectId);
-			using var reader = command.ExecuteReader();
-			while(reader.Read())
-			{
-				Console.WriteLine($"事务: {reader["description"]}, 时间: {reader["timestamp"]}, 用户: {reader["username"]}");
+				using (var command = new SQLiteCommand( sql, connection )) {
+					command.Parameters.AddWithValue( "@project_id", projectId );
+					using (var reader = command.ExecuteReader()) {
+						while (reader.Read()) {
+							Console.WriteLine( $"事务: {reader["description"]}, 时间: {reader["timestamp"]}, 用户: {reader["username"]}" );
+						}
+					}
+				}
 			}
 		}
 		// 撤销事务
 		public bool UndoTransaction(int transactionId)
 		{
-			using var connection = new SQLiteConnection(_connectionString);
-			connection.Open();
-			using var transaction = connection.BeginTransaction();
-			try
-			{
-				// 标记事务为已撤销
-				string updateSql = "UPDATE transactions SET is_undone = 1 WHERE id = @id";
-				using(var command = new SQLiteCommand(updateSql, connection))
-				{
-					command.Parameters.AddWithValue("@id", transactionId);
-					command.ExecuteNonQuery();
+			using (var connection = new SQLiteConnection( _connectionString )) {
+				connection.Open();
+				using (var transaction = connection.BeginTransaction()) {
+					try {
+						// 标记事务为已撤销
+						string updateSql = "UPDATE transactions SET is_undone = 1 WHERE id = @id";
+						using (var command = new SQLiteCommand( updateSql, connection )) {
+							command.Parameters.AddWithValue( "@id", transactionId );
+							command.ExecuteNonQuery();
+						}
+						// 这里可以添加实际的撤销逻辑
+						// 例如根据transaction_details中的信息恢复数据
+						transaction.Commit();
+						return true;
+					}
+					catch {
+						transaction.Rollback();
+						return false;
+					}
 				}
-				// 这里可以添加实际的撤销逻辑
-				// 例如根据transaction_details中的信息恢复数据
-				transaction.Commit();
-				return true;
-			}
-			catch
-			{
-				transaction.Rollback();
-				return false;
 			}
 		}
 		/// <summary>
@@ -1574,17 +1594,18 @@ C# SQLite 事务表创建程序
 			{
 			try {
 				string connectionString = $"Data Source={databasePath};Version=3;";
-				using var connection = new SQLiteConnection(connectionString);
-				connection.Open();
+				using (var connection = new SQLiteConnection( connectionString )) {
+					connection.Open();
 
-				// 测试查询
-				string sql = "SELECT name FROM sqlite_master WHERE type='table'";
-				using var command = new SQLiteCommand(sql, connection);
-				using var reader = command.ExecuteReader();
-				Console.WriteLine("\n数据库中的表:");
-				while(reader.Read())
-				{
-					Console.WriteLine($"  - {reader["name"]}");
+					// 测试查询
+					string sql = "SELECT name FROM sqlite_master WHERE type='table'";
+					using (var command = new SQLiteCommand( sql, connection ))
+					using (var reader = command.ExecuteReader()) {
+						Console.WriteLine( "\n数据库中的表:" );
+						while (reader.Read()) {
+							Console.WriteLine( $"  - {reader["name"]}" );
+						}
+					}
 				}
 			}
 			catch (Exception ex) {
@@ -1599,27 +1620,28 @@ C# SQLite 事务表创建程序
 		/// </summary>
 		public void InitializeAllTables( )
 		{
-			using var connection = new SQLiteConnection(_connectionString);
-			connection.Open();
-			// 按依赖顺序创建表
-			CreateUserTable(connection);
-			CreateSettingsTable(connection);
-			CreateProjectsTable(connection);
-			CreateMediaAssetsTable(connection);
-			CreateTimelineTracksTable(connection);
-			CreateClipsTable(connection);
-			CreateTransactionsTable(connection);
-			CreateTransactionDetailsTable(connection);
-			CreateEffectsTable(connection);
-			CreateClipEffectsTable(connection);
-			CreateUserProfilesTable(connection);
-			CreateUserSessionsTable(connection);
-			CreateUserPreferencesTable(connection);
-			// 创建索引
-			CreateAllIndexes(connection);
-			// 创建触发器
-			CreateAllTriggers(connection);
-			Console.WriteLine("所有数据库表初始化完成");
+			using (var connection = new SQLiteConnection( _connectionString )) {
+				connection.Open();
+				// 按依赖顺序创建表
+				CreateUserTable( connection );
+				CreateSettingsTable( connection );
+				CreateProjectsTable( connection );
+				CreateMediaAssetsTable( connection );
+				CreateTimelineTracksTable( connection );
+				CreateClipsTable( connection );
+				CreateTransactionsTable( connection );
+				CreateTransactionDetailsTable( connection );
+				CreateEffectsTable( connection );
+				CreateClipEffectsTable( connection );
+				CreateUserProfilesTable( connection );
+				CreateUserSessionsTable( connection );
+				CreateUserPreferencesTable( connection );
+				// 创建索引
+				CreateAllIndexes( connection );
+				// 创建触发器
+				CreateAllTriggers( connection );
+				Console.WriteLine( "所有数据库表初始化完成" );
+			}
 		}
 		#endregion
 
@@ -1644,8 +1666,9 @@ C# SQLite 事务表创建程序
                     FOREIGN KEY (user_id) REFERENCES users (id)
                 )";
 
-			using var command = new SQLiteCommand(sql, connection);
-			command.ExecuteNonQuery();
+			using (var command = new SQLiteCommand( sql, connection )) {
+				command.ExecuteNonQuery();
+			}
 		}
 
 		private void CreateMediaAssetsTable(SQLiteConnection connection)
@@ -1667,8 +1690,9 @@ C# SQLite 事务表创建程序
                     FOREIGN KEY (user_id) REFERENCES users (id)
                 )";
 
-			using var command = new SQLiteCommand(sql, connection);
-			command.ExecuteNonQuery();
+			using (var command = new SQLiteCommand( sql, connection )) {
+				command.ExecuteNonQuery();
+			}
 		}
 
 		private void CreateTimelineTracksTable(SQLiteConnection connection)
@@ -1687,8 +1711,9 @@ C# SQLite 事务表创建程序
                     FOREIGN KEY (project_id) REFERENCES projects (id)
                 )";
 
-			using var command = new SQLiteCommand(sql, connection);
-			command.ExecuteNonQuery();
+			using (var command = new SQLiteCommand( sql, connection )) {
+				command.ExecuteNonQuery();
+			}
 		}
 
 		private void CreateClipsTable(SQLiteConnection connection)
@@ -1718,8 +1743,9 @@ C# SQLite 事务表创建程序
                     FOREIGN KEY (media_asset_id) REFERENCES media_assets (id)
                 )";
 
-			using var command = new SQLiteCommand(sql, connection);
-			command.ExecuteNonQuery();
+			using (var command = new SQLiteCommand( sql, connection )) {
+				command.ExecuteNonQuery();
+			}
 		}
 		private void CreateTransactionsTable(SQLiteConnection connection)
 		{
@@ -1736,8 +1762,9 @@ C# SQLite 事务表创建程序
                     FOREIGN KEY (user_id) REFERENCES users (id)
                 )";
 
-			using var command = new SQLiteCommand(sql, connection);
-			command.ExecuteNonQuery();
+			using (var command = new SQLiteCommand( sql, connection )) {
+				command.ExecuteNonQuery();
+			}
 		}
 
 		private void CreateTransactionDetailsTable(SQLiteConnection connection)
@@ -2418,13 +2445,14 @@ C# SQLite 事务表创建程序
 
 				string sql = "SELECT * FROM settings WHERE id = @id";
 
-				using var command = new SQLiteCommand(sql, connection);
-				command.Parameters.AddWithValue("@id", id);
+				using (var command = new SQLiteCommand( sql, connection )) {
+					command.Parameters.AddWithValue( "@id", id );
 
-				using var reader = command.ExecuteReader();
-				if(reader.Read())
-				{
-					return CreateSettingsFromReader(reader);
+					using (var reader = command.ExecuteReader()) {
+						if (reader.Read()) {
+							return CreateSettingsFromReader( reader );
+						}
+					}
 				}
 			}
 
@@ -2434,10 +2462,10 @@ C# SQLite 事务表创建程序
 		// 更新设置
 		public bool UpdateSettings(Settings settings)
 		{
-			using var connection = new SQLiteConnection(_connectionString);
-			connection.Open();
+			using (var connection = new SQLiteConnection( _connectionString )) {
+				connection.Open();
 
-			string sql = @"
+				string sql = @"
                     UPDATE settings SET
                         lfdm = @lfdm,
                         bm = @bm,
@@ -2480,50 +2508,50 @@ C# SQLite 事务表创建程序
                         note = @note
                     WHERE id = @id";
 
-			using(var command = new SQLiteCommand(sql, connection))
-			{
-				command.Parameters.AddWithValue("@id", settings.Id);
-				command.Parameters.AddWithValue("@lfdm", settings.Lfdm ?? "");
-				command.Parameters.AddWithValue("@bm", settings.Bm ? 1 : 0);
-				command.Parameters.AddWithValue("@bms", settings.Bms ? 1 : 0);
-				command.Parameters.AddWithValue("@bmdate", settings.Bmdate);
-				command.Parameters.AddWithValue("@bmd", settings.Bmd ?? "");
-				command.Parameters.AddWithValue("@bmsize", settings.Bmsize ?? "");
-				command.Parameters.AddWithValue("@autos", settings.Autos ? 1 : 0);
-				command.Parameters.AddWithValue("@pre_setsavelocation", settings.PreSetsavelocation ?? "");
-				command.Parameters.AddWithValue("@sharereview", settings.Sharereview ? 1 : 0);
-				command.Parameters.AddWithValue("@importtheproject", settings.Importtheproject ?? "");
-				command.Parameters.AddWithValue("@significantadjustmentofvalues", settings.Significantadjustmentofvalues ?? "");
-				command.Parameters.AddWithValue("@defaultdurationoftheimage", settings.Defaultdurationoftheimage ?? "");
-				command.Parameters.AddWithValue("@targetloudness", settings.Targetloudness ?? "");
-				command.Parameters.AddWithValue("@timelinesound", settings.Timelinesound ? 1 : 0);
-				command.Parameters.AddWithValue("@maintracklinkage", settings.Maintracklinkage ?? "");
-				command.Parameters.AddWithValue("@freedomlevel", settings.Freedomlevel ?? "");
-				command.Parameters.AddWithValue("@defaultframerate", settings.Defaultframerate ?? "");
-				command.Parameters.AddWithValue("@timecodeformat", settings.Timecodeformat ?? "");
-				command.Parameters.AddWithValue("@exportingalertsound", settings.Exportingalertsound ? 1 : 0);
-				command.Parameters.AddWithValue("@sync_job_dream_materials", settings.SyncJobDreamMaterials ?? "");
-				command.Parameters.AddWithValue("@standardizedexpression", settings.Standardizedexpression ?? "");
-				command.Parameters.AddWithValue("@individuation", settings.Individuation ?? "");
-				command.Parameters.AddWithValue("@codesettings", settings.Codesettings ? 1 : 0);
-				command.Parameters.AddWithValue("@codesettings1", settings.Codesettings1 ? 1 : 0);
-				command.Parameters.AddWithValue("@interfacedesign", settings.Interfacedesign ? 1 : 0);
-				command.Parameters.AddWithValue("@automaticre_sealing", settings.AutomaticreSealing ? 1 : 0);
-				command.Parameters.AddWithValue("@locationofthepackagedfile", settings.Locationofthepackagedfile ?? "");
-				command.Parameters.AddWithValue("@sizeofthepackagedfile", settings.Sizeofthepackagedfile ?? "");
-				command.Parameters.AddWithValue("@agencymode", settings.Agencymode ?? "");
-				command.Parameters.AddWithValue("@agencylocation", settings.Agencylocation ?? "");
-				command.Parameters.AddWithValue("@agencysize", settings.Agencysize ?? "");
-				command.Parameters.AddWithValue("@audio_outputdevice", settings.AudioOutputdevice ?? "");
-				command.Parameters.AddWithValue("@renderfilelocation", settings.Renderfilelocation ?? "");
-				command.Parameters.AddWithValue("@renderfilesize", settings.Renderfilesize);
-				command.Parameters.AddWithValue("@startup_cleaner", settings.StartupCleaner);
-				command.Parameters.AddWithValue("@automaticrendering", settings.Automaticrendering ? 1 : 0);
-				command.Parameters.AddWithValue("@autoupdate", settings.Autoupdate ? 1 : 0);
-				command.Parameters.AddWithValue("@notification_settings", settings.NotificationSettings ?? "");
-				command.Parameters.AddWithValue("@note", settings.Note ?? "");
+				using (var command = new SQLiteCommand( sql, connection )) {
+					command.Parameters.AddWithValue( "@id", settings.Id );
+					command.Parameters.AddWithValue( "@lfdm", settings.Lfdm ?? "" );
+					command.Parameters.AddWithValue( "@bm", settings.Bm ? 1 : 0 );
+					command.Parameters.AddWithValue( "@bms", settings.Bms ? 1 : 0 );
+					command.Parameters.AddWithValue( "@bmdate", settings.Bmdate );
+					command.Parameters.AddWithValue( "@bmd", settings.Bmd ?? "" );
+					command.Parameters.AddWithValue( "@bmsize", settings.Bmsize ?? "" );
+					command.Parameters.AddWithValue( "@autos", settings.Autos ? 1 : 0 );
+					command.Parameters.AddWithValue( "@pre_setsavelocation", settings.PreSetsavelocation ?? "" );
+					command.Parameters.AddWithValue( "@sharereview", settings.Sharereview ? 1 : 0 );
+					command.Parameters.AddWithValue( "@importtheproject", settings.Importtheproject ?? "" );
+					command.Parameters.AddWithValue( "@significantadjustmentofvalues", settings.Significantadjustmentofvalues ?? "" );
+					command.Parameters.AddWithValue( "@defaultdurationoftheimage", settings.Defaultdurationoftheimage ?? "" );
+					command.Parameters.AddWithValue( "@targetloudness", settings.Targetloudness ?? "" );
+					command.Parameters.AddWithValue( "@timelinesound", settings.Timelinesound ? 1 : 0 );
+					command.Parameters.AddWithValue( "@maintracklinkage", settings.Maintracklinkage ?? "" );
+					command.Parameters.AddWithValue( "@freedomlevel", settings.Freedomlevel ?? "" );
+					command.Parameters.AddWithValue( "@defaultframerate", settings.Defaultframerate ?? "" );
+					command.Parameters.AddWithValue( "@timecodeformat", settings.Timecodeformat ?? "" );
+					command.Parameters.AddWithValue( "@exportingalertsound", settings.Exportingalertsound ? 1 : 0 );
+					command.Parameters.AddWithValue( "@sync_job_dream_materials", settings.SyncJobDreamMaterials ?? "" );
+					command.Parameters.AddWithValue( "@standardizedexpression", settings.Standardizedexpression ?? "" );
+					command.Parameters.AddWithValue( "@individuation", settings.Individuation ?? "" );
+					command.Parameters.AddWithValue( "@codesettings", settings.Codesettings ? 1 : 0 );
+					command.Parameters.AddWithValue( "@codesettings1", settings.Codesettings1 ? 1 : 0 );
+					command.Parameters.AddWithValue( "@interfacedesign", settings.Interfacedesign ? 1 : 0 );
+					command.Parameters.AddWithValue( "@automaticre_sealing", settings.AutomaticreSealing ? 1 : 0 );
+					command.Parameters.AddWithValue( "@locationofthepackagedfile", settings.Locationofthepackagedfile ?? "" );
+					command.Parameters.AddWithValue( "@sizeofthepackagedfile", settings.Sizeofthepackagedfile ?? "" );
+					command.Parameters.AddWithValue( "@agencymode", settings.Agencymode ?? "" );
+					command.Parameters.AddWithValue( "@agencylocation", settings.Agencylocation ?? "" );
+					command.Parameters.AddWithValue( "@agencysize", settings.Agencysize ?? "" );
+					command.Parameters.AddWithValue( "@audio_outputdevice", settings.AudioOutputdevice ?? "" );
+					command.Parameters.AddWithValue( "@renderfilelocation", settings.Renderfilelocation ?? "" );
+					command.Parameters.AddWithValue( "@renderfilesize", settings.Renderfilesize );
+					command.Parameters.AddWithValue( "@startup_cleaner", settings.StartupCleaner );
+					command.Parameters.AddWithValue( "@automaticrendering", settings.Automaticrendering ? 1 : 0 );
+					command.Parameters.AddWithValue( "@autoupdate", settings.Autoupdate ? 1 : 0 );
+					command.Parameters.AddWithValue( "@notification_settings", settings.NotificationSettings ?? "" );
+					command.Parameters.AddWithValue( "@note", settings.Note ?? "" );
 
-				return command.ExecuteNonQuery() > 0;
+					return command.ExecuteNonQuery() > 0;
+				}
 			}
 		}
 
