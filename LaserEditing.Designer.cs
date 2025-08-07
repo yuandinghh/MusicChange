@@ -833,6 +833,7 @@ namespace MusicChange
 			this.vieweMax.SymbolColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
 			this.vieweMax.SymbolSize = 14F;
 			this.vieweMax.TabIndex = 5;
+			this.vieweMax.Click += new System.EventHandler(this.vieweMax_Click);
 			// 
 			// volumenum
 			// 
@@ -859,7 +860,7 @@ namespace MusicChange
 			this.volumeTrackBar.Size = new System.Drawing.Size(100, 56);
 			this.volumeTrackBar.TabIndex = 4;
 			this.volumeTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
-			this.volumeTrackBar.Value = 50;
+			this.volumeTrackBar.Value = 80;
 			this.volumeTrackBar.Scroll += new System.EventHandler(this.VolumeTrackBar_Scroll);
 			// 
 			// playPauseButton
@@ -1078,8 +1079,8 @@ namespace MusicChange
 			// sC6.Panel1
 			// 
 			this.sC6.Panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-			this.sC6.Size = new System.Drawing.Size(100, 285);
-			this.sC6.SplitterDistance = 25;
+			this.sC6.Size = new System.Drawing.Size(1842, 285);
+			this.sC6.SplitterDistance = 460;
 			this.sC6.TabIndex = 0;
 			this.sC6.MouseMove += new System.Windows.Forms.MouseEventHandler(this.splitContainer6_MouseMove);
 			// 
