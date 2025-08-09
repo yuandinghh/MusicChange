@@ -54,7 +54,7 @@ namespace MusicChange
 
 		#region ------- ToolTip 鼠标进入悬停显示 -------
 			ToolTipEx toolTip1 = new ToolTipEx();   // 创建自定义 ToolTipEx 实例 ，鼠标悬停时显示提示信息
-			toolTip1.TipFont = new Font("微软雅黑", 20); // 这里设置字体和大小
+			//toolTip1.TipFont = new Font("微软雅黑", 20); // 这里设置字体和大小
 			ConfigureToolTip(toolTip1);
 			// 初始化 LibVLC
 
