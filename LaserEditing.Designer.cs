@@ -58,6 +58,7 @@ namespace MusicChange
 			this.sC3 = new System.Windows.Forms.SplitContainer();
 			this.upperleft = new System.Windows.Forms.Panel();
 			this.rightChannelProgressBar = new System.Windows.Forms.ProgressBar();
+			this.dataGridView1 = new System.Windows.Forms.DataGridView();
 			this.leftChannelProgressBar = new System.Windows.Forms.ProgressBar();
 			this.panel4 = new System.Windows.Forms.Panel();
 			this.qrcode1 = new System.Windows.Forms.Button();
@@ -92,8 +93,8 @@ namespace MusicChange
 			this.zoomOutButton = new DevComponents.DotNetBar.ButtonX();
 			this.stopButton = new System.Windows.Forms.Button();
 			this.muteButton = new DevComponents.DotNetBar.ButtonX();
+			this.temp2 = new System.Windows.Forms.TextBox();
 			this.button4 = new System.Windows.Forms.Button();
-			this.dataGridView1 = new System.Windows.Forms.DataGridView();
 			this.temp1 = new System.Windows.Forms.TextBox();
 			this.temp = new System.Windows.Forms.TextBox();
 			this.sC5 = new System.Windows.Forms.SplitContainer();
@@ -115,6 +116,7 @@ namespace MusicChange
 			this.sC3.Panel2.SuspendLayout();
 			this.sC3.SuspendLayout();
 			this.upperleft.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
 			this.panel4.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dG)).BeginInit();
 			this.lefttopfile.SuspendLayout();
@@ -129,7 +131,6 @@ namespace MusicChange
 			((System.ComponentModel.ISupportInitialize)(this.progressBar)).BeginInit();
 			this.volumeControlPanel.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.volumeTrackBar)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.sC5)).BeginInit();
 			this.sC5.Panel2.SuspendLayout();
 			this.sC5.SuspendLayout();
@@ -366,7 +367,7 @@ namespace MusicChange
 			this.sC3.Panel2.Controls.Add(this.sC4);
 			this.sC3.Panel2MinSize = 800;
 			this.sC3.Size = new System.Drawing.Size(1842, 680);
-			this.sC3.SplitterDistance = 700;
+			this.sC3.SplitterDistance = 680;
 			this.sC3.TabIndex = 0;
 			this.sC3.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.sC3_SplitterMoved);
 			// 
@@ -374,12 +375,13 @@ namespace MusicChange
 			// 
 			this.upperleft.BackColor = System.Drawing.Color.DimGray;
 			this.upperleft.Controls.Add(this.rightChannelProgressBar);
+			this.upperleft.Controls.Add(this.dataGridView1);
 			this.upperleft.Controls.Add(this.leftChannelProgressBar);
 			this.upperleft.Controls.Add(this.panel4);
 			this.upperleft.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.upperleft.Location = new System.Drawing.Point(82, 97);
 			this.upperleft.Name = "upperleft";
-			this.upperleft.Size = new System.Drawing.Size(616, 581);
+			this.upperleft.Size = new System.Drawing.Size(596, 581);
 			this.upperleft.TabIndex = 18;
 			// 
 			// rightChannelProgressBar
@@ -388,6 +390,41 @@ namespace MusicChange
 			this.rightChannelProgressBar.Name = "rightChannelProgressBar";
 			this.rightChannelProgressBar.Size = new System.Drawing.Size(177, 23);
 			this.rightChannelProgressBar.TabIndex = 2;
+			// 
+			// dataGridView1
+			// 
+			this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+			dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+			dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+			dataGridViewCellStyle1.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+			dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+			dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+			dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+			this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+			this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+			dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+			dataGridViewCellStyle2.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+			dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+			dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+			dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+			this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle2;
+			this.dataGridView1.Location = new System.Drawing.Point(6, 289);
+			this.dataGridView1.Name = "dataGridView1";
+			dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+			dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+			dataGridViewCellStyle3.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+			dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+			dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+			dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+			this.dataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+			this.dataGridView1.RowHeadersWidth = 51;
+			this.dataGridView1.RowTemplate.Height = 27;
+			this.dataGridView1.Size = new System.Drawing.Size(587, 171);
+			this.dataGridView1.TabIndex = 2;
 			// 
 			// leftChannelProgressBar
 			// 
@@ -406,7 +443,7 @@ namespace MusicChange
 			this.panel4.Location = new System.Drawing.Point(0, 0);
 			this.panel4.Margin = new System.Windows.Forms.Padding(5);
 			this.panel4.Name = "panel4";
-			this.panel4.Size = new System.Drawing.Size(616, 90);
+			this.panel4.Size = new System.Drawing.Size(596, 90);
 			this.panel4.TabIndex = 0;
 			this.panel4.SizeChanged += new System.EventHandler(this.panel4_SizeChanged);
 			// 
@@ -415,7 +452,7 @@ namespace MusicChange
 			this.qrcode1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
 			this.qrcode1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.qrcode1.Image = global::MusicChange.Properties.Resources.QRcode;
-			this.qrcode1.Location = new System.Drawing.Point(345, 0);
+			this.qrcode1.Location = new System.Drawing.Point(335, 0);
 			this.qrcode1.Margin = new System.Windows.Forms.Padding(0);
 			this.qrcode1.Name = "qrcode1";
 			this.qrcode1.Size = new System.Drawing.Size(70, 80);
@@ -445,38 +482,38 @@ namespace MusicChange
 			// dG
 			// 
 			this.dG.BackgroundColor = System.Drawing.Color.DimGray;
-			dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-			dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-			dataGridViewCellStyle1.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-			dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-			dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-			dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-			this.dG.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+			dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+			dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+			dataGridViewCellStyle4.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+			dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+			dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+			dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+			this.dG.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
 			this.dG.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-			dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-			dataGridViewCellStyle2.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-			dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-			dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-			dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-			this.dG.DefaultCellStyle = dataGridViewCellStyle2;
+			dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+			dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
+			dataGridViewCellStyle5.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
+			dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+			dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+			dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+			this.dG.DefaultCellStyle = dataGridViewCellStyle5;
 			this.dG.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.dG.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(215)))), ((int)(((byte)(229)))));
 			this.dG.Location = new System.Drawing.Point(0, 0);
 			this.dG.Name = "dG";
-			dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-			dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-			dataGridViewCellStyle3.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-			dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-			dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-			dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-			this.dG.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+			dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+			dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
+			dataGridViewCellStyle6.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
+			dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+			dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+			dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+			this.dG.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
 			this.dG.RowHeadersWidth = 51;
 			this.dG.RowTemplate.Height = 27;
-			this.dG.Size = new System.Drawing.Size(616, 90);
+			this.dG.Size = new System.Drawing.Size(596, 90);
 			this.dG.TabIndex = 1;
 			// 
 			// lefttopfile
@@ -488,7 +525,7 @@ namespace MusicChange
 			this.lefttopfile.Location = new System.Drawing.Point(82, 62);
 			this.lefttopfile.Margin = new System.Windows.Forms.Padding(6);
 			this.lefttopfile.Name = "lefttopfile";
-			this.lefttopfile.Size = new System.Drawing.Size(616, 35);
+			this.lefttopfile.Size = new System.Drawing.Size(596, 35);
 			this.lefttopfile.TabIndex = 11;
 			this.lefttopfile.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
 			// 
@@ -661,7 +698,7 @@ namespace MusicChange
 			this.leftmatrial.Dock = System.Windows.Forms.DockStyle.Top;
 			this.leftmatrial.Location = new System.Drawing.Point(2, 2);
 			this.leftmatrial.Name = "leftmatrial";
-			this.leftmatrial.Size = new System.Drawing.Size(696, 60);
+			this.leftmatrial.Size = new System.Drawing.Size(676, 60);
 			this.leftmatrial.Style.Alignment = System.Drawing.StringAlignment.Center;
 			this.leftmatrial.Style.BackColor1.Color = System.Drawing.Color.Black;
 			this.leftmatrial.Style.BackColor2.Color = System.Drawing.Color.Black;
@@ -681,7 +718,7 @@ namespace MusicChange
 			this.flowLayoutPanel1.ForeColor = System.Drawing.SystemColors.AppWorkspace;
 			this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
 			this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-			this.flowLayoutPanel1.Size = new System.Drawing.Size(696, 60);
+			this.flowLayoutPanel1.Size = new System.Drawing.Size(676, 60);
 			this.flowLayoutPanel1.TabIndex = 0;
 			// 
 			// material
@@ -745,29 +782,31 @@ namespace MusicChange
 			// sC4.Panel2
 			// 
 			this.sC4.Panel2.BackColor = System.Drawing.Color.DimGray;
+			this.sC4.Panel2.Controls.Add(this.temp2);
 			this.sC4.Panel2.Controls.Add(this.button4);
-			this.sC4.Panel2.Controls.Add(this.dataGridView1);
 			this.sC4.Panel2.Controls.Add(this.temp1);
 			this.sC4.Panel2.Controls.Add(this.temp);
 			this.sC4.Panel2.Margin = new System.Windows.Forms.Padding(5);
 			this.sC4.Panel2MinSize = 300;
-			this.sC4.Size = new System.Drawing.Size(1138, 680);
-			this.sC4.SplitterDistance = 630;
+			this.sC4.Size = new System.Drawing.Size(1158, 680);
+			this.sC4.SplitterDistance = 650;
 			this.sC4.TabIndex = 0;
 			this.sC4.SplitterMoving += new System.Windows.Forms.SplitterCancelEventHandler(this.sC4_SplitterMoving);
 			this.sC4.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.sC4_SplitterMoved);
 			// 
 			// videoView1
 			// 
-			this.videoView1.BackColor = System.Drawing.Color.Teal;
+			this.videoView1.BackColor = System.Drawing.Color.LimeGreen;
+			this.videoView1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
 			this.videoView1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.videoView1.Location = new System.Drawing.Point(0, 30);
 			this.videoView1.Margin = new System.Windows.Forms.Padding(10);
 			this.videoView1.MediaPlayer = null;
 			this.videoView1.Name = "videoView1";
-			this.videoView1.Size = new System.Drawing.Size(630, 594);
-			this.videoView1.TabIndex = 3;
-			this.videoView1.Text = "videoView1";
+			this.videoView1.Padding = new System.Windows.Forms.Padding(5);
+			this.videoView1.Size = new System.Drawing.Size(650, 594);
+			this.videoView1.TabIndex = 5;
+			this.videoView1.Resize += new System.EventHandler(this.videoView1_Resize);
 			// 
 			// panel1
 			// 
@@ -775,7 +814,7 @@ namespace MusicChange
 			this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
 			this.panel1.Location = new System.Drawing.Point(0, 0);
 			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(630, 30);
+			this.panel1.Size = new System.Drawing.Size(650, 30);
 			this.panel1.TabIndex = 4;
 			// 
 			// progressBar
@@ -788,12 +827,12 @@ namespace MusicChange
 			this.progressBar.Maximum = 1000;
 			this.progressBar.Name = "progressBar";
 			this.progressBar.RightToLeft = System.Windows.Forms.RightToLeft.No;
-			this.progressBar.Size = new System.Drawing.Size(630, 26);
+			this.progressBar.Size = new System.Drawing.Size(650, 26);
 			this.progressBar.TabIndex = 2;
 			this.progressBar.TickStyle = System.Windows.Forms.TickStyle.None;
-			this.progressBar.Scroll += new System.EventHandler(this._progressBar_Scroll);
-			this.progressBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this._progressBar_MouseDown);
-			this.progressBar.MouseUp += new System.Windows.Forms.MouseEventHandler(this._progressBar_MouseUp);
+			this.progressBar.Scroll += new System.EventHandler(this.progressBar_Scroll);
+			this.progressBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.progressBar_MouseDown);
+			this.progressBar.MouseUp += new System.Windows.Forms.MouseEventHandler(this.progressBar_MouseUp);
 			// 
 			// volumeControlPanel
 			// 
@@ -816,7 +855,7 @@ namespace MusicChange
 			this.volumeControlPanel.MinimumSize = new System.Drawing.Size(0, 30);
 			this.volumeControlPanel.Name = "volumeControlPanel";
 			this.volumeControlPanel.Padding = new System.Windows.Forms.Padding(2);
-			this.volumeControlPanel.Size = new System.Drawing.Size(630, 30);
+			this.volumeControlPanel.Size = new System.Drawing.Size(650, 30);
 			this.volumeControlPanel.TabIndex = 1;
 			// 
 			// vieweMax
@@ -824,7 +863,7 @@ namespace MusicChange
 			this.vieweMax.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
 			this.vieweMax.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
 			this.vieweMax.Dock = System.Windows.Forms.DockStyle.Right;
-			this.vieweMax.Location = new System.Drawing.Point(602, 2);
+			this.vieweMax.Location = new System.Drawing.Point(622, 2);
 			this.vieweMax.Margin = new System.Windows.Forms.Padding(10, 4, 2, 2);
 			this.vieweMax.Name = "vieweMax";
 			this.vieweMax.Size = new System.Drawing.Size(26, 26);
@@ -840,19 +879,20 @@ namespace MusicChange
 			this.volumenum.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
 			this.volumenum.BackColor = System.Drawing.Color.Black;
+			this.volumenum.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.volumenum.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-			this.volumenum.Location = new System.Drawing.Point(316, 4);
+			this.volumenum.Location = new System.Drawing.Point(302, 10);
 			this.volumenum.Margin = new System.Windows.Forms.Padding(4);
 			this.volumenum.Name = "volumenum";
-			this.volumenum.Size = new System.Drawing.Size(24, 24);
+			this.volumenum.Size = new System.Drawing.Size(40, 24);
 			this.volumenum.TabIndex = 4;
-			this.volumenum.Text = "50";
+			this.volumenum.Text = "80";
 			// 
 			// volumeTrackBar
 			// 
 			this.volumeTrackBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-			this.volumeTrackBar.Location = new System.Drawing.Point(206, 4);
+			this.volumeTrackBar.Location = new System.Drawing.Point(206, 6);
 			this.volumeTrackBar.Margin = new System.Windows.Forms.Padding(4);
 			this.volumeTrackBar.Maximum = 100;
 			this.volumeTrackBar.Minimum = 1;
@@ -877,7 +917,7 @@ namespace MusicChange
 			this.playPauseButton.Size = new System.Drawing.Size(30, 30);
 			this.playPauseButton.TabIndex = 4;
 			this.playPauseButton.UseVisualStyleBackColor = true;
-			this.playPauseButton.Click += new System.EventHandler(this.playPauseButton_Click_1);
+			this.playPauseButton.Click += new System.EventHandler(this.playPauseButton_Click);
 			// 
 			// fitToWindowButton
 			// 
@@ -889,7 +929,7 @@ namespace MusicChange
 			this.fitToWindowButton.Margin = new System.Windows.Forms.Padding(2);
 			this.fitToWindowButton.Name = "fitToWindowButton";
 			this.fitToWindowButton.Size = new System.Drawing.Size(26, 26);
-			this.fitToWindowButton.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+			this.fitToWindowButton.Style = DevComponents.DotNetBar.eDotNetBarStyle.VS2005;
 			this.fitToWindowButton.Symbol = "";
 			this.fitToWindowButton.SymbolColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
 			this.fitToWindowButton.SymbolSize = 14F;
@@ -902,7 +942,7 @@ namespace MusicChange
 			this.totalTimeLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
 			this.totalTimeLabel.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.totalTimeLabel.Location = new System.Drawing.Point(90, 4);
+			this.totalTimeLabel.Location = new System.Drawing.Point(90, 8);
 			this.totalTimeLabel.Margin = new System.Windows.Forms.Padding(4);
 			this.totalTimeLabel.Name = "totalTimeLabel";
 			this.totalTimeLabel.Size = new System.Drawing.Size(80, 17);
@@ -992,6 +1032,13 @@ namespace MusicChange
 			this.muteButton.TabIndex = 3;
 			this.muteButton.Click += new System.EventHandler(this.MuteButton_Click);
 			// 
+			// temp2
+			// 
+			this.temp2.Location = new System.Drawing.Point(34, 127);
+			this.temp2.Name = "temp2";
+			this.temp2.Size = new System.Drawing.Size(261, 25);
+			this.temp2.TabIndex = 2;
+			// 
 			// button4
 			// 
 			this.button4.Location = new System.Drawing.Point(57, 281);
@@ -1001,50 +1048,16 @@ namespace MusicChange
 			this.button4.Text = "button4";
 			this.button4.UseVisualStyleBackColor = true;
 			// 
-			// dataGridView1
-			// 
-			dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-			dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
-			dataGridViewCellStyle4.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-			dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-			dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-			dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-			this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
-			this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-			dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
-			dataGridViewCellStyle5.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
-			dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-			dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-			dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-			this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle5;
-			this.dataGridView1.Location = new System.Drawing.Point(32, 410);
-			this.dataGridView1.Name = "dataGridView1";
-			dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-			dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
-			dataGridViewCellStyle6.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
-			dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-			dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-			dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-			this.dataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
-			this.dataGridView1.RowHeadersWidth = 51;
-			this.dataGridView1.RowTemplate.Height = 27;
-			this.dataGridView1.Size = new System.Drawing.Size(240, 150);
-			this.dataGridView1.TabIndex = 2;
-			// 
 			// temp1
 			// 
-			this.temp1.Location = new System.Drawing.Point(69, 62);
+			this.temp1.Location = new System.Drawing.Point(34, 72);
 			this.temp1.Name = "temp1";
 			this.temp1.Size = new System.Drawing.Size(261, 25);
 			this.temp1.TabIndex = 1;
 			// 
 			// temp
 			// 
-			this.temp.Location = new System.Drawing.Point(69, 17);
+			this.temp.Location = new System.Drawing.Point(34, 20);
 			this.temp.Name = "temp";
 			this.temp.Size = new System.Drawing.Size(261, 25);
 			this.temp.TabIndex = 0;
@@ -1111,7 +1124,6 @@ namespace MusicChange
 			this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.LaserEditing_MouseDown);
 			this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.LaserEditing_MouseMove);
 			this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.LaserEditing_MouseUp);
-			this.Resize += new System.EventHandler(this.LaserEditing_Resize);
 			this.splitContainer1.Panel1.ResumeLayout(false);
 			this.splitContainer1.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
@@ -1129,6 +1141,7 @@ namespace MusicChange
 			((System.ComponentModel.ISupportInitialize)(this.sC3)).EndInit();
 			this.sC3.ResumeLayout(false);
 			this.upperleft.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
 			this.panel4.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.dG)).EndInit();
 			this.lefttopfile.ResumeLayout(false);
@@ -1146,7 +1159,6 @@ namespace MusicChange
 			this.volumeControlPanel.ResumeLayout(false);
 			this.volumeControlPanel.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.volumeTrackBar)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
 			this.sC5.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.sC5)).EndInit();
 			this.sC5.ResumeLayout(false);
@@ -1200,7 +1212,6 @@ namespace MusicChange
 		private System.Windows.Forms.TrackBar progressBar;
 		private System.Windows.Forms.Label totalTimeLabel;
 		private System.Windows.Forms.Label currentTimeLabel;
-		private LibVLCSharp.WinForms.VideoView videoView1;
 		private System.Windows.Forms.Button playPauseButton;
 		private System.Windows.Forms.Button stopButton;
 		private System.Windows.Forms.Panel volumeControlPanel;
@@ -1210,10 +1221,12 @@ namespace MusicChange
 		private DevComponents.DotNetBar.ButtonX zoomInButton;
 		private DevComponents.DotNetBar.ButtonX zoomOutButton;
 		private DevComponents.DotNetBar.ButtonX fitToWindowButton;
-		private System.Windows.Forms.ProgressBar leftChannelProgressBar;
 		private System.Windows.Forms.ProgressBar rightChannelProgressBar;
 		private System.Windows.Forms.Panel panel1;
 		private DevComponents.DotNetBar.ButtonX vieweMax;
+		private System.Windows.Forms.ProgressBar leftChannelProgressBar;
+		private LibVLCSharp.WinForms.VideoView videoView1;
+		private System.Windows.Forms.TextBox temp2;
 	}
 }
 #endregion 
