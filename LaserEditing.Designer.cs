@@ -797,17 +797,14 @@ namespace MusicChange
             // 
             // videoView1
             // 
-            this.videoView1.BackColor = System.Drawing.Color.LimeGreen;
-            this.videoView1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.videoView1.BackColor = System.Drawing.Color.Teal;
             this.videoView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.videoView1.Location = new System.Drawing.Point(0, 30);
-            this.videoView1.Margin = new System.Windows.Forms.Padding(10);
             this.videoView1.MediaPlayer = null;
             this.videoView1.Name = "videoView1";
-            this.videoView1.Padding = new System.Windows.Forms.Padding(5);
             this.videoView1.Size = new System.Drawing.Size(650, 594);
             this.videoView1.TabIndex = 5;
-            this.videoView1.Resize += new System.EventHandler(this.videoView1_Resize);
+            this.videoView1.Text = "videoView1";
             // 
             // panel1
             // 

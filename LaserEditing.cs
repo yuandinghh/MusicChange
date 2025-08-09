@@ -75,7 +75,7 @@ namespace MusicChange
 		private DockStyle normalDockStyle;
 		private AnchorStyles normalAnchorStyle;
 		private Control normalParent;
-		private Form videoFullScreenForm; // 用于真正的全屏模式
+		//private Form videoFullScreenForm; // 用于真正的全屏模式
 		private ToolTipEx toolTipEx = new ToolTipEx();
 
 		public LaserEditing( )

@@ -467,9 +467,6 @@
     <None Include="pause.jpg" />
     <None Include="start.jpg" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="MusicChange.csproj.user" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
