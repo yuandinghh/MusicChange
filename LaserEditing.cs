@@ -111,52 +111,79 @@ namespace MusicChange
 			this.KeyPreview = true;
 
 
-		}
+	
 
-		#region   ------------初始化 LibVLC 核心 播放视频文件 播放 继续 停止等	 -----------------	
-		/*要从视频中获取音频的左右声道数值并显示，LibVLC 本身并不直接提供左右声道音量的实时数据接口。但可以通过以下方法实现一个近似的解决方案：
-	实现步骤：
-	1.	使用 LibVLC 的音频回调功能：
-	•	LibVLC 提供了 AudioCallbacks，可以通过它获取音频数据。
-	•	通过分析音频数据，可以计算左右声道的音量值。
-	2.	计算左右声道音量：
-	•	音频数据通常是 PCM 格式，可以通过解析 PCM 数据计算左右声道的音量。
-	•	计算方法是对每个声道的采样值取绝对值的平均值或 RMS（均方根值）。
-	3.	显示左右声道音量：
-	•	使用 UI 控件（如 ProgressBar 或自定义绘制）显示左右声道的音量。
-	示例代码：
-	以下是一个实现左右声道音量显示的示例：  		*/
-		// 音频回调函数
-		//private void OnAudioPlay(IntPtr data, IntPtr samples, uint count, long pts, short[] audioData)
-		//{
-		//	private void OnAudioPlay(IntPtr data, IntPtr samples, uint count, long pts)
-		//	{
-		//	//	throw new NotImplementedException();
-		//	//}
-		//	// 获取音频样本数据
-		//	audioData = new short[count];
-		//	Marshal.Copy(samples, audioData, 0, audioData.Length);
-		//          //waveProvider.AddSamples(audioData);
-		//	waveProvider.AddSamples( audioData, 0, audioData.Length );
-		//	// 假设音频是立体声（左右声道交替）
-		//	var leftChannel = audioData.Where((_, index) => index % 2 == 0).ToArray();
-		//	var rightChannel = audioData.Where((_, index) => index % 2 != 0).ToArray();
-		//	// 计算左右声道音量（RMS）
-		//	var leftVolume = CalculateRMS(leftChannel);
-		//	var rightVolume = CalculateRMS(rightChannel);
-		//	if(this.IsHandleCreated)
-		//	{
-		//		BeginInvoke(new Action(() =>
-		//	  {
-		//		  leftChannelProgressBar.Value = Math.Min((int)leftVolume, 100);
-		//		  rightChannelProgressBar.Value = Math.Min((int)rightVolume, 100);
-		//	  }));
-		//	}
-		//}
-		// 修复音频回调方法签名 - 确保所有回调方法都有正确的参数签名
-		// 完整修复的音频回调方法
-		// 完整实现的 OnAudioPlay 方法 - 确保没有任何未实现的部分
-		private void OnAudioPlay(IntPtr data, IntPtr samples, uint count, long pts)
+
+		#region ------- ToolTip 鼠标进入悬停显示 -------
+		ToolTipEx toolTip1 = new ToolTipEx();   // 创建自定义 ToolTipEx 实例 ，鼠标悬停时显示提示信息
+		toolTip1.TipFont = new Font("微软雅黑", 20); // 这里设置字体和大小
+		ConfigureToolTip(toolTip1);
+			}
+
+	private void ConfigureToolTip(ToolTipEx toolTip1)
+	{
+	// 设置 ToolTip 属性
+		toolTip1.AutoPopDelay = 90000; // 提示框显示 5 秒后消失
+		toolTip1.InitialDelay = 500; // 鼠标悬停 1 秒后显示提示框
+		toolTip1.ReshowDelay = 1000;   // 鼠标移开后再次悬停的延迟时间
+		toolTip1.ShowAlways = true;   // 即使控件未激活也显示提示框
+		toolTip1.IsBalloon = true;    // 使用气泡样式
+		toolTip1.ToolTipIcon = ToolTipIcon.Info; // 提示框图标
+		toolTip1.ToolTipTitle = "提示"; // 提示框标题
+
+		toolTip1.SetToolTip(playPauseButton, "视频播放开始和停止");
+		toolTip1.SetToolTip(stopButton, "停止播放视频");
+		toolTip1.SetToolTip(button4, "crf（Constant Rate Factor，恒定码率因子）\r\n•\t作用：控制视频压缩的画质和文件大小。\r\n•\t取值范围：0~51，常用范围为 18~28。\r\n•\t数值越小，画质越高，文件越大。\r\n•\t数值越大，画质越低，文件越小。\r\n•\t一般推荐：高质量用 18~22，普通用 23~28。");
+		toolTip1.SetToolTip(buttonX1, "选择播放速度");
+		toolTip1.SetToolTip(temp2, "preset（预设编码速度）\r\n•\t作用：控制编码速度与压缩效率的平衡。\r\n•\t可选值（从快到慢）：\r\n•\tultrafast, superfast, veryfast, faster, fast, medium, slow, slower, veryslow\r\n•\t说明：\r\n•\t越快（如 ultrafast），编码速度快，但文件大、画质略低。\r\n•\t越慢（如 veryslow），编码速度慢，但文件更小、画质更好。\r\n•\t默认值是 medium，一般推荐用 fast、medium 或 slow。");
+	}
+	#endregion
+
+
+	#region   ------------初始化 LibVLC 核心 播放视频文件 播放 继续 停止等	 -----------------	
+	/*要从视频中获取音频的左右声道数值并显示，LibVLC 本身并不直接提供左右声道音量的实时数据接口。但可以通过以下方法实现一个近似的解决方案：
+实现步骤：
+1.	使用 LibVLC 的音频回调功能：
+•	LibVLC 提供了 AudioCallbacks，可以通过它获取音频数据。
+•	通过分析音频数据，可以计算左右声道的音量值。
+2.	计算左右声道音量：
+•	音频数据通常是 PCM 格式，可以通过解析 PCM 数据计算左右声道的音量。
+•	计算方法是对每个声道的采样值取绝对值的平均值或 RMS（均方根值）。
+3.	显示左右声道音量：
+•	使用 UI 控件（如 ProgressBar 或自定义绘制）显示左右声道的音量。
+示例代码：
+以下是一个实现左右声道音量显示的示例：  		*/
+	// 音频回调函数
+	//private void OnAudioPlay(IntPtr data, IntPtr samples, uint count, long pts, short[] audioData)
+	//{
+	//	private void OnAudioPlay(IntPtr data, IntPtr samples, uint count, long pts)
+	//	{
+	//	//	throw new NotImplementedException();
+	//	//}
+	//	// 获取音频样本数据
+	//	audioData = new short[count];
+	//	Marshal.Copy(samples, audioData, 0, audioData.Length);
+	//          //waveProvider.AddSamples(audioData);
+	//	waveProvider.AddSamples( audioData, 0, audioData.Length );
+	//	// 假设音频是立体声（左右声道交替）
+	//	var leftChannel = audioData.Where((_, index) => index % 2 == 0).ToArray();
+	//	var rightChannel = audioData.Where((_, index) => index % 2 != 0).ToArray();
+	//	// 计算左右声道音量（RMS）
+	//	var leftVolume = CalculateRMS(leftChannel);
+	//	var rightVolume = CalculateRMS(rightChannel);
+	//	if(this.IsHandleCreated)
+	//	{
+	//		BeginInvoke(new Action(() =>
+	//	  {
+	//		  leftChannelProgressBar.Value = Math.Min((int)leftVolume, 100);
+	//		  rightChannelProgressBar.Value = Math.Min((int)rightVolume, 100);
+	//	  }));
+	//	}
+	//}
+	// 修复音频回调方法签名 - 确保所有回调方法都有正确的参数签名
+	// 完整修复的音频回调方法
+	// 完整实现的 OnAudioPlay 方法 - 确保没有任何未实现的部分
+	private void OnAudioPlay(IntPtr data, IntPtr samples, uint count, long pts)
 		{
 			// 不要抛出任何异常，而是静默处理所有情况
 			try
@@ -593,25 +620,29 @@ namespace MusicChange
 		private void ZoomInButton_Click(object sender, EventArgs e)
 		{
 			currentZoomFactor = mediaPlayer.Scale;
+			if(currentZoomFactor == 0)
+			{
+				currentZoomFactor = 0.4f;
+				ApplyZoom();
+				return;
+			}
 			currentZoomFactor += ZOOM_INCREMENT;
-			if(currentZoomFactor > MAX_ZOOM)
-				currentZoomFactor = MAX_ZOOM;
-
+			if(currentZoomFactor > MAX_ZOOM) 				currentZoomFactor = MAX_ZOOM;
 			ApplyZoom();
 		}
 		// 缩小按钮点击事件
 		private void ZoomOutButton_Click(object sender, EventArgs e)
 		{
 			currentZoomFactor = mediaPlayer.Scale;
+			if (currentZoomFactor <= 0) return;
 			currentZoomFactor -= ZOOM_INCREMENT;
 			if(currentZoomFactor < MIN_ZOOM) 		currentZoomFactor = MIN_ZOOM;
-
 			ApplyZoom();
 		}
 		// 适应窗口按钮点击事件
 		private void FitToWindowButton_Click(object sender, EventArgs e)
 		{
-			currentZoomFactor = 0.5f;
+			currentZoomFactor = 0.0f;
 			ApplyZoom();
 		}
 		/// <summary>
@@ -883,11 +914,15 @@ namespace MusicChange
 		// 按钮事件处理
 		private void playPauseButton_Click(object sender, EventArgs e)
 		{  //			var tt = _mediaPlayer;
-			if(IsfirstPlaying == false)
+			float zz;
+			if(!IsfirstPlaying )
 			{
 				IsfirstPlaying = true;
 				PlayVideo();
 				playPauseButton.Image = Properties.Resources.pause;
+				 zz = mediaPlayer.Scale;
+				temp1.Text = zz.ToString();
+				temp2.Text = $"缩放: {mediaPlayer.Scale:P0}"; // 显示为百分比
 				return;
 			}
 			else
@@ -900,7 +935,9 @@ namespace MusicChange
 				{
 					progressTimer.Stop();
 					mediaPlayer.Pause();               //添加图片
-					playPauseButton.Image = Properties.Resources.start;                 //((Button)sender).Text = "播放";
+					playPauseButton.Image = Properties.Resources.start;           
+                    temp2.Text = $"缩放: {mediaPlayer.Scale:P0}";
+
 				}
 				else
 				{
@@ -910,7 +947,7 @@ namespace MusicChange
 																						//videoView1.ba
 				}
 			}
-			var zz = mediaPlayer.Scale;
+			 zz = mediaPlayer.Scale;
 			temp1.Text = zz.ToString();
 			temp2.Text = $"缩放: {mediaPlayer.Scale:P0}"; // 显示为百分比
 		}
@@ -1638,7 +1675,9 @@ namespace MusicChange
 			//_mediaPlayer.Mute = true; // 静音					  //_mediaPlayer.uiMode = "full"; // 或 "mini"
 			filePath = ofd.FileName;
 			PlayVideo();
-
+			 var fsize = mediaPlayer.Scale;
+			temp1.Text =  fsize.ToString();
+			temp2.Text = $"缩放: {mediaPlayer.Scale:P0}"; // 显示为百分比
 
 		}
 
@@ -2166,15 +2205,15 @@ namespace MusicChange
 		{
 			try {
 				if (mediaPlayer != null) {
-					// 从 MediaPlayer 获取视频尺寸
-					var videoTrack = mediaPlayer.VideoTrack;
-					if (videoTrack.HasValue) {
-						return new VideoSizeInfo
-						{
-							Width = (int) videoTrack.Value.Data.Width,
-							Height = (int)	videoTrack.Value.Data.Height
-						};
-					}
+				//	// 从 MediaPlayer 获取视频尺寸
+				//	var videoTrack = mediaPlayer.VideoTrack;
+				//	if (videoTrack.HasValue) {
+				//		return new VideoSizeInfo
+				//		{
+				//			Width = (int) videoTrack.Value.Data.Width,
+				//			Height = (int)	videoTrack.Value.Data.Height
+				//		};
+				//	}
 
 					// 备用方法：从媒体信息获取
 					var media = mediaPlayer.Media;
@@ -2216,11 +2255,11 @@ namespace MusicChange
 						if (videoTracks.Length > 0) {
 							return new VideoSizeInfo
 							{
-								Width = videoTracks[0].Data.Video.Width,
-								Height = videoTracks[0].Data.Video.Height
+								Width =(int) videoTracks[0].Data.Video.Width,
+								Height = (int)videoTracks[0].Data.Video.Height
 							};
 						}
-					}
+					} 
 				}
 			}
 			catch (Exception ex) {
