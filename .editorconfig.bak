@@ -5,8 +5,6 @@ dotnet_diagnostic.IDE0055.severity = none
 
 [*.cs]
 #### 命名样式 ####
-# 禁用所有命名规则
-dotnet_diagnostic.IDE1006.severity = none
 
 # 命名规则
 

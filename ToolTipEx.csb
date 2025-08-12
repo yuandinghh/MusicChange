@@ -1,0 +1,907 @@
+﻿using System;
+using System.ComponentModel;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Text;
+using System.Windows.Forms;
+
+namespace MusicChange
+{
+
+	#region  1111111111111111111111
+	//[ToolboxItem(true)]
+	//public class ToolTipEx:ToolTip
+	//{
+	//	#region 属性字段
+	//	// 外观属性
+	//	private Color _backColor1 = Color.FromArgb(45, 45, 48);
+	//	private Color _backColor2 = Color.FromArgb(30, 30, 32);
+	//	private Color _borderColor = Color.FromArgb(65, 65, 70);
+	//	private Color _foreColor = Color.White;
+	//	private int _cornerRadius = 8;
+	//	private int _shadowSize = 8;
+	//	private Color _shadowColor = Color.FromArgb(30, 0, 0, 0);
+	//	private Image _icon;
+	//	private int _iconSize = 20;
+	//	private Font _titleFont;
+	//	private string _titleText = "";
+	//	private Color _titleColor = Color.FromArgb(255, 241, 148);
+	//	//private renly Color GetColor (int r, int g, int b) => Color.FromArgb(r, g, b);
+
+	//	// 动画属性
+	//	private bool _fadeEffect = true;
+	//	private int _fadeDuration = 300;
+
+	//	// 布局属性
+	//	private int _padding = 10;
+	//	private int _iconTextSpacing = 8;
+	//	private int _titleContentSpacing = 4;
+	//	private ContentAlignment _iconAlignment = ContentAlignment.TopLeft;
+
+	////	Rectangle contentRect = new Rectangle(
+	////	bounds.X + _padding,
+	////	bounds.Y + _padding,
+	////	bounds.Width - _padding * 2,
+	////	bounds.Height - _padding * 2
+	////);
+
+
+	//	#endregion
+
+
+
+	//	#region 构造函数
+
+	//	public ToolTipEx()
+	//	{
+	//		// 启用OwnerDraw模式
+	//		this.OwnerDraw = true;
+
+	//		// 设置默认属性
+	//		this.BackColor = Color.Transparent;
+	//		this.ForeColor = Color.White;
+	//		this.IsBalloon = false;
+	//		this.UseAnimation = true;
+	//		this.UseFading = true;
+
+	//		// 注册事件
+	//		this.Draw += ToolTipEx_Draw;
+	//		this.Popup += ToolTipEx_Popup;
+	//	}
+
+	//	#endregion
+
+	//	#region 事件处理
+	//	private void ToolTipEx_Popup(object sender, PopupEventArgs e)
+	//	{
+	//		// 计算工具提示大小
+	//		Size size = CalculateSize(GetToolTip(e.AssociatedControl));
+	//		e.ToolTipSize = new Size(size.Width + _shadowSize * 2, size.Height + _shadowSize * 2);
+	//	}
+
+	//	private void ToolTipEx_Draw(object sender, DrawToolTipEventArgs e)
+	//	{
+	//		// 绘制工具提示
+	//		DrawToolTip(e);
+	//	}
+
+	//	#endregion
+
+	//	#region 核心方法
+	//	private void DrawToolTip(DrawToolTipEventArgs e)
+	//	{
+	//		// 计算实际内容区域（排除阴影）
+	//		Rectangle contentRect = new Rectangle(
+	//			e.Bounds.X + _shadowSize,
+	//			e.Bounds.Y + _shadowSize,
+	//			e.Bounds.Width - _shadowSize * 2,
+	//			e.Bounds.Height - _shadowSize * 2
+	//		);
+
+	//		// 绘制阴影
+	//		DrawShadow(e.Graphics, e.Bounds);
+	//		// 绘制背景
+	//		DrawBackground(e.Graphics, contentRect);
+
+	//		// 绘制边框
+	//		DrawBorder(e.Graphics, contentRect);
+	//		// 绘制内容
+	//		DrawContent(e.Graphics, contentRect, e.ToolTipText);
+	//	}
+
+	//	private void DrawShadow(Graphics g, Rectangle bounds)
+	//	{
+	//		if(_shadowSize <= 0)
+	//			return;
+	//		using var path = CreateRoundedRectangle(bounds, _cornerRadius + _shadowSize);
+	//		using var brush = new SolidBrush(_shadowColor);
+	//		g.FillPath(brush, path);
+	//	}
+
+	//	private void DrawBackground(Graphics g, Rectangle bounds)
+	//	{
+	//		using(var path = CreateRoundedRectangle(bounds, _cornerRadius))
+	//		using(var brush = new LinearGradientBrush(
+	//			bounds,
+	//			_backColor1,
+	//			_backColor2,
+	//			LinearGradientMode.Vertical))
+	//		{
+	//			g.FillPath(brush, path);
+	//		}
+	//	}
+	//	private void DrawBorder(Graphics g, Rectangle bounds)
+	//	{
+	//		using(var path = CreateRoundedRectangle(bounds, _cornerRadius))
+	//		using(var pen = new Pen(_borderColor))
+	//		{
+	//			g.DrawPath(pen, path);
+	//		}
+	//	}
+
+	//	private void DrawContent(Graphics g, Rectangle bounds, string text)
+	//	{
+	//		g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+	//		g.SmoothingMode = SmoothingMode.AntiAlias;
+
+	//		// 计算内容区域（减去内边距）
+	//		Rectangle contentRect = new Rectangle(
+	//			bounds.X + _padding,
+	//			bounds.Y + _padding,
+	//			bounds.Width - _padding * 2,
+	//			bounds.Height - _padding * 2
+	//		);
+
+	//		// 绘制图标
+	//		Rectangle? iconRect = null;
+	//		if(_icon != null)
+	//		{
+	//			iconRect = DrawIcon(g, ref contentRect);
+	//		}
+
+	//		// 绘制标题
+	//		Rectangle? titleRect = null;
+	//		if(!string.IsNullOrWhiteSpace(_titleText))
+	//		{
+	//			titleRect = DrawTitle(g, ref contentRect, iconRect);
+	//		}
+
+	//		// 绘制内容文本
+	//		DrawText(g, contentRect, text, titleRect, iconRect);
+	//	}
+	//	private Rectangle? DrawIcon(Graphics g, ref Rectangle contentRect)
+	//	{
+	//		int iconWidth = _iconSize;
+	//		int iconHeight = _iconSize;
+
+	//		Rectangle iconRect = new Rectangle(
+	//			contentRect.X,
+	//			contentRect.Y,
+	//			iconWidth,
+	//			iconHeight
+	//		);
+
+	//		// 根据对齐方式调整位置
+	//		if(_iconAlignment == ContentAlignment.TopRight ||
+	//			_iconAlignment == ContentAlignment.MiddleRight ||
+	//			_iconAlignment == ContentAlignment.BottomRight)
+	//		{
+	//			iconRect.X = contentRect.Right - iconWidth;
+	//		}
+	//		else if(_iconAlignment == ContentAlignment.TopCenter ||
+	//				 _iconAlignment == ContentAlignment.MiddleCenter ||
+	//				 _iconAlignment == ContentAlignment.BottomCenter)
+	//		{
+	//			iconRect.X = contentRect.X + (contentRect.Width - iconWidth) / 2;
+	//		}
+
+	//		if(_iconAlignment == ContentAlignment.BottomLeft ||
+	//			_iconAlignment == ContentAlignment.BottomCenter ||
+	//			_iconAlignment == ContentAlignment.BottomRight)
+	//		{
+	//			iconRect.Y = contentRect.Bottom - iconHeight;
+	//		}
+	//		else if(_iconAlignment == ContentAlignment.MiddleLeft ||
+	//				 _iconAlignment == ContentAlignment.MiddleCenter ||
+	//				 _iconAlignment == ContentAlignment.MiddleRight)
+	//		{
+	//			iconRect.Y = contentRect.Y + (contentRect.Height - iconHeight) / 2;
+	//		}
+
+	//		// 绘制图标
+	//		g.DrawImage(_icon, iconRect);
+
+	//		// 调整内容区域
+	//		if(_iconAlignment == ContentAlignment.TopLeft ||
+	//			_iconAlignment == ContentAlignment.MiddleLeft ||
+	//			_iconAlignment == ContentAlignment.BottomLeft)
+	//		{
+	//			contentRect.X += iconWidth + _iconTextSpacing;
+	//			contentRect.Width -= iconWidth + _iconTextSpacing;
+	//		}
+	//		else if(_iconAlignment == ContentAlignment.TopRight ||
+	//				 _iconAlignment == ContentAlignment.MiddleRight ||
+	//				 _iconAlignment == ContentAlignment.BottomRight)
+	//		{
+	//			contentRect.Width -= iconWidth + _iconTextSpacing;
+	//		}
+	//		else if(_iconAlignment == ContentAlignment.TopCenter ||
+	//				 _iconAlignment == ContentAlignment.MiddleCenter ||
+	//				 _iconAlignment == ContentAlignment.BottomCenter)
+	//		{
+	//			// 顶部/中间/底部居中不影响内容区域宽度
+	//		}
+
+	//		return iconRect;
+	//	}
+
+	//	private Rectangle? DrawTitle(Graphics g, ref Rectangle contentRect, Rectangle? iconRect)
+	//	{
+	//		using var titleFont = TitleFont;
+	//		using var brush = new SolidBrush(_titleColor);
+	//		SizeF titleSize = g.MeasureString(_titleText, titleFont, contentRect.Width);
+	//		Rectangle titleRect = new Rectangle(
+	//			contentRect.X,
+	//			contentRect.Y,
+	//			contentRect.Width,
+	//			(int)Math.Ceiling(titleSize.Height)
+	//		);
+
+	//		g.DrawString(_titleText, titleFont, brush, titleRect);
+
+	//		// 调整内容区域
+	//		contentRect.Y += titleRect.Height + _titleContentSpacing;
+	//		contentRect.Height -= titleRect.Height + _titleContentSpacing;
+
+	//		return titleRect;
+	//	}
+
+	//	private void DrawText1(Graphics g, Rectangle contentRect, string text, Rectangle? titleRect, Rectangle? iconRect)
+	//	{
+	//		using(var brush = new SolidBrush(_foreColor))
+	//		{
+	//			TextFormatFlags flags = TextFormatFlags.WordBreak |
+	//									 TextFormatFlags.TextBoxControl |
+	//									 TextFormatFlags.EndEllipsis;
+
+	//			TextRenderer.DrawText(g, text, this.TitleFont, contentRect, _foreColor, flags);
+	//		}
+	//	}
+
+	//	private Size CalculateSize1(string text)
+	//	{
+	//		// 使用临时位图计算文本大小
+	//		using(var bmp = new Bitmap(1, 1))
+	//		using(var g = Graphics.FromImage(bmp))
+	//		{
+	//			g.TextRenderingHint = TextRenderingHint.AntiAlias;
+
+	//			int width = 0;
+	//			int height = _padding * 2;
+	//			int maxWidth = 400; // 最大宽度限制
+
+	//			// 计算文本尺寸
+	//			if(!string.IsNullOrWhiteSpace(text))
+	//			{
+	//				SizeF textSize = g.MeasureString(text, this.TitleFont, maxWidth - _padding * 2);
+	//				width = Math.Max(width, (int)textSize.Width);
+	//				height += (int)textSize.Height;
+	//			}
+
+	//			// 添加标题高度
+	//			if(!string.IsNullOrWhiteSpace(_titleText))
+	//			{
+	//				using(var titleFont = TitleFont)
+	//				{
+	//					SizeF titleSize = g.MeasureString(_titleText, titleFont, maxWidth - _padding * 2);
+	//					width = Math.Max(width, (int)titleSize.Width);
+	//					height += (int)titleSize.Height + _titleContentSpacing;
+	//				}
+	//			}
+
+	//			// 添加图标高度/宽度
+	//			if(_icon != null)
+	//			{
+	//				width += _iconSize + _iconTextSpacing;
+	//				height = Math.Max(height, _iconSize + _padding * 2);
+	//			}
+
+	//			// 确保最小尺寸
+	//			width = Math.Max(width, 100);
+	//			height = Math.Max(height, 40);
+	//			return new Size(width, height);
+	//		}
+	//	}
+	//	private GraphicsPath CreateRoundedRectangle(Rectangle bounds, int radius)
+	//	{
+	//		GraphicsPath path = new GraphicsPath();
+
+	//		if(radius <= 0)
+	//		{
+	//			path.AddRectangle(bounds);
+	//			return path;
+	//		}
+
+	//		int diameter = radius * 2;
+	//		Rectangle arcRect = new Rectangle(bounds.Location, new Size(diameter, diameter));
+
+	//		// 左上角
+	//		path.AddArc(arcRect, 180, 90);
+
+	//		// 右上角
+	//		arcRect.X = bounds.Right - diameter;
+	//		path.AddArc(arcRect, 270, 90);
+
+	//		// 右下角
+	//		arcRect.Y = bounds.Bottom - diameter;
+	//		path.AddArc(arcRect, 0, 90);
+
+	//		// 左下角
+	//		arcRect.X = bounds.Left;
+	//		path.AddArc(arcRect, 90, 90);
+
+	//		path.CloseFigure();
+	//		return path;
+	//	}
+
+	//	private void UpdateStyles()
+	//	{
+	//		// 强制重绘所有工具提示
+	//		foreach(Control ctrl in this.GetAllToolTipControls())
+	//		{
+	//			this.SetToolTip(ctrl, this.GetToolTip(ctrl));
+	//		}
+	//	}
+
+	//	private Control[] GetAllToolTipControls()
+	//	{
+	//		// 获取所有设置了工具提示的控件
+	//		// 注意：实际实现中需要更健壮的方法
+	//		return new Control[0]; // 简化实现
+	//	}
+	//	#endregion
+
+	//	#region 公共方法
+	//	public void SetToolTip(Control control, string title, string text, Image icon = null)
+	//	{
+	//		_titleText = title;
+	//		_icon = icon;
+	//		base.SetToolTip(control, text);
+	//	}
+
+	#endregion
+	//}
+	#region  222222222222222
+	[ToolboxItem( true )]
+	public class ToolTipEx:ToolTip
+	{
+		// 新增字体相关属性
+		private float _maxFontScale = 0.85f; // 最大字体缩放比例
+		private int _minFontSize = 8;        // 最小字体大小
+		private bool _autoAdjustFont = true; // 是否自动调整字体大小
+
+		#region     属性字段 		外观属性
+		private Color _backColor1 = Color.FromArgb( 45, 45, 48 );
+		private Color _backColor2 = Color.FromArgb( 30, 30, 32 );
+		private Color _borderColor = Color.FromArgb( 65, 65, 70 );
+		private Color _foreColor = Color.White;
+		private int _cornerRadius = 8;
+		private int _shadowSize = 8;
+		private Color _shadowColor = Color.FromArgb( 30, 0, 0, 0 );
+		private Image _icon;
+		private int _iconSize = 20;
+		private Font _titleFont;
+		private string _titleText = "";
+		private Color _titleColor = Color.FromArgb( 255, 241, 148 );
+		private  Color GetColor(int r, int g, int b) => Color.FromArgb( r, g, b );
+
+		//动画属性
+		private bool _fadeEffect = true;
+		private int _fadeDuration = 300;
+
+		//布局属性
+		private int _padding = 10;
+		private int _iconTextSpacing = 8;
+		private int _titleContentSpacing = 4;
+		private ContentAlignment _iconAlignment = ContentAlignment.TopLeft;
+
+	//	Rectangle contentRect = new Rectangle(
+	//	bounds.X + _padding,
+	//	bounds.Y + _padding,
+	//	bounds.Width - _padding * 2,
+	//	bounds.Height - _padding * 2
+	//);
+
+		#endregion
+
+		#region 公共属性
+		[Category( "外观" ), Description( "工具提示的背景起始颜色" )]
+		public Color BackColor1
+		{
+			get => _backColor1;
+			set {
+				_backColor1 = value;
+				UpdateStyles();
+			}
+		}
+
+		[Category( "外观" ), Description( "工具提示的背景结束颜色" )]
+		public Color BackColor2
+		{
+			get => _backColor2;
+			set {
+				_backColor2 = value;
+				UpdateStyles();
+			}
+		}
+
+		[Category( "外观" ), Description( "工具提示的边框颜色" )]
+		public Color BorderColor
+		{
+			get => _borderColor;
+			set {
+				_borderColor = value;
+				UpdateStyles();
+			}
+		}
+
+		[Category( "外观" ), Description( "工具提示的文本颜色" )]
+		public Color ForeColor
+		{
+			get => _foreColor;
+			set {
+				_foreColor = value;
+				UpdateStyles();
+			}
+		}
+
+		[Category( "外观" ), Description( "工具提示的圆角半径" )]
+		public int CornerRadius
+		{
+			get => _cornerRadius;
+			set {
+				_cornerRadius = value;
+				UpdateStyles();
+			}
+		}
+
+		[Category( "外观" ), Description( "工具提示的阴影大小" )]
+		public int ShadowSize
+		{
+			get => _shadowSize;
+			set {
+				_shadowSize = Math.Max( 0, value );
+				UpdateStyles();
+			}
+		}
+
+		[Category( "外观" ), Description( "工具提示的阴影颜色" )]
+		public Color ShadowColor
+		{
+			get => _shadowColor;
+			set {
+				_shadowColor = value;
+				UpdateStyles();
+			}
+		}
+
+		[Category( "外观" ), Description( "工具提示的图标" )]
+		public Image Icon
+		{
+			get => _icon;
+			set {
+				_icon = value;
+				UpdateStyles();
+			}
+		}
+
+		[Category( "外观" ), Description( "工具提示的图标尺寸" )]
+		public int IconSize
+		{
+			get => _iconSize;
+			set {
+				_iconSize = Math.Max( 16, value );
+				UpdateStyles();
+			}
+		}
+
+		[Category( "外观" ), Description( "工具提示的标题字体" )]
+		public Font TitleFont
+		{
+			get => _titleFont ?? new Font( SystemFonts.DefaultFont.FontFamily, SystemFonts.DefaultFont.Size + 2, FontStyle.Bold );
+			set {
+				_titleFont = value;
+				UpdateStyles();
+			}
+		}
+
+		[Category( "外观" ), Description( "工具提示的标题文本" )]
+		public string TitleText
+		{
+			get => _titleText;
+			set {
+				_titleText = value;
+				UpdateStyles();
+			}
+		}
+
+		[Category( "外观" ), Description( "工具提示的标题颜色" )]
+		public Color TitleColor
+		{
+			get => _titleColor;
+			set {
+				_titleColor = value;
+				UpdateStyles();
+			}
+		}
+
+		[Category( "行为" ), Description( "是否启用淡入淡出效果" )]
+		public bool FadeEffect
+		{
+			get => _fadeEffect;
+			set {
+				_fadeEffect = value;
+			}
+		}
+
+		[Category( "行为" ), Description( "淡入淡出动画持续时间(毫秒)" )]
+		public int FadeDuration
+		{
+			get => _fadeDuration;
+			set {
+				_fadeDuration = Math.Max( 0, value );
+			}
+		}
+
+		[Category( "布局" ), Description( "工具提示的内边距" )]
+		public int Padding
+		{
+			get => _padding;
+			set {
+				_padding = Math.Max( 0, value );
+				UpdateStyles();
+			}
+		}
+
+		[Category( "布局" ), Description( "图标和文本之间的间距" )]
+		public int IconTextSpacing
+		{
+			get => _iconTextSpacing;
+			set {
+				_iconTextSpacing = Math.Max( 0, value );
+				UpdateStyles();
+			}
+		}
+
+		[Category( "布局" ), Description( "标题和内容之间的间距" )]
+		public int TitleContentSpacing
+		{
+			get => _titleContentSpacing;
+			set {
+				_titleContentSpacing = Math.Max( 0, value );
+				UpdateStyles();
+			}
+		}
+
+		[Category( "布局" ), Description( "图标对齐方式" )]
+		public ContentAlignment IconAlignment
+		{
+			get => _iconAlignment;
+			set {
+				_iconAlignment = value;
+				UpdateStyles();
+			}
+		}
+
+		#endregion
+
+		[Category("字体"), Description("是否自动调整字体大小以适应内容")]
+		public bool AutoAdjustFont
+		{
+			get => _autoAdjustFont;
+			set
+			{
+				_autoAdjustFont = value;
+				UpdateStyles();
+			}
+		}
+		private Control[] GetAllToolTipControls( )
+		{
+			// 获取所有设置了工具提示的控件
+			// 注意：实际实现中需要更健壮的方法
+			return []; // 简化实现
+		}
+
+		private void UpdateStyles( )
+		{
+			// 强制重绘所有工具提示
+			foreach (Control ctrl in this.GetAllToolTipControls()) {
+				this.SetToolTip( ctrl, this.GetToolTip( ctrl ) );
+			}
+		}
+
+
+		[Category("字体"), Description("最大字体缩放比例(0.1-1.0)")]
+		public float MaxFontScale
+		{
+			get => _maxFontScale;
+			set
+			{
+				_maxFontScale = Math.Max(0.1f, Math.Min(1.0f, value));
+				UpdateStyles();
+			}
+		}
+
+		[Category("字体"), Description("最小允许的字体大小")]
+		public int MinFontSize
+		{
+			get => _minFontSize;
+			set
+			{
+				_minFontSize = Math.Max(6, value);
+				UpdateStyles();
+			}
+		}
+
+		// 改进的文本绘制方法
+		private void DrawText(Graphics g, Rectangle contentRect, string text,
+							 Rectangle? titleRect, Rectangle? iconRect)
+		{
+			Font textFont = this.Font;
+			bool fontAdjusted = false;
+
+			// 如果需要自动调整字体大小
+			if (_autoAdjustFont) {
+				textFont = GetAdjustedFont( g, text, contentRect.Size, this.Font );
+				fontAdjusted = true;
+			}
+
+			using (var brush = new SolidBrush(_foreColor))
+			using(var format = new StringFormat())
+			{
+				format.Alignment = StringAlignment.Near;
+				format.LineAlignment = StringAlignment.Near;
+				format.Trimming = StringTrimming.EllipsisCharacter;
+				format.FormatFlags = StringFormatFlags.LineLimit;
+
+				// 测量文本所需空间
+				SizeF textSize = g.MeasureString(text, textFont, contentRect.Width, format);
+
+				// 如果文本太大，尝试缩小字体
+				if(textSize.Height > contentRect.Height && !fontAdjusted)
+				{
+					textFont = GetAdjustedFont(g, text, contentRect.Size, this.Font);
+					textSize = g.MeasureString(text, textFont, contentRect.Width, format);
+				}
+
+				// 绘制文本
+				g.DrawString(text, textFont, brush,
+							 new RectangleF(contentRect.X, contentRect.Y,
+										   contentRect.Width, contentRect.Height),
+							 format);
+			}
+
+			// 清理临时创建的字体
+			if(fontAdjusted && textFont != this.Font)
+			{
+				textFont.Dispose();
+			}
+		}
+
+		// 智能字体调整方法
+		private Font GetAdjustedFont1(Graphics g, string text, Size layoutArea, Font originalFont)
+		{
+			// 初始字体设置
+			Font testFont = originalFont;
+			SizeF textSize = g.MeasureString(text, testFont);
+
+			// 如果文本在区域内，直接返回原字体
+			if(textSize.Width <= layoutArea.Width && textSize.Height <= layoutArea.Height)
+			{
+				return new Font(testFont.FontFamily, testFont.Size, testFont.Style);
+			}
+
+			// 计算最大允许的字体大小
+			float fontSize = originalFont.Size * _maxFontScale;
+			float minSize = _minFontSize;
+
+			// 二分查找最佳字体大小
+			float low = minSize;
+			float high = fontSize;
+			Font bestFont = new Font(originalFont.FontFamily, fontSize, originalFont.Style);
+
+			for(int i = 0 ;i < 5 ;i++) // 最多迭代5次
+			{
+				float mid = (low + high) / 2;
+				testFont = new Font(originalFont.FontFamily, mid, originalFont.Style);
+				textSize = g.MeasureString(text, testFont, layoutArea.Width);
+
+				if(textSize.Height <= layoutArea.Height)
+				{
+					bestFont.Dispose();
+					bestFont = testFont;
+					low = mid;
+				}
+				else
+				{
+					testFont.Dispose();
+					high = mid;
+				}
+			}
+
+			return bestFont;
+		}
+
+		// 改进的尺寸计算方法
+		private Size CalculateSize(string text)
+		{
+			using(var bmp = new Bitmap(1, 1))
+			using(var g = Graphics.FromImage(bmp))
+			{
+				g.TextRenderingHint = TextRenderingHint.AntiAlias;
+
+				// 计算内容区域
+				int maxContentWidth = Math.Min(_maxWidth - _padding * 2, 500);
+				int maxContentHeight = Math.Min(_maxHeight - _padding * 2, 400);
+
+				// 计算图标尺寸
+				int iconWidth = _icon != null ? _iconSize + _iconTextSpacing : 0;
+				int iconHeight = _icon != null ? _iconSize : 0;
+
+				// 计算标题尺寸
+				int titleHeight = 0;
+				int titleWidth = 0;
+				if(!string.IsNullOrWhiteSpace(_titleText))
+				{
+					using(var titleFont = TitleFont)
+					{
+						SizeF titleSize = g.MeasureString(_titleText, titleFont, maxContentWidth);
+						titleWidth = (int)titleSize.Width;
+						titleHeight = (int)Math.Ceiling(titleSize.Height);
+					}
+				}
+
+				// 计算文本尺寸（考虑自动调整字体）
+				int textHeight = 0;
+				int textWidth = 0;
+				if(!string.IsNullOrWhiteSpace(text))
+				{
+					Font textFont = this.Font;
+					if(_autoAdjustFont)
+					{
+						// 预估初始可用空间
+						Size availableSize = new Size(
+							maxContentWidth - iconWidth,
+							maxContentHeight - titleHeight - _titleContentSpacing
+						);
+
+						textFont = GetAdjustedFont(g, text, availableSize, this.Font);
+					}
+
+					SizeF textSize = g.MeasureString(text, textFont, maxContentWidth);
+					textWidth = (int)textSize.Width;
+					textHeight = (int)Math.Ceiling(textSize.Height);
+
+					if(textFont != this.Font)
+					{
+						textFont.Dispose();
+					}
+				}
+
+				// 计算整体宽度
+				int width = Math.Max(titleWidth, textWidth) + _padding * 2;
+				if(_icon != null)
+				{
+					if(_iconAlignment == ContentAlignment.TopLeft ||
+						_iconAlignment == ContentAlignment.MiddleLeft ||
+						_iconAlignment == ContentAlignment.BottomLeft ||
+						_iconAlignment == ContentAlignment.TopRight ||
+						_iconAlignment == ContentAlignment.MiddleRight ||
+						_iconAlignment == ContentAlignment.BottomRight)
+					{
+						width += iconWidth;
+					}
+					else
+					{
+						width = Math.Max(width, iconWidth + _padding * 2);
+					}
+				}
+
+				// 计算整体高度
+				int height = _padding * 2 + titleHeight + _titleContentSpacing + textHeight;
+				if(_icon != null)
+				{
+					if(_iconAlignment == ContentAlignment.TopCenter ||
+						_iconAlignment == ContentAlignment.TopLeft ||
+						_iconAlignment == ContentAlignment.TopRight ||
+						_iconAlignment == ContentAlignment.BottomCenter ||
+						_iconAlignment == ContentAlignment.BottomLeft ||
+						_iconAlignment == ContentAlignment.BottomRight)
+					{
+						height = Math.Max(height, iconHeight + _padding * 2 + titleHeight + _titleContentSpacing);
+					}
+					else
+					{
+						height = Math.Max(height, iconHeight + _padding * 2);
+					}
+				}
+
+				// 确保不超过最大尺寸
+				width = Math.Min(_maxWidth, Math.Max(width, 100));
+				height = Math.Min(_maxHeight, Math.Max(height, 40));
+
+				return new Size(width, height);
+			}
+		}
+		private Font GetAdjustedFont(Graphics g, string text, Size layoutArea, Font originalFont)
+		{
+			// 二分查找最佳字体大小
+			float low = minSize;
+			float high = fontSize;
+
+			for(int i = 0 ;i < 5 ;i++) // 最多迭代5次
+			{
+				float mid = (low + high) / 2;
+				testFont = new Font(originalFont.FontFamily, mid, originalFont.Style);
+				textSize = g.MeasureString(text, testFont, layoutArea.Width);
+
+				if(textSize.Height <= layoutArea.Height)
+				{
+					bestFont = testFont;
+					low = mid; // 可以尝试更大的字体
+				}
+				else
+				{
+					high = mid; // 需要更小的字体
+				}
+			}
+		}
+		// 在绘制前调整内容区域
+	
+
+// 根据图标位置动态调整
+//if (_icon != null)
+//{
+//    iconRect = DrawIcon(g, ref contentRect);
+    
+//    // 如果图标占用空间过大，进一步调整
+//    if (contentRect.Width< 50) // 最小宽度保护
+//    {
+//        // 缩小图标或调整布局
+//        int overflow = 50 - contentRect.Width;
+//		_iconSize = Math.Max(16, _iconSize - overflow);
+//        contentRect = new Rectangle(/* 重新计算区域 */);
+//	}
+//}
+
+private void DrawText(Graphics g, Rectangle contentRect, string text)
+{
+	try
+	{
+		// 尝试方案1：使用自动调整的字体
+		Font textFont = GetAdjustedFont(g, text, contentRect.Size, this.Font);
+		DrawTextWithFont(g, contentRect, text, textFont);
+	}
+	catch(ArgumentException)
+	{
+		// 字体大小无效时回退
+		try
+		{
+			// 方案2：使用系统默认字体
+			using(Font safeFont = new Font(SystemFonts.DefaultFont.FontFamily,
+										  Math.Min(12, contentRect.Height / 3)))
+			{
+				DrawTextWithFont(g, contentRect, text, safeFont);
+			}
+		}
+		catch
+		{
+			// 终极方案3：使用省略号表示
+			g.DrawString("...", this.Font, Brushes.Black, contentRect);
+		}
+	}
+}
+		#endregion
+	}
+
+}
