@@ -91,11 +91,11 @@ namespace MusicChange
 			IsfirstPlaying = false;
 			this.DoubleBuffered = true;   //button2.FlatAppearance.BorderSize = 0; // 边框大小设为 0//qrcode1.FlatAppearance.BorderSize = 0;   // 边框大小设为 0
 		
-				// 初始化 VLC
-			vlcControl.BeginInit();
-			vlcControl.VlcLibDirectory = new DirectoryInfo(@"C:\VLC\Lib"); // LibVLC 库路径
-			vlcControl.EndInit();
-			this.Controls.Add(vlcControl);
+				// 初始化 VLC  添加 亮度  对比度 控制 8-12
+			//vlcControl.BeginInit();
+			//vlcControl.VlcLibDirectory = new DirectoryInfo(@"C:\VLC\Lib"); // LibVLC 库路径
+			//vlcControl.EndInit();
+			//this.Controls.Add(vlcControl);
 		}
 		private void LaserEditing_Load(object sender, EventArgs e)
 		{
@@ -115,6 +115,9 @@ namespace MusicChange
 			this.sC3.Panel1MinSize = 300;
 			sC3.SplitterDistance = weight + 20; // 上左
 			sC4.SplitterDistance = weight + 40; //上中			//LoadLibVLCSharpDynamically();  动态加载 LibVLCSharp.WinForms.dll
+			
+			
+			
 			InitializeLibVLC(); // 初始化 LibVLC
 			InitializeUIControls();
 			// 确保窗体能接收按键事件
@@ -583,38 +586,57 @@ namespace MusicChange
 			}
 		}
 		// 检查您的 InitializeLibVLC 方法确保正确设置
-		private void InitializeLibVLC()
+		private void InitializeLibVLC( )
 		{
-			try
-			{
+			//	Core.Initialize(); // 初始化 LibVLC
+
+			//	using var libVLC = new LibVLC();
+			//	using var mediaPlayer = new MediaPlayer( libVLC );
+			//	// 加载媒体文件
+			//	var media = new Media( libVLC, filePath, FromType.FromPath );
+			//	mediaPlayer.Media = media;
+
+			//	// 调整视频参数（需在播放开始后生效）
+			//	mediaPlayer.Play();
+
+			//	// 检查是否支持视频调整
+			//	if (mediaPlayer.VideoAdjustments != null) {
+			//		mediaPlayer.VideoAdjustments.Brightness = 1.2f; // 亮度 (0.0-2.0)
+			//		mediaPlayer.VideoAdjustments.Contrast = 1.1f;   // 对比度 (0.0-2.0)
+			//		mediaPlayer.VideoAdjustments.Saturation = 0.9f; // 饱和度 (0.0-2.0)
+			//		mediaPlayer.VideoAdjustments.Hue = 0.1f;        // 色调 (-180.0-180.0)
+			//	}
+
+			//	Console.ReadKey();
+			//	mediaPlayer.Stop();
+
+
+			try {
 				Core.Initialize();                  // 创建 LibVLC 实例
 				libVLC = new LibVLC();  //启用硬件加速：  "--avcodec-hw=dxva2"
-				if(libVLC == null)
+				if (libVLC == null)
 					return;
 				// 创建 MediaPlayer 实例
-				mediaPlayer = new MediaPlayer(libVLC);
-				if(mediaPlayer == null)
+				mediaPlayer = new MediaPlayer( libVLC );
+				if (mediaPlayer == null)
 					return;
 				// 设置 VideoView
-				if(videoView1 != null)
-				{
+				if (videoView1 != null) {
 					videoView1.MediaPlayer = mediaPlayer;
 				}
 
 				// 初始化 NAudio 组件
-				try
-				{
-					waveProvider = new BufferedWaveProvider(new WaveFormat(44100, 16, 2))
+				try {
+					waveProvider = new BufferedWaveProvider( new WaveFormat( 44100, 16, 2 ) )
 					{
-						BufferDuration = TimeSpan.FromMilliseconds(500),
+						BufferDuration = TimeSpan.FromMilliseconds( 500 ),
 						DiscardOnBufferOverflow = true
 					};
 					waveOut = new WaveOutEvent();
-					waveOut.Init(waveProvider);
+					waveOut.Init( waveProvider );
 					// 注意：不要在这里启动播放，而是在实际需要播放时启动
 				}
-				catch
-				{
+				catch {
 					// 如果 NAudio 初始化失败，继续运行但不提供音频可视化
 					waveProvider = null;
 					waveOut = null;
@@ -628,8 +650,7 @@ namespace MusicChange
 				// 设置音频回调 - 确保所有回调都有实现
 				//_mediaPlayer.SetAudioCallbacks(				//	OnAudioPlay,    // 必须有完整实现				//	OnAudioPause,   // 必须有完整实现				//	OnAudioResume,  // 必须有完整实现				//	OnAudioFlush,   // 必须有完整实现				//	OnAudioDrain    // 必须有完整实现				//);
 			}
-			catch
-			{
+			catch {
 				// 静默处理初始化异常
 				CleanupResources();
 			}
@@ -2866,77 +2887,77 @@ namespace MusicChange
 
 		#endregion
 
-		#region ------------  VLC  视频播放 用c# 控制亮度 对比度 色饱和   ------------
+//		#region ------------  VLC  视频播放 用c# 控制亮度 对比度 色饱和   ------------
 
-		/*  ​一、技术基础与核心库​
+//		/*  ​一、技术基础与核心库​
 
-1.​LibVLC 动态库​
-VLC 的核心功能通过 libvlc.dll提供，该库包含控制视频参数的底层接口，如亮度（brightness）、对比度（contrast）、色饱和度（saturation）等。
-•​参数范围​：
-•亮度：-100（全黑）到 100（最亮），默认 0
-•对比度：0（无对比）到 200（最大对比），默认 100
-•色饱和度：0（灰度）到 300（过饱和），默认 100。
+//1.​LibVLC 动态库​
+//VLC 的核心功能通过 libvlc.dll提供，该库包含控制视频参数的底层接口，如亮度（brightness）、对比度（contrast）、色饱和度（saturation）等。
+//•​参数范围​：
+//•亮度：-100（全黑）到 100（最亮），默认 0
+//•对比度：0（无对比）到 200（最大对比），默认 100
+//•色饱和度：0（灰度）到 300（过饱和），默认 100。
   
   
-2.​C# 封装库（VLC.DotNet）​​
-使用 NuGet 包 Vlc.DotNet.Forms或 Vlc.DotNet.Wpf简化调用流程，避免直接操作 P/Invoke。
-// 创建 VLC 实例
-var vlcOptions = new string[] { "--ignore-config" }; // 禁用默认配置
-var vlcLibDirectory = @"C:\Path\To\VLC\Libs"; // VLC 库路径
-var mediaPlayer = new VlcControl(vlcLibDirectory, vlcOptions);
+//2.​C# 封装库（VLC.DotNet）​​
+//使用 NuGet 包 Vlc.DotNet.Forms或 Vlc.DotNet.Wpf简化调用流程，避免直接操作 P/Invoke。
+//// 创建 VLC 实例
+//var vlcOptions = new string[] { "--ignore-config" }; // 禁用默认配置
+//var vlcLibDirectory = @"C:\Path\To\VLC\Libs"; // VLC 库路径
+//var mediaPlayer = new VlcControl(vlcLibDirectory, vlcOptions);
 
-// 设置媒体源
-mediaPlayer.SetMedia(new Uri("file:///C:/video.mp4"));
-mediaPlayer.Play();
-		*/
-		[DllImport("libvlc", CallingConvention = CallingConvention.Cdecl)]
-		private static extern int libvlc_video_set_adjust_int(
-		IntPtr mediaPlayer,
-		uint option,
-		int value
-`			);
+//// 设置媒体源
+//mediaPlayer.SetMedia(new Uri("file:///C:/video.mp4"));
+//mediaPlayer.Play();
+//		*/
+//		[DllImport("libvlc", CallingConvention = CallingConvention.Cdecl)]
+//		private static extern int libvlc_video_set_adjust_int(
+//		IntPtr mediaPlayer,
+//		uint option,
+//		int value
+//			);
 
-		// 参数选项枚举
-		private enum VideoAdjustOption:uint
-		{
-			Brightness = 0,    // 亮度
-			Contrast = 1,      // 对比度
-			Saturation = 2     // 色饱和度
-		}
+//		// 参数选项枚举
+//		private enum VideoAdjustOption:uint
+//		{
+//			Brightness = 0,    // 亮度
+//			Contrast = 1,      // 对比度
+//			Saturation = 2     // 色饱和度
+//		}
 
-		// 示例：设置亮度
+//		// 示例：设置亮度
 
-		private void Initvlcbring()
-		{
-			// 调整亮度（范围：-100 ~ 100）
-			VlcControl.mediaPlayer.VideoAdjustments.Brightness = 50;
+//		private void Initvlcbring()
+//		{
+//			// 调整亮度（范围：-100 ~ 100）
+//			vlcControl.mediaPlayer.VideoAdjustments.Brightness = 50;
 
-			// 调整对比度（范围：0 ~ 200）
-			mediaPlayer.VideoAdjustments.Contrast = 150;
+//			// 调整对比度（范围：0 ~ 200）
+//			mediaPlayer.VideoAdjustments.Contrast = 150;
 
-			// 调整色饱和度（范围：0 ~ 300）
-			libvlc_video_set_adjust_int(
-		mediaPlayer.GetInstance(),
-		(uint)VideoAdjustOption.Brightness, 50);
-		}
-		// 亮度滑块事件
-		private void trackBarBrightness_Scroll(object sender, EventArgs e)
-		{
-			mediaPlayer.VideoAdjustments.Brightness = trackBarBrightness.Value;
-		}
+//			// 调整色饱和度（范围：0 ~ 300）
+//			libvlc_video_set_adjust_int(
+//		mediaPlayer.GetInstance(),
+//		(uint)VideoAdjustOption.Brightness, 50);
+//		}
+//		// 亮度滑块事件
+//		private void trackBarBrightness_Scroll(object sender, EventArgs e)
+//		{
+//			mediaPlayer.VideoAdjustments.Brightness = trackBarBrightness.Value;
+//		}
 
-		// 对比度滑块事件
-		private void trackBarContrast_Scroll(object sender, EventArgs e)
-		{
-			mediaPlayer.VideoAdjustments.Contrast = trackBarContrast.Value;
-		}
+//		// 对比度滑块事件
+//		private void trackBarContrast_Scroll(object sender, EventArgs e)
+//		{
+//			mediaPlayer.VideoAdjustments.Contrast = trackBarContrast.Value;
+//		}
 
-		// 饱和度滑块事件
-		private void trackBarSaturation_Scroll(object sender, EventArgs e)
-		{
-			mediaPlayer.VideoAdjustments.Saturation = trackBarSaturation.Value;
-		}
-		#endregion
+//		// 饱和度滑块事件
+//		private void trackBarSaturation_Scroll(object sender, EventArgs e)
+//		{
+//			mediaPlayer.VideoAdjustments.Saturation = trackBarSaturation.Value;
+//		}
+//		#endregion
 	}
 }
 

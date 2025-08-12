@@ -69,8 +69,8 @@
     <Reference Include="ICSharpCode.SharpZipLib, Version=1.4.2.13, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>packages\SharpZipLib.1.4.2\lib\netstandard2.0\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="LibVLCSharp, Version=3.9.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\LibVLCSharp.3.9.3\lib\net471\LibVLCSharp.dll</HintPath>
+    <Reference Include="LibVLCSharp, Version=3.9.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\LibVLCSharp.3.9.4\lib\net471\LibVLCSharp.dll</HintPath>
     </Reference>
     <Reference Include="LibVLCSharp.WinForms, Version=3.9.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\LibVLCSharp.WinForms.3.9.3\lib\net40\LibVLCSharp.WinForms.dll</HintPath>
