@@ -802,14 +802,13 @@ namespace MusicChange
 			// 
 			// videoView1
 			// 
-			this.videoView1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+			this.videoView1.BackColor = System.Drawing.Color.Chartreuse;
 			this.videoView1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.videoView1.Location = new System.Drawing.Point(0, 30);
 			this.videoView1.MediaPlayer = null;
 			this.videoView1.Name = "videoView1";
 			this.videoView1.Size = new System.Drawing.Size(650, 594);
 			this.videoView1.TabIndex = 5;
-			this.videoView1.Text = "videoView1";
 			// 
 			// panel1
 			// 
@@ -1266,7 +1265,6 @@ namespace MusicChange
 		private Microsoft.VisualBasic.Compatibility.VB6.DirListBoxArray dirListBoxArray1;
 		private Microsoft.VisualBasic.Compatibility.VB6.DirListBoxArray dirListBoxArray2;
 		private LibVLCSharp.WinForms.VideoView videoView1;
-		//private LibVLCSharp.WinForms.VideoView videoView1;
 	}
 }
 #endregion 

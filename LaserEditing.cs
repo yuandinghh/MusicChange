@@ -45,16 +45,16 @@ namespace MusicChange
 		public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
 		private const int WM_NCLBUTTONDOWN = 0xA1;
 		private const int HTCAPTION = 0x2;
-		//private const int HT_CAPTION = 0x2;
+		//private const int HT_CAPTION = 0x2; 		
 		private bool splitContainer5mouseDown;
-		int count = 0;
+		//int count = 0;
 		bool IsOfficialMaterialSwitch = false; //官方素材开关
 		bool Ismaterial = true;
-		string importfile;  //imøport a file
-		int gwidth, gheight, lwidth, lheight;// 获取屏幕工作区宽度
+		private readonly string importfile;  //imøport a file
+		int gwidth, gheight, lwidth, lheight;  // 获取屏幕工作区宽度
 		#endregion
 		private Assembly libVLCSharpWinFormsAssembly;
-		private Type videoViewType;   //				 		private object videoViewInstance;
+		private Type videoViewType;   //	private object videoViewInstance;
 		private VideoView videoView;
 		private LibVLC libVLC;
 		private string filePath = "F:\\newipad\\跳舞3_m.MP4";
@@ -68,10 +68,8 @@ namespace MusicChange
 		private const float ZOOM_INCREMENT = 0.05f;
 		private const float MIN_ZOOM = 0.2f;
 		private const float MAX_ZOOM = 3.0f;
-		private bool isSeeking = false;  // 是否正在拖拽进度条  		
-		private object audioData;
-		private bool isvideoView = true;
-		//---------------------------
+		private bool isSeeking = false;  // 是否正在拖拽进度条 		private object audioData; 		private bool isvideoView = true;
+										 //---------------------------
 		private bool isVideoMaximized = false;
 		private Rectangle normalVideoBounds;
 		private DockStyle normalDockStyle;
@@ -90,8 +88,8 @@ namespace MusicChange
 			InitializeComponent();
 			IsfirstPlaying = false;
 			this.DoubleBuffered = true;   //button2.FlatAppearance.BorderSize = 0; // 边框大小设为 0//qrcode1.FlatAppearance.BorderSize = 0;   // 边框大小设为 0
-		
-				// 初始化 VLC  添加 亮度  对比度 控制 8-12
+
+			// 初始化 VLC  添加 亮度  对比度 控制 8-12
 			//vlcControl.BeginInit();
 			//vlcControl.VlcLibDirectory = new DirectoryInfo(@"C:\VLC\Lib"); // LibVLC 库路径
 			//vlcControl.EndInit();
@@ -99,10 +97,9 @@ namespace MusicChange
 		}
 		private void LaserEditing_Load(object sender, EventArgs e)
 		{
-			//splitContainer5mouseDown = false;			//splitContainer1.Panel2MinSize = 400;	//buttonx8.BackColor = System.Drawing.Color.Gray;
+			splitContainer5mouseDown = false;           //splitContainer1.Panel2MinSize = 400;	//buttonx8.BackColor = System.Drawing.Color.Gray;
 			Ismaterial = true;  // 默认选择当前素材
 			buttonX3_Click(null, null); // 设置当前素材按钮样式	this.ClientSize = new System.Drawing.Size( 1900, 1080 );
-			splitContainer5mouseDown = false;
 			OfficialMaterialSwitch(); // 初始化官方素材开关状态
 			gwidth = this.Width = Screen.PrimaryScreen.WorkingArea.Width; // 获取屏幕工作区宽度
 			temp.Text = "屏幕工作区宽度: " + gwidth.ToString();
@@ -115,9 +112,9 @@ namespace MusicChange
 			this.sC3.Panel1MinSize = 300;
 			sC3.SplitterDistance = weight + 20; // 上左
 			sC4.SplitterDistance = weight + 40; //上中			//LoadLibVLCSharpDynamically();  动态加载 LibVLCSharp.WinForms.dll
-			
-			
-			
+
+
+
 			InitializeLibVLC(); // 初始化 LibVLC
 			InitializeUIControls();
 			// 确保窗体能接收按键事件
@@ -586,7 +583,7 @@ namespace MusicChange
 			}
 		}
 		// 检查您的 InitializeLibVLC 方法确保正确设置
-		private void InitializeLibVLC( )
+		private void InitializeLibVLC()
 		{
 			//	Core.Initialize(); // 初始化 LibVLC
 
@@ -611,32 +608,36 @@ namespace MusicChange
 			//	mediaPlayer.Stop();
 
 
-			try {
+			try
+			{
 				Core.Initialize();                  // 创建 LibVLC 实例
 				libVLC = new LibVLC();  //启用硬件加速：  "--avcodec-hw=dxva2"
-				if (libVLC == null)
+				if(libVLC == null)
 					return;
 				// 创建 MediaPlayer 实例
-				mediaPlayer = new MediaPlayer( libVLC );
-				if (mediaPlayer == null)
+				mediaPlayer = new MediaPlayer(libVLC);
+				if(mediaPlayer == null)
 					return;
 				// 设置 VideoView
-				if (videoView1 != null) {
+				if(videoView1 != null)
+				{
 					videoView1.MediaPlayer = mediaPlayer;
 				}
 
 				// 初始化 NAudio 组件
-				try {
-					waveProvider = new BufferedWaveProvider( new WaveFormat( 44100, 16, 2 ) )
+				try
+				{
+					waveProvider = new BufferedWaveProvider(new WaveFormat(44100, 16, 2))
 					{
-						BufferDuration = TimeSpan.FromMilliseconds( 500 ),
+						BufferDuration = TimeSpan.FromMilliseconds(500),
 						DiscardOnBufferOverflow = true
 					};
 					waveOut = new WaveOutEvent();
-					waveOut.Init( waveProvider );
+					waveOut.Init(waveProvider);
 					// 注意：不要在这里启动播放，而是在实际需要播放时启动
 				}
-				catch {
+				catch
+				{
 					// 如果 NAudio 初始化失败，继续运行但不提供音频可视化
 					waveProvider = null;
 					waveOut = null;
@@ -650,7 +651,8 @@ namespace MusicChange
 				// 设置音频回调 - 确保所有回调都有实现
 				//_mediaPlayer.SetAudioCallbacks(				//	OnAudioPlay,    // 必须有完整实现				//	OnAudioPause,   // 必须有完整实现				//	OnAudioResume,  // 必须有完整实现				//	OnAudioFlush,   // 必须有完整实现				//	OnAudioDrain    // 必须有完整实现				//);
 			}
-			catch {
+			catch
+			{
 				// 静默处理初始化异常
 				CleanupResources();
 			}
@@ -1651,12 +1653,9 @@ namespace MusicChange
 		/// QRCode 二维码 
 		/// </summary>
 		private void buttonX12_Click(object sender, EventArgs e)
-		{
-			// 显示二维码生成界面
-			QRCode form = new QRCode();
-			form.Show();
-			// 隐藏当前界面			this.Hide();
-
+		{           // 显示二维码生成界面
+			QRCode form = new();
+			form.Show();            // 隐藏当前界面			this.Hide();
 		}
 		#endregion
 
@@ -2067,29 +2066,6 @@ namespace MusicChange
 
 			return string.Empty;
 		}
-
-		// 切换最大化方式（内置 vs 外部）
-		private void ToggleMaximizeMethod()
-		{
-			//if(isVideoMaximized)
-			//{
-			//	// 当前是内置最大化，切换到外部播放器
-			//	UseExternalPlayerForMaximize = !UseExternalPlayerForMaximize;
-			//	//RestoreVideoView(); // 先恢复当前最大化
-			//}
-
-			UseExternalPlayerForMaximize = !UseExternalPlayerForMaximize;
-
-			if(UseExternalPlayerForMaximize)
-			{
-				MaximizeWithExternalPlayer();
-			}
-			else
-			{
-				ToggleVideoMaximize(); // 使用内置最大化
-			}
-		}
-
 		// 使用外部播放器的标志
 		private bool UseExternalPlayerForMaximize = false;
 
@@ -2252,11 +2228,26 @@ namespace MusicChange
 		private void vieweMax_Click(object sender, EventArgs e)
 		{
 			// 可以根据需要切换最大化方式 			// 方式1: 总是使用内置最大化			// ToggleVideoMaximize();
-
 			// 方式2: 切换最大化方式			
-			ToggleMaximizeMethod();
+			// 切换最大化方式（内置 vs 外部）
+			//private void ToggleMaximizeMethod() 			{
+			//if(isVideoMaximized)
+			//{
+			//	// 当前是内置最大化，切换到外部播放器
+			//	UseExternalPlayerForMaximize = !UseExternalPlayerForMaximize;
+			//	//RestoreVideoView(); // 先恢复当前最大化
+			//}
 
-			// 方式3: 根据设置决定
+			UseExternalPlayerForMaximize = !UseExternalPlayerForMaximize;
+			if(UseExternalPlayerForMaximize)
+			{
+				MaximizeWithExternalPlayer();
+			}
+			else
+			{
+				ToggleVideoMaximize(); // 使用内置最大化
+			}
+			//}  			// 方式3: 根据设置决定
 			if(UseExternalPlayerForMaximize)
 			{
 				MaximizeWithExternalPlayer();
@@ -2318,14 +2309,14 @@ namespace MusicChange
 		//当videoView 大小尺寸变化使调整 播放画面符合 尺寸
 		private void videoView1_Resize(object sender, EventArgs e)
 		{
-			int vvW = videoView1.Width;
+			//int vvW = videoView1.Width;
 		}
 
 		// 保存和加载偏好设置
 		private PlayerPreferences LoadPlayerPreferences()
 		{
 			// 从配置文件或注册表加载设置
-			PlayerPreferences prefs = new PlayerPreferences
+			PlayerPreferences prefs = new()
 			{
 				UseExternalPlayer = Properties.Settings.Default.UseExternalPlayer,
 				PreferredPlayer = Properties.Settings.Default.PreferredPlayer,
@@ -2887,77 +2878,77 @@ namespace MusicChange
 
 		#endregion
 
-//		#region ------------  VLC  视频播放 用c# 控制亮度 对比度 色饱和   ------------
+		//		#region ------------  VLC  视频播放 用c# 控制亮度 对比度 色饱和   ------------
 
-//		/*  ​一、技术基础与核心库​
+		//		/*  ​一、技术基础与核心库​
 
-//1.​LibVLC 动态库​
-//VLC 的核心功能通过 libvlc.dll提供，该库包含控制视频参数的底层接口，如亮度（brightness）、对比度（contrast）、色饱和度（saturation）等。
-//•​参数范围​：
-//•亮度：-100（全黑）到 100（最亮），默认 0
-//•对比度：0（无对比）到 200（最大对比），默认 100
-//•色饱和度：0（灰度）到 300（过饱和），默认 100。
-  
-  
-//2.​C# 封装库（VLC.DotNet）​​
-//使用 NuGet 包 Vlc.DotNet.Forms或 Vlc.DotNet.Wpf简化调用流程，避免直接操作 P/Invoke。
-//// 创建 VLC 实例
-//var vlcOptions = new string[] { "--ignore-config" }; // 禁用默认配置
-//var vlcLibDirectory = @"C:\Path\To\VLC\Libs"; // VLC 库路径
-//var mediaPlayer = new VlcControl(vlcLibDirectory, vlcOptions);
+		//1.​LibVLC 动态库​
+		//VLC 的核心功能通过 libvlc.dll提供，该库包含控制视频参数的底层接口，如亮度（brightness）、对比度（contrast）、色饱和度（saturation）等。
+		//•​参数范围​：
+		//•亮度：-100（全黑）到 100（最亮），默认 0
+		//•对比度：0（无对比）到 200（最大对比），默认 100
+		//•色饱和度：0（灰度）到 300（过饱和），默认 100。
 
-//// 设置媒体源
-//mediaPlayer.SetMedia(new Uri("file:///C:/video.mp4"));
-//mediaPlayer.Play();
-//		*/
-//		[DllImport("libvlc", CallingConvention = CallingConvention.Cdecl)]
-//		private static extern int libvlc_video_set_adjust_int(
-//		IntPtr mediaPlayer,
-//		uint option,
-//		int value
-//			);
 
-//		// 参数选项枚举
-//		private enum VideoAdjustOption:uint
-//		{
-//			Brightness = 0,    // 亮度
-//			Contrast = 1,      // 对比度
-//			Saturation = 2     // 色饱和度
-//		}
+		//2.​C# 封装库（VLC.DotNet）​​
+		//使用 NuGet 包 Vlc.DotNet.Forms或 Vlc.DotNet.Wpf简化调用流程，避免直接操作 P/Invoke。
+		//// 创建 VLC 实例
+		//var vlcOptions = new string[] { "--ignore-config" }; // 禁用默认配置
+		//var vlcLibDirectory = @"C:\Path\To\VLC\Libs"; // VLC 库路径
+		//var mediaPlayer = new VlcControl(vlcLibDirectory, vlcOptions);
 
-//		// 示例：设置亮度
+		//// 设置媒体源
+		//mediaPlayer.SetMedia(new Uri("file:///C:/video.mp4"));
+		//mediaPlayer.Play();
+		//		*/
+		//		[DllImport("libvlc", CallingConvention = CallingConvention.Cdecl)]
+		//		private static extern int libvlc_video_set_adjust_int(
+		//		IntPtr mediaPlayer,
+		//		uint option,
+		//		int value
+		//			);
 
-//		private void Initvlcbring()
-//		{
-//			// 调整亮度（范围：-100 ~ 100）
-//			vlcControl.mediaPlayer.VideoAdjustments.Brightness = 50;
+		//		// 参数选项枚举
+		//		private enum VideoAdjustOption:uint
+		//		{
+		//			Brightness = 0,    // 亮度
+		//			Contrast = 1,      // 对比度
+		//			Saturation = 2     // 色饱和度
+		//		}
 
-//			// 调整对比度（范围：0 ~ 200）
-//			mediaPlayer.VideoAdjustments.Contrast = 150;
+		//		// 示例：设置亮度
 
-//			// 调整色饱和度（范围：0 ~ 300）
-//			libvlc_video_set_adjust_int(
-//		mediaPlayer.GetInstance(),
-//		(uint)VideoAdjustOption.Brightness, 50);
-//		}
-//		// 亮度滑块事件
-//		private void trackBarBrightness_Scroll(object sender, EventArgs e)
-//		{
-//			mediaPlayer.VideoAdjustments.Brightness = trackBarBrightness.Value;
-//		}
+		//		private void Initvlcbring()
+		//		{
+		//			// 调整亮度（范围：-100 ~ 100）
+		//			vlcControl.mediaPlayer.VideoAdjustments.Brightness = 50;
 
-//		// 对比度滑块事件
-//		private void trackBarContrast_Scroll(object sender, EventArgs e)
-//		{
-//			mediaPlayer.VideoAdjustments.Contrast = trackBarContrast.Value;
-//		}
+		//			// 调整对比度（范围：0 ~ 200）
+		//			mediaPlayer.VideoAdjustments.Contrast = 150;
 
-//		// 饱和度滑块事件
-//		private void trackBarSaturation_Scroll(object sender, EventArgs e)
-//		{
-//			mediaPlayer.VideoAdjustments.Saturation = trackBarSaturation.Value;
-//		}
-//		#endregion
+		//			// 调整色饱和度（范围：0 ~ 300）
+		//			libvlc_video_set_adjust_int(
+		//		mediaPlayer.GetInstance(),
+		//		(uint)VideoAdjustOption.Brightness, 50);
+		//		}
+		//		// 亮度滑块事件
+		//		private void trackBarBrightness_Scroll(object sender, EventArgs e)
+		//		{
+		//			mediaPlayer.VideoAdjustments.Brightness = trackBarBrightness.Value;
+		//		}
+
+		//		// 对比度滑块事件
+		//		private void trackBarContrast_Scroll(object sender, EventArgs e)
+		//		{
+		//			mediaPlayer.VideoAdjustments.Contrast = trackBarContrast.Value;
+		//		}
+
+		//		// 饱和度滑块事件
+		//		private void trackBarSaturation_Scroll(object sender, EventArgs e)
+		//		{
+		//			mediaPlayer.VideoAdjustments.Saturation = trackBarSaturation.Value;
+		//		}
+		//		#endregion
 	}
 }
 

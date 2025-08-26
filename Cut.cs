@@ -33,8 +33,8 @@ namespace MusicChange
 		TimeSpan durationS, startTimeTs, endTimeTs;  // 视频时长、起始时间和结束时间
 		int totalSeconds; // 视频总时长（秒）
 		int right_rotate_angle = 0; // 视频旋转角度
-		int left_rotate_angle = 0; // ++6+
-		bool firstdisp = true; // 是否第一次显示
+		int left_rotate_angle = 0;
+		bool firstdisp = true; // 是否第一次显示	
 		bool clibb = false; //裁剪 时间正确
 		bool isCutting = false; // 是否正在裁剪
 		bool isCompress = false; // 是否正在压缩
@@ -52,9 +52,9 @@ namespace MusicChange
 			comboBoxSpeed.SelectedIndexChanged += comboBoxSpeed_SelectedIndexChanged; //示例：为按钮和组合框添加说明
 			#endregion
 
-		#region ------- ToolTip 鼠标进入悬停显示 -------
+			#region ------- ToolTip 鼠标进入悬停显示 -------
 			ToolTipEx toolTip1 = new ToolTipEx();   // 创建自定义 ToolTipEx 实例 ，鼠标悬停时显示提示信息
-			//toolTip1.TipFont = new Font("微软雅黑", 20); // 这里设置字体和大小
+													//toolTip1.TipFont = new Font("微软雅黑", 20); // 这里设置字体和大小
 			ConfigureToolTip(toolTip1);
 			// 初始化 LibVLC
 
@@ -90,7 +90,7 @@ namespace MusicChange
 		#region -------------- 视频播放相关 ------------
 		// 选择要播放的视频文件
 		private void button3_Click(object sender, EventArgs e)
-		{  
+		{
 			if(textBox1 != null)
 			{
 				OpenFileDialog ofd = new OpenFileDialog();
@@ -184,7 +184,7 @@ namespace MusicChange
 			//退出当前窗口
 			Application.Exit();
 			this.Close();
-		//释放资源
+			//释放资源
 
 		}
 		//选择目录
