@@ -81,7 +81,6 @@ namespace MusicChange
 
 		private VlcControl vlcControl = new VlcControl();
 
-
 		public LaserEditing()
 		{
 			AutoScaleMode = AutoScaleMode.Dpi; // 根据系统DPI自动缩放
@@ -1547,7 +1546,6 @@ namespace MusicChange
 			splitContainer5mouseDown = true;
 		}
 
-
 		private void splitContainer3_Panel1_Paint(object sender, PaintEventArgs e)
 		{
 
@@ -1623,8 +1621,9 @@ namespace MusicChange
 
 		private void buttonx6_Click(object sender, EventArgs e)
 		{       //show cut 
-				//Cut form = new Cut();
-				//form.Show();
+            Cut cut = new();
+            cut.Show();
+            //cut.Dispose();
 		}
 
 		private bool IsInResizeArea(System.Drawing.Point point)
@@ -1952,7 +1951,6 @@ namespace MusicChange
 				MessageBox.Show("没有选择视频文件", "错误", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 				return;
 			}
-
 			try
 			{
 				// 方法1: 使用系统默认播放器
@@ -2223,7 +2221,6 @@ namespace MusicChange
 			UseExternalPlayerForMaximize = true;
 			MaximizeWithExternalPlayer();
 		}
-
 		// 修改 vieweMax_Click 方法
 		private void vieweMax_Click(object sender, EventArgs e)
 		{
@@ -2236,7 +2233,6 @@ namespace MusicChange
 			//	// 当前是内置最大化，切换到外部播放器
 			//	UseExternalPlayerForMaximize = !UseExternalPlayerForMaximize;
 			//	//RestoreVideoView(); // 先恢复当前最大化
-			//}
 
 			UseExternalPlayerForMaximize = !UseExternalPlayerForMaximize;
 			if(UseExternalPlayerForMaximize)
@@ -2836,6 +2832,16 @@ namespace MusicChange
 
 			// 初始调整
 			AdjustVideoToViewSize();
+		}
+
+		private void buttonX2_Click_1(object sender, EventArgs e)
+		{
+			//扫描 视频文件是否可以播放
+			VideoCheckerForm cut = new();
+			cut.Show();
+			//cut.ShowDialog();
+			//cut.Dispose();
+
 		}
 
 		/// <summary>

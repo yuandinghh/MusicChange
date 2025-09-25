@@ -351,6 +351,12 @@
     <Compile Include="UserControl1.xaml.cs">
       <DependentUpon>UserControl1.xaml</DependentUpon>
     </Compile>
+    <Compile Include="videocheck.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="videocheck.Designer.cs">
+      <DependentUpon>videocheck.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="ChangePictuer.resx">
       <DependentUpon>ChangePictuer.cs</DependentUpon>
     </EmbeddedResource>
@@ -371,6 +377,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ToolTipEx.resx">
       <DependentUpon>ToolTipEx.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="videocheck.resx">
+      <DependentUpon>videocheck.cs</DependentUpon>
     </EmbeddedResource>
     <None Include=".editorconfig" />
     <None Include="app.manifest" />

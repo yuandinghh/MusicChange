@@ -46,6 +46,7 @@ namespace MusicChange
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.Ptop = new DevComponents.DotNetBar.PanelEx();
 			this.globalsetting = new DevComponents.DotNetBar.ButtonX();
+			this.buttonX2 = new DevComponents.DotNetBar.ButtonX();
 			this.Modifythephoto = new DevComponents.DotNetBar.ButtonX();
 			this.topleft = new System.Windows.Forms.Panel();
 			this.min = new System.Windows.Forms.Button();
@@ -94,7 +95,6 @@ namespace MusicChange
 			this.stopButton = new System.Windows.Forms.Button();
 			this.muteButton = new DevComponents.DotNetBar.ButtonX();
 			this.textBoxX1 = new DevComponents.DotNetBar.Controls.TextBoxX();
-			this.buttonX2 = new DevComponents.DotNetBar.ButtonX();
 			this.temp2 = new System.Windows.Forms.TextBox();
 			this.temp1 = new System.Windows.Forms.TextBox();
 			this.temp = new System.Windows.Forms.TextBox();
@@ -170,6 +170,7 @@ namespace MusicChange
 			this.Ptop.CanvasColor = System.Drawing.SystemColors.Control;
 			this.Ptop.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.VS2005;
 			this.Ptop.Controls.Add(this.globalsetting);
+			this.Ptop.Controls.Add(this.buttonX2);
 			this.Ptop.Controls.Add(this.Modifythephoto);
 			this.Ptop.Controls.Add(this.topleft);
 			this.Ptop.Controls.Add(this.logo);
@@ -210,6 +211,20 @@ namespace MusicChange
 			this.globalsetting.Text = "全局设置";
 			this.globalsetting.TextColor = System.Drawing.Color.White;
 			this.globalsetting.Click += new System.EventHandler(this.buttonx11_Click);
+			// 
+			// buttonX2
+			// 
+			this.buttonX2.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+			this.buttonX2.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
+			this.buttonX2.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.buttonX2.Location = new System.Drawing.Point(644, 3);
+			this.buttonX2.Name = "buttonX2";
+			this.buttonX2.Size = new System.Drawing.Size(255, 23);
+			this.buttonX2.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+			this.buttonX2.TabIndex = 3;
+			this.buttonX2.Text = "扫描 视频文件是否可以播放";
+			this.buttonX2.TextColor = System.Drawing.Color.DarkBlue;
+			this.buttonX2.Click += new System.EventHandler(this.buttonX2_Click_1);
 			// 
 			// Modifythephoto
 			// 
@@ -788,7 +803,6 @@ namespace MusicChange
 			// 
 			this.sC4.Panel2.BackColor = System.Drawing.Color.DimGray;
 			this.sC4.Panel2.Controls.Add(this.textBoxX1);
-			this.sC4.Panel2.Controls.Add(this.buttonX2);
 			this.sC4.Panel2.Controls.Add(this.temp2);
 			this.sC4.Panel2.Controls.Add(this.temp1);
 			this.sC4.Panel2.Controls.Add(this.temp);
@@ -802,13 +816,14 @@ namespace MusicChange
 			// 
 			// videoView1
 			// 
-			this.videoView1.BackColor = System.Drawing.Color.Chartreuse;
+			this.videoView1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
 			this.videoView1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.videoView1.Location = new System.Drawing.Point(0, 30);
 			this.videoView1.MediaPlayer = null;
 			this.videoView1.Name = "videoView1";
 			this.videoView1.Size = new System.Drawing.Size(650, 594);
 			this.videoView1.TabIndex = 5;
+			this.videoView1.Text = "videoView1";
 			// 
 			// panel1
 			// 
@@ -1063,17 +1078,6 @@ namespace MusicChange
 			this.textBoxX1.Size = new System.Drawing.Size(168, 25);
 			this.textBoxX1.TabIndex = 4;
 			// 
-			// buttonX2
-			// 
-			this.buttonX2.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-			this.buttonX2.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-			this.buttonX2.Location = new System.Drawing.Point(57, 348);
-			this.buttonX2.Name = "buttonX2";
-			this.buttonX2.Size = new System.Drawing.Size(75, 23);
-			this.buttonX2.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-			this.buttonX2.TabIndex = 3;
-			this.buttonX2.Text = "buttonX2";
-			// 
 			// temp2
 			// 
 			this.temp2.Location = new System.Drawing.Point(34, 127);
@@ -1265,6 +1269,7 @@ namespace MusicChange
 		private Microsoft.VisualBasic.Compatibility.VB6.DirListBoxArray dirListBoxArray1;
 		private Microsoft.VisualBasic.Compatibility.VB6.DirListBoxArray dirListBoxArray2;
 		private LibVLCSharp.WinForms.VideoView videoView1;
+		//private LibVLCSharp.WinForms.VideoView videoView1;
 	}
 }
 #endregion 

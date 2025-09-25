@@ -270,22 +270,25 @@ namespace MusicChange
 		}
 		private void buttonx4_Click(object sender, EventArgs e)
 		{  //选择文件夹 音频
-			using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog()) {
-				folderBrowserDialog.Description = "请选择一个文件夹";
-				if (folderBrowserDialog.ShowDialog() == DialogResult.OK) {
-					string selectedPath = folderBrowserDialog.SelectedPath;
-					textBoxX2.Text = selectedPath;
-					string[] jpgFiles = Directory.GetFiles( selectedPath, "*.mp4", SearchOption.TopDirectoryOnly );
-					listBox1.Items.Clear();
-					foreach (string file in jpgFiles) {
-						listBox1.Items.Add( file );
-					}
-					if (jpgFiles.Length > 0) {
-						label1.Text = $"找到 {jpgFiles.Length} 个 .jpg 文件。";
-					}
-					else {
-						label1.Text = "未找到任何 .jpg 文件。";
-					}
+			using FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+			folderBrowserDialog.Description = "请选择一个文件夹";
+			if(folderBrowserDialog.ShowDialog() == DialogResult.OK)
+			{
+				string selectedPath = folderBrowserDialog.SelectedPath;
+				textBoxX2.Text = selectedPath;
+				string[] jpgFiles = Directory.GetFiles(selectedPath, "*.mp4", SearchOption.TopDirectoryOnly);
+				listBox1.Items.Clear();
+				foreach(string file in jpgFiles)
+				{
+					listBox1.Items.Add(file);
+				}
+				if(jpgFiles.Length > 0)
+				{
+					label1.Text = $"找到 {jpgFiles.Length} 个 .jpg 文件。";
+				}
+				else
+				{
+					label1.Text = "未找到任何 .jpg 文件。";
 				}
 			}
 
@@ -414,6 +417,7 @@ namespace MusicChange
 				MessageBox.Show( $"获取文件信息失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error );
 			}
 		}
+		//将目录下的所有文件改名  copy dao   rename	
 		private async void buttonX5_Click(object sender, EventArgs e) //将目录下的所有文件改名存到别的目录
 		{
 			int count = 0;
@@ -422,18 +426,15 @@ namespace MusicChange
 			foreach (string file in allFiles) {
 				//get extension 
 				string extension = Path.GetExtension( file );
-
 				string fileName = Path.GetFileName( file );
 				//取得目录		string path = Path.GetDirectoryName(file);
 				//get current timn
-				string currentTime = DateTime.Now.ToString( "mmss.fff" );  //yyyyMMddHHmmss
-																		   //get file name without extension
+				string currentTime = DateTime.Now.ToString( "mmss.fff" );  //yyyyMMddHHmmss				   //get file name without extension
 				string fileNameWithoutExtension = Path.GetFileNameWithoutExtension( file );
 				//
-				string newFileName = textBoxX1.Text + "\\" + fileNameWithoutExtension + currentTime + extension;
+				string newFileName = textBoxX2.Text + "\\" + fileNameWithoutExtension + currentTime + extension;
 				//将filename改名为newfilename
-
-				await Task.Run( ( ) => File.Copy( file, newFileName, true ) );
+				 await Task.Run( ( ) => File.Copy( file, newFileName, true ) );
 				count++;
 				textBox1.Text = "文件已复制:" + count + "个";
 				//	File.Move(newFileName, textBoxX1.Text);
@@ -465,6 +466,16 @@ namespace MusicChange
 				DirectoryInfo nextTarget = target.CreateSubdirectory( subDir.Name );
 				CopyDirectory( subDir.FullName, nextTarget.FullName, overwrite );
 			}
+		}
+
+		private void buttonX6_Click(object sender, EventArgs e)
+		{
+			//选择目录
+            FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+            if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+            {
+                textBoxX2.Text = folderBrowserDialog.SelectedPath;
+            }
 		}
 	}
 
