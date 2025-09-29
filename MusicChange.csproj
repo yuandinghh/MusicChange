@@ -338,6 +338,12 @@
     <Compile Include="UserControl1.xaml.cs">
       <DependentUpon>UserControl1.xaml</DependentUpon>
     </Compile>
+    <Compile Include="VideoSettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VideoSettingsForm.Designer.cs">
+      <DependentUpon>VideoSettingsForm.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="LaserEditing.resx">
       <DependentUpon>LaserEditing.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -352,6 +358,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ToolTipEx.resx">
       <DependentUpon>ToolTipEx.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VideoSettingsForm.resx">
+      <DependentUpon>VideoSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include=".editorconfig" />
     <None Include="app.manifest" />

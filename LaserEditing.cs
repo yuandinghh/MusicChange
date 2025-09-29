@@ -678,19 +678,16 @@ namespace MusicChange
 				{
 					waveOut.Play();
 				}
-
 				mediaPlayer.Stop();
-
 				using var media = new Media(libVLC, filePath, FromType.FromPath);
 				if(media == null)
 				{
 					throw new InvalidOperationException("无法创建媒体对象");
 				}
-
-				progressTimer.Start();
-				//_mediaPlayer.bringToF
-				//_videoView.BringToFront();
+				progressTimer.Start(); 		//_mediaPlayer.bringToF	//_videoView.BringToFront();
 				mediaPlayer.Play(media);
+				mediaPlayer.Mute = false;
+				SetVolume(volumeTrackBar.Value);
 			}
 			catch(Exception ex)
 			{
@@ -721,7 +718,7 @@ namespace MusicChange
 			}
 		}
 		// 增强 CleanupResources 方法以正确释放音频资源
-		private void CleanupResources()
+		private void CleanupResources()  // 添加 try-catch 块	 
 		{
 			try
 			{
@@ -829,6 +826,7 @@ namespace MusicChange
 			if(isMuted)
 			{
 				isMuted = false;
+				mediaPlayer.Mute = isMuted;
 				//_muteButton.Text = "Mute";
 			}
 		}
@@ -843,6 +841,7 @@ namespace MusicChange
 				previousVolume = mediaPlayer.Volume;
 				mediaPlayer.Volume = 0;
 				isMuted = true;
+				mediaPlayer.Mute = isMuted;
 				muteButton.SymbolColor = Color.Salmon;
 				volumeTrackBar.Value = 0;
 			}
@@ -866,6 +865,7 @@ namespace MusicChange
 			if(isMuted)
 			{
 				isMuted = false;
+				mediaPlayer.Mute = isMuted;
 				//_muteButton.Text = "Mute";
 			}
 		}
@@ -1004,25 +1004,23 @@ namespace MusicChange
 			try
 			{
 				if(!isMuted)
-				{
-					// 保存当前音量并静音
+				{					// 保存当前音量并静音
 					previousVolume = mediaPlayer.Volume;
-					mediaPlayer.Volume = 0;
+					//mediaPlayer.Volume = 1;
 					isMuted = true;
-					muteButton.SymbolColor = Color.Salmon;
-					volumeTrackBar.Value = 0;
-
-					// 更新声道显示为静音状态  					UpdateChannelDisplay(0, 0);
+					mediaPlayer.Mute = isMuted;
+					muteButton.SymbolColor = Color.Gray;
+					
+					//volumeTrackBar.Value = 1; 	// 更新声道显示为静音状态  	UpdateChannelDisplay(0, 0);
 				}
 				else
-				{
-					// 恢复之前音量
+				{		// 恢复之前音量
 					mediaPlayer.Volume = previousVolume;
 					isMuted = false;
-					muteButton.SymbolColor = Color.Gray;
+					mediaPlayer.Mute = isMuted;
+					muteButton.SymbolColor = Color.Salmon;
 					volumeTrackBar.Value = previousVolume;
-
-					// 更新声道显示为恢复的音量 					UpdateChannelDisplay(previousVolume, previousVolume);
+					// 更新声道显示为恢复的音量 	UpdateChannelDisplay(previousVolume, previousVolume);
 				}
 			}
 			catch(Exception ex)
@@ -1613,11 +1611,8 @@ namespace MusicChange
 
 		private void buttonx6_Click(object sender, EventArgs e)
 		{       //show cut 
-            Cut cut = new();
-            cut.Show();
-            //cut.Dispose();
+			//Cut cut = new(); 			cut.Show();
 		}
-
 		private bool IsInResizeArea(System.Drawing.Point point)
 		{
 			return point.X <= borderSize ||  // 左边界
@@ -1629,7 +1624,6 @@ namespace MusicChange
 		private void SetCursorBasedOnPosition(System.Drawing.Point point)
 		{
 		}
-
 
 		private void splitContainer6_MouseMove(object sender, MouseEventArgs e)
 		{
@@ -2831,6 +2825,14 @@ namespace MusicChange
 			////扫描 视频文件是否可以播放
 			//VideoCheckerForm cut = new();
 			//cut.Show();
+		}
+
+		private void buttonX1_Click(object sender, EventArgs e)  //调节视频的色彩 对比度 和 亮度
+		{
+			using(var settingsForm = new VideoSettingsForm(mediaPlayer))
+			{
+				settingsForm.ShowDialog();
+			}
 		}
 
 		/// <summary>
