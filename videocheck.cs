@@ -597,7 +597,7 @@ namespace MusicChange
 			this.lvResults.Location = new System.Drawing.Point(16, 104);
 			this.lvResults.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.lvResults.Name = "lvResults";
-			this.lvResults.Size = new System.Drawing.Size(1120, 411);
+			this.lvResults.Size = new System.Drawing.Size(1012, 411);
 			this.lvResults.TabIndex = 6;
 			this.lvResults.UseCompatibleStateImageBehavior = false;
 			// 
@@ -608,18 +608,19 @@ namespace MusicChange
 			this.progressBar.Location = new System.Drawing.Point(13, 521);
 			this.progressBar.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.progressBar.Name = "progressBar";
-			this.progressBar.Size = new System.Drawing.Size(1121, 27);
+			this.progressBar.Size = new System.Drawing.Size(1029, 27);
 			this.progressBar.TabIndex = 7;
 			// 
 			// lblStatus
 			// 
 			this.lblStatus.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.lblStatus.BackColor = System.Drawing.SystemColors.ActiveCaption;
 			this.lblStatus.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.lblStatus.Location = new System.Drawing.Point(16, 567);
+			this.lblStatus.Location = new System.Drawing.Point(13, 561);
 			this.lblStatus.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblStatus.Name = "lblStatus";
-			this.lblStatus.Size = new System.Drawing.Size(1121, 22);
+			this.lblStatus.Size = new System.Drawing.Size(1040, 22);
 			this.lblStatus.TabIndex = 8;
 			this.lblStatus.Text = "就绪";
 			// 
@@ -627,11 +628,12 @@ namespace MusicChange
 			// 
 			this.lblStats.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.lblStats.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.lblStats.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.lblStats.Location = new System.Drawing.Point(16, 591);
+			this.lblStats.Location = new System.Drawing.Point(13, 598);
 			this.lblStats.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblStats.Name = "lblStats";
-			this.lblStats.Size = new System.Drawing.Size(1121, 22);
+			this.lblStats.Size = new System.Drawing.Size(1054, 22);
 			this.lblStats.TabIndex = 9;
 			this.lblStats.Text = "统计信息";
 			// 

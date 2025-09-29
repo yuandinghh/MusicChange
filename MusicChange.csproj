@@ -305,18 +305,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClipRepository.cs" />
-    <Compile Include="ChangePictuer.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ChangePictuer.Designer.cs">
-      <DependentUpon>ChangePictuer.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Cut.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Cut.Designer.cs">
-      <DependentUpon>Cut.cs</DependentUpon>
-    </Compile>
     <Compile Include="db.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="LaserEditing.cs">
@@ -325,7 +313,6 @@
     <Compile Include="LaserEditing.Designer.cs">
       <DependentUpon>LaserEditing.cs</DependentUpon>
     </Compile>
-    <Compile Include="LivpConverter.cs" />
     <Compile Include="MediaAssetRepository.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Projects.cs" />
@@ -351,18 +338,6 @@
     <Compile Include="UserControl1.xaml.cs">
       <DependentUpon>UserControl1.xaml</DependentUpon>
     </Compile>
-    <Compile Include="videocheck.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="videocheck.Designer.cs">
-      <DependentUpon>videocheck.cs</DependentUpon>
-    </Compile>
-    <EmbeddedResource Include="ChangePictuer.resx">
-      <DependentUpon>ChangePictuer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Cut.resx">
-      <DependentUpon>Cut.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="LaserEditing.resx">
       <DependentUpon>LaserEditing.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -377,9 +352,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ToolTipEx.resx">
       <DependentUpon>ToolTipEx.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="videocheck.resx">
-      <DependentUpon>videocheck.cs</DependentUpon>
     </EmbeddedResource>
     <None Include=".editorconfig" />
     <None Include="app.manifest" />

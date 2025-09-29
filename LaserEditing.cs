@@ -1560,14 +1560,6 @@ namespace MusicChange
 		{
 
 		}
-
-		private void 修改图片_Click(object sender, EventArgs e)
-		{
-			ChangePictuer form = new ChangePictuer();
-			form.Show();
-
-		}
-
 		private void flowLayoutPanel2_Paint(object sender, PaintEventArgs e)
 		{
 
@@ -2836,12 +2828,9 @@ namespace MusicChange
 
 		private void buttonX2_Click_1(object sender, EventArgs e)
 		{
-			//扫描 视频文件是否可以播放
-			VideoCheckerForm cut = new();
-			cut.Show();
-			//cut.ShowDialog();
-			//cut.Dispose();
-
+			////扫描 视频文件是否可以播放
+			//VideoCheckerForm cut = new();
+			//cut.Show();
 		}
 
 		/// <summary>

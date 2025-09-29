@@ -36,7 +36,7 @@ namespace MusicChange
 
 				}
 				catch (Exception ex) {
-					ChangePictuer.failCount++;
+					//ChangePictuer.failCount++;  //????
 					failFiles.AppendLine( $"{livpPath}: {ex.Message}" );
 				}
 				finally {
