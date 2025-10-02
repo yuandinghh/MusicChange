@@ -1,6 +1,7 @@
 ﻿#region ------------- 系统加载部分  无需改变的变量 -------------
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -9,16 +10,15 @@ using System.Windows.Forms;
 using System.Windows.Media;
 using LibVLCSharp.Shared;
 using LibVLCSharp.WinForms;
+using Microsoft.Extensions.Logging;
+using Vlc.DotNet.Core.Interops;
 using Vlc.DotNet.Forms;
-using NAudio.Wave;
 using Color = System.Drawing.Color;
 using MediaPlayer = LibVLCSharp.Shared.MediaPlayer;
 using Point = System.Drawing.Point;
-using System.Drawing;
-using Vlc.DotNet.Core.Interops;
+
 
 #endregion
-
 #region  ------------- 全局变量 -------------
 namespace MusicChange
 {
@@ -58,27 +58,24 @@ namespace MusicChange
 		private VideoView videoView;
 		private LibVLC libVLC;
 		private string filePath = "F:\\newipad\\跳舞3_m.MP4";
-		private MediaPlayer mediaPlayer;
+		public MediaPlayer mediaPlayer;
 		bool IsfirstPlaying = false;  //show first play
 		private bool isMuted = false;
 		private int previousVolume = 80;
-		private BufferedWaveProvider waveProvider;
-		private WaveOutEvent waveOut;
 		private float currentZoomFactor = 1.0f;
 		private const float ZOOM_INCREMENT = 0.05f;
 		private const float MIN_ZOOM = 0.2f;
 		private const float MAX_ZOOM = 3.0f;
 		private bool isSeeking = false;  // 是否正在拖拽进度条 		private object audioData; 		private bool isvideoView = true;
-										 //---------------------------
 		private bool isVideoMaximized = false;
 		private Rectangle normalVideoBounds;
 		private DockStyle normalDockStyle;
 		private AnchorStyles normalAnchorStyle;
 		private Control normalParent;
 		//private Form videoFullScreenForm; // 用于真正的全屏模式
-		private ToolTipEx toolTipEx = new ToolTipEx();
+		private readonly ToolTipEx toolTipEx = new();
 		private bool darkMode = false;
-
+		private readonly float[] _playbackRates = { 0.25f, 0.5f, 0.75f, 1.0f, 1.25f, 1.5f, 1.75f, 2.0f, 3.0f, 4.0f };
 		private VlcControl vlcControl = new VlcControl();
 
 		public LaserEditing()
@@ -86,17 +83,48 @@ namespace MusicChange
 			AutoScaleMode = AutoScaleMode.Dpi; // 根据系统DPI自动缩放
 			InitializeComponent();
 			IsfirstPlaying = false;
-			this.DoubleBuffered = true;   //button2.FlatAppearance.BorderSize = 0; // 边框大小设为 0//qrcode1.FlatAppearance.BorderSize = 0;   // 边框大小设为 0
+			this.DoubleBuffered = true;   //button2.FlatAppearance.BorderSize = 0; // 边框大小设为 0//qrcode1.FlatAppearance.BorderSize = 0;   // 边框大小设为 0  // 初始化 VLC  添加 亮度  对比度 控制 8-12  //vlcControl.BeginInit();
+										  //vlcControl.VlcLibDirectory = new DirectoryInfo(@"C:\VLC\Lib"); // LibVLC 库路径
+										  //vlcControl.EndInit();	  //this.Controls.Add(vlcControl);
 
-			// 初始化 VLC  添加 亮度  对比度 控制 8-12
-			//vlcControl.BeginInit();
-			//vlcControl.VlcLibDirectory = new DirectoryInfo(@"C:\VLC\Lib"); // LibVLC 库路径
-			//vlcControl.EndInit();
-			//this.Controls.Add(vlcControl);
 		}
+		#region  initlibvlc( )
+		//private void initlibvlc( )
+		//{
+		//	//get
+		//		if (libVLC != null)
+		//			return libVLC;
+
+		//		if (!_coreInitialized) {
+		//			lock (_coreLock) {
+		//				if (!_coreInitialized) {
+		//					try {
+		//						Core.Initialize( VlcHelper.VLCLocation );
+		//						_coreInitialized = true;
+		//					}
+		//					catch (VLCException vlcex) {
+		//						Logger.LogException( vlcex );
+		//						throw new ApplicationException( "VLC not found (v3). Set location in settings." );
+		//					}
+		//				}
+		//			}
+
+
+		//		}
+		//		try {
+		//			libVLC = new LibVLC();
+		//		}
+		//		catch (Exception ex) {
+		//			Logger.LogException( ex, "VLC Setup" );
+		//			throw new ApplicationException( "VLC not found (v3). Set location in settings." );
+		//		}
+		//		return libVLC;
+		//	}
+		#endregion
+
 		private void LaserEditing_Load(object sender, EventArgs e)
 		{
-			splitContainer5mouseDown = false;           //splitContainer1.Panel2MinSize = 400;	//buttonx8.BackColor = System.Drawing.Color.Gray;
+			splitContainer5mouseDown = false;   //splitContainer1.Panel2MinSize = 400;	//buttonx8.BackColor = System.Drawing.Color.Gray;
 			Ismaterial = true;  // 默认选择当前素材
 			buttonX3_Click(null, null); // 设置当前素材按钮样式	this.ClientSize = new System.Drawing.Size( 1900, 1080 );
 			OfficialMaterialSwitch(); // 初始化官方素材开关状态
@@ -111,12 +139,8 @@ namespace MusicChange
 			this.sC3.Panel1MinSize = 300;
 			sC3.SplitterDistance = weight + 20; // 上左
 			sC4.SplitterDistance = weight + 40; //上中			//LoadLibVLCSharpDynamically();  动态加载 LibVLCSharp.WinForms.dll
-
-
-
 			InitializeLibVLC(); // 初始化 LibVLC
-			InitializeUIControls();
-			// 确保窗体能接收按键事件
+			InitializeUIControls();             // 确保窗体能接收按键事件
 			this.KeyPreview = true;
 			//SetupToolTips();
 			//darkMode = false;
@@ -126,144 +150,36 @@ namespace MusicChange
 
 		#region ------- ToolTip 鼠标进入悬停显示 -------
 
-		//public partial class MainForm : Form
-		//{
-		//	private ToolTipEx toolTipEx = new ToolTipEx();
-		//	private bool darkMode = false;
-
-		//	//public MainForm( )
-		//	//{
-		//	//	InitializeComponent();
-		//	//	SetupToolTips();
-		//	//}
-
-		//	private void SetupToolTips( )
-		//	{
-		//		// 初始主题
-		//		ApplyTheme( Color.SteelBlue, darkMode );
-
-		//	//toolTipEx.Font =
-
-		//	// 为控件设置提示
-		//	toolTipEx.SetToolTip( buttonX2, "保存文档", "将当前文档保存到磁盘", Properties.Resources.add );
-		//	toolTipEx.SetToolTip( vieweMax, "删除项目", "永久删除选定项目", Properties.Resources.ico );
-		//}
-
-		//private void ApplyTheme(Color primaryColor, bool isDarkMode)
-		//	{
-		//		if (isDarkMode) {
-		//			// 深色模式
-		//			toolTipEx.BackColor1 = ColorUtils.Darken( primaryColor, 0.4f );
-		//			toolTipEx.BackColor2 = ColorUtils.Darken( primaryColor, 0.6f );
-		//			toolTipEx.BorderColor = ColorUtils.Lighten( primaryColor, 0.2f );
-		//			toolTipEx.ForeColor = Color.WhiteSmoke;
-		//			toolTipEx.TitleColor = ColorUtils.Lighten( primaryColor, 0.4f );
-		//			toolTipEx.ShadowColor = Color.FromArgb( 30, 0, 0, 0 );
-		//		}
-		//		else {
-		//			// 浅色模式
-		//			toolTipEx.BackColor1 = ColorUtils.Lighten( primaryColor, 0.85f );
-		//			toolTipEx.BackColor2 = ColorUtils.Lighten( primaryColor, 0.75f );
-		//			toolTipEx.BorderColor = ColorUtils.Darken( primaryColor, 0.2f );
-		//			toolTipEx.ForeColor = ColorUtils.Darken( primaryColor, 0.7f );
-		//			toolTipEx.TitleColor = primaryColor;
-		//			toolTipEx.ShadowColor = Color.FromArgb( 20, 0, 0, 0 );
-		//		}
-		//	}
-
-		//	private void btnToggleTheme_Click(object sender, EventArgs e)
-		//	{
-		//		darkMode = !darkMode;
-		//		ApplyTheme( Color.SteelBlue, darkMode );
-		//	}
-
-
-		//public static class ColorUtils
-		//{
-		//	public static Color Darken(Color color, float factor)
-		//	{
-		//		factor = Math.Clamp( factor, 0, 1 );
-		//		return Color.FromArgb(
-		//			color.A,
-		//			(int)(color.R * factor),
-		//			(int)(color.G * factor),
-		//			(int)(color.B * factor) );
-		//	}
-
-		//	public static Color Lighten(Color color, float factor)
-		//	{
-		//		factor = Math.Clamp( factor, 0, 1 );
-		//		return Color.FromArgb(
-		//			color.A,
-		//			(int)(color.R + (255 - color.R) * factor),
-		//			(int)(color.G + (255 - color.G) * factor),
-		//			(int)(color.B + (255 - color.B) * factor) );
-		//	}
-		//}
-
-
-
-		//private void SetupToolTips( )
-		//{
-		//	// 设置全局属性
-		//	toolTipEx.AutoPopDelay = 5000; // 提示框显示 5 秒后消失
-		//	toolTipEx.BackColor1 = Color.FromArgb( 50, 50, 80 );
-		//	toolTipEx.BackColor2 = Color.FromArgb( 30, 30, 50 );
-		//	toolTipEx.BorderColor = Color.SteelBlue;
-		//	toolTipEx.ForeColor = Color.WhiteSmoke;
-		//	toolTipEx.TitleColor = Color.LightSkyBlue;
-		//	toolTipEx.CornerRadius = 10;
-		//	toolTipEx.ShadowSize = 10;
-		//	toolTipEx.Padding = 12;
-		//	toolTipEx.IconTextSpacing = 10;
-		//	toolTipEx.TitleContentSpacing = 6;
-
-		//	toolTipEx.SetToolTip( stopButton, "停止播放视频" );
-
-		//	// 为按钮设置工具提示
-		//	//toolTipEx.SetToolTip( btnSave, "保存文档","将当前文档保存到磁盘\n快捷键: Ctrl+S",	SystemIcons.Information.ToBitmap() );
-		//	//toolTipEx.SetToolTip( btnDelete, "删除项目",
-		//	//	"永久删除选定项目\n此操作无法撤销!",
-		//	//	SystemIcons.Warning.ToBitmap() );
-		//	//toolTipEx.SetToolTip( btnHelp, "帮助和支持",
-		//	//	"访问在线帮助文档和用户手册",
-		//	//	SystemIcons.Question.ToBitmap() );
-		//	//// 为文本框设置工具提示
-		//	//toolTipEx.SetToolTip( txtUsername, "用户名",
-		//	//	"输入您的登录用户名\n长度: 4-20个字符\n允许: 字母、数字和下划线" );
-		//	//// 为复选框设置工具提示
-		//	//toolTipEx.SetToolTip( chkRemember, "记住登录信息",
-		//	//	"在本地保存您的登录凭据\n下次登录时自动填充" );
-		//}
-
-
 		private void ConfigureToolTip(ToolTipEx toolTip1)
-		{
-			// 设置 ToolTip 属性
+		{           // 设置 ToolTip 属性
 			toolTip1.AutoPopDelay = 100000; // 提示框显示 5 秒后消失
 			toolTip1.InitialDelay = 500; // 鼠标悬停 1 秒后显示提示框
 			toolTip1.ReshowDelay = 1000;   // 鼠标移开后再次悬停的延迟时间
 			toolTip1.ShowAlways = true;   // 即使控件未激活也显示提示框
 			toolTip1.IsBalloon = true;    // 使用气泡样式
-			toolTip1.ToolTipIcon = ToolTipIcon.Info; // 提示框图标
+			toolTip1.ToolTipIcon = ToolTipIcon.Info;      // 提示框图标  info  Warning
 			toolTip1.ToolTipTitle = "提示"; // 提示框标题
 			toolTip1.BackColor = Color.FromArgb(204, 200, 0); // 设置背景颜色
-			toolTip1.TitleFont = new Font(
-			familyName: "微软雅黑",    // 字体家族
-			emSize: 15,             // 字体大小
-			style: FontStyle.Bold | FontStyle.Italic  // 字体样式（可组合）
-			);
+															  //toolTip1.TitleFont = new Font(	familyName: "微软雅黑",  emSize: 16,     // 字体大小
+			toolTip1.TitleFont = new Font("微软雅黑", 16f); //	style: FontStyle.Bold | FontStyle.Italic ); // 字体样式（可组合）
 			toolTip1.ForeColor = Color.Aqua; // 设置前景颜色
 			toolTip1.TitleColor = Color.FromArgb(32, 200, 0); // 设置标题颜色 
 			toolTip1.CornerRadius = 10; // 设置圆角半径
 			toolTip1.ShadowSize = 10; // 设置阴影大小
-									  //toolTip1.Padding = new Padding( 12 ); // 设置内边距
+			toolTip1.ContentFont = new Font("Segoe UI", 18f, FontStyle.Regular);   // 设置内容字体和颜色
+			toolTip1.ContentColor = Color.WhiteSmoke;
+			// 设置内容填充          toolTip1.ContentFill = new SolidBrush(Color.FromArgb(50, 50, 50));
+			//toolTip1.Padding = new Padding( 10 ); // 上下左右各增加10像素内边距
+			//toolTip1.Padding = new Padding
 
+			toolTip1.BackColor1 = Color.FromArgb(50, 50, 80);
+			toolTip1.BackColor2 = Color.FromArgb(30, 30, 50);
+			toolTip1.BorderColor = Color.SteelBlue;
 
 			toolTip1.SetToolTip(playPauseButton, "视频播放开始和停止");
 			toolTip1.SetToolTip(stopButton, "停止播放视频");
 			toolTip1.SetToolTip(buttonX2, "crf（Constant Rate Factor，恒定码率因子）\r\n•\t作用：控制视频压缩的画质和文件大小。\r\n•\t取值范围：0~51，常用范围为 18~28。\r\n•\t数值越小，画质越高，文件越大。\r\n•\t数值越大，画质越低，文件越小。\r\n•\t一般推荐：高质量用 18~22，普通用 23~28。");
-			toolTip1.SetToolTip(buttonX1, "选择播放速度");
+			toolTip1.SetToolTip(color, "选择播放速度");
 			toolTip1.SetToolTip(temp2, "preset（预设编码速度）\r\n•\t作用：控制编码速度与压缩效率的平衡。\r\n•\t可选值（从快到慢）：\r\n•\tultrafast, superfast, veryfast, faster, fast, medium, slow, slower, veryslow\r\n•\t说明：\r\n•\t越快（如 ultrafast），编码速度快，但文件大、画质略低。\r\n•\t越慢（如 veryslow），编码速度慢，但文件更小、画质更好。\r\n•\t默认值是 medium，一般推荐用 fast、medium 或 slow。");
 			toolTip1.SetToolTip(zoomInButton, "放大视频");
 			toolTip1.SetToolTip(zoomOutButton, "缩小视频画面");
@@ -272,34 +188,13 @@ namespace MusicChange
 			toolTip1.SetToolTip(muteButton, "静音");
 			toolTip1.SetToolTip(fitToWindowButton, "适应 窗口大小");
 			toolTip1.SetToolTip(vieweMax, "使用外部播放器！");
-
-
-			// 设置内容字体和颜色
-			toolTip1.ContentFont = new Font("Segoe UI", 18, FontStyle.Regular);
-			toolTip1.ContentColor = Color.WhiteSmoke;
-
-			// 设置标题字体和颜色
-			toolTip1.TitleFont = new Font("Segoe UI", 12, FontStyle.Bold);
-			toolTip1.TitleColor = Color.LightSkyBlue;
-
-			// 设置其他属性
-			toolTip1.BackColor1 = Color.FromArgb(50, 50, 80);
-			toolTip1.BackColor2 = Color.FromArgb(30, 30, 50);
-			toolTip1.BorderColor = Color.SteelBlue;
+			toolTip1.SetToolTip(speed, "设置视频播放速度");
+			toolTip1.SetToolTip(color, "设置视频图像属性\n亮度、对比度、饱和度和色调\n  ");
 
 			// 为控件设置提示
 			toolTip1.SetToolTip(vieweMax, "保存文档",
 				"将当前文档保存到磁盘\n快捷键: Ctrl+S",
 				Properties.Resources.loading);
-
-			// 设置全局默认值
-			toolTip1.BackColor1 = Color.FromArgb(50, 50, 80);
-			toolTip1.BackColor2 = Color.FromArgb(30, 30, 50);
-			toolTip1.BorderColor = Color.SteelBlue;
-			toolTip1.ContentFont = new Font("Segoe UI", 9);
-			toolTip1.ContentColor = Color.WhiteSmoke;
-			toolTip1.TitleFont = new Font("Segoe UI", 11, FontStyle.Bold);
-			toolTip1.TitleColor = Color.LightSkyBlue;
 
 			// 为按钮1设置提示（使用全局默认字体和颜色）
 			toolTip1.SetToolTip(muteButton, "保存文档",
@@ -316,297 +211,31 @@ namespace MusicChange
 				Color.Yellow);                         // 自定义内容颜色
 
 			// 为文本框设置提示（无图标）
-			toolTip1.SetToolTip(zoomInButton, "用户名",
-				"输入您的登录用户名\n长度: 4-20个字符\n允许: 字母、数字和下划线");
+			toolTip1.SetToolTip(vieweMax, "视频在独立视频程序播放");
+
+			// 普通文本换行控制
+			toolTip1.SetToolTip(buttonX2, "这是一个较长的提示文本，\n通过换行来控制显示宽度。");
+
+			// 或者使用 HTML 格式（需要设置 OwnerDraw 为 true）
+			toolTip1.OwnerDraw = true;
+			toolTip1.Draw += (sender, e) =>
+			{
+				e.DrawBackground();
+				e.DrawBorder();
+				e.Graphics.DrawString(e.ToolTipText, e.Font, System.Drawing.Brushes.Black,
+									 new RectangleF(e.Bounds.X, e.Bounds.Y, 200, e.Bounds.Height));
+			};
+			toolTip1.SetToolTip(buttonX2, "提示", "这是一个可以自动换行的长文本提示，当达到指定宽度时会自动换行显示...");
 
 		}
-
-		//	private void SetupToolTips( )
-		//	{
-		//		// 初始主题
-		//		ApplyTheme( Color.SteelBlue, darkMode );
-
-		//		// 为控件设置提示
-		//		toolTipEx.SetToolTip( btnSave, "保存文档", "将当前文档保存到磁盘", Properties.Resources.SaveIcon );
-		//		toolTipEx.SetToolTip( btnDelete, "删除项目", "永久删除选定项目", Properties.Resources.DeleteIcon );
-		//	}
-
-		//	private void ApplyTheme(Color primaryColor, bool isDarkMode)
-		//	{
-		//		if (isDarkMode) {
-		//			// 深色模式
-		//			toolTipEx.BackColor1 = ColorUtils.Darken( primaryColor, 0.4f );
-		//			toolTipEx.BackColor2 = ColorUtils.Darken( primaryColor, 0.6f );
-		//			toolTipEx.BorderColor = ColorUtils.Lighten( primaryColor, 0.2f );
-		//			toolTipEx.ForeColor = Color.WhiteSmoke;
-		//			toolTipEx.TitleColor = ColorUtils.Lighten( primaryColor, 0.4f );
-		//			toolTipEx.ShadowColor = Color.FromArgb( 30, 0, 0, 0 );
-		//		}
-		//		else {
-		//			// 浅色模式
-		//			toolTipEx.BackColor1 = ColorUtils.Lighten( primaryColor, 0.85f );
-		//			toolTipEx.BackColor2 = ColorUtils.Lighten( primaryColor, 0.75f );
-		//			toolTipEx.BorderColor = ColorUtils.Darken( primaryColor, 0.2f );
-		//			toolTipEx.ForeColor = ColorUtils.Darken( primaryColor, 0.7f );
-		//			toolTipEx.TitleColor = primaryColor;
-		//			toolTipEx.ShadowColor = Color.FromArgb( 20, 0, 0, 0 );
-		//		}
-		//	}
-
-		//	private void btnToggleTheme_Click(object sender, EventArgs e)
-		//	{
-		//		darkMode = !darkMode;
-		//		ApplyTheme( Color.SteelBlue, darkMode );
-		//	}
 
 		#endregion
 
 		#region   ------------初始化 LibVLC 核心 播放视频文件 播放 继续 停止等	 -----------------	
-		/*要从视频中获取音频的左右声道数值并显示，LibVLC 本身并不直接提供左右声道音量的实时数据接口。但可以通过以下方法实现一个近似的解决方案：
-	实现步骤：
-	1.	使用 LibVLC 的音频回调功能：
-	•	LibVLC 提供了 AudioCallbacks，可以通过它获取音频数据。
-	•	通过分析音频数据，可以计算左右声道的音量值。
-	2.	计算左右声道音量：
-	•	音频数据通常是 PCM 格式，可以通过解析 PCM 数据计算左右声道的音量。
-	•	计算方法是对每个声道的采样值取绝对值的平均值或 RMS（均方根值）。
-	3.	显示左右声道音量：
-	•	使用 UI 控件（如 ProgressBar 或自定义绘制）显示左右声道的音量。
-	示例代码：
-	以下是一个实现左右声道音量显示的示例：  		*/
-		// 音频回调函数
-		//private void OnAudioPlay(IntPtr data, IntPtr samples, uint count, long pts, short[] audioData)
-		//{
-		//	private void OnAudioPlay(IntPtr data, IntPtr samples, uint count, long pts)
-		//	{
-		//	//	throw new NotImplementedException();
-		//	//}
-		//	// 获取音频样本数据
-		//	audioData = new short[count];
-		//	Marshal.Copy(samples, audioData, 0, audioData.Length);
-		//          //waveProvider.AddSamples(audioData);
-		//	waveProvider.AddSamples( audioData, 0, audioData.Length );
-		//	// 假设音频是立体声（左右声道交替）
-		//	var leftChannel = audioData.Where((_, index) => index % 2 == 0).ToArray();
-		//	var rightChannel = audioData.Where((_, index) => index % 2 != 0).ToArray();
-		//	// 计算左右声道音量（RMS）
-		//	var leftVolume = CalculateRMS(leftChannel);
-		//	var rightVolume = CalculateRMS(rightChannel);
-		//	if(this.IsHandleCreated)
-		//	{
-		//		BeginInvoke(new Action(() =>
-		//	  {
-		//		  leftChannelProgressBar.Value = Math.Min((int)leftVolume, 100);
-		//		  rightChannelProgressBar.Value = Math.Min((int)rightVolume, 100);
-		//	  }));
-		//	}
-		//}
-		// 修复音频回调方法签名 - 确保所有回调方法都有正确的参数签名
-		// 完整修复的音频回调方法
-		// 完整实现的 OnAudioPlay 方法 - 确保没有任何未实现的部分
-		/// <summary>
-		/// 音频播放回调方法
-		/// </summary>
-		/// <param name="data"></param>
-		/// <param name="samples"></param>
-		/// <param name="count"></param>
-		/// <param name="pts"></param>
-		private void OnAudioPlay(IntPtr data, IntPtr samples, uint count, long pts)
-		{
-			// 不要抛出任何异常，而是静默处理所有情况
-			try
-			{
-				// 参数验证
-				if(samples == IntPtr.Zero || count == 0)
-				{
-					return; // 静默返回，不抛出异常
-				}
+		//要从视频中获取音频的左右声道数值并显示，LibVLC 本身并不直接提供左右声道音量的实时数据接口。但可以通过以下方法实现一个近似的解
 
-				// 确保必要的组件存在
-				if(waveProvider == null)
-				{
-					return;
-				}
-
-				// 安全地处理音频数据
-				short[] audioData = null;
-				try
-				{
-					audioData = new short[count];
-					Marshal.Copy(samples, audioData, 0, (int)count);
-				}
-				catch
-				{
-					// 如果复制失败，静默返回
-					return;
-				}
-
-				// 添加音频数据到缓冲区
-				try
-				{
-					if(audioData != null && audioData.Length > 0)
-					{
-						// 转换 short[] 到 byte[]
-						byte[] byteData = new byte[audioData.Length * 2];
-						Buffer.BlockCopy(audioData, 0, byteData, 0, byteData.Length);
-						waveProvider.AddSamples(byteData, 0, byteData.Length);
-					}
-				}
-				catch
-				{
-					// 静默处理缓冲区添加错误
-				}
-
-				// 更新声道显示
-				try
-				{
-					if(audioData != null && audioData.Length > 0)
-					{
-						UpdateChannelDisplayFromAudioData(audioData);
-					}
-				}
-				catch
-				{
-					// 静默处理显示更新错误
-				}
-			}
-			catch
-			{
-				// 捕获所有异常，确保不会传播到 LibVLC
-				// 这是关键：音频回调中绝不能抛出异常
-			}
-		}
-		// 完整实现的 UpdateChannelDisplayFromAudioData 方法
-		private void UpdateChannelDisplayFromAudioData(short[] audioData)
-		{
-			try
-			{
-				if(audioData == null || audioData.Length == 0)
-					return;
-
-				if(leftChannelProgressBar == null || rightChannelProgressBar == null)
-					return;
-
-				// 限制处理的数据量以提高性能
-				int processCount = Math.Min(audioData.Length, 100);
-
-				// 高效计算左右声道音量
-				long leftSum = 0;
-				long rightSum = 0;
-				int leftSamples = 0;
-				int rightSamples = 0;
-
-				for(int i = 0 ;i < processCount - 1 ;i += 2)
-				{
-					leftSum += Math.Abs((long)audioData[i]);
-					leftSamples++;
-
-					if(i + 1 < audioData.Length)
-					{
-						rightSum += Math.Abs((long)audioData[i + 1]);
-						rightSamples++;
-					}
-				}
-
-				// 计算平均值并转换为显示值
-				int leftVolume = 0;
-				int rightVolume = 0;
-
-				if(leftSamples > 0)
-				{
-					long leftAverage = leftSum / leftSamples;
-					leftVolume = (int)Math.Min(1, leftAverage / 100);
-				}
-
-				if(rightSamples > 0)
-				{
-					long rightAverage = rightSum / rightSamples;
-					rightVolume = (int)Math.Min(1, rightAverage / 100);
-				}
-
-				// 安全更新UI
-				SafeUpdateChannelDisplay(leftVolume, rightVolume);
-			}
-			catch
-			{
-				// 静默处理所有异常
-			}
-		}
-		// 安全更新声道显示的方法
-		private void SafeUpdateChannelDisplay(int leftVolume, int rightVolume)
-		{
-			try
-			{
-				// 检查控件状态
-				if(this.IsDisposed || !this.IsHandleCreated)
-					return;
-
-				// 使用 BeginInvoke 异步更新UI
-				this.BeginInvoke(new Action(() =>
-			  {
-				  try
-				  {
-					  // 更新左声道显示
-					  if(leftChannelProgressBar != null &&
-					!leftChannelProgressBar.IsDisposed &&
-					leftChannelProgressBar.IsHandleCreated)
-					  {
-						  int value = Math.Max(0, Math.Min(100, leftVolume));
-						  if(value != leftChannelProgressBar.Value)
-						  {
-							  leftChannelProgressBar.Value = value;
-						  }
-					  }
-
-					  // 更新右声道显示
-					  if(rightChannelProgressBar != null &&
-					!rightChannelProgressBar.IsDisposed &&
-					rightChannelProgressBar.IsHandleCreated)
-					  {
-						  int value = Math.Max(0, Math.Min(100, rightVolume));
-						  if(value != rightChannelProgressBar.Value)
-						  {
-							  rightChannelProgressBar.Value = value;
-						  }
-					  }
-				  }
-				  catch
-				  {
-					  // 静默处理UI更新异常
-				  }
-			  }));
-			}
-			catch
-			{
-				// 静默处理调度异常
-			}
-		}
-		// 检查您的 InitializeLibVLC 方法确保正确设置
 		private void InitializeLibVLC()
 		{
-			//	Core.Initialize(); // 初始化 LibVLC
-
-			//	using var libVLC = new LibVLC();
-			//	using var mediaPlayer = new MediaPlayer( libVLC );
-			//	// 加载媒体文件
-			//	var media = new Media( libVLC, filePath, FromType.FromPath );
-			//	mediaPlayer.Media = media;
-
-			//	// 调整视频参数（需在播放开始后生效）
-			//	mediaPlayer.Play();
-
-			//	// 检查是否支持视频调整
-			//	if (mediaPlayer.VideoAdjustments != null) {
-			//		mediaPlayer.VideoAdjustments.Brightness = 1.2f; // 亮度 (0.0-2.0)
-			//		mediaPlayer.VideoAdjustments.Contrast = 1.1f;   // 对比度 (0.0-2.0)
-			//		mediaPlayer.VideoAdjustments.Saturation = 0.9f; // 饱和度 (0.0-2.0)
-			//		mediaPlayer.VideoAdjustments.Hue = 0.1f;        // 色调 (-180.0-180.0)
-			//	}
-
-			//	Console.ReadKey();
-			//	mediaPlayer.Stop();
-
-
 			try
 			{
 				Core.Initialize();                  // 创建 LibVLC 实例
@@ -616,44 +245,28 @@ namespace MusicChange
 				// 创建 MediaPlayer 实例
 				mediaPlayer = new MediaPlayer(libVLC);
 				if(mediaPlayer == null)
+				{
+					MessageBox.Show("播放器未正确初始化", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
 					return;
+				}
+				//mediaPlayer.VideoAdjustments.Brightness = 1.2f; // 亮度 (0.0-2.0)
 				// 设置 VideoView
 				if(videoView1 != null)
 				{
 					videoView1.MediaPlayer = mediaPlayer;
 				}
 
-				// 初始化 NAudio 组件
-				try
-				{
-					waveProvider = new BufferedWaveProvider(new WaveFormat(44100, 16, 2))
-					{
-						BufferDuration = TimeSpan.FromMilliseconds(500),
-						DiscardOnBufferOverflow = true
-					};
-					waveOut = new WaveOutEvent();
-					waveOut.Init(waveProvider);
-					// 注意：不要在这里启动播放，而是在实际需要播放时启动
-				}
-				catch
-				{
-					// 如果 NAudio 初始化失败，继续运行但不提供音频可视化
-					waveProvider = null;
-					waveOut = null;
-				}
 				mediaPlayer.TimeChanged += OnMediaPlayerTimeChanged;
 				mediaPlayer.LengthChanged += OnMediaPlayerLengthChanged;
 				mediaPlayer.Playing += OnMediaPlayerPlaying;
 				mediaPlayer.Paused += OnMediaPlayerPaused;
 				mediaPlayer.Stopped += OnMediaPlayerStopped;
 				mediaPlayer.EndReached += OnMediaPlayerEndReached;
-				// 设置音频回调 - 确保所有回调都有实现
-				//_mediaPlayer.SetAudioCallbacks(				//	OnAudioPlay,    // 必须有完整实现				//	OnAudioPause,   // 必须有完整实现				//	OnAudioResume,  // 必须有完整实现				//	OnAudioFlush,   // 必须有完整实现				//	OnAudioDrain    // 必须有完整实现				//);
+
 			}
 			catch
 			{
-				// 静默处理初始化异常
-				CleanupResources();
+				// 静默处理初始化异常  				CleanupResources();
 			}
 		}
 		// 修复播放视频方法
@@ -674,17 +287,16 @@ namespace MusicChange
 				}
 
 				// 确保 NAudio 组件已启动
-				if(waveOut != null && waveOut.PlaybackState != PlaybackState.Playing)
-				{
-					waveOut.Play();
-				}
+				//if (waveOut != null && waveOut.PlaybackState != PlaybackState.Playing) {
+				//	waveOut.Play();
+				//}
 				mediaPlayer.Stop();
 				using var media = new Media(libVLC, filePath, FromType.FromPath);
 				if(media == null)
 				{
 					throw new InvalidOperationException("无法创建媒体对象");
 				}
-				progressTimer.Start(); 		//_mediaPlayer.bringToF	//_videoView.BringToFront();
+				progressTimer.Start();      //_mediaPlayer.bringToF	//_videoView.BringToFront();
 				mediaPlayer.Play(media);
 				mediaPlayer.Mute = false;
 				SetVolume(volumeTrackBar.Value);
@@ -717,88 +329,13 @@ namespace MusicChange
 				return 0;
 			}
 		}
-		// 增强 CleanupResources 方法以正确释放音频资源
-		private void CleanupResources()  // 添加 try-catch 块	 
-		{
-			try
-			{
-				progressTimer?.Stop();
 
-				// 停止并释放 NAudio 资源
-				if(waveOut != null)
-				{
-					try
-					{
-						if(waveOut.PlaybackState == NAudio.Wave.PlaybackState.Playing ||
-							waveOut.PlaybackState == NAudio.Wave.PlaybackState.Paused)
-						{
-							waveOut.Stop();
-						}
-					}
-					catch { }
-					waveOut.Dispose();
-					waveOut = null;
-				}
-				if(waveProvider != null)
-				{
-					waveProvider.ClearBuffer();
-					waveProvider = null;
-				}
-
-				if(mediaPlayer != null)
-				{
-					try
-					{
-						mediaPlayer.Stop();
-					}
-					catch { }
-
-					// 安全地取消订阅事件
-					try
-					{
-						mediaPlayer.TimeChanged -= OnMediaPlayerTimeChanged;
-						mediaPlayer.LengthChanged -= OnMediaPlayerLengthChanged;
-						mediaPlayer.Playing -= OnMediaPlayerPlaying;
-						mediaPlayer.Paused -= OnMediaPlayerPaused;
-						mediaPlayer.Stopped -= OnMediaPlayerStopped;
-						mediaPlayer.EndReached -= OnMediaPlayerEndReached;
-					}
-					catch { }
-
-					mediaPlayer.Dispose();
-					mediaPlayer = null;
-				}
-
-				libVLC?.Dispose();
-				libVLC = null;
-
-				videoView1?.Dispose();
-				videoView1 = null;
-			}
-			catch(Exception ex)
-			{
-				if(System.Diagnostics.Debugger.IsAttached)
-				{
-					System.Diagnostics.Debug.WriteLine($"清理资源时出错: {ex.Message}");
-				}
-			}
-		}
-		// 计算 RMS（均方根值）
-		//private double CalculateRMS(short[] samples)
-		//{
-		//	if(samples.Length == 0)
-		//		return 0;
-		//	return Math.Sqrt(samples.Select(sample => sample * sample).Average());
-		//}
 		private void PlayButton_Click(object sender, EventArgs e)
 		{
 			var media = new Media(libVLC, "your_video_file.mp4", FromType.FromPath);
 			mediaPlayer.Play(media);
 		}
-		//private void StopButton_Click(object sender, EventArgs e)  //??????????
-		//{
-		//	mediaPlayer.Stop();
-		//}
+
 		protected override void OnFormClosing(FormClosingEventArgs e)
 		{
 			//_mediaPlayer.Dispose();			//_libVLC.Dispose();			CleanupResources();  // 清理资源 +++++++++ 的
@@ -937,10 +474,10 @@ namespace MusicChange
 			if(InvokeRequired)
 			{
 				Invoke(new Action(() =>
-			{
-				// 更新按钮状态
-				// 可以在这里初始化声道显示 						UpdateChannelDisplay(50, 50); // 默认显示
-			}));
+		{
+			// 更新按钮状态
+			// 可以在这里初始化声道显示 						UpdateChannelDisplay(50, 50); // 默认显示
+		}));
 			}
 			else
 			{
@@ -1004,17 +541,17 @@ namespace MusicChange
 			try
 			{
 				if(!isMuted)
-				{					// 保存当前音量并静音
+				{                 // 保存当前音量并静音
 					previousVolume = mediaPlayer.Volume;
 					//mediaPlayer.Volume = 1;
 					isMuted = true;
 					mediaPlayer.Mute = isMuted;
 					muteButton.SymbolColor = Color.Gray;
-					
+
 					//volumeTrackBar.Value = 1; 	// 更新声道显示为静音状态  	UpdateChannelDisplay(0, 0);
 				}
 				else
-				{		// 恢复之前音量
+				{      // 恢复之前音量
 					mediaPlayer.Volume = previousVolume;
 					isMuted = false;
 					mediaPlayer.Mute = isMuted;
@@ -1049,9 +586,9 @@ namespace MusicChange
 			if(InvokeRequired)
 			{
 				Invoke(new Action(() =>
-		  {
-			  // 更新按钮状态
-		  }));
+	  {
+		  // 更新按钮状态
+	  }));
 			}
 		}
 		private void OnMediaPlayerPaused(object sender, EventArgs e)
@@ -1059,9 +596,9 @@ namespace MusicChange
 			if(InvokeRequired)
 			{
 				Invoke(new Action(() =>
-		  {
-			  // 更新按钮状态
-		  }));
+	  {
+		  // 更新按钮状态
+	  }));
 			}
 		}
 		private void OnMediaPlayerStopped(object sender, EventArgs e)
@@ -1069,9 +606,9 @@ namespace MusicChange
 			if(InvokeRequired)
 			{
 				Invoke(new Action(() =>
-		  {
-			  ResetProgress();
-		  }));
+	  {
+		  ResetProgress();
+	  }));
 			}
 			else
 			{
@@ -1083,9 +620,9 @@ namespace MusicChange
 			if(InvokeRequired)
 			{
 				Invoke(new Action(() =>
-		  {
-			  ResetProgress();
-		  }));
+	  {
+		  ResetProgress();
+	  }));
 			}
 			else
 			{
@@ -1197,7 +734,6 @@ namespace MusicChange
 					mediaPlayer.Pause();               //添加图片
 					playPauseButton.Image = Properties.Resources.start;
 					temp2.Text = $"缩放: {mediaPlayer.Scale:P0}";
-
 				}
 				else
 				{
@@ -1259,63 +795,7 @@ namespace MusicChange
 				Console.WriteLine($"清理资源时出错: {ex.Message}");
 			}
 		}
-		// 确保所有其他音频回调方法也都完整实现
-		private void OnAudioPause(IntPtr data, long pts)
-		{
-			try
-			{
-				if(waveOut != null && waveOut.PlaybackState == PlaybackState.Playing)
-				{
-					waveOut.Pause();
-				}
-			}
-			catch
-			{
-				// 静默处理所有异常
-			}
-		}
-		private void OnAudioResume(IntPtr data, long pts)
-		{
-			try
-			{
-				if(waveOut != null && waveOut.PlaybackState == PlaybackState.Paused)
-				{
-					waveOut.Play();
-				}
-			}
-			catch
-			{
-				// 静默处理所有异常
-			}
-		}
-		private void OnAudioFlush(IntPtr data, long pts)
-		{
-			try
-			{
-				if(waveProvider != null)
-				{
-					waveProvider.ClearBuffer();
-				}
-			}
-			catch
-			{
-				// 静默处理所有异常
-			}
-		}
-		private void OnAudioDrain(IntPtr data)
-		{
-			try
-			{
-				if(waveOut != null)
-				{
-					waveOut.Stop();
-				}
-			}
-			catch
-			{
-				// 静默处理所有异常
-			}
-		}
+
 		// 安全更新声道显示UI
 		private void UpdateChannelDisplayUI(int leftVolume, int rightVolume)
 		{
@@ -1327,33 +807,33 @@ namespace MusicChange
 
 				// 使用 BeginInvoke 异步更新UI
 				this.BeginInvoke(new Action(() =>
+		  {
+			  try
 			  {
-				  try
+				  // 更新左声道进度条
+				  if(leftChannelProgressBar != null &&
+			!leftChannelProgressBar.IsDisposed &&
+			leftChannelProgressBar.IsHandleCreated)
 				  {
-					  // 更新左声道进度条
-					  if(leftChannelProgressBar != null &&
-					!leftChannelProgressBar.IsDisposed &&
-					leftChannelProgressBar.IsHandleCreated)
-					  {
-						  leftChannelProgressBar.Value = Math.Max(0, Math.Min(leftChannelProgressBar.Maximum, leftVolume));
-					  }
+					  leftChannelProgressBar.Value = Math.Max(0, Math.Min(leftChannelProgressBar.Maximum, leftVolume));
+				  }
 
-					  // 更新右声道进度条
-					  if(rightChannelProgressBar != null &&
-					!rightChannelProgressBar.IsDisposed &&
-					rightChannelProgressBar.IsHandleCreated)
-					  {
-						  rightChannelProgressBar.Value = Math.Max(0, Math.Min(rightChannelProgressBar.Maximum, rightVolume));
-					  }
-				  }
-				  catch(Exception uiEx)
+				  // 更新右声道进度条
+				  if(rightChannelProgressBar != null &&
+			!rightChannelProgressBar.IsDisposed &&
+			rightChannelProgressBar.IsHandleCreated)
 				  {
-					  if(System.Diagnostics.Debugger.IsAttached)
-					  {
-						  System.Diagnostics.Debug.WriteLine($"更新声道显示UI时出错: {uiEx.Message}");
-					  }
+					  rightChannelProgressBar.Value = Math.Max(0, Math.Min(rightChannelProgressBar.Maximum, rightVolume));
 				  }
-			  }));
+			  }
+			  catch(Exception uiEx)
+			  {
+				  if(System.Diagnostics.Debugger.IsAttached)
+				  {
+					  System.Diagnostics.Debug.WriteLine($"更新声道显示UI时出错: {uiEx.Message}");
+				  }
+			  }
+		  }));
 			}
 			catch(Exception ex)
 			{
@@ -1448,6 +928,7 @@ namespace MusicChange
 				this.WindowState = previousWindowState;
 			}
 		}
+		#region  ------------- protected override void WndProc(ref Message m)
 		//protected override void WndProc(ref Message m)
 		//{
 		//	const int WM_NCHITTEST = 0x0084;
@@ -1495,13 +976,13 @@ namespace MusicChange
 
 		//	base.WndProc( ref m );
 		//}
-
+		#endregion
 		// 处理快捷键
 		private void LaserEditing_KeyDown(object sender, KeyEventArgs e)
 		{
 			Keys key = e.KeyCode;
 			//  if (e.Control != true)//如果没按Ctrl键      return;
-			switch(key)
+			switch(key)   //功能键键 选择 
 			{
 				case Keys.F1:
 
@@ -1526,6 +1007,27 @@ namespace MusicChange
 					break;
 
 			}
+
+			// 添加播放速率控制快捷键
+			if(e.Control)
+			{
+				switch(e.KeyCode)
+				{
+					case Keys.Up:  // Ctrl + Up - 增加播放速率
+						IncreasePlaybackRate();
+						e.Handled = true;
+						break;
+					case Keys.Down:  // Ctrl + Down - 降低播放速率
+						DecreasePlaybackRate();
+						e.Handled = true;
+						break;
+					case Keys.D0:  // Ctrl + 0 - 重置播放速率
+						SetPlaybackRate(1.0f);
+						e.Handled = true;
+						break;
+				}
+			}
+
 			//         if(e.KeyCode == Keys.F4 && isVideoMaximized)
 			//{
 			//	MaximizeVideoView();
@@ -1611,7 +1113,7 @@ namespace MusicChange
 
 		private void buttonx6_Click(object sender, EventArgs e)
 		{       //show cut 
-			//Cut cut = new(); 			cut.Show();
+				//Cut cut = new(); 			cut.Show();
 		}
 		private bool IsInResizeArea(System.Drawing.Point point)
 		{
@@ -2181,24 +1683,24 @@ namespace MusicChange
 		{
 			System.Threading.Timer playerMonitor = null;
 			playerMonitor = new System.Threading.Timer((state) =>
+		 {
+			 if(!IsExternalPlayerRunning())
+			 {
+				 // 外部播放器已关闭，恢复主界面
+				 this.Invoke(new Action(() =>
 		   {
-			   if(!IsExternalPlayerRunning())
+			   // 恢复界面状态
+			   if(this.WindowState == FormWindowState.Minimized)
 			   {
-				   // 外部播放器已关闭，恢复主界面
-				   this.Invoke(new Action(() =>
-				 {
-					 // 恢复界面状态
-					 if(this.WindowState == FormWindowState.Minimized)
-					 {
-						 this.WindowState = FormWindowState.Normal;
-					 }
-					 this.Activate();
-				 }));
-
-				   // 停止监控
-				   playerMonitor?.Dispose();
+				   this.WindowState = FormWindowState.Normal;
 			   }
-		   }, null, 0, 1000); // 每秒检查一次
+			   this.Activate();
+		   }));
+
+				 // 停止监控
+				 playerMonitor?.Dispose();
+			 }
+		 }, null, 0, 1000); // 每秒检查一次
 		}
 
 		// 外部播放器按钮点击事件
@@ -2355,8 +1857,7 @@ namespace MusicChange
 		/// <param name="containerHeight">容器高度</param>
 		/// <param name="mode">缩放模式</param>
 		/// <returns>计算出的缩放比例</returns>
-		private float CalculateVideoScaleFactor(int videoWidth, int videoHeight,
-			int containerWidth, int containerHeight, VideoScaleMode mode = VideoScaleMode.Fit)
+		private float CalculateVideoScaleFactor(int videoWidth, int videoHeight, int containerWidth, int containerHeight, VideoScaleMode mode = VideoScaleMode.Fit)
 		{
 			try
 			{
@@ -2365,13 +1866,10 @@ namespace MusicChange
 				{
 					return 1.0f; // 默认缩放比例
 				}
-
 				// 计算宽高比
 				float videoAspectRatio = (float)videoWidth / videoHeight;
 				float containerAspectRatio = (float)containerWidth / containerHeight;
-
 				float scaleFactor = 1.0f;
-
 				switch(mode)
 				{
 					case VideoScaleMode.Fit: // 适应容器（完整显示，可能有黑边）
@@ -2401,11 +1899,9 @@ namespace MusicChange
 						break;
 
 					case VideoScaleMode.Stretch: // 拉伸填充（可能变形）
-												 // 分别计算X和Y方向的缩放比例
-						float scaleX = (float)containerWidth / videoWidth;
+						float scaleX = (float)containerWidth / videoWidth;   // 分别计算X和Y方向的缩放比例
 						float scaleY = (float)containerHeight / videoHeight;
-						// 这种模式下返回平均缩放比例
-						scaleFactor = (scaleX + scaleY) / 2;
+						scaleFactor = (scaleX + scaleY) / 2;    // 这种模式下返回平均缩放比例
 						break;
 
 					case VideoScaleMode.Original: // 原始大小
@@ -2428,7 +1924,6 @@ namespace MusicChange
 
 				// 确保缩放比例在合理范围内
 				scaleFactor = Math.Max(0.1f, Math.Min(10.0f, scaleFactor));
-
 				return scaleFactor;
 			}
 			catch(Exception ex)
@@ -2591,13 +2086,13 @@ namespace MusicChange
 			// 延迟执行调整，避免频繁调整
 			System.Threading.Timer adjustTimer = null;
 			adjustTimer = new System.Threading.Timer((state) =>
-		   {
-			   this.Invoke(new Action(() =>
-			  {
-				  AdjustVideoToViewSize();
-				  adjustTimer?.Dispose();
-			  }));
-		   }, null, 100, System.Threading.Timeout.Infinite); // 100ms 延迟
+		 {
+			 this.Invoke(new Action(() =>
+		  {
+			  AdjustVideoToViewSize();
+			  adjustTimer?.Dispose();
+		  }));
+		 }, null, 100, System.Threading.Timeout.Infinite); // 100ms 延迟
 		}
 
 		/// <summary>
@@ -2737,7 +2232,6 @@ namespace MusicChange
 				// 居中显示
 				displayX = containerRect.X + (containerRect.Width - displayWidth) / 2;
 				displayY = containerRect.Y + (containerRect.Height - displayHeight) / 2;
-
 				return new Rectangle(displayX, displayY, displayWidth, displayHeight);
 			}
 			catch
@@ -2755,22 +2249,15 @@ namespace MusicChange
 			{
 				if(videoView1 == null || mediaPlayer == null)
 					return;
-
 				// 获取视频原始尺寸
 				VideoSizeInfo videoSize = GetVideoOriginalSize();
-
 				if(videoSize.Width > 0 && videoSize.Height > 0)
 				{
 					// 计算自适应缩放比例
-					float scaleFactor = CalculateVideoScaleFactor(
-						videoSize.Width, videoSize.Height,
-						videoView1.Width, videoView1.Height,
-						VideoScaleMode.Fit);
-
+					float scaleFactor = CalculateVideoScaleFactor(videoSize.Width, videoSize.Height, videoView1.Width, videoView1.Height, VideoScaleMode.Fit);
 					// 应用缩放
 					mediaPlayer.Scale = scaleFactor;
 					currentZoomFactor = scaleFactor;
-
 					// 更新显示
 					UpdateZoomLabel();
 				}
@@ -2829,12 +2316,378 @@ namespace MusicChange
 
 		private void buttonX1_Click(object sender, EventArgs e)  //调节视频的色彩 对比度 和 亮度
 		{
-			using(var settingsForm = new VideoSettingsForm(mediaPlayer))
+			//using var settingsForm = new VideoSettingsForm(mediaPlayer);
+			//settingsForm.ShowDialog();  //?????
+		}
+		#endregion
+
+		#region  ----------------------  调整播放速度 ---------------
+		//	private void speed_Click(object sender, EventArgs e)  //调整播放速度
+		//	{
+		//		//temp2 = sender as ToolStripMenuItem;
+		//		//temp2.Text = $"播放速率: {mediaPlayer.Rate:F2}x";
+		//		//mediaPlayer.SetRate(Convert.ToSingle(textBox1.Text));
+		//		//temp2.Text = $"播放速率: {mediaPlayer.Rate:F2}x";
+		//		//点击出现 选择框
+
+		//		//ToolStripMenuItem temp2 = sender as ToolStripMenuItem;
+		//		//temp2.Text = $"播放速率: {mediaPlayer.Rate:F2}x";
+
+		//		//temp2.DropDownItems.AddRange( new ToolStripItem[]
+		//		//{
+		//		//	new ToolStripMenuItem("0.25x", null, speed_Click),
+		//		//	new ToolStripMenuItem("0.5x", null, speed_Click),
+		//		//	new ToolStripMenuItem("0.75x", null, speed_Click),
+		//		//	new ToolStripMenuItem("1.0x", null, speed_Click),
+		//		//	new ToolStripMenuItem("1.25x", null, speed_Click),
+		//		//	new ToolStripMenuItem("1.5x", null, speed_Click),
+		//		//	new ToolStripMenuItem("1.75x", null, speed_Click),
+		//		//	new ToolStripMenuItem("2.0x", null, speed_Click),
+
+		//		//} );
+
+		//           mediaPlayer.Rate = Convert.ToSingle(textBox1.Text);
+		//           textBox1.Text = mediaPlayer.Rate.ToString();
+
+		//		if(sender is ToolStripMenuItem temp2)
+		//		{
+		//			temp2.Text = $"播放速率: {mediaPlayer.Rate:F2}x";
+		//			temp2.DropDownItems.AddRange(new ToolStripItem[]
+		//			{
+		//	new ToolStripMenuItem("0.25x", null, speed_Click),
+		//	new ToolStripMenuItem("0.5x", null, speed_Click),
+		//	new ToolStripMenuItem("0.75x", null, speed_Click),
+		//	new ToolStripMenuItem("1.0x", null, speed_Click),
+		//	new ToolStripMenuItem("1.25x", null, speed_Click),
+		//	new ToolStripMenuItem("1.5x", null, speed_Click),
+		//	new ToolStripMenuItem("1.75x", null, speed_Click),
+		//	new ToolStripMenuItem("2.0x", null, speed_Click),
+		//			});
+		//		}
+		//		else
+		//		{
+		//			MessageBox.Show("触发事件的控件不是菜单项", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+		//		}
+
+		//		try
+		//		{
+		//			if(mediaPlayer == null)
+		//			{
+		//				MessageBox.Show("播放器未初始化", "错误", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+		//				return;
+		//			}
+
+		//			// 检查输入是否有效
+		//			if(float.TryParse(textBox1.Text, out float rate))
+		//			{
+		//				// 限制播放速率范围（通常在 0.25 到 4.0 之间）
+		//				rate = Math.Max(0.25f, Math.Min(4.0f, rate));
+
+		//				// 使用正确的方法设置播放速率
+		//				mediaPlayer.SetRate(rate);
+
+		//				// 更新文本框显示当前速率
+		//				textBox1.Text = mediaPlayer.Rate.ToString("F2");
+
+		//				// 可选：显示状态信息
+		//				if(temp2 != null)
+		//				{
+		//					temp2.Text = $"播放速率: {rate:F2}x";
+		//				}
+		//			}
+		//			else
+		//			{
+		//				MessageBox.Show("请输入有效的数字", "输入错误", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+		//				// 恢复当前速率显示
+		//				textBox1.Text = mediaPlayer.Rate.ToString("F2");
+		//			}
+		//		}
+		//		catch(Exception ex)
+		//		{
+		//			MessageBox.Show($"设置播放速率失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+		//			// 恢复当前速率显示
+		//			if(mediaPlayer != null)
+		//			{
+		//				textBox1.Text = mediaPlayer.Rate.ToString("F2");
+		//			}
+		//		}
+		//	}
+		//	// 添加预设播放速率按钮
+		//	private void CreatePlaybackRateControls()
+		//	{
+		//		// 如果您想要添加预设速率按钮
+		//		Button[] rateButtons = {
+		//	new Button { Text = "0.5x", Tag = 0.5f },
+		//	new Button { Text = "1.0x", Tag = 1.0f },
+		//	new Button { Text = "1.5x", Tag = 1.5f },
+		//	new Button { Text = "2.0x", Tag = 2.0f }
+		//};
+
+		//		// 为每个按钮添加点击事件
+		//		foreach(Button btn in rateButtons)
+		//		{
+		//			btn.Click += (sender, e) =>
+		//			{
+		//				var button = sender as Button;
+		//				float rate = (float)button.Tag;
+		//				SetPlaybackRate(rate);
+		//			};
+		//		}
+		//	}
+
+		//	// 设置播放速率的通用方法
+		//	private void SetPlaybackRate(float rate)
+		//	{
+		//		try
+		//		{
+		//			if(mediaPlayer == null)
+		//				return;
+
+		//			// 限制播放速率范围
+		//			rate = Math.Max(0.25f, Math.Min(4.0f, rate));
+
+		//			// 设置播放速率
+		//			mediaPlayer.SetRate(rate);
+
+		//			// 更新UI
+		//			if(textBox1 != null)
+		//			{
+		//				textBox1.Text = rate.ToString("F2");
+		//			}
+
+		//			// 可选：更新状态标签
+		//			if(temp2 != null)
+		//			{
+		//				temp2.Text = $"播放速率: {rate:F2}x";
+		//			}
+		//		}
+		//		catch(Exception ex)
+		//		{
+		//			MessageBox.Show($"设置播放速率失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+		//		}
+		//	}
+
+		//	// 获取当前播放速率
+		//	private float GetCurrentPlaybackRate()
+		//	{
+		//		try
+		//		{
+		//			return mediaPlayer?.Rate ?? 1.0f;
+		//		}
+		//		catch
+		//		{
+		//			return 1.0f;
+		//		}
+		//	}
+
+		//	// 增加播放速率
+		//	private void IncreasePlaybackRate()
+		//	{
+		//		float currentRate = GetCurrentPlaybackRate();
+		//		float[] rates = { 0.25f, 0.5f, 0.75f, 1.0f, 1.25f, 1.5f, 1.75f, 2.0f, 2.5f, 3.0f, 4.0f };
+
+		//		// 找到下一个更高的速率
+		//		foreach(float rate in rates)
+		//		{
+		//			if(rate > currentRate)
+		//			{
+		//				SetPlaybackRate(rate);
+		//				return;
+		//			}
+		//		}
+
+		//		// 如果已经是最高速率，保持不变
+		//		SetPlaybackRate(4.0f);
+		//	}
+
+		//	// 降低播放速率
+		//	private void DecreasePlaybackRate()
+		//	{
+		//		float currentRate = GetCurrentPlaybackRate();
+		//		float[] rates = { 0.25f, 0.5f, 0.75f, 1.0f, 1.25f, 1.5f, 1.75f, 2.0f, 2.5f, 3.0f, 4.0f };
+
+		//		// 找到下一个更低的速率
+		//		for(int i = rates.Length - 1 ;i >= 0 ;i--)
+		//		{
+		//			if(rates[i] < currentRate)
+		//			{
+		//				SetPlaybackRate(rates[i]);
+		//				return;
+		//			}
+		//		}
+
+		//		// 如果已经是最慢速率，保持不变
+		//		SetPlaybackRate(0.25f);
+		//	}
+
+		private void speed_Click(object sender, EventArgs e)  //调整播放速度
+		{
+			try
 			{
-				settingsForm.ShowDialog();
+				if(mediaPlayer == null)
+				{
+					MessageBox.Show("播放器未初始化", "错误", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+					return;
+				}
+
+				// 检查输入是否有效
+				if(float.TryParse(textBox1.Text, out float rate))
+				{
+					// 限制播放速率范围（通常在 0.25 到 4.0 之间）
+					rate = Math.Max(0.25f, Math.Min(4.0f, rate));
+
+					// 使用正确的方法设置播放速率
+					mediaPlayer.SetRate(rate);
+
+					// 更新文本框显示当前速率
+					textBox1.Text = mediaPlayer.Rate.ToString("F2");
+
+					// 更新状态显示
+					if(temp2 != null)
+					{
+						temp2.Text = $"播放速率: {rate:F2}x";
+					}
+				}
+				else
+				{
+					MessageBox.Show("请输入有效的数字", "输入错误", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+					// 恢复当前速率显示
+					textBox1.Text = mediaPlayer.Rate.ToString("F2");
+				}
+			}
+			catch(Exception ex)
+			{
+				MessageBox.Show($"设置播放速率失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				// 恢复当前速率显示
+				if(mediaPlayer != null)
+				{
+					textBox1.Text = mediaPlayer.Rate.ToString("F2");
+				}
 			}
 		}
 
+		// 设置播放速率的通用方法
+		private void SetPlaybackRate(float rate)
+		{
+			try
+			{
+				if(mediaPlayer == null)
+					return;
+
+				// 限制播放速率范围
+				rate = Math.Max(0.25f, Math.Min(4.0f, rate));
+
+				// 设置播放速率
+				mediaPlayer.SetRate(rate);
+
+				// 更新UI
+				if(textBox1 != null)
+				{
+					textBox1.Text = rate.ToString("F2");
+				}
+
+				// 更新状态标签
+				if(temp2 != null)
+				{
+					temp2.Text = $"播放速率: {rate:F2}x";
+				}
+			}
+			catch(Exception ex)
+			{
+				MessageBox.Show($"设置播放速率失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}
+		}
+
+		// 获取当前播放速率
+		private float GetCurrentPlaybackRate()
+		{
+			try
+			{
+				return mediaPlayer?.Rate ?? 1.0f;
+			}
+			catch
+			{
+				return 1.0f;
+			}
+		}
+
+		// 增加播放速率
+		private void IncreasePlaybackRate()
+		{
+			float currentRate = GetCurrentPlaybackRate();
+			float[] rates = { 0.25f, 0.5f, 0.75f, 1.0f, 1.25f, 1.5f, 1.75f, 2.0f, 2.5f, 3.0f, 4.0f };
+
+			// 找到下一个更高的速率
+			foreach(float rate in rates)
+			{
+				if(rate > currentRate)
+				{
+					SetPlaybackRate(rate);
+					return;
+				}
+			}
+
+			// 如果已经是最高速率，保持不变
+			SetPlaybackRate(4.0f);
+		}
+
+		// 降低播放速率
+		private void DecreasePlaybackRate()
+		{
+			float currentRate = GetCurrentPlaybackRate();
+			float[] rates = { 0.25f, 0.5f, 0.75f, 1.0f, 1.25f, 1.5f, 1.75f, 2.0f, 2.5f, 3.0f, 4.0f };
+
+			// 找到下一个更低的速率
+			for(int i = rates.Length - 1 ;i >= 0 ;i--)
+			{
+				if(rates[i] < currentRate)
+				{
+					SetPlaybackRate(rates[i]);
+					return;
+				}
+			}
+
+			// 如果已经是最慢速率，保持不变
+			SetPlaybackRate(0.25f);
+		}
+
+		// 预设播放速率按钮点击事件
+		private void presetRateButton_Click(object sender, EventArgs e)
+		{
+			if(sender is Button button && button.Tag is float rate)
+			{
+				SetPlaybackRate(rate);
+			}
+		}
+
+		// 创建预设播放速率按钮
+		private void CreatePresetRateButtons()
+		{
+			float[] presetRates = { 0.5f, 0.75f, 1.0f, 1.25f, 1.5f, 2.0f };
+
+			// 假设您有一个容器控件来放置这些按钮
+			FlowLayoutPanel ratePanel = new FlowLayoutPanel();
+
+			foreach(float rate in presetRates)
+			{
+				Button rateButton = new Button
+				{
+					Text = $"{rate}x",
+					Tag = rate,
+					Size = new Size(50, 30),
+					Margin = new Padding(2)
+				};
+				rateButton.Click += presetRateButton_Click;
+				ratePanel.Controls.Add(rateButton);
+			}
+
+			// 将面板添加到您的界面中
+			// this.Controls.Add(ratePanel);
+		}
+
+		#endregion
+
+		#region   ------------------  手动触发自适应调整  ---------------
 		/// <summary>
 		/// 手动触发自适应调整
 		/// </summary>
@@ -2853,20 +2706,7 @@ namespace MusicChange
 			// 初始调整视频大小
 			AdjustVideoToViewSize();
 		}
-		// 当 videoView 或其父容器大小改变时，会自动调用 AdjustVideoToViewSize
-		//private void VideoView_SizeChanged(object sender, EventArgs e)
-		//{
-		//	// 延迟执行调整
-		//	System.Threading.Timer adjustTimer = null;
-		//	adjustTimer = new System.Threading.Timer( (state) =>
-		//	{
-		//		this.Invoke( new Action( ( ) =>
-		//		{
-		//			AdjustVideoToViewSize();
-		//			adjustTimer?.Dispose();
-		//		} ) );
-		//	}, null, 100, System.Threading.Timeout.Infinite );
-		//}
+
 
 		private void autoFitButton_Click(object sender, EventArgs e)
 		{
@@ -2875,7 +2715,7 @@ namespace MusicChange
 
 		#endregion
 
-		//		#region ------------  VLC  视频播放 用c# 控制亮度 对比度 色饱和   ------------
+		#region ------------  VLC  视频播放 用c# 控制亮度 对比度 色饱和   ------------
 
 		//		/*  ​一、技术基础与核心库​
 
@@ -2945,7 +2785,7 @@ namespace MusicChange
 		//		{
 		//			mediaPlayer.VideoAdjustments.Saturation = trackBarSaturation.Value;
 		//		}
-		//		#endregion
+		#endregion
 	}
 }
 
