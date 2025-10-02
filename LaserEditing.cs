@@ -77,6 +77,8 @@ namespace MusicChange
 		private bool darkMode = false;
 		private readonly float[] _playbackRates = { 0.25f, 0.5f, 0.75f, 1.0f, 1.25f, 1.5f, 1.75f, 2.0f, 3.0f, 4.0f };
 		private VlcControl vlcControl = new VlcControl();
+		// 在类中添加上下文菜单
+		private ContextMenuStrip speedContextMenu;
 
 		public LaserEditing()
 		{
@@ -141,11 +143,11 @@ namespace MusicChange
 			sC4.SplitterDistance = weight + 40; //上中			//LoadLibVLCSharpDynamically();  动态加载 LibVLCSharp.WinForms.dll
 			InitializeLibVLC(); // 初始化 LibVLC
 			InitializeUIControls();             // 确保窗体能接收按键事件
-			this.KeyPreview = true;
-			//SetupToolTips();
-			//darkMode = false;
-
+			this.KeyPreview = true;   			//darkMode = false;
+			InitializeSpeedMenu();  // 初始化播放速度菜单
 			ConfigureToolTip(toolTipEx);
+
+
 		}
 
 		#region ------- ToolTip 鼠标进入悬停显示 -------
@@ -2322,250 +2324,196 @@ namespace MusicChange
 		#endregion
 
 		#region  ----------------------  调整播放速度 ---------------
-		//	private void speed_Click(object sender, EventArgs e)  //调整播放速度
-		//	{
-		//		//temp2 = sender as ToolStripMenuItem;
-		//		//temp2.Text = $"播放速率: {mediaPlayer.Rate:F2}x";
-		//		//mediaPlayer.SetRate(Convert.ToSingle(textBox1.Text));
-		//		//temp2.Text = $"播放速率: {mediaPlayer.Rate:F2}x";
-		//		//点击出现 选择框
-
-		//		//ToolStripMenuItem temp2 = sender as ToolStripMenuItem;
-		//		//temp2.Text = $"播放速率: {mediaPlayer.Rate:F2}x";
-
-		//		//temp2.DropDownItems.AddRange( new ToolStripItem[]
-		//		//{
-		//		//	new ToolStripMenuItem("0.25x", null, speed_Click),
-		//		//	new ToolStripMenuItem("0.5x", null, speed_Click),
-		//		//	new ToolStripMenuItem("0.75x", null, speed_Click),
-		//		//	new ToolStripMenuItem("1.0x", null, speed_Click),
-		//		//	new ToolStripMenuItem("1.25x", null, speed_Click),
-		//		//	new ToolStripMenuItem("1.5x", null, speed_Click),
-		//		//	new ToolStripMenuItem("1.75x", null, speed_Click),
-		//		//	new ToolStripMenuItem("2.0x", null, speed_Click),
-
-		//		//} );
-
-		//           mediaPlayer.Rate = Convert.ToSingle(textBox1.Text);
-		//           textBox1.Text = mediaPlayer.Rate.ToString();
-
-		//		if(sender is ToolStripMenuItem temp2)
-		//		{
-		//			temp2.Text = $"播放速率: {mediaPlayer.Rate:F2}x";
-		//			temp2.DropDownItems.AddRange(new ToolStripItem[]
-		//			{
-		//	new ToolStripMenuItem("0.25x", null, speed_Click),
-		//	new ToolStripMenuItem("0.5x", null, speed_Click),
-		//	new ToolStripMenuItem("0.75x", null, speed_Click),
-		//	new ToolStripMenuItem("1.0x", null, speed_Click),
-		//	new ToolStripMenuItem("1.25x", null, speed_Click),
-		//	new ToolStripMenuItem("1.5x", null, speed_Click),
-		//	new ToolStripMenuItem("1.75x", null, speed_Click),
-		//	new ToolStripMenuItem("2.0x", null, speed_Click),
-		//			});
-		//		}
-		//		else
-		//		{
-		//			MessageBox.Show("触发事件的控件不是菜单项", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
-		//		}
-
-		//		try
-		//		{
-		//			if(mediaPlayer == null)
-		//			{
-		//				MessageBox.Show("播放器未初始化", "错误", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-		//				return;
-		//			}
-
-		//			// 检查输入是否有效
-		//			if(float.TryParse(textBox1.Text, out float rate))
-		//			{
-		//				// 限制播放速率范围（通常在 0.25 到 4.0 之间）
-		//				rate = Math.Max(0.25f, Math.Min(4.0f, rate));
-
-		//				// 使用正确的方法设置播放速率
-		//				mediaPlayer.SetRate(rate);
-
-		//				// 更新文本框显示当前速率
-		//				textBox1.Text = mediaPlayer.Rate.ToString("F2");
-
-		//				// 可选：显示状态信息
-		//				if(temp2 != null)
-		//				{
-		//					temp2.Text = $"播放速率: {rate:F2}x";
-		//				}
-		//			}
-		//			else
-		//			{
-		//				MessageBox.Show("请输入有效的数字", "输入错误", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-		//				// 恢复当前速率显示
-		//				textBox1.Text = mediaPlayer.Rate.ToString("F2");
-		//			}
-		//		}
-		//		catch(Exception ex)
-		//		{
-		//			MessageBox.Show($"设置播放速率失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
-		//			// 恢复当前速率显示
-		//			if(mediaPlayer != null)
-		//			{
-		//				textBox1.Text = mediaPlayer.Rate.ToString("F2");
-		//			}
-		//		}
-		//	}
-		//	// 添加预设播放速率按钮
-		//	private void CreatePlaybackRateControls()
-		//	{
-		//		// 如果您想要添加预设速率按钮
-		//		Button[] rateButtons = {
-		//	new Button { Text = "0.5x", Tag = 0.5f },
-		//	new Button { Text = "1.0x", Tag = 1.0f },
-		//	new Button { Text = "1.5x", Tag = 1.5f },
-		//	new Button { Text = "2.0x", Tag = 2.0f }
-		//};
-
-		//		// 为每个按钮添加点击事件
-		//		foreach(Button btn in rateButtons)
-		//		{
-		//			btn.Click += (sender, e) =>
-		//			{
-		//				var button = sender as Button;
-		//				float rate = (float)button.Tag;
-		//				SetPlaybackRate(rate);
-		//			};
-		//		}
-		//	}
-
-		//	// 设置播放速率的通用方法
-		//	private void SetPlaybackRate(float rate)
-		//	{
-		//		try
-		//		{
-		//			if(mediaPlayer == null)
-		//				return;
-
-		//			// 限制播放速率范围
-		//			rate = Math.Max(0.25f, Math.Min(4.0f, rate));
-
-		//			// 设置播放速率
-		//			mediaPlayer.SetRate(rate);
-
-		//			// 更新UI
-		//			if(textBox1 != null)
-		//			{
-		//				textBox1.Text = rate.ToString("F2");
-		//			}
-
-		//			// 可选：更新状态标签
-		//			if(temp2 != null)
-		//			{
-		//				temp2.Text = $"播放速率: {rate:F2}x";
-		//			}
-		//		}
-		//		catch(Exception ex)
-		//		{
-		//			MessageBox.Show($"设置播放速率失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
-		//		}
-		//	}
-
-		//	// 获取当前播放速率
-		//	private float GetCurrentPlaybackRate()
-		//	{
-		//		try
-		//		{
-		//			return mediaPlayer?.Rate ?? 1.0f;
-		//		}
-		//		catch
-		//		{
-		//			return 1.0f;
-		//		}
-		//	}
-
-		//	// 增加播放速率
-		//	private void IncreasePlaybackRate()
-		//	{
-		//		float currentRate = GetCurrentPlaybackRate();
-		//		float[] rates = { 0.25f, 0.5f, 0.75f, 1.0f, 1.25f, 1.5f, 1.75f, 2.0f, 2.5f, 3.0f, 4.0f };
-
-		//		// 找到下一个更高的速率
-		//		foreach(float rate in rates)
-		//		{
-		//			if(rate > currentRate)
-		//			{
-		//				SetPlaybackRate(rate);
-		//				return;
-		//			}
-		//		}
-
-		//		// 如果已经是最高速率，保持不变
-		//		SetPlaybackRate(4.0f);
-		//	}
-
-		//	// 降低播放速率
-		//	private void DecreasePlaybackRate()
-		//	{
-		//		float currentRate = GetCurrentPlaybackRate();
-		//		float[] rates = { 0.25f, 0.5f, 0.75f, 1.0f, 1.25f, 1.5f, 1.75f, 2.0f, 2.5f, 3.0f, 4.0f };
-
-		//		// 找到下一个更低的速率
-		//		for(int i = rates.Length - 1 ;i >= 0 ;i--)
-		//		{
-		//			if(rates[i] < currentRate)
-		//			{
-		//				SetPlaybackRate(rates[i]);
-		//				return;
-		//			}
-		//		}
-
-		//		// 如果已经是最慢速率，保持不变
-		//		SetPlaybackRate(0.25f);
-		//	}
-
-		private void speed_Click(object sender, EventArgs e)  //调整播放速度
+		
+		// 初始化播放速度菜单
+		private void InitializeSpeedMenu( )
 		{
-			try
-			{
-				if(mediaPlayer == null)
-				{
-					MessageBox.Show("播放器未初始化", "错误", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+			speedContextMenu = new ContextMenuStrip();
+
+			// 定义播放速度选项
+			float[] speedRates = { 0.25f, 0.5f, 0.75f, 1.0f, 1.25f, 1.5f, 1.75f, 2.0f, 2.5f, 3.0f, 4.0f };
+
+			foreach (float rate in speedRates) {
+				ToolStripMenuItem item = new ToolStripMenuItem( $"{rate}x" );
+				item.Tag = rate;
+				item.Click += SpeedMenuItem_Click;
+				speedContextMenu.Items.Add( item );
+			}
+
+			// 添加自定义速度选项
+			ToolStripSeparator separator = new ToolStripSeparator();
+			speedContextMenu.Items.Add( separator );
+
+			ToolStripMenuItem customItem = new ToolStripMenuItem( "自定义速度..." );
+			customItem.Click += CustomSpeedMenuItem_Click;
+			speedContextMenu.Items.Add( customItem );
+
+			// 将菜单关联到 speed 按钮
+			if (speed != null) {
+				speed.ContextMenuStrip = speedContextMenu;
+			}
+		}
+		// 播放速度菜单项点击事件
+		private void SpeedMenuItem_Click(object sender, EventArgs e)
+		{
+			try {
+				if (mediaPlayer == null) {
+					MessageBox.Show( "播放器未初始化", "错误", MessageBoxButtons.OK, MessageBoxIcon.Warning );
 					return;
 				}
 
-				// 检查输入是否有效
-				if(float.TryParse(textBox1.Text, out float rate))
-				{
-					// 限制播放速率范围（通常在 0.25 到 4.0 之间）
-					rate = Math.Max(0.25f, Math.Min(4.0f, rate));
+				if (sender is ToolStripMenuItem menuItem && menuItem.Tag is float rate) {
+					// 设置播放速率
+					mediaPlayer.SetRate( rate );
 
-					// 使用正确的方法设置播放速率
-					mediaPlayer.SetRate(rate);
+					// 更新UI
+					if (textBox1 != null) {
+						textBox1.Text = rate.ToString( "F2" );
+					}
 
-					// 更新文本框显示当前速率
-					textBox1.Text = mediaPlayer.Rate.ToString("F2");
-
-					// 更新状态显示
-					if(temp2 != null)
-					{
+					if (temp2 != null) {
 						temp2.Text = $"播放速率: {rate:F2}x";
 					}
-				}
-				else
-				{
-					MessageBox.Show("请输入有效的数字", "输入错误", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-					// 恢复当前速率显示
-					textBox1.Text = mediaPlayer.Rate.ToString("F2");
+
+					// 更新按钮文本或状态
+					if (speed != null) {
+						speed.Text = $"{rate}x";
+					}
 				}
 			}
-			catch(Exception ex)
-			{
-				MessageBox.Show($"设置播放速率失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				// 恢复当前速率显示
-				if(mediaPlayer != null)
-				{
-					textBox1.Text = mediaPlayer.Rate.ToString("F2");
-				}
+			catch (Exception ex) {
+				MessageBox.Show( $"设置播放速率失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error );
 			}
 		}
 
+		// 自定义速度菜单项点击事件
+		private void CustomSpeedMenuItem_Click(object sender, EventArgs e)
+		{
+			// 显示输入对话框让用户输入自定义速度
+			using (Form customSpeedForm = new Form()) {
+				customSpeedForm.Text = "设置自定义播放速度";
+				customSpeedForm.Size = new Size( 300, 150 );
+				customSpeedForm.StartPosition = FormStartPosition.CenterParent;
+				customSpeedForm.FormBorderStyle = FormBorderStyle.FixedDialog;
+				customSpeedForm.MaximizeBox = false;
+				customSpeedForm.MinimizeBox = false;
+
+				Label label = new Label
+				{
+					Text = "请输入播放速度 (0.25 - 4.0):",
+					Location = new Point( 20, 20 ),
+					Size = new Size( 200, 20 )
+				};
+
+				TextBox speedTextBox = new TextBox
+				{
+					Text = mediaPlayer?.Rate.ToString( "F2" ) ?? "1.00",
+					Location = new Point( 20, 45 ),
+					Size = new Size( 100, 20 )
+				};
+
+				Button okButton = new Button
+				{
+					Text = "确定",
+					Location = new Point( 20, 80 ),
+					Size = new Size( 75, 25 ),
+					DialogResult = DialogResult.OK
+				};
+
+				Button cancelButton = new Button
+				{
+					Text = "取消",
+					Location = new Point( 105, 80 ),
+					Size = new Size( 75, 25 ),
+					DialogResult = DialogResult.Cancel
+				};
+
+				customSpeedForm.Controls.AddRange( new Control[] { label, speedTextBox, okButton, cancelButton } );
+
+				customSpeedForm.AcceptButton = okButton;
+				customSpeedForm.CancelButton = cancelButton;
+
+				if (customSpeedForm.ShowDialog() == DialogResult.OK) {
+					if (float.TryParse( speedTextBox.Text, out float customRate )) {
+						// 限制范围
+						customRate = Math.Max( 0.25f, Math.Min( 4.0f, customRate ) );
+						SetPlaybackRate( customRate );
+					}
+					else {
+						MessageBox.Show( "请输入有效的数字", "输入错误", MessageBoxButtons.OK, MessageBoxIcon.Warning );
+					}
+				}
+			}
+		}
+		// 修改 speed 按钮点击事件
+		private void speed_Click(object sender, EventArgs e)
+		{
+			// 如果上下文菜单已初始化，显示菜单
+			if (speedContextMenu != null) {
+				// 在按钮下方显示菜单
+				speedContextMenu.Show( speed, new Point( 0, speed.Height ) );
+			}
+			else {
+				// 如果菜单未初始化，使用原来的文本框方式
+				try {
+					if (mediaPlayer == null) {
+						MessageBox.Show( "播放器未初始化", "错误", MessageBoxButtons.OK, MessageBoxIcon.Warning );
+						return;
+					}
+
+					if (float.TryParse( textBox1.Text, out float rate )) {
+						rate = Math.Max( 0.25f, Math.Min( 4.0f, rate ) );
+						mediaPlayer.SetRate( rate );
+						textBox1.Text = mediaPlayer.Rate.ToString( "F2" );
+
+						if (temp2 != null) {
+							temp2.Text = $"播放速率: {rate:F2}x";
+						}
+					}
+					else {
+						MessageBox.Show( "请输入有效的数字", "输入错误", MessageBoxButtons.OK, MessageBoxIcon.Warning );
+						textBox1.Text = mediaPlayer.Rate.ToString( "F2" );
+					}
+				}
+				catch (Exception ex) {
+					MessageBox.Show( $"设置播放速率失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error );
+					if (mediaPlayer != null) {
+						textBox1.Text = mediaPlayer.Rate.ToString( "F2" );
+					}
+				}
+			}
+		}
+		// 如果您想要为菜单项添加图标
+		private void InitializeSpeedMenuWithIcons( )
+		{
+			speedContextMenu = new ContextMenuStrip();
+
+			float[] speedRates = { 0.25f, 0.5f, 0.75f, 1.0f, 1.25f, 1.5f, 1.75f, 2.0f, 2.5f, 3.0f, 4.0f };
+
+			foreach (float rate in speedRates) {
+				ToolStripMenuItem item = new ToolStripMenuItem( $"{rate}x" );
+				item.Tag = rate;
+				item.Click += SpeedMenuItem_Click;
+
+				// 可选：为当前速率添加选中标记
+				if (mediaPlayer != null && Math.Abs( rate - mediaPlayer.Rate ) < 0.01f) {
+					item.Checked = true;
+				}
+
+				speedContextMenu.Items.Add( item );
+			}
+
+			ToolStripSeparator separator = new ToolStripSeparator();
+			speedContextMenu.Items.Add( separator );
+
+			ToolStripMenuItem customItem = new ToolStripMenuItem( "自定义速度..." );
+			customItem.Click += CustomSpeedMenuItem_Click;
+			speedContextMenu.Items.Add( customItem );
+
+			if (speed != null) {
+				speed.ContextMenuStrip = speedContextMenu;
+			}
+		}
 		// 设置播放速率的通用方法
 		private void SetPlaybackRate(float rate)
 		{

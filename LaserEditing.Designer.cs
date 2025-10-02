@@ -82,6 +82,7 @@ namespace MusicChange
             this.panel1 = new System.Windows.Forms.Panel();
             this.progressBar = new System.Windows.Forms.TrackBar();
             this.volumeControlPanel = new System.Windows.Forms.Panel();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.speed = new DevComponents.DotNetBar.ButtonX();
             this.color = new DevComponents.DotNetBar.ButtonX();
             this.vieweMax = new DevComponents.DotNetBar.ButtonX();
@@ -95,7 +96,6 @@ namespace MusicChange
             this.zoomOutButton = new DevComponents.DotNetBar.ButtonX();
             this.stopButton = new System.Windows.Forms.Button();
             this.muteButton = new DevComponents.DotNetBar.ButtonX();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.textBoxX1 = new DevComponents.DotNetBar.Controls.TextBoxX();
             this.temp2 = new System.Windows.Forms.TextBox();
             this.temp1 = new System.Windows.Forms.TextBox();
@@ -802,7 +802,6 @@ namespace MusicChange
             // sC4.Panel2
             // 
             this.sC4.Panel2.BackColor = System.Drawing.Color.DimGray;
-            this.sC4.Panel2.Controls.Add(this.textBox1);
             this.sC4.Panel2.Controls.Add(this.textBoxX1);
             this.sC4.Panel2.Controls.Add(this.temp2);
             this.sC4.Panel2.Controls.Add(this.temp1);
@@ -855,6 +854,7 @@ namespace MusicChange
             // volumeControlPanel
             // 
             this.volumeControlPanel.BackColor = System.Drawing.Color.Black;
+            this.volumeControlPanel.Controls.Add(this.textBox1);
             this.volumeControlPanel.Controls.Add(this.speed);
             this.volumeControlPanel.Controls.Add(this.color);
             this.volumeControlPanel.Controls.Add(this.vieweMax);
@@ -878,13 +878,20 @@ namespace MusicChange
             this.volumeControlPanel.Size = new System.Drawing.Size(650, 30);
             this.volumeControlPanel.TabIndex = 1;
             // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(571, 4);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(41, 25);
+            this.textBox1.TabIndex = 5;
+            // 
             // speed
             // 
             this.speed.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
             this.speed.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.speed.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-            this.speed.Location = new System.Drawing.Point(553, 4);
+            this.speed.Location = new System.Drawing.Point(540, 4);
             this.speed.Margin = new System.Windows.Forms.Padding(2);
             this.speed.Name = "speed";
             this.speed.Size = new System.Drawing.Size(26, 26);
@@ -901,7 +908,7 @@ namespace MusicChange
             this.color.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.color.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-            this.color.Location = new System.Drawing.Point(510, 4);
+            this.color.Location = new System.Drawing.Point(499, 4);
             this.color.Margin = new System.Windows.Forms.Padding(2);
             this.color.Name = "color";
             this.color.Size = new System.Drawing.Size(26, 26);
@@ -1021,7 +1028,7 @@ namespace MusicChange
             this.zoomInButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.zoomInButton.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-            this.zoomInButton.Location = new System.Drawing.Point(480, 4);
+            this.zoomInButton.Location = new System.Drawing.Point(469, 4);
             this.zoomInButton.Margin = new System.Windows.Forms.Padding(2);
             this.zoomInButton.Name = "zoomInButton";
             this.zoomInButton.Size = new System.Drawing.Size(26, 26);
@@ -1083,13 +1090,6 @@ namespace MusicChange
             this.muteButton.SymbolSize = 14F;
             this.muteButton.TabIndex = 3;
             this.muteButton.Click += new System.EventHandler(this.MuteButton_Click);
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(52, 566);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 25);
-            this.textBox1.TabIndex = 5;
             // 
             // textBoxX1
             // 
