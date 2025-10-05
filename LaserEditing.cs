@@ -22,11 +22,11 @@ using Point = System.Drawing.Point;
 #region  ------------- 全局变量 -------------
 namespace MusicChange
 {
-	public partial class LaserEditing:Form
+	public partial class LaserEditing : Form
 	{       // Windows API 函数
-		[DllImport("user32.dll")]
+		[DllImport( "user32.dll" )]
 		private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
-		[DllImport("user32.dll")]
+		[DllImport( "user32.dll" )]
 		private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
 		// 快捷键ID
 		//private const int HOTKEY_ID = 1;
@@ -39,9 +39,9 @@ namespace MusicChange
 		private System.Drawing.Point dragStartPoint;
 		private const int borderSize = 10;
 		private FormWindowState previousWindowState;
-		[DllImport("user32.dll")]
-		public static extern bool ReleaseCapture();
-		[DllImport("user32.dll")]
+		[DllImport( "user32.dll" )]
+		public static extern bool ReleaseCapture( );
+		[DllImport( "user32.dll" )]
 		public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
 		private const int WM_NCLBUTTONDOWN = 0xA1;
 		private const int HTCAPTION = 0x2;
@@ -80,14 +80,14 @@ namespace MusicChange
 		// 在类中添加上下文菜单
 		private ContextMenuStrip speedContextMenu;
 
-		public LaserEditing()
+
+		public LaserEditing( )
 		{
 			AutoScaleMode = AutoScaleMode.Dpi; // 根据系统DPI自动缩放
 			InitializeComponent();
 			IsfirstPlaying = false;
-			this.DoubleBuffered = true;   //button2.FlatAppearance.BorderSize = 0; // 边框大小设为 0//qrcode1.FlatAppearance.BorderSize = 0;   // 边框大小设为 0  // 初始化 VLC  添加 亮度  对比度 控制 8-12  //vlcControl.BeginInit();
-										  //vlcControl.VlcLibDirectory = new DirectoryInfo(@"C:\VLC\Lib"); // LibVLC 库路径
-										  //vlcControl.EndInit();	  //this.Controls.Add(vlcControl);
+
+
 
 		}
 		#region  initlibvlc( )
@@ -128,14 +128,14 @@ namespace MusicChange
 		{
 			splitContainer5mouseDown = false;   //splitContainer1.Panel2MinSize = 400;	//buttonx8.BackColor = System.Drawing.Color.Gray;
 			Ismaterial = true;  // 默认选择当前素材
-			buttonX3_Click(null, null); // 设置当前素材按钮样式	this.ClientSize = new System.Drawing.Size( 1900, 1080 );
+			buttonX3_Click( null, null ); // 设置当前素材按钮样式	this.ClientSize = new System.Drawing.Size( 1900, 1080 );
 			OfficialMaterialSwitch(); // 初始化官方素材开关状态
 			gwidth = this.Width = Screen.PrimaryScreen.WorkingArea.Width; // 获取屏幕工作区宽度
 			temp.Text = "屏幕工作区宽度: " + gwidth.ToString();
 			temp.Text = filePath;
 			temp1.Text = "屏幕工作区高度: " + Screen.PrimaryScreen.WorkingArea.Height.ToString();
 			gheight = this.Height = Screen.PrimaryScreen.WorkingArea.Height; // 获取屏幕工作区高度
-			this.Size = new System.Drawing.Size(1550, 900); // 设置主窗口初始大小
+			this.Size = new System.Drawing.Size( 1550, 900 ); // 设置主窗口初始大小
 			lwidth = this.Size.Width;//			lheight = this.Size.Height;
 			int weight = lwidth / 3; // 设置窗口宽度  
 			this.sC3.Panel1MinSize = 300;
@@ -143,10 +143,11 @@ namespace MusicChange
 			sC4.SplitterDistance = weight + 40; //上中			//LoadLibVLCSharpDynamically();  动态加载 LibVLCSharp.WinForms.dll
 			InitializeLibVLC(); // 初始化 LibVLC
 			InitializeUIControls();             // 确保窗体能接收按键事件
-			this.KeyPreview = true;   			//darkMode = false;
+			this.KeyPreview = true;             //darkMode = false;
 			InitializeSpeedMenu();  // 初始化播放速度菜单
-			ConfigureToolTip(toolTipEx);
-
+			ConfigureToolTip( toolTipEx );
+			// 	作用：用于存储 VideoView 实例对象•	用途：如果启用，可以动态创建和管理 VideoView 控件实例
+			//videoViewType = libVLCSharpWinFormsAssembly.GetType("LibVLCSharp.WinForms.VideoView");
 
 		}
 
@@ -161,62 +162,62 @@ namespace MusicChange
 			toolTip1.IsBalloon = true;    // 使用气泡样式
 			toolTip1.ToolTipIcon = ToolTipIcon.Info;      // 提示框图标  info  Warning
 			toolTip1.ToolTipTitle = "提示"; // 提示框标题
-			toolTip1.BackColor = Color.FromArgb(204, 200, 0); // 设置背景颜色
-															  //toolTip1.TitleFont = new Font(	familyName: "微软雅黑",  emSize: 16,     // 字体大小
-			toolTip1.TitleFont = new Font("微软雅黑", 16f); //	style: FontStyle.Bold | FontStyle.Italic ); // 字体样式（可组合）
+			toolTip1.BackColor = Color.FromArgb( 204, 200, 0 ); // 设置背景颜色
+																//toolTip1.TitleFont = new Font(	familyName: "微软雅黑",  emSize: 16,     // 字体大小
+			toolTip1.TitleFont = new Font( "微软雅黑", 16f ); //	style: FontStyle.Bold | FontStyle.Italic ); // 字体样式（可组合）
 			toolTip1.ForeColor = Color.Aqua; // 设置前景颜色
-			toolTip1.TitleColor = Color.FromArgb(32, 200, 0); // 设置标题颜色 
+			toolTip1.TitleColor = Color.FromArgb( 32, 200, 0 ); // 设置标题颜色 
 			toolTip1.CornerRadius = 10; // 设置圆角半径
 			toolTip1.ShadowSize = 10; // 设置阴影大小
-			toolTip1.ContentFont = new Font("Segoe UI", 18f, FontStyle.Regular);   // 设置内容字体和颜色
+			toolTip1.ContentFont = new Font( "Segoe UI", 18f, FontStyle.Regular );   // 设置内容字体和颜色
 			toolTip1.ContentColor = Color.WhiteSmoke;
 			// 设置内容填充          toolTip1.ContentFill = new SolidBrush(Color.FromArgb(50, 50, 50));
 			//toolTip1.Padding = new Padding( 10 ); // 上下左右各增加10像素内边距
 			//toolTip1.Padding = new Padding
 
-			toolTip1.BackColor1 = Color.FromArgb(50, 50, 80);
-			toolTip1.BackColor2 = Color.FromArgb(30, 30, 50);
+			toolTip1.BackColor1 = Color.FromArgb( 50, 50, 80 );
+			toolTip1.BackColor2 = Color.FromArgb( 30, 30, 50 );
 			toolTip1.BorderColor = Color.SteelBlue;
 
-			toolTip1.SetToolTip(playPauseButton, "视频播放开始和停止");
-			toolTip1.SetToolTip(stopButton, "停止播放视频");
-			toolTip1.SetToolTip(buttonX2, "crf（Constant Rate Factor，恒定码率因子）\r\n•\t作用：控制视频压缩的画质和文件大小。\r\n•\t取值范围：0~51，常用范围为 18~28。\r\n•\t数值越小，画质越高，文件越大。\r\n•\t数值越大，画质越低，文件越小。\r\n•\t一般推荐：高质量用 18~22，普通用 23~28。");
-			toolTip1.SetToolTip(color, "选择播放速度");
-			toolTip1.SetToolTip(temp2, "preset（预设编码速度）\r\n•\t作用：控制编码速度与压缩效率的平衡。\r\n•\t可选值（从快到慢）：\r\n•\tultrafast, superfast, veryfast, faster, fast, medium, slow, slower, veryslow\r\n•\t说明：\r\n•\t越快（如 ultrafast），编码速度快，但文件大、画质略低。\r\n•\t越慢（如 veryslow），编码速度慢，但文件更小、画质更好。\r\n•\t默认值是 medium，一般推荐用 fast、medium 或 slow。");
-			toolTip1.SetToolTip(zoomInButton, "放大视频");
-			toolTip1.SetToolTip(zoomOutButton, "缩小视频画面");
-			toolTip1.SetToolTip(volumeControlPanel, "音量控制");
-			toolTip1.SetToolTip(volumeTrackBar, "音量控制");
-			toolTip1.SetToolTip(muteButton, "静音");
-			toolTip1.SetToolTip(fitToWindowButton, "适应 窗口大小");
-			toolTip1.SetToolTip(vieweMax, "使用外部播放器！");
-			toolTip1.SetToolTip(speed, "设置视频播放速度");
-			toolTip1.SetToolTip(color, "设置视频图像属性\n亮度、对比度、饱和度和色调\n  ");
+			toolTip1.SetToolTip( playPauseButton, "视频播放开始和停止" );
+			toolTip1.SetToolTip( stopButton, "停止播放视频" );
+			toolTip1.SetToolTip( buttonX2, "crf（Constant Rate Factor，恒定码率因子）\r\n•\t作用：控制视频压缩的画质和文件大小。\r\n•\t取值范围：0~51，常用范围为 18~28。\r\n•\t数值越小，画质越高，文件越大。\r\n•\t数值越大，画质越低，文件越小。\r\n•\t一般推荐：高质量用 18~22，普通用 23~28。" );
+			toolTip1.SetToolTip( color, "选择播放速度" );
+			toolTip1.SetToolTip( temp2, "preset（预设编码速度）\r\n•\t作用：控制编码速度与压缩效率的平衡。\r\n•\t可选值（从快到慢）：\r\n•\tultrafast, superfast, veryfast, faster, fast, medium, slow, slower, veryslow\r\n•\t说明：\r\n•\t越快（如 ultrafast），编码速度快，但文件大、画质略低。\r\n•\t越慢（如 veryslow），编码速度慢，但文件更小、画质更好。\r\n•\t默认值是 medium，一般推荐用 fast、medium 或 slow。" );
+			toolTip1.SetToolTip( zoomInButton, "放大视频" );
+			toolTip1.SetToolTip( zoomOutButton, "缩小视频画面" );
+			toolTip1.SetToolTip( volumeControlPanel, "音量控制" );
+			toolTip1.SetToolTip( volumeTrackBar, "音量控制" );
+			toolTip1.SetToolTip( muteButton, "静音" );
+			toolTip1.SetToolTip( fitToWindowButton, "适应 窗口大小" );
+			toolTip1.SetToolTip( vieweMax, "使用外部播放器！" );
+			toolTip1.SetToolTip( speed, "设置视频播放速度" );
+			toolTip1.SetToolTip( color, "设置视频图像属性\n亮度、对比度、饱和度和色调\n  " );
 
 			// 为控件设置提示
-			toolTip1.SetToolTip(vieweMax, "保存文档",
+			toolTip1.SetToolTip( vieweMax, "保存文档",
 				"将当前文档保存到磁盘\n快捷键: Ctrl+S",
-				Properties.Resources.loading);
+				Properties.Resources.loading );
 
 			// 为按钮1设置提示（使用全局默认字体和颜色）
-			toolTip1.SetToolTip(muteButton, "保存文档",
+			toolTip1.SetToolTip( muteButton, "保存文档",
 				"将当前文档保存到磁盘\n快捷键: Ctrl+S",
-				Properties.Resources.右转1501);
+				Properties.Resources.右转1501 );
 
 			// 为按钮2设置自定义字体和颜色
-			toolTip1.SetToolTip(vieweMax, "删除项目",
+			toolTip1.SetToolTip( vieweMax, "删除项目",
 				"永久删除选定项目\n此操作无法撤销!",
 				Properties.Resources.QRcode,
-				new Font("Arial", 12, FontStyle.Bold),  // 自定义标题字体
+				new Font( "Arial", 12, FontStyle.Bold ),  // 自定义标题字体
 				Color.Red,                             // 自定义标题颜色
-				new Font("Consolas", 10),              // 自定义内容字体
-				Color.Yellow);                         // 自定义内容颜色
+				new Font( "Consolas", 10 ),              // 自定义内容字体
+				Color.Yellow );                         // 自定义内容颜色
 
 			// 为文本框设置提示（无图标）
-			toolTip1.SetToolTip(vieweMax, "视频在独立视频程序播放");
+			toolTip1.SetToolTip( vieweMax, "视频在独立视频程序播放" );
 
 			// 普通文本换行控制
-			toolTip1.SetToolTip(buttonX2, "这是一个较长的提示文本，\n通过换行来控制显示宽度。");
+			toolTip1.SetToolTip( buttonX2, "这是一个较长的提示文本，\n通过换行来控制显示宽度。" );
 
 			// 或者使用 HTML 格式（需要设置 OwnerDraw 为 true）
 			toolTip1.OwnerDraw = true;
@@ -224,37 +225,33 @@ namespace MusicChange
 			{
 				e.DrawBackground();
 				e.DrawBorder();
-				e.Graphics.DrawString(e.ToolTipText, e.Font, System.Drawing.Brushes.Black,
-									 new RectangleF(e.Bounds.X, e.Bounds.Y, 200, e.Bounds.Height));
+				e.Graphics.DrawString( e.ToolTipText, e.Font, System.Drawing.Brushes.Black,
+									 new RectangleF( e.Bounds.X, e.Bounds.Y, 200, e.Bounds.Height ) );
 			};
-			toolTip1.SetToolTip(buttonX2, "提示", "这是一个可以自动换行的长文本提示，当达到指定宽度时会自动换行显示...");
+			toolTip1.SetToolTip( buttonX2, "提示", "这是一个可以自动换行的长文本提示，当达到指定宽度时会自动换行显示..." );
 
 		}
 
 		#endregion
 
 		#region   ------------初始化 LibVLC 核心 播放视频文件 播放 继续 停止等	 -----------------	
-		//要从视频中获取音频的左右声道数值并显示，LibVLC 本身并不直接提供左右声道音量的实时数据接口。但可以通过以下方法实现一个近似的解
 
-		private void InitializeLibVLC()
+		private void InitializeLibVLC( )
 		{
-			try
-			{
+			try {
 				Core.Initialize();                  // 创建 LibVLC 实例
-				libVLC = new LibVLC();  //启用硬件加速：  "--avcodec-hw=dxva2"
-				if(libVLC == null)
-					return;
-				// 创建 MediaPlayer 实例
-				mediaPlayer = new MediaPlayer(libVLC);
-				if(mediaPlayer == null)
-				{
-					MessageBox.Show("播放器未正确初始化", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				libVLC = new LibVLC( "--avcodec-hw=dxva2" );  //启用硬件加速：  "--avcodec-hw=dxva2"
+				if (libVLC == null) {
+					MessageBox.Show( "LibVLC 未正确初始化", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error );
 					return;
 				}
-				//mediaPlayer.VideoAdjustments.Brightness = 1.2f; // 亮度 (0.0-2.0)
-				// 设置 VideoView
-				if(videoView1 != null)
-				{
+				// 创建 MediaPlayer 实例
+				mediaPlayer = new MediaPlayer( libVLC );
+				if (mediaPlayer == null) {
+					MessageBox.Show( "播放器未正确初始化", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error );
+					return;
+				}
+				if (videoView1 != null) {
 					videoView1.MediaPlayer = mediaPlayer;
 				}
 
@@ -264,106 +261,117 @@ namespace MusicChange
 				mediaPlayer.Paused += OnMediaPlayerPaused;
 				mediaPlayer.Stopped += OnMediaPlayerStopped;
 				mediaPlayer.EndReached += OnMediaPlayerEndReached;
+				/*
+				事件说明
+				1. mediaPlayer.TimeChanged += OnMediaPlayerTimeChanged;
+				•	作用：当媒体播放位置（时间）发生变化时触发
+				•	用途：更新进度条、时间标签等UI元素
+				•	触发频率：播放过程中频繁触发（通常每秒多次）
+				2. mediaPlayer.LengthChanged += OnMediaPlayerLengthChanged;
+				•	作用：当媒体总长度确定或改变时触发
+				•	用途：更新总时间显示、设置进度条最大值
+				•	触发时机：媒体加载完成时或流媒体长度变化时
+				3. mediaPlayer.Playing += OnMediaPlayerPlaying;
+				•	作用：当媒体开始播放时触发
+				•	用途：更新播放按钮状态、初始化播放相关UI
+				•	触发时机：调用 Play() 方法后
+				4. mediaPlayer.Paused += OnMediaPlayerPaused;
+				•	作用：当媒体暂停时触发
+				•	用途：更新播放按钮图标、暂停相关动画等
+				•	触发时机：调用 Pause() 方法后
+				5. mediaPlayer.Stopped += OnMediaPlayerStopped;
+				•	作用：当媒体停止时触发
+				•	用途：重置进度条、更新按钮状态
+				•	触发时机：调用 Stop() 方法后
+				6. mediaPlayer.EndReached += OnMediaPlayerEndReached;
+				•	作用：当媒体播放结束时触发
+				•	用途：自动播放下一个文件、重置播放状态
+				•	触发时机：媒体播放到末尾时
+				1.	线程安全：这些事件通常在后台线程触发，需要使用 InvokeRequired 和 Invoke 确保UI更新在主线程进行
+2.	性能考虑：TimeChanged 事件触发非常频繁，通常使用定时器而不是直接处理该事件来更新UI
+3.	资源清理：在窗体关闭时应该取消订阅这些事件以避免内存泄漏：
+				*/
 
 			}
-			catch
-			{
+			catch {
 				// 静默处理初始化异常  				CleanupResources();
 			}
 		}
 		// 修复播放视频方法
-		public void PlayVideo()
+		public void PlayVideo( )
 		{
-			try
-			{
-				if(libVLC == null || mediaPlayer == null)
-				{
-					MessageBox.Show("播放器未正确初始化", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			try {
+				if (libVLC == null || mediaPlayer == null) {
+					MessageBox.Show( "播放器未正确初始化", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error );
 					return;
 				}
 
-				if(string.IsNullOrEmpty(filePath))
-				{
-					MessageBox.Show("文件路径不能为空", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				if (string.IsNullOrEmpty( filePath )) {
+					MessageBox.Show( "文件路径不能为空", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error );
 					return;
 				}
 
-				// 确保 NAudio 组件已启动
-				//if (waveOut != null && waveOut.PlaybackState != PlaybackState.Playing) {
-				//	waveOut.Play();
-				//}
 				mediaPlayer.Stop();
-				using var media = new Media(libVLC, filePath, FromType.FromPath);
-				if(media == null)
-				{
-					throw new InvalidOperationException("无法创建媒体对象");
+				using var media = new Media( libVLC, filePath, FromType.FromPath );
+				if (media == null) {
+					throw new InvalidOperationException( "无法创建媒体对象" );
 				}
-				progressTimer.Start();      //_mediaPlayer.bringToF	//_videoView.BringToFront();
-				mediaPlayer.Play(media);
+				progressTimer.Start();
+				mediaPlayer.Play( media );
 				mediaPlayer.Mute = false;
-				SetVolume(volumeTrackBar.Value);
+				SetVolume( volumeTrackBar.Value );
 			}
-			catch(Exception ex)
-			{
-				MessageBox.Show($"播放视频失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			catch (Exception ex) {
+				MessageBox.Show( $"播放视频失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error );
 			}
 		}
 		// 计算 RMS（均方根值）- 优化版本
 		private double CalculateRMS(short[] samples)
 		{
-			if(samples == null || samples.Length == 0)
+			if (samples == null || samples.Length == 0)
 				return 0;
 
-			try
-			{
+			try {
 				// 优化计算，避免使用 LINQ 以提高性能
 				long sum = 0;
-				foreach(short sample in samples)
-				{
+				foreach (short sample in samples) {
 					sum += (long)sample * sample;
 				}
 
 				double mean = (double)sum / samples.Length;
-				return Math.Sqrt(mean) / 100; // 调整比例以适应进度条范围
+				return Math.Sqrt( mean ) / 100; // 调整比例以适应进度条范围
 			}
-			catch
-			{
+			catch {
 				return 0;
 			}
 		}
 
 		private void PlayButton_Click(object sender, EventArgs e)
 		{
-			var media = new Media(libVLC, "your_video_file.mp4", FromType.FromPath);
-			mediaPlayer.Play(media);
+			var media = new Media( libVLC, "your_video_file.mp4", FromType.FromPath );
+			mediaPlayer.Play( media );
 		}
 
 		protected override void OnFormClosing(FormClosingEventArgs e)
 		{
 			//_mediaPlayer.Dispose();			//_libVLC.Dispose();			CleanupResources();  // 清理资源 +++++++++ 的
-			base.OnFormClosing(e);
+			base.OnFormClosing( e );
 		}
-		private void InitializeUIControls()
+		private void InitializeUIControls( )
 		{
-			// 初始化音量控制UI
-			//_videoView.BringToFront();
-			//_videoView.SendToBack();   //发送到父容器的最底层（降低其 Z 顺序，使其被其他同级控件覆盖）
-			//InitializeChannelDisplay();
-			// 初始化视频缩放控制UI
-			//InitializeZoomControls();
+
 			progressTimer.Start();
 			volumeTrackBar.Value = 80;
-			SetVolume(80);
+			SetVolume( 80 );
 			volumeTrackBar.Value = 80;
 		}
 		private void VolumeTrackBar_Scroll(object sender, EventArgs e)
 		{
 			int volume = volumeTrackBar.Value;
 			volumenum.Text = volume.ToString();
-			SetVolume(volume);
+			SetVolume( volume );
 			// 如果之前是静音状态，则取消静音
-			if(isMuted)
-			{
+			if (isMuted) {
 				isMuted = false;
 				mediaPlayer.Mute = isMuted;
 				//_muteButton.Text = "Mute";
@@ -372,10 +380,9 @@ namespace MusicChange
 		// 静音按钮点击事件处理程序
 		private void MuteButton_Click1(object sender, EventArgs e)
 		{
-			if(mediaPlayer == null)
+			if (mediaPlayer == null)
 				return;
-			if(!isMuted)
-			{
+			if (!isMuted) {
 				// 保存当前音量并静音
 				previousVolume = mediaPlayer.Volume;
 				mediaPlayer.Volume = 0;
@@ -384,8 +391,7 @@ namespace MusicChange
 				muteButton.SymbolColor = Color.Salmon;
 				volumeTrackBar.Value = 0;
 			}
-			else
-			{
+			else {
 				// 恢复之前音量
 				mediaPlayer.Volume = previousVolume;
 				isMuted = false;
@@ -398,11 +404,10 @@ namespace MusicChange
 		private void VolumeDownButton_Click(object sender, EventArgs e)
 		{
 			int currentVolume = mediaPlayer?.Volume ?? 0;
-			int newVolume = Math.Max(0, currentVolume - 1);
-			SetVolume(newVolume);
+			int newVolume = Math.Max( 0, currentVolume - 1 );
+			SetVolume( newVolume );
 			// 如果之前是静音状态，则取消静音
-			if(isMuted)
-			{
+			if (isMuted) {
 				isMuted = false;
 				mediaPlayer.Mute = isMuted;
 				//_muteButton.Text = "Mute";
@@ -412,14 +417,13 @@ namespace MusicChange
 		private void ZoomInButton_Click(object sender, EventArgs e)
 		{
 			currentZoomFactor = mediaPlayer.Scale;
-			if(currentZoomFactor == 0)
-			{
+			if (currentZoomFactor == 0) {
 				currentZoomFactor = 0.4f;
 				ApplyZoom();
 				return;
 			}
 			currentZoomFactor += ZOOM_INCREMENT;
-			if(currentZoomFactor > MAX_ZOOM)
+			if (currentZoomFactor > MAX_ZOOM)
 				currentZoomFactor = MAX_ZOOM;
 			ApplyZoom();
 		}
@@ -427,10 +431,10 @@ namespace MusicChange
 		private void ZoomOutButton_Click(object sender, EventArgs e)
 		{
 			currentZoomFactor = mediaPlayer.Scale;
-			if(currentZoomFactor <= 0)
+			if (currentZoomFactor <= 0)
 				return;
 			currentZoomFactor -= ZOOM_INCREMENT;
-			if(currentZoomFactor < MIN_ZOOM)
+			if (currentZoomFactor < MIN_ZOOM)
 				currentZoomFactor = MIN_ZOOM;
 			ApplyZoom();
 		}
@@ -443,12 +447,11 @@ namespace MusicChange
 		/// <summary>
 		/// 应用当前缩放因子到视频显示
 		/// </summary>
-		private void ApplyZoom()
+		private void ApplyZoom( )
 		{
-			if(mediaPlayer == null || videoView1 == null)
+			if (mediaPlayer == null || videoView1 == null)
 				return;
-			try
-			{
+			try {
 				// 这里我们通过调整视频视图的大小来实现缩放效果
 				// 实际的 VLC 缩放需要通过其 API 设置
 				UpdateZoomLabel();
@@ -456,16 +459,15 @@ namespace MusicChange
 				// 如果需要通过 VLC API 实现真正的缩放，可以使用以下方法：
 				mediaPlayer.Scale = currentZoomFactor;
 			}
-			catch(Exception ex)
-			{
-				MessageBox.Show($"应用缩放失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			catch (Exception ex) {
+				MessageBox.Show( $"应用缩放失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error );
 			}
 			temp2.Text = $"缩放: {currentZoomFactor:P0}"; // 显示为百分比
 		}
 		/// <summary>
 		/// 更新缩放标签显示
 		/// </summary>
-		private void UpdateZoomLabel()
+		private void UpdateZoomLabel( )
 		{
 			// 如果您有一个显示缩放级别的标签，可以在这里更新它
 			// 例如：zoomLabel.Text = $"{_currentZoomFactor:P0}"; // 显示为百分比
@@ -473,25 +475,21 @@ namespace MusicChange
 		// 在播放器事件处理中添加声道更新
 		private void OnMediaPlayerPlaying(object sender, EventArgs e)
 		{
-			if(InvokeRequired)
-			{
-				Invoke(new Action(() =>
+			if (InvokeRequired) {
+				Invoke( new Action( ( ) =>
 		{
 			// 更新按钮状态
 			// 可以在这里初始化声道显示 						UpdateChannelDisplay(50, 50); // 默认显示
-		}));
+		} ) );
 			}
-			else
-			{
+			else {
 				//UpdateChannelDisplay(50, 50); // 默认显示
 			}
 		}
-		//-----------------------------------------------
 		// 定时器更新进度
 		private void ProgressTimer_Tick(object sender, EventArgs e)
 		{
-			if(mediaPlayer != null && !isSeeking)
-			{
+			if (mediaPlayer != null && !isSeeking) {
 				UpdateProgress();
 
 				// 更新声道显示（实际应用中应从音频数据获取）
@@ -505,45 +503,39 @@ namespace MusicChange
 		/// <returns>对应的颜色</returns>
 		private Color GetChannelColor(int level)
 		{
-			if(level < 30)
+			if (level < 30)
 				return Color.LimeGreen;
-			else if(level < 70)
+			else if (level < 70)
 				return Color.Yellow;
 			else
 				return Color.Red;
 		}
 		public void SetVolume(int volume)
 		{
-			try
-			{
-				if(mediaPlayer != null)
-				{
-					int clampedVolume = Math.Max(0, Math.Min(100, volume));
+			try {
+				if (mediaPlayer != null) {
+					int clampedVolume = Math.Max( 0, Math.Min( 100, volume ) );
 					mediaPlayer.Volume = clampedVolume;
 
 					// 更新音量进度条（避免触发Scroll事件）
-					if(volumeTrackBar.Value != clampedVolume)
-					{
+					if (volumeTrackBar.Value != clampedVolume) {
 						volumeTrackBar.Value = clampedVolume;
 					}
 
 					// 同时更新声道显示
 				}
 			}
-			catch(Exception ex)
-			{
-				MessageBox.Show($"设置音量失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			catch (Exception ex) {
+				MessageBox.Show( $"设置音量失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error );
 			}
 		}
 		// 静音按钮点击事件处理程序
 		private void MuteButton_Click(object sender, EventArgs e)
 		{
-			if(mediaPlayer == null)
+			if (mediaPlayer == null)
 				return;
-			try
-			{
-				if(!isMuted)
-				{                 // 保存当前音量并静音
+			try {
+				if (!isMuted) {                 // 保存当前音量并静音
 					previousVolume = mediaPlayer.Volume;
 					//mediaPlayer.Volume = 1;
 					isMuted = true;
@@ -552,8 +544,7 @@ namespace MusicChange
 
 					//volumeTrackBar.Value = 1; 	// 更新声道显示为静音状态  	UpdateChannelDisplay(0, 0);
 				}
-				else
-				{      // 恢复之前音量
+				else {      // 恢复之前音量
 					mediaPlayer.Volume = previousVolume;
 					isMuted = false;
 					mediaPlayer.Mute = isMuted;
@@ -562,9 +553,8 @@ namespace MusicChange
 					// 更新声道显示为恢复的音量 	UpdateChannelDisplay(previousVolume, previousVolume);
 				}
 			}
-			catch(Exception ex)
-			{
-				MessageBox.Show($"切换静音状态失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			catch (Exception ex) {
+				MessageBox.Show( $"切换静音状态失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error );
 			}
 		}
 		// 播放器事件处理
@@ -574,60 +564,52 @@ namespace MusicChange
 		}
 		private void OnMediaPlayerLengthChanged(object sender, MediaPlayerLengthChangedEventArgs e)
 		{
-			if(InvokeRequired)
-			{
-				Invoke(new Action(() => UpdateTotalTime(e.Length)));
+			if (InvokeRequired) {
+				Invoke( new Action( ( ) => UpdateTotalTime( e.Length ) ) );
 			}
-			else
-			{
-				UpdateTotalTime(e.Length);
+			else {
+				UpdateTotalTime( e.Length );
 			}
 		}
 		private void OnMediaPlayerPlaying1(object sender, EventArgs e)
 		{
-			if(InvokeRequired)
-			{
-				Invoke(new Action(() =>
-	  {
-		  // 更新按钮状态
-	  }));
+			if (InvokeRequired) {
+				Invoke( new Action( ( ) =>
+		{
+			// 更新按钮状态
+		} ) );
 			}
 		}
 		private void OnMediaPlayerPaused(object sender, EventArgs e)
 		{
-			if(InvokeRequired)
-			{
-				Invoke(new Action(() =>
-	  {
-		  // 更新按钮状态
-	  }));
+			if (InvokeRequired) {
+				Invoke( new Action( ( ) =>
+		{
+			// 更新按钮状态
+		} ) );
 			}
 		}
 		private void OnMediaPlayerStopped(object sender, EventArgs e)
 		{
-			if(InvokeRequired)
-			{
-				Invoke(new Action(() =>
-	  {
-		  ResetProgress();
-	  }));
+			if (InvokeRequired) {
+				Invoke( new Action( ( ) =>
+		{
+			ResetProgress();
+		} ) );
 			}
-			else
-			{
+			else {
 				ResetProgress();
 			}
 		}
 		private void OnMediaPlayerEndReached(object sender, EventArgs e)
 		{
-			if(InvokeRequired)
-			{
-				Invoke(new Action(() =>
-	  {
-		  ResetProgress();
-	  }));
+			if (InvokeRequired) {
+				Invoke( new Action( ( ) =>
+		{
+			ResetProgress();
+		} ) );
 			}
-			else
-			{
+			else {
 				ResetProgress();
 			}
 		}
@@ -638,12 +620,10 @@ namespace MusicChange
 		}
 		private void progressBar_MouseUp(object sender, MouseEventArgs e)
 		{
-			if(isSeeking && mediaPlayer != null)
-			{
+			if (isSeeking && mediaPlayer != null) {
 				// 计算目标时间
 				long totalTime = mediaPlayer.Length;
-				if(totalTime > 0)
-				{
+				if (totalTime > 0) {
 					long targetTime = (long)(progressBar.Value * totalTime / 1000.0);
 					mediaPlayer.Time = targetTime;
 				}
@@ -653,50 +633,46 @@ namespace MusicChange
 		private void progressBar_Scroll(object sender, EventArgs e)
 		{
 			// 拖拽时实时更新时间显示
-			if(mediaPlayer != null && mediaPlayer.Length > 0)
-			{
+			if (mediaPlayer != null && mediaPlayer.Length > 0) {
 				long totalTime = mediaPlayer.Length;
 				long currentTime = (long)(progressBar.Value * totalTime / 1000.0);
-				currentTimeLabel.Text = FormatTime(currentTime);
+				currentTimeLabel.Text = FormatTime( currentTime );
 			}
 		}
-		private Control[] GetAllToolTipControls()
+		private Control[] GetAllToolTipControls( )
 		{
 			// 获取所有设置了工具提示的控件
 			// 注意：实际实现中需要更健壮的方法
 			return new Control[0]; // 简化实现
 		}
 		//	定时器更新进度
-		private void UpdateProgress()
+		private void UpdateProgress( )
 		{
-			if(mediaPlayer == null)
+			if (mediaPlayer == null)
 				return;
 
 			long currentTime = mediaPlayer.Time;
 			long totalTime = mediaPlayer.Length;
 
-			if(totalTime > 0)
-			{
+			if (totalTime > 0) {
 				// 更新进度条
 				int progressValue = (int)(currentTime * 1000 / totalTime);
-				if(progressValue >= 0 && progressValue <= 1000)
-				{
+				if (progressValue >= 0 && progressValue <= 1000) {
 					progressBar.Value = progressValue;
 				}
 
 				// 更新时间标签
-				currentTimeLabel.Text = FormatTime(currentTime);
+				currentTimeLabel.Text = FormatTime( currentTime );
 			}
 		}
 		private void UpdateTotalTime(long totalTime)
 		{
-			totalTimeLabel.Text = FormatTime(totalTime);
-			if(totalTime > 0)
-			{
+			totalTimeLabel.Text = FormatTime( totalTime );
+			if (totalTime > 0) {
 				progressBar.Maximum = 1000;
 			}
 		}
-		private void ResetProgress()
+		private void ResetProgress( )  //结束播放时重置进度
 		{
 			progressBar.Value = 0;
 			currentTimeLabel.Text = "00:00:00";
@@ -704,18 +680,17 @@ namespace MusicChange
 		// 格式化时间显示 (毫秒转为 HH:MM:SS)
 		private string FormatTime(long milliseconds)
 		{
-			if(milliseconds <= 0)
+			if (milliseconds <= 0)
 				return "00:00:00";
 
-			TimeSpan time = TimeSpan.FromMilliseconds(milliseconds);
+			TimeSpan time = TimeSpan.FromMilliseconds( milliseconds );
 			return $"{time.Hours:D2}:{time.Minutes:D2}:{time.Seconds:D2}:{time.Milliseconds}";
 		}
 		// 按钮事件处理
 		private void playPauseButton_Click(object sender, EventArgs e)
 		{  //			var tt = _mediaPlayer;
 			float zz;
-			if(!IsfirstPlaying)
-			{
+			if (!IsfirstPlaying) {
 				IsfirstPlaying = true;
 				PlayVideo();
 				playPauseButton.Image = Properties.Resources.pause;
@@ -724,21 +699,17 @@ namespace MusicChange
 				temp2.Text = $"缩放: {mediaPlayer.Scale:P0}"; // 显示为百分比
 				return;
 			}
-			else
-			{
-				if(mediaPlayer == null)
-				{
+			else {
+				if (mediaPlayer == null) {
 					return;
 				}
-				if(mediaPlayer.State == VLCState.Playing)
-				{
+				if (mediaPlayer.State == VLCState.Playing) {
 					progressTimer.Stop();
 					mediaPlayer.Pause();               //添加图片
 					playPauseButton.Image = Properties.Resources.start;
 					temp2.Text = $"缩放: {mediaPlayer.Scale:P0}";
 				}
-				else
-				{
+				else {
 					progressTimer.Start();
 					mediaPlayer.Play();
 					playPauseButton.Image = Properties.Resources.pause;                 //((Button)sender).Text = "暂停";
@@ -752,29 +723,24 @@ namespace MusicChange
 		private void StopButton_Click(object sender, EventArgs e)
 		{
 			//_mediaPlayer?.Stop();
-			try
-			{
-				if(mediaPlayer != null)
-				{
+			try {
+				if (mediaPlayer != null) {
 					playPauseButton.Image = Properties.Resources.start;
 					progressTimer.Stop();
 					mediaPlayer.Stop();
 				}
 			}
-			catch(Exception ex)
-			{
-				MessageBox.Show($"停止播放失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			catch (Exception ex) {
+				MessageBox.Show( $"停止播放失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error );
 			}
 		}
 		// 播放视频文件
-		private void CleanupResources1()
+		private void CleanupResources1( )
 		{
-			try
-			{
+			try {
 				progressTimer?.Stop();
 
-				if(mediaPlayer != null)
-				{
+				if (mediaPlayer != null) {
 					mediaPlayer.Stop();
 					mediaPlayer.TimeChanged -= OnMediaPlayerTimeChanged;
 					mediaPlayer.LengthChanged -= OnMediaPlayerLengthChanged;
@@ -792,56 +758,43 @@ namespace MusicChange
 				videoView?.Dispose();
 				videoView = null;
 			}
-			catch(Exception ex)
-			{
-				Console.WriteLine($"清理资源时出错: {ex.Message}");
+			catch (Exception ex) {
+				Console.WriteLine( $"清理资源时出错: {ex.Message}" );
 			}
 		}
 
 		// 安全更新声道显示UI
 		private void UpdateChannelDisplayUI(int leftVolume, int rightVolume)
 		{
-			try
-			{
+			try {
 				// 检查窗体状态
-				if(this.IsDisposed || !this.IsHandleCreated)
+				if (this.IsDisposed || !this.IsHandleCreated)
 					return;
 
 				// 使用 BeginInvoke 异步更新UI
-				this.BeginInvoke(new Action(() =>
+				this.BeginInvoke( new Action( ( ) =>
 		  {
-			  try
-			  {
+			  try {
 				  // 更新左声道进度条
-				  if(leftChannelProgressBar != null &&
-			!leftChannelProgressBar.IsDisposed &&
-			leftChannelProgressBar.IsHandleCreated)
-				  {
-					  leftChannelProgressBar.Value = Math.Max(0, Math.Min(leftChannelProgressBar.Maximum, leftVolume));
+				  if (leftChannelProgressBar != null && !leftChannelProgressBar.IsDisposed && leftChannelProgressBar.IsHandleCreated) {
+					  leftChannelProgressBar.Value = Math.Max( 0, Math.Min( leftChannelProgressBar.Maximum, leftVolume ) );
 				  }
 
 				  // 更新右声道进度条
-				  if(rightChannelProgressBar != null &&
-			!rightChannelProgressBar.IsDisposed &&
-			rightChannelProgressBar.IsHandleCreated)
-				  {
-					  rightChannelProgressBar.Value = Math.Max(0, Math.Min(rightChannelProgressBar.Maximum, rightVolume));
+				  if (rightChannelProgressBar != null && !rightChannelProgressBar.IsDisposed && rightChannelProgressBar.IsHandleCreated) {
+					  rightChannelProgressBar.Value = Math.Max( 0, Math.Min( rightChannelProgressBar.Maximum, rightVolume ) );
 				  }
 			  }
-			  catch(Exception uiEx)
-			  {
-				  if(System.Diagnostics.Debugger.IsAttached)
-				  {
-					  System.Diagnostics.Debug.WriteLine($"更新声道显示UI时出错: {uiEx.Message}");
+			  catch (Exception uiEx) {
+				  if (System.Diagnostics.Debugger.IsAttached) {
+					  System.Diagnostics.Debug.WriteLine( $"更新声道显示UI时出错: {uiEx.Message}" );
 				  }
 			  }
-		  }));
+		  } ) );
 			}
-			catch(Exception ex)
-			{
-				if(System.Diagnostics.Debugger.IsAttached)
-				{
-					System.Diagnostics.Debug.WriteLine($"调度UI更新时出错: {ex.Message}");
+			catch (Exception ex) {
+				if (System.Diagnostics.Debugger.IsAttached) {
+					System.Diagnostics.Debug.WriteLine( $"调度UI更新时出错: {ex.Message}" );
 				}
 			}
 		}
@@ -850,30 +803,27 @@ namespace MusicChange
 		#region ----------- 鼠标拖动窗口和改变大小问题 快捷键  还没解决-------------------
 		private void panelEx4_MouseDown(object sender, MouseEventArgs e)
 		{
-			if(e.Button == MouseButtons.Left)
-			{
+			if (e.Button == MouseButtons.Left) {
 				ReleaseCapture();
-				SendMessage(this.Handle, WM_NCLBUTTONDOWN, HTCAPTION, 0);
+				SendMessage( this.Handle, WM_NCLBUTTONDOWN, HTCAPTION, 0 );
 			}
 
 		}
 		private void LaserEditing_MouseDown(object sender, MouseEventArgs e)
 		{
 			splitContainer5mouseDown = true;
-			if(e.Button == MouseButtons.Left)
-			{
+			if (e.Button == MouseButtons.Left) {
 				// 释放鼠标捕获并发送消息以模拟拖动窗口
 				ReleaseCapture();
-				SendMessage(this.Handle, WM_NCLBUTTONDOWN, HTCAPTION, 0);
+				SendMessage( this.Handle, WM_NCLBUTTONDOWN, HTCAPTION, 0 );
 			}
 			//// 只有在正常状态下才能拖动和调整大小
 			//if(this.WindowState == FormWindowState.Normal)
 			//{
 			//	// 鼠标左键按下时开始拖动（排除边缘区域，避免与缩放冲突）
-			if(e.Button == MouseButtons.Left)
-			{  //&& !IsInResizeArea( e.Location )
+			if (e.Button == MouseButtons.Left) {  //&& !IsInResizeArea( e.Location )
 				isDragging = true;
-				dragStartPoint = new Point(e.X, e.Y);
+				dragStartPoint = new Point( e.X, e.Y );
 				this.Cursor = Cursors.Hand;
 			}
 		}
@@ -886,9 +836,8 @@ namespace MusicChange
 		{
 
 			// 处理拖动
-			if(isDragging)
-			{
-				this.Location = new Point(this.Location.X + e.X - dragStartPoint.X, this.Location.Y + e.Y - dragStartPoint.Y);
+			if (isDragging) {
+				this.Location = new Point( this.Location.X + e.X - dragStartPoint.X, this.Location.Y + e.Y - dragStartPoint.Y );
 				//  Point newLocation = this.Location;
 				//newLocation.X += e.X - dragStartPoint.X;
 				//newLocation.Y += e.Y - dragStartPoint.Y;
@@ -902,8 +851,7 @@ namespace MusicChange
 
 		private void LaserEditing_MouseUp(object sender, MouseEventArgs e)
 		{
-			if(e.Button == MouseButtons.Left)
-			{
+			if (e.Button == MouseButtons.Left) {
 				isDragging = false;
 				//this.Cursor = Cursors.Default;
 			}
@@ -912,21 +860,19 @@ namespace MusicChange
 		private void LaserEditing_MouseDoubleClick(object sender, MouseEventArgs e)
 		{
 			// 双击标题栏切换最大化/正常状态
-			if(e.Button == MouseButtons.Left &&
+			if (e.Button == MouseButtons.Left &&
 				e.Y < 50) // 假设标题栏高度为50
 			{
 				ToggleMaximize();
 			}
 		}
-		private void ToggleMaximize()
+		private void ToggleMaximize( )
 		{
-			if(this.WindowState == FormWindowState.Normal)
-			{
+			if (this.WindowState == FormWindowState.Normal) {
 				previousWindowState = FormWindowState.Normal;
 				this.WindowState = FormWindowState.Maximized;
 			}
-			else
-			{
+			else {
 				this.WindowState = previousWindowState;
 			}
 		}
@@ -984,7 +930,7 @@ namespace MusicChange
 		{
 			Keys key = e.KeyCode;
 			//  if (e.Control != true)//如果没按Ctrl键      return;
-			switch(key)   //功能键键 选择 
+			switch (key)   //功能键键 选择 
 			{
 				case Keys.F1:
 
@@ -1011,10 +957,8 @@ namespace MusicChange
 			}
 
 			// 添加播放速率控制快捷键
-			if(e.Control)
-			{
-				switch(e.KeyCode)
-				{
+			if (e.Control) {
+				switch (e.KeyCode) {
 					case Keys.Up:  // Ctrl + Up - 增加播放速率
 						IncreasePlaybackRate();
 						e.Handled = true;
@@ -1024,7 +968,7 @@ namespace MusicChange
 						e.Handled = true;
 						break;
 					case Keys.D0:  // Ctrl + 0 - 重置播放速率
-						SetPlaybackRate(1.0f);
+						SetPlaybackRate( 1.0f );
 						e.Handled = true;
 						break;
 				}
@@ -1090,12 +1034,10 @@ namespace MusicChange
 
 		private void button3_Click(object sender, EventArgs e)
 		{
-			if(WindowState == FormWindowState.Maximized)
-			{
+			if (WindowState == FormWindowState.Maximized) {
 				WindowState = FormWindowState.Normal; // 恢复到正常状态
 			}
-			else
-			{
+			else {
 				WindowState = FormWindowState.Maximized; // 最大化窗口
 			}
 
@@ -1103,12 +1045,10 @@ namespace MusicChange
 
 		private void button42_Click(object sender, EventArgs e)
 		{           //minimize
-			if(WindowState == FormWindowState.Minimized)
-			{
+			if (WindowState == FormWindowState.Minimized) {
 				WindowState = FormWindowState.Normal; // 恢复到正常状态
 			}
-			else
-			{
+			else {
 				WindowState = FormWindowState.Minimized; // 最小化窗口
 			}
 		}
@@ -1135,7 +1075,7 @@ namespace MusicChange
 		}
 		private void panelEx1_MouseMove(object sender, MouseEventArgs e)
 		{
-			SetCursorBasedOnPosition(e.Location);
+			SetCursorBasedOnPosition( e.Location );
 		}
 
 		/// <summary>
@@ -1173,7 +1113,7 @@ namespace MusicChange
 			personalcollection.Visible = false;
 			personaMcollection.Visible = false;
 		}
-		private void AllGray()
+		private void AllGray( )
 		{
 			this.material.SymbolColor = System.Drawing.Color.Gray;
 			this.audio.SymbolColor = System.Drawing.Color.Gray;
@@ -1181,14 +1121,12 @@ namespace MusicChange
 
 
 		//官方素材 开关
-		private void OfficialMaterialSwitch()
+		private void OfficialMaterialSwitch( )
 		{
-			if(IsOfficialMaterialSwitch)
-			{
+			if (IsOfficialMaterialSwitch) {
 				hot.Visible = true;
 			}
-			else
-			{
+			else {
 				hot.Visible = false;
 			}
 		}
@@ -1246,25 +1184,21 @@ namespace MusicChange
 			//qrcode1.Visible = false;
 			panel4.Visible = false;
 			// 获取默认文档目录路径
-			string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+			string documentsPath = Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments );
 			temp.Text = "默认文档目录: " + documentsPath;
-			string subDirectory = Path.Combine(documentsPath, "ResourceFolder");
+			string subDirectory = Path.Combine( documentsPath, "ResourceFolder" );
 			//判断是否目录存在
-			if(Directory.Exists(subDirectory))
-			{
+			if (Directory.Exists( subDirectory )) {
 				temp.Text = "子目录已存在: " + subDirectory;
 			}
-			else
-			{
+			else {
 				temp1.Text = "子目录不存在，将创建: " + subDirectory;
 				// 创建子目录
-				try
-				{
-					Directory.CreateDirectory(subDirectory);
+				try {
+					Directory.CreateDirectory( subDirectory );
 					temp1.Text = "子目录创建成功: " + subDirectory;
 				}
-				catch(Exception ex)
-				{
+				catch (Exception ex) {
 					temp1.Text = "创建子目录失败: " + ex.Message;
 				}
 			}
@@ -1276,33 +1210,27 @@ namespace MusicChange
 			ofd.InitialDirectory = subDirectory;            //ofd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic); //默认打开音乐文件夹
 			ofd.Multiselect = true; //允许多选
 			ofd.Filter = "素材|*.mp3;*.wav;*.wma;*.flac;*.aac;*.ogg;*.mp4;*.avi;*.wmv;*.mov;*.jpg;*.jpeg;*.png;*.bmp;*.gif";
-			if(ofd.ShowDialog() == DialogResult.OK)
-			{ //获取所有的选中文件存入string数组
+			if (ofd.ShowDialog() == DialogResult.OK) { //获取所有的选中文件存入string数组
 				string[] selectedFiles = ofd.FileNames;
 			}
-			if(ofd.FileNames.Length > 0)
-			{
+			if (ofd.FileNames.Length > 0) {
 				// 遍历选中的文件
-				foreach(string file in ofd.FileNames)
-				{
-					try
-					{
+				foreach (string file in ofd.FileNames) {
+					try {
 						// 获取文件名
-						string fileName = Path.GetFileName(file);
+						string fileName = Path.GetFileName( file );
 						// 构建目标路径
-						string targetPath = Path.Combine(subDirectory, fileName);
+						string targetPath = Path.Combine( subDirectory, fileName );
 						// 复制文件到目标路径
-						File.Copy(file, targetPath, true); // true表示覆盖同名文件
+						File.Copy( file, targetPath, true ); // true表示覆盖同名文件
 						temp1.Text += $"\n已导入: {fileName}";
 					}
-					catch(Exception ex)
-					{
+					catch (Exception ex) {
 						temp1.Text += $"\n导入失败: {ex.Message}";
 					}
 				}
 			}
-			else
-			{
+			else {
 				temp1.Text = "未选择任何文件";
 				//button2.Visible = true;				qrcode1.Visible = true;
 				panel4.Visible = true;
@@ -1321,14 +1249,12 @@ namespace MusicChange
 			SplitContainer sc = sender as SplitContainer;
 
 			// 确保 Panel1 不小于最小宽度
-			if(sc.Panel1.Width < sc.Panel1MinSize)
-			{
+			if (sc.Panel1.Width < sc.Panel1MinSize) {
 				sc.SplitterDistance = sc.Panel1MinSize;
 			}
 
 			// 确保 Panel2 不小于最小宽度
-			if(sc.Panel2.Width < sc.Panel2MinSize)
-			{
+			if (sc.Panel2.Width < sc.Panel2MinSize) {
 				sc.SplitterDistance = sc.Width - sc.Panel2MinSize - sc.SplitterWidth;
 			}
 		}
@@ -1338,16 +1264,14 @@ namespace MusicChange
 			SplitContainer sc = sender as SplitContainer;
 
 			// 防止 Panel1 小于最小宽度
-			if(e.SplitX < sc.Panel1MinSize)
-			{
+			if (e.SplitX < sc.Panel1MinSize) {
 				e.Cancel = true; // 取消移动
 				sc.SplitterDistance = sc.Panel1MinSize;
 			}
 
 			// 防止 Panel2 小于最小宽度
 			int panel2Width = sc.Width - e.SplitX - sc.SplitterWidth;
-			if(panel2Width < sc.Panel2MinSize)
-			{
+			if (panel2Width < sc.Panel2MinSize) {
 				e.Cancel = true; // 取消移动
 				sc.SplitterDistance = sc.Width - sc.Panel2MinSize - sc.SplitterWidth;
 			}
@@ -1355,22 +1279,21 @@ namespace MusicChange
 
 
 		/*// 递归删除子目录及其所有内容
-	try
-	{
-	if (Directory.Exists(subDirectory))
-	{
-	Directory.Delete(subDirectory, recursive: true); // recursive: true 表示删除所有子文件和子目录
-	MessageBox.Show("子目录删除成功");
-	}
-	}
-	catch (Exception ex)
-	{
-	MessageBox.Show("删除子目录失败: " + ex.Message);
-	}*/
+		try
+		{
+		if (Directory.Exists(subDirectory))
+		{
+		Directory.Delete(subDirectory, recursive: true); // recursive: true 表示删除所有子文件和子目录
+		MessageBox.Show("子目录删除成功");
+		}
+		}
+		catch (Exception ex)
+		{
+		MessageBox.Show("删除子目录失败: " + ex.Message);
+		}*/
 		private void panel4_SizeChanged(object sender, EventArgs e)  // 导入 。。dynamic resize
 		{
-			if(panel4.Visible)
-			{
+			if (panel4.Visible) {
 				// 调整按钮和二维码的位置
 				openfile.Left = (panel4.Width - openfile.Width) / 2 - 20; // 水平居中
 				openfile.Top = (panel4.Height - openfile.Height) / 2; // 垂直居中
@@ -1389,24 +1312,22 @@ namespace MusicChange
 		#endregion
 
 		#region   ------------动态加载 LibVLCSharp.WinForms	暂时不用----------------	
-		private void LoadLibVLCSharpDynamically()
+		private void LoadLibVLCSharpDynamically( )
 		{
-			try
-			{
+			try {
 				// 动态加载 LibVLCSharp.WinForms 程序集 D:\Documents\Visual Studio 2022\MusicChange
 				//string libVLCSharpWinFormsPath = Path.Combine(Application.StartupPath, "LibVLCSharp.WinForms.dll");
-				string libVLCSharpWinFormsPath = Path.Combine($"D:\\Documents\\Visual Studio 2022\\MusicChange", "LibVLCSharp.WinForms.dll");
+				string libVLCSharpWinFormsPath = Path.Combine( $"D:\\Documents\\Visual Studio 2022\\MusicChange", "LibVLCSharp.WinForms.dll" );
 
-				libVLCSharpWinFormsAssembly = Assembly.LoadFrom(libVLCSharpWinFormsPath);
+				libVLCSharpWinFormsAssembly = Assembly.LoadFrom( libVLCSharpWinFormsPath );
 				// 获取 VideoView 类型
-				videoViewType = libVLCSharpWinFormsAssembly.GetType("LibVLCSharp.WinForms.VideoView");
+				videoViewType = libVLCSharpWinFormsAssembly.GetType( "LibVLCSharp.WinForms.VideoView" );
 				// 创建 VideoView 实例 				videoViewInstance = Activator.CreateInstance(videoViewType);  暂时不用
 				// 设置 MediaPlayer 属性（如果需要）
 				// 这需要使用反射来设置属性
 			}
-			catch(Exception ex)
-			{
-				MessageBox.Show($"动态加载 LibVLCSharp 失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			catch (Exception ex) {
+				MessageBox.Show( $"动态加载 LibVLCSharp 失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error );
 			}
 		}
 		#endregion
@@ -1417,11 +1338,9 @@ namespace MusicChange
 			//	db dr = new db( dbPath );			dr.dbinit();
 			OpenFileDialog ofd = new OpenFileDialog();
 			ofd.Filter = "视频文件|*.mp4;*.avi;*.wmv;*.mov|所有文件|*.*";
-			if(ofd.ShowDialog() == DialogResult.OK)
-			{
+			if (ofd.ShowDialog() == DialogResult.OK) {
 				temp.Text = ofd.FileName;
 			}
-			//_mediaPlayer.Mute = true; // 静音					  //_mediaPlayer.uiMode = "full"; // 或 "mini"
 			filePath = ofd.FileName;
 			PlayVideo();
 			var fsize = mediaPlayer.Scale;
@@ -1434,24 +1353,21 @@ namespace MusicChange
 
 		#region   ------------ LibVLC   视频 最大化,启动外部 视频播放程序   -----------------	
 		// 使用外部播放器最大化视频
-		private void MaximizeWithExternalPlayer()
+		private void MaximizeWithExternalPlayer( )
 		{
-			if(string.IsNullOrEmpty(filePath))
-			{
-				MessageBox.Show("没有选择视频文件", "错误", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+			if (string.IsNullOrEmpty( filePath )) {
+				MessageBox.Show( "没有选择视频文件", "错误", MessageBoxButtons.OK, MessageBoxIcon.Warning );
 				return;
 			}
-			try
-			{
+			try {
 				// 方法1: 使用系统默认播放器
-				System.Diagnostics.Process.Start(filePath);
+				System.Diagnostics.Process.Start( filePath );
 				mediaPlayer.Pause();   // 暂停播放 ???????
 									   // 或者方法2: 指定特定的外部播放器  ?????????
 									   // LaunchWithSpecificPlayer(filePath);
 			}
-			catch(Exception ex)
-			{
-				MessageBox.Show($"无法启动外部播放器: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			catch (Exception ex) {
+				MessageBox.Show( $"无法启动外部播放器: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error );
 				// 如果外部播放器启动失败，回退到内置最大化
 				ToggleVideoMaximize();
 			}
@@ -1460,43 +1376,38 @@ namespace MusicChange
 		// 使用特定外部播放器
 		private void LaunchWithSpecificPlayer(string videoPath)
 		{
-			try
-			{
+			try {
 				// VLC 媒体播放器
 				string vlcPath = FindVLCPath();
-				if(!string.IsNullOrEmpty(vlcPath) && File.Exists(vlcPath))
-				{
-					System.Diagnostics.Process.Start(vlcPath, $"\"{videoPath}\" --fullscreen");
+				if (!string.IsNullOrEmpty( vlcPath ) && File.Exists( vlcPath )) {
+					System.Diagnostics.Process.Start( vlcPath, $"\"{videoPath}\" --fullscreen" );
 					return;
 				}
 
 				// MPC-HC 播放器
 				string mpcPath = FindMPCPath();
-				if(!string.IsNullOrEmpty(mpcPath) && File.Exists(mpcPath))
-				{
-					System.Diagnostics.Process.Start(mpcPath, $"\"{videoPath}\" /fullscreen");
+				if (!string.IsNullOrEmpty( mpcPath ) && File.Exists( mpcPath )) {
+					System.Diagnostics.Process.Start( mpcPath, $"\"{videoPath}\" /fullscreen" );
 					return;
 				}
 
 				// Windows Media Player
 				string wmpPath = @"C:\Program Files\Windows Media Player\wmplayer.exe";
-				if(File.Exists(wmpPath))
-				{
-					System.Diagnostics.Process.Start(wmpPath, $"/fullscreen \"{videoPath}\"");
+				if (File.Exists( wmpPath )) {
+					System.Diagnostics.Process.Start( wmpPath, $"/fullscreen \"{videoPath}\"" );
 					return;
 				}
 
 				// 如果都没找到，使用系统默认播放器
-				System.Diagnostics.Process.Start(videoPath);
+				System.Diagnostics.Process.Start( videoPath );
 			}
-			catch(Exception ex)
-			{
-				MessageBox.Show($"无法启动指定播放器: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			catch (Exception ex) {
+				MessageBox.Show( $"无法启动指定播放器: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error );
 			}
 		}
 
 		// 查找 VLC 安装路径
-		private string FindVLCPath()
+		private string FindVLCPath( )
 		{
 			// 常见的 VLC 安装路径
 			string[] vlcPaths = {
@@ -1507,24 +1418,19 @@ namespace MusicChange
 		Environment.GetEnvironmentVariable("ProgramFiles(x86)") + @"\VideoLAN\VLC\vlc.exe"
 	};
 
-			foreach(string path in vlcPaths)
-			{
-				if(File.Exists(path))
-				{
+			foreach (string path in vlcPaths) {
+				if (File.Exists( path )) {
 					return path;
 				}
 			}
 
 			// 检查 PATH 环境变量
-			string pathEnv = Environment.GetEnvironmentVariable("PATH");
-			if(!string.IsNullOrEmpty(pathEnv))
-			{
-				string[] paths = pathEnv.Split(';');
-				foreach(string p in paths)
-				{
-					string fullPath = Path.Combine(p, "vlc.exe");
-					if(File.Exists(fullPath))
-					{
+			string pathEnv = Environment.GetEnvironmentVariable( "PATH" );
+			if (!string.IsNullOrEmpty( pathEnv )) {
+				string[] paths = pathEnv.Split( ';' );
+				foreach (string p in paths) {
+					string fullPath = Path.Combine( p, "vlc.exe" );
+					if (File.Exists( fullPath )) {
 						return fullPath;
 					}
 				}
@@ -1534,7 +1440,7 @@ namespace MusicChange
 		}
 
 		// 查找 MPC-HC 安装路径
-		private string FindMPCPath()
+		private string FindMPCPath( )
 		{
 			string[] mpcPaths = {
 		@"C:\Program Files\MPC-HC\mpc-hc64.exe",
@@ -1544,10 +1450,8 @@ namespace MusicChange
 		Environment.GetEnvironmentVariable("ProgramFiles(x86)") + @"\MPC-HC\mpc-hc.exe"
 	};
 
-			foreach(string path in mpcPaths)
-			{
-				if(File.Exists(path))
-				{
+			foreach (string path in mpcPaths) {
+				if (File.Exists( path )) {
 					return path;
 				}
 			}
@@ -1556,26 +1460,23 @@ namespace MusicChange
 		}
 		// 使用外部播放器的标志
 		private bool UseExternalPlayerForMaximize = false;
+		//private VideoAdjustmentSettings _videoAdjustments;
 
 		// 修改原有的最大化切换方法
-		private void ToggleVideoMaximize()
+		private void ToggleVideoMaximize( )
 		{
-			if(videoView1 == null)
+			if (videoView1 == null)
 				return;
 
-			if(!isVideoMaximized)
-			{
-				if(UseExternalPlayerForMaximize)
-				{
+			if (!isVideoMaximized) {
+				if (UseExternalPlayerForMaximize) {
 					MaximizeWithExternalPlayer();
 				}
-				else
-				{
+				else {
 					//MaximizeVideoView();
 				}
 			}
-			else
-			{
+			else {
 				//RestoreVideoView();
 			}
 		}
@@ -1604,45 +1505,39 @@ namespace MusicChange
 		// 高级外部播放器启动
 		private void LaunchWithAdvancedSettings(string videoPath)
 		{
-			try
-			{
+			try {
 				ExternalPlayerSettings settings = GetExternalPlayerSettings();
 
-				if(!string.IsNullOrEmpty(settings.PlayerPath) && File.Exists(settings.PlayerPath))
-				{
+				if (!string.IsNullOrEmpty( settings.PlayerPath ) && File.Exists( settings.PlayerPath )) {
 					string arguments = settings.Arguments ?? "";
 
 					// 如果需要从当前播放位置开始
-					if(settings.StartFromCurrentPosition && mediaPlayer != null)
-					{
+					if (settings.StartFromCurrentPosition && mediaPlayer != null) {
 						long currentTime = mediaPlayer.Time;
 						arguments += $" --start-time={currentTime / 1000.0}";
 					}
 
 					// 如果需要全屏
-					if(settings.UseFullscreen)
-					{
+					if (settings.UseFullscreen) {
 						arguments += " --fullscreen";
 					}
 
 					arguments += $" \"{videoPath}\"";
 
-					System.Diagnostics.Process.Start(settings.PlayerPath, arguments);
+					System.Diagnostics.Process.Start( settings.PlayerPath, arguments );
 				}
-				else
-				{
+				else {
 					// 使用系统默认播放器
-					System.Diagnostics.Process.Start(videoPath);
+					System.Diagnostics.Process.Start( videoPath );
 				}
 			}
-			catch(Exception ex)
-			{
-				MessageBox.Show($"启动外部播放器失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			catch (Exception ex) {
+				MessageBox.Show( $"启动外部播放器失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error );
 			}
 		}
 
 		// 获取外部播放器设置（可以从配置文件或注册表读取）
-		private ExternalPlayerSettings GetExternalPlayerSettings()
+		private ExternalPlayerSettings GetExternalPlayerSettings( )
 		{
 			// 这里可以从配置文件、注册表或用户设置中读取
 			// 示例实现：
@@ -1656,24 +1551,20 @@ namespace MusicChange
 		}
 
 		// 检测外部播放器是否正在运行
-		private bool IsExternalPlayerRunning()
+		private bool IsExternalPlayerRunning( )
 		{
-			try
-			{
+			try {
 				// 检查常见的视频播放器进程
 				string[] playerProcesses = { "vlc", "mpc-hc", "wmplayer", "potplayer", "kmplayer" };
 
-				foreach(string processName in playerProcesses)
-				{
-					var processes = System.Diagnostics.Process.GetProcessesByName(processName);
-					if(processes.Length > 0)
-					{
+				foreach (string processName in playerProcesses) {
+					var processes = System.Diagnostics.Process.GetProcessesByName( processName );
+					if (processes.Length > 0) {
 						return true;
 					}
 				}
 			}
-			catch
-			{
+			catch {
 				// 忽略异常
 			}
 
@@ -1681,28 +1572,26 @@ namespace MusicChange
 		}
 
 		// 监控外部播放器状态
-		private void MonitorExternalPlayer()
+		private void MonitorExternalPlayer( )
 		{
 			System.Threading.Timer playerMonitor = null;
-			playerMonitor = new System.Threading.Timer((state) =>
+			playerMonitor = new System.Threading.Timer( (state) =>
 		 {
-			 if(!IsExternalPlayerRunning())
-			 {
+			 if (!IsExternalPlayerRunning()) {
 				 // 外部播放器已关闭，恢复主界面
-				 this.Invoke(new Action(() =>
-		   {
-			   // 恢复界面状态
-			   if(this.WindowState == FormWindowState.Minimized)
-			   {
-				   this.WindowState = FormWindowState.Normal;
-			   }
-			   this.Activate();
-		   }));
+				 this.Invoke( new Action( ( ) =>
+		{
+			// 恢复界面状态
+			if (this.WindowState == FormWindowState.Minimized) {
+				this.WindowState = FormWindowState.Normal;
+			}
+			this.Activate();
+		} ) );
 
 				 // 停止监控
 				 playerMonitor?.Dispose();
 			 }
-		 }, null, 0, 1000); // 每秒检查一次
+		 }, null, 0, 1000 ); // 每秒检查一次
 		}
 
 		// 外部播放器按钮点击事件
@@ -1725,36 +1614,30 @@ namespace MusicChange
 			//	//RestoreVideoView(); // 先恢复当前最大化
 
 			UseExternalPlayerForMaximize = !UseExternalPlayerForMaximize;
-			if(UseExternalPlayerForMaximize)
-			{
+			if (UseExternalPlayerForMaximize) {
 				MaximizeWithExternalPlayer();
 			}
-			else
-			{
+			else {
 				ToggleVideoMaximize(); // 使用内置最大化
 			}
 			//}  			// 方式3: 根据设置决定
-			if(UseExternalPlayerForMaximize)
-			{
+			if (UseExternalPlayerForMaximize) {
 				MaximizeWithExternalPlayer();
 			}
-			else
-			{
+			else {
 				ToggleVideoMaximize();
 			}
 		}
 
 		// 从文件资源管理器打开
-		private void OpenWithExternalPlayerFromExplorer()
+		private void OpenWithExternalPlayerFromExplorer( )
 		{
-			if(string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
-			{
-				MessageBox.Show("文件不存在", "错误", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+			if (string.IsNullOrEmpty( filePath ) || !File.Exists( filePath )) {
+				MessageBox.Show( "文件不存在", "错误", MessageBoxButtons.OK, MessageBoxIcon.Warning );
 				return;
 			}
 
-			try
-			{
+			try {
 				// 使用 Windows 资源管理器的"打开方式"功能
 				System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo
 				{
@@ -1762,34 +1645,30 @@ namespace MusicChange
 					Arguments = $"shell32.dll,OpenAs_RunDLL \"{filePath}\"",
 					UseShellExecute = false
 				};
-				System.Diagnostics.Process.Start(psi);
+				System.Diagnostics.Process.Start( psi );
 			}
-			catch(Exception ex)
-			{
-				MessageBox.Show($"打开方式对话框失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			catch (Exception ex) {
+				MessageBox.Show( $"打开方式对话框失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error );
 			}
 		}
 		// 发送文件到外部播放器（使用 Windows 的"发送到"功能）
-		private void SendToExternalPlayer()
+		private void SendToExternalPlayer( )
 		{
-			if(string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
-			{
-				MessageBox.Show("文件不存在", "错误", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+			if (string.IsNullOrEmpty( filePath ) || !File.Exists( filePath )) {
+				MessageBox.Show( "文件不存在", "错误", MessageBoxButtons.OK, MessageBoxIcon.Warning );
 				return;
 			}
 
-			try
-			{
+			try {
 				// 创建临时的 .lnk 文件指向播放器
 				string tempPath = Path.GetTempPath();
-				string linkPath = Path.Combine(tempPath, "ExternalPlayer.lnk");
+				string linkPath = Path.Combine( tempPath, "ExternalPlayer.lnk" );
 
 				// 这里简化处理，直接使用系统关联
-				System.Diagnostics.Process.Start("explorer.exe", $"/select,\"{filePath}\"");
+				System.Diagnostics.Process.Start( "explorer.exe", $"/select,\"{filePath}\"" );
 			}
-			catch(Exception ex)
-			{
-				MessageBox.Show($"发送到外部播放器失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			catch (Exception ex) {
+				MessageBox.Show( $"发送到外部播放器失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error );
 			}
 		}
 		//当videoView 大小尺寸变化使调整 播放画面符合 尺寸
@@ -1799,7 +1678,7 @@ namespace MusicChange
 		}
 
 		// 保存和加载偏好设置
-		private PlayerPreferences LoadPlayerPreferences()
+		private PlayerPreferences LoadPlayerPreferences( )
 		{
 			// 从配置文件或注册表加载设置
 			PlayerPreferences prefs = new()
@@ -1848,8 +1727,7 @@ namespace MusicChange
 		}
 		#endregion
 
-		#region   ----- 当videoView  大小尺寸变化使 如何计算 视频 画面符合videoView  尺寸, 正好按比例在 videoView 内播放  ----
-
+		#region   ------------ LibVLC 计算视频在指定容器内的自适应缩放比例    -----------------	
 		/// <summary>
 		/// 计算视频在指定容器内的自适应缩放比例 
 		/// </summary>
@@ -1861,40 +1739,33 @@ namespace MusicChange
 		/// <returns>计算出的缩放比例</returns>
 		private float CalculateVideoScaleFactor(int videoWidth, int videoHeight, int containerWidth, int containerHeight, VideoScaleMode mode = VideoScaleMode.Fit)
 		{
-			try
-			{
+			try {
 				// 验证输入参数
-				if(videoWidth <= 0 || videoHeight <= 0 || containerWidth <= 0 || containerHeight <= 0)
-				{
+				if (videoWidth <= 0 || videoHeight <= 0 || containerWidth <= 0 || containerHeight <= 0) {
 					return 1.0f; // 默认缩放比例
 				}
 				// 计算宽高比
 				float videoAspectRatio = (float)videoWidth / videoHeight;
 				float containerAspectRatio = (float)containerWidth / containerHeight;
 				float scaleFactor = 1.0f;
-				switch(mode)
-				{
+				switch (mode) {
 					case VideoScaleMode.Fit: // 适应容器（完整显示，可能有黑边）
-						if(videoAspectRatio > containerAspectRatio)
-						{
+						if (videoAspectRatio > containerAspectRatio) {
 							// 视频更宽，以宽度为准
 							scaleFactor = (float)containerWidth / videoWidth;
 						}
-						else
-						{
+						else {
 							// 视频更高，以高度为准
 							scaleFactor = (float)containerHeight / videoHeight;
 						}
 						break;
 
 					case VideoScaleMode.Fill: // 填充容器（可能裁剪部分内容）
-						if(videoAspectRatio > containerAspectRatio)
-						{
+						if (videoAspectRatio > containerAspectRatio) {
 							// 视频更宽，以高度为准
 							scaleFactor = (float)containerHeight / videoHeight;
 						}
-						else
-						{
+						else {
 							// 视频更高，以宽度为准
 							scaleFactor = (float)containerWidth / videoWidth;
 						}
@@ -1913,26 +1784,22 @@ namespace MusicChange
 					case VideoScaleMode.BestFit: // 最佳适应（保持比例且完整显示）
 					default:
 						// 与Fit模式相同
-						if(videoAspectRatio > containerAspectRatio)
-						{
+						if (videoAspectRatio > containerAspectRatio) {
 							scaleFactor = (float)containerWidth / videoWidth;
 						}
-						else
-						{
+						else {
 							scaleFactor = (float)containerHeight / videoHeight;
 						}
 						break;
 				}
 
 				// 确保缩放比例在合理范围内
-				scaleFactor = Math.Max(0.1f, Math.Min(10.0f, scaleFactor));
+				scaleFactor = Math.Max( 0.1f, Math.Min( 10.0f, scaleFactor ) );
 				return scaleFactor;
 			}
-			catch(Exception ex)
-			{
-				if(System.Diagnostics.Debugger.IsAttached)
-				{
-					System.Diagnostics.Debug.WriteLine($"计算视频缩放比例时出错: {ex.Message}");
+			catch (Exception ex) {
+				if (System.Diagnostics.Debugger.IsAttached) {
+					System.Diagnostics.Debug.WriteLine( $"计算视频缩放比例时出错: {ex.Message}" );
 				}
 				return 1.0f;
 			}
@@ -1942,12 +1809,10 @@ namespace MusicChange
 		/// 获取视频的原始尺寸
 		/// </summary>
 		/// <returns>视频尺寸信息</returns>
-		private VideoSizeInfo GetVideoOriginalSize()
+		private VideoSizeInfo GetVideoOriginalSize( )
 		{
-			try
-			{
-				if(mediaPlayer != null)
-				{
+			try {
+				if (mediaPlayer != null) {
 					//	// 从 MediaPlayer 获取视频尺寸
 					//	var videoTrack = mediaPlayer.VideoTrack;
 					//	if (videoTrack.HasValue) {
@@ -1960,11 +1825,9 @@ namespace MusicChange
 
 					// 备用方法：从媒体信息获取
 					var media = mediaPlayer.Media;
-					if(media != null)
-					{
-						var videoTracks = media.Tracks.Where(t => t.TrackType == TrackType.Video).ToArray();
-						if(videoTracks.Length > 0)
-						{
+					if (media != null) {
+						var videoTracks = media.Tracks.Where( t => t.TrackType == TrackType.Video ).ToArray();
+						if (videoTracks.Length > 0) {
 							return new VideoSizeInfo
 							{
 								Width = (int)videoTracks[0].Data.Video.Width,
@@ -1974,11 +1837,9 @@ namespace MusicChange
 					}
 				}
 			}
-			catch(Exception ex)
-			{
-				if(System.Diagnostics.Debugger.IsAttached)
-				{
-					System.Diagnostics.Debug.WriteLine($"获取视频原始尺寸时出错: {ex.Message}");
+			catch (Exception ex) {
+				if (System.Diagnostics.Debugger.IsAttached) {
+					System.Diagnostics.Debug.WriteLine( $"获取视频原始尺寸时出错: {ex.Message}" );
 				}
 			}
 
@@ -1990,20 +1851,16 @@ namespace MusicChange
 		/// 从文件获取视频尺寸（备用方法）
 		/// </summary>
 		/// <returns>视频尺寸信息</returns>
-		private VideoSizeInfo GetVideoSizeFromFile()
+		private VideoSizeInfo GetVideoSizeFromFile( )
 		{
-			try
-			{
-				if(!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
-				{
+			try {
+				if (!string.IsNullOrEmpty( filePath ) && File.Exists( filePath )) {
 					// 使用 MediaInfo 或其他库获取视频信息
-					using(var media = new Media(libVLC, filePath, FromType.FromPath))
-					{
-						media.Parse(MediaParseOptions.ParseNetwork);
+					using (var media = new Media( libVLC, filePath, FromType.FromPath )) {
+						media.Parse( MediaParseOptions.ParseNetwork );
 
-						var videoTracks = media.Tracks.Where(t => t.TrackType == TrackType.Video).ToArray();
-						if(videoTracks.Length > 0)
-						{
+						var videoTracks = media.Tracks.Where( t => t.TrackType == TrackType.Video ).ToArray();
+						if (videoTracks.Length > 0) {
 							return new VideoSizeInfo
 							{
 								Width = (int)videoTracks[0].Data.Video.Width,
@@ -2013,11 +1870,9 @@ namespace MusicChange
 					}
 				}
 			}
-			catch(Exception ex)
-			{
-				if(System.Diagnostics.Debugger.IsAttached)
-				{
-					System.Diagnostics.Debug.WriteLine($"从文件获取视频尺寸时出错: {ex.Message}");
+			catch (Exception ex) {
+				if (System.Diagnostics.Debugger.IsAttached) {
+					System.Diagnostics.Debug.WriteLine( $"从文件获取视频尺寸时出错: {ex.Message}" );
 				}
 			}
 
@@ -2027,11 +1882,10 @@ namespace MusicChange
 		/// <summary>
 		/// 调整视频以适应 videoView 尺寸
 		/// </summary>
-		private void AdjustVideoToViewSize()
+		private void AdjustVideoToViewSize( )
 		{
-			try
-			{
-				if(videoView1 == null || mediaPlayer == null)
+			try {
+				if (videoView1 == null || mediaPlayer == null)
 					return;
 
 				// 获取 videoView 的当前尺寸
@@ -2039,43 +1893,38 @@ namespace MusicChange
 				int viewHeight = videoView1.Height;
 
 				// 如果尺寸太小，不进行调整
-				if(viewWidth < 10 || viewHeight < 10)
+				if (viewWidth < 10 || viewHeight < 10)
 					return;
 
 				// 获取视频原始尺寸
 				VideoSizeInfo videoSize = GetVideoOriginalSize();
 
-				if(videoSize.Width > 0 && videoSize.Height > 0)
-				{
+				if (videoSize.Width > 0 && videoSize.Height > 0) {
 					// 计算自适应缩放比例
 					float scaleFactor = CalculateVideoScaleFactor(
 						videoSize.Width, videoSize.Height,
 						viewWidth, viewHeight,
-						VideoScaleMode.Fit); // 使用适应模式
+						VideoScaleMode.Fit ); // 使用适应模式
 
 					// 应用缩放
-					if(mediaPlayer != null)
-					{
+					if (mediaPlayer != null) {
 						mediaPlayer.Scale = scaleFactor;
 						currentZoomFactor = scaleFactor;
 
 						// 更新缩放显示
 						UpdateZoomLabel();
 
-						if(System.Diagnostics.Debugger.IsAttached)
-						{
-							System.Diagnostics.Debug.WriteLine($"视频尺寸: {videoSize.Width}x{videoSize.Height}, " +
+						if (System.Diagnostics.Debugger.IsAttached) {
+							System.Diagnostics.Debug.WriteLine( $"视频尺寸: {videoSize.Width}x{videoSize.Height}, " +
 															  $"视图尺寸: {viewWidth}x{viewHeight}, " +
-															  $"缩放比例: {scaleFactor:F2}");
+															  $"缩放比例: {scaleFactor:F2}" );
 						}
 					}
 				}
 			}
-			catch(Exception ex)
-			{
-				if(System.Diagnostics.Debugger.IsAttached)
-				{
-					System.Diagnostics.Debug.WriteLine($"调整视频到视图尺寸时出错: {ex.Message}");
+			catch (Exception ex) {
+				if (System.Diagnostics.Debugger.IsAttached) {
+					System.Diagnostics.Debug.WriteLine( $"调整视频到视图尺寸时出错: {ex.Message}" );
 				}
 			}
 		}
@@ -2087,14 +1936,14 @@ namespace MusicChange
 		{
 			// 延迟执行调整，避免频繁调整
 			System.Threading.Timer adjustTimer = null;
-			adjustTimer = new System.Threading.Timer((state) =>
+			adjustTimer = new System.Threading.Timer( (state) =>
 		 {
-			 this.Invoke(new Action(() =>
+			 this.Invoke( new Action( ( ) =>
 		  {
 			  AdjustVideoToViewSize();
 			  adjustTimer?.Dispose();
-		  }));
-		 }, null, 100, System.Threading.Timeout.Infinite); // 100ms 延迟
+		  } ) );
+		 }, null, 100, System.Threading.Timeout.Infinite ); // 100ms 延迟
 		}
 
 		/// <summary>
@@ -2113,7 +1962,7 @@ namespace MusicChange
 
 			public float AspectRatio => Height > 0 ? (float)Width / Height : 1.0f;
 
-			public override string ToString()
+			public override string ToString( )
 			{
 				return $"{Width}x{Height} ({AspectRatio:F2})";
 			}
@@ -2161,10 +2010,8 @@ namespace MusicChange
 		private Rectangle CalculateVideoDisplayRect(int videoWidth, int videoHeight,
 			Rectangle containerRect, VideoScaleMode mode = VideoScaleMode.Fit)
 		{
-			try
-			{
-				if(videoWidth <= 0 || videoHeight <= 0)
-				{
+			try {
+				if (videoWidth <= 0 || videoHeight <= 0) {
 					return containerRect;
 				}
 
@@ -2174,18 +2021,15 @@ namespace MusicChange
 				int displayWidth, displayHeight;
 				int displayX, displayY;
 
-				switch(mode)
-				{
+				switch (mode) {
 					case VideoScaleMode.Fit:
 					case VideoScaleMode.BestFit:
-						if(videoAspectRatio > containerAspectRatio)
-						{
+						if (videoAspectRatio > containerAspectRatio) {
 							// 视频更宽
 							displayWidth = containerRect.Width;
 							displayHeight = (int)(displayWidth / videoAspectRatio);
 						}
-						else
-						{
+						else {
 							// 视频更高
 							displayHeight = containerRect.Height;
 							displayWidth = (int)(displayHeight * videoAspectRatio);
@@ -2193,14 +2037,12 @@ namespace MusicChange
 						break;
 
 					case VideoScaleMode.Fill:
-						if(videoAspectRatio > containerAspectRatio)
-						{
+						if (videoAspectRatio > containerAspectRatio) {
 							// 视频更宽
 							displayHeight = containerRect.Height;
 							displayWidth = (int)(displayHeight * videoAspectRatio);
 						}
-						else
-						{
+						else {
 							// 视频更高
 							displayWidth = containerRect.Width;
 							displayHeight = (int)(displayWidth / videoAspectRatio);
@@ -2214,17 +2056,14 @@ namespace MusicChange
 
 					case VideoScaleMode.Original:
 					default:
-						displayWidth = Math.Min(videoWidth, containerRect.Width);
-						displayHeight = Math.Min(videoHeight, containerRect.Height);
+						displayWidth = Math.Min( videoWidth, containerRect.Width );
+						displayHeight = Math.Min( videoHeight, containerRect.Height );
 						// 保持原始宽高比
-						if((float)displayWidth / displayHeight != videoAspectRatio)
-						{
-							if(displayWidth / videoAspectRatio <= displayHeight)
-							{
+						if ((float)displayWidth / displayHeight != videoAspectRatio) {
+							if (displayWidth / videoAspectRatio <= displayHeight) {
 								displayHeight = (int)(displayWidth / videoAspectRatio);
 							}
-							else
-							{
+							else {
 								displayWidth = (int)(displayHeight * videoAspectRatio);
 							}
 						}
@@ -2234,10 +2073,9 @@ namespace MusicChange
 				// 居中显示
 				displayX = containerRect.X + (containerRect.Width - displayWidth) / 2;
 				displayY = containerRect.Y + (containerRect.Height - displayHeight) / 2;
-				return new Rectangle(displayX, displayY, displayWidth, displayHeight);
+				return new Rectangle( displayX, displayY, displayWidth, displayHeight );
 			}
-			catch
-			{
+			catch {
 				return containerRect;
 			}
 		}
@@ -2245,18 +2083,16 @@ namespace MusicChange
 		/// <summary>
 		/// 应用自适应缩放
 		/// </summary>
-		private void ApplyAutoScale()
+		private void ApplyAutoScale( )
 		{
-			try
-			{
-				if(videoView1 == null || mediaPlayer == null)
+			try {
+				if (videoView1 == null || mediaPlayer == null)
 					return;
 				// 获取视频原始尺寸
 				VideoSizeInfo videoSize = GetVideoOriginalSize();
-				if(videoSize.Width > 0 && videoSize.Height > 0)
-				{
+				if (videoSize.Width > 0 && videoSize.Height > 0) {
 					// 计算自适应缩放比例
-					float scaleFactor = CalculateVideoScaleFactor(videoSize.Width, videoSize.Height, videoView1.Width, videoView1.Height, VideoScaleMode.Fit);
+					float scaleFactor = CalculateVideoScaleFactor( videoSize.Width, videoSize.Height, videoView1.Width, videoView1.Height, VideoScaleMode.Fit );
 					// 应用缩放
 					mediaPlayer.Scale = scaleFactor;
 					currentZoomFactor = scaleFactor;
@@ -2264,11 +2100,9 @@ namespace MusicChange
 					UpdateZoomLabel();
 				}
 			}
-			catch(Exception ex)
-			{
-				if(System.Diagnostics.Debugger.IsAttached)
-				{
-					System.Diagnostics.Debug.WriteLine($"应用自适应缩放时出错: {ex.Message}");
+			catch (Exception ex) {
+				if (System.Diagnostics.Debugger.IsAttached) {
+					System.Diagnostics.Debug.WriteLine( $"应用自适应缩放时出错: {ex.Message}" );
 				}
 			}
 		}
@@ -2276,21 +2110,17 @@ namespace MusicChange
 		/// <summary>
 		/// 在窗体加载时订阅 videoView 的尺寸改变事件
 		/// </summary>
-		private void SubscribeVideoViewEvents()
+		private void SubscribeVideoViewEvents( )
 		{
-			try
-			{
-				if(videoView1 != null)
-				{
+			try {
+				if (videoView1 != null) {
 					videoView1.SizeChanged += VideoView_SizeChanged;
 					videoView1.Resize += VideoView_SizeChanged;
 				}
 			}
-			catch(Exception ex)
-			{
-				if(System.Diagnostics.Debugger.IsAttached)
-				{
-					System.Diagnostics.Debug.WriteLine($"订阅 videoView 事件时出错: {ex.Message}");
+			catch (Exception ex) {
+				if (System.Diagnostics.Debugger.IsAttached) {
+					System.Diagnostics.Debug.WriteLine( $"订阅 videoView 事件时出错: {ex.Message}" );
 				}
 			}
 		}
@@ -2309,22 +2139,56 @@ namespace MusicChange
 			AdjustVideoToViewSize();
 		}
 
-		private void buttonX2_Click_1(object sender, EventArgs e)
-		{
-			////扫描 视频文件是否可以播放
-			//VideoCheckerForm cut = new();
-			//cut.Show();
-		}
+		//// 在 LaserEditing 类中添加以下方法
 
-		private void buttonX1_Click(object sender, EventArgs e)  //调节视频的色彩 对比度 和 亮度
-		{
-			//using var settingsForm = new VideoSettingsForm(mediaPlayer);
-			//settingsForm.ShowDialog();  //?????
-		}
-		#endregion
+		//// 保存视频调整设置
+		//private void SaveVideoAdjustments()
+		//{
+		//	if(mediaPlayer != null)
+		//	{
+		//		try
+		//		{
+		//			Properties.Settings.Default.VideoBrightness = _brightnessTrackBar.Value / 100.0f;
+		//			Properties.Settings.Default.VideoContrast = _contrastTrackBar.Value / 100.0f;
+		//			Properties.Settings.Default.VideoSaturation = _saturationTrackBar.Value / 100.0f;
+		//			Properties.Settings.Default.VideoGamma = _gammaTrackBar.Value / 100.0f;
+		//			Properties.Settings.Default.Save();
+		//		}
+		//		catch(Exception ex)
+		//		{
+		//			MessageBox.Show($"保存视频设置失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+		//		}
+		//	}
+		//}
+
+		//// 加载视频调整设置
+		//private void LoadVideoAdjustments()
+		//{
+		//	try
+		//	{
+		//		float brightness = Properties.Settings.Default.VideoBrightness;
+		//		float contrast = Properties.Settings.Default.VideoContrast;
+		//		float saturation = Properties.Settings.Default.VideoSaturation;
+		//		float gamma = Properties.Settings.Default.VideoGamma;
+
+		//		// 应用保存的设置
+		//		if(mediaPlayer != null)
+		//		{
+		//			mediaPlayer.SetVideoAdjustment(VideoAdjustmentOptions.Enable, brightness, contrast, saturation, gamma, 0.0f);
+		//		}
+		//	}
+		//	catch(Exception ex)
+		//	{
+		//		MessageBox.Show($"加载视频设置失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+		//	}
+		//}
+
+		// 在 LaserEditing.cs 文件末尾或其他合适位置添加
+
+#endregion
 
 		#region  ----------------------  调整播放速度 ---------------
-		
+
 		// 初始化播放速度菜单
 		private void InitializeSpeedMenu( )
 		{
@@ -2367,8 +2231,8 @@ namespace MusicChange
 					mediaPlayer.SetRate( rate );
 
 					// 更新UI
-					if (textBox1 != null) {
-						textBox1.Text = rate.ToString( "F2" );
+					if (SpeedT != null) {
+						SpeedT.Text = rate.ToString( "F2" );
 					}
 
 					if (temp2 != null) {
@@ -2461,24 +2325,21 @@ namespace MusicChange
 						return;
 					}
 
-					if (float.TryParse( textBox1.Text, out float rate )) {
+					if (float.TryParse( SpeedT.Text, out float rate )) {
 						rate = Math.Max( 0.25f, Math.Min( 4.0f, rate ) );
 						mediaPlayer.SetRate( rate );
-						textBox1.Text = mediaPlayer.Rate.ToString( "F2" );
+						SpeedT.Text = mediaPlayer.Rate.ToString( "F2" );
 
-						if (temp2 != null) {
-							temp2.Text = $"播放速率: {rate:F2}x";
-						}
 					}
 					else {
 						MessageBox.Show( "请输入有效的数字", "输入错误", MessageBoxButtons.OK, MessageBoxIcon.Warning );
-						textBox1.Text = mediaPlayer.Rate.ToString( "F2" );
+						SpeedT.Text = mediaPlayer.Rate.ToString( "F2" ) + "X";
 					}
 				}
 				catch (Exception ex) {
 					MessageBox.Show( $"设置播放速率失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error );
 					if (mediaPlayer != null) {
-						textBox1.Text = mediaPlayer.Rate.ToString( "F2" );
+						SpeedT.Text = mediaPlayer.Rate.ToString( "F2" );
 					}
 				}
 			}
@@ -2517,116 +2378,99 @@ namespace MusicChange
 		// 设置播放速率的通用方法
 		private void SetPlaybackRate(float rate)
 		{
-			try
-			{
-				if(mediaPlayer == null)
+			try {
+				if (mediaPlayer == null)
 					return;
 
 				// 限制播放速率范围
-				rate = Math.Max(0.25f, Math.Min(4.0f, rate));
+				rate = Math.Max( 0.25f, Math.Min( 4.0f, rate ) );
 
 				// 设置播放速率
-				mediaPlayer.SetRate(rate);
+				mediaPlayer.SetRate( rate );
 
 				// 更新UI
-				if(textBox1 != null)
-				{
-					textBox1.Text = rate.ToString("F2");
+				if (SpeedT != null) {
+					SpeedT.Text = rate.ToString( "F2" ) + "X";
 				}
 
-				// 更新状态标签
-				if(temp2 != null)
-				{
-					temp2.Text = $"播放速率: {rate:F2}x";
-				}
 			}
-			catch(Exception ex)
-			{
-				MessageBox.Show($"设置播放速率失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			catch (Exception ex) {
+				MessageBox.Show( $"设置播放速率失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error );
 			}
 		}
 
 		// 获取当前播放速率
-		private float GetCurrentPlaybackRate()
+		private float GetCurrentPlaybackRate( )
 		{
-			try
-			{
+			try {
 				return mediaPlayer?.Rate ?? 1.0f;
 			}
-			catch
-			{
+			catch {
 				return 1.0f;
 			}
 		}
 
 		// 增加播放速率
-		private void IncreasePlaybackRate()
+		private void IncreasePlaybackRate( )
 		{
 			float currentRate = GetCurrentPlaybackRate();
 			float[] rates = { 0.25f, 0.5f, 0.75f, 1.0f, 1.25f, 1.5f, 1.75f, 2.0f, 2.5f, 3.0f, 4.0f };
 
 			// 找到下一个更高的速率
-			foreach(float rate in rates)
-			{
-				if(rate > currentRate)
-				{
-					SetPlaybackRate(rate);
+			foreach (float rate in rates) {
+				if (rate > currentRate) {
+					SetPlaybackRate( rate );
 					return;
 				}
 			}
-
 			// 如果已经是最高速率，保持不变
-			SetPlaybackRate(4.0f);
+			SetPlaybackRate( 4.0f );
 		}
 
 		// 降低播放速率
-		private void DecreasePlaybackRate()
+		private void DecreasePlaybackRate( )
 		{
 			float currentRate = GetCurrentPlaybackRate();
 			float[] rates = { 0.25f, 0.5f, 0.75f, 1.0f, 1.25f, 1.5f, 1.75f, 2.0f, 2.5f, 3.0f, 4.0f };
 
 			// 找到下一个更低的速率
-			for(int i = rates.Length - 1 ;i >= 0 ;i--)
-			{
-				if(rates[i] < currentRate)
-				{
-					SetPlaybackRate(rates[i]);
+			for (int i = rates.Length - 1; i >= 0; i--) {
+				if (rates[i] < currentRate) {
+					SetPlaybackRate( rates[i] );
 					return;
 				}
 			}
 
 			// 如果已经是最慢速率，保持不变
-			SetPlaybackRate(0.25f);
+			SetPlaybackRate( 0.25f );
 		}
 
 		// 预设播放速率按钮点击事件
 		private void presetRateButton_Click(object sender, EventArgs e)
 		{
-			if(sender is Button button && button.Tag is float rate)
-			{
-				SetPlaybackRate(rate);
+			if (sender is Button button && button.Tag is float rate) {
+				SetPlaybackRate( rate );
 			}
 		}
 
 		// 创建预设播放速率按钮
-		private void CreatePresetRateButtons()
+		private void CreatePresetRateButtons( )
 		{
 			float[] presetRates = { 0.5f, 0.75f, 1.0f, 1.25f, 1.5f, 2.0f };
 
 			// 假设您有一个容器控件来放置这些按钮
 			FlowLayoutPanel ratePanel = new FlowLayoutPanel();
 
-			foreach(float rate in presetRates)
-			{
+			foreach (float rate in presetRates) {
 				Button rateButton = new Button
 				{
 					Text = $"{rate}x",
 					Tag = rate,
-					Size = new Size(50, 30),
-					Margin = new Padding(2)
+					Size = new Size( 50, 30 ),
+					Margin = new Padding( 2 )
 				};
 				rateButton.Click += presetRateButton_Click;
-				ratePanel.Controls.Add(rateButton);
+				ratePanel.Controls.Add( rateButton );
 			}
 
 			// 将面板添加到您的界面中
@@ -2734,14 +2578,32 @@ namespace MusicChange
 		//			mediaPlayer.VideoAdjustments.Saturation = trackBarSaturation.Value;
 		//		}
 		#endregion
+
+		#region   ------------------  调节视频的色彩 对比度 和 亮度  ---------------
+
+		private void buttonX1_Click(object sender, EventArgs e)  //调节视频的色彩 对比度 和 亮度
+		{
+			//判断 mediaPlayer 是否有视频播放
+
+			if (mediaPlayer == null || !mediaPlayer.IsPlaying) {
+				MessageBox.Show( "播放器未初始化或没有视频播放", "错误", MessageBoxButtons.OK, MessageBoxIcon.Warning );
+				return;
+			}
+
+			try {
+				using var settingsForm = new AdjustForm( mediaPlayer );
+				settingsForm.ShowDialog();
+			}
+			catch (Exception ex) {
+				MessageBox.Show( $"打开视频设置失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error );
+			}
+		}
+
+
 	}
+
 }
-
-
-
-
-
-
+#endregion
 
 
 

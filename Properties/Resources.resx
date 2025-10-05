@@ -154,7 +154,7 @@
   <data name="最大化" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\最大化.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="add" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="add1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\add.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="ico" type="System.Resources.ResXFileRef, System.Windows.Forms">

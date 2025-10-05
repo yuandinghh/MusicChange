@@ -118,5 +118,26 @@ namespace MusicChange.Properties {
                 this["MaximizeVideoOnLoad"] = value;
             }
         }
-    }
+
+		public float VideoBrightness
+		{
+			get;
+			internal set;
+		}
+		public float VideoContrast
+		{
+			get;
+			internal set;
+		}
+		public float VideoSaturation
+		{
+			get;
+			internal set;
+		}
+		public float VideoGamma
+		{
+			get;
+			internal set;
+		}
+	}
 }
