@@ -27,10 +27,17 @@
 		/// </summary>
 		private void InitializeComponent( )
 		{
-			this.components = new System.ComponentModel.Container();
+			this.SuspendLayout();
+			// 
+			// AdjustForm
+			// 
+			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size( 800, 450 );
+			this.ClientSize = new System.Drawing.Size(465, 456);
+			this.Name = "AdjustForm";
 			this.Text = "AdjustForm";
+			this.ResumeLayout(false);
+
 		}
 
 		#endregion

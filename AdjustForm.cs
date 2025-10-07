@@ -184,10 +184,13 @@ namespace MusicChange
 		public AdjustForm(MediaPlayer mediaPlayer)
 		{
 			_mediaPlayer = mediaPlayer;
-			this.Text = "调节亮度/对比度/色饱和度/伽马/色调";
+			//this.Text = "调节亮度/对比度/色饱和度/伽马/色调";
+			this.Text = "色彩调节";
 			this.Size = new Size( 400, 370 );
 			this.FormBorderStyle = FormBorderStyle.FixedDialog;
 			this.MaximizeBox = false;
+			//将窗口定位到本程序的中心位置
+			this.StartPosition = FormStartPosition.CenterScreen;
 
 			_brightnessLabel = new Label { Text = "亮度", Location = new Point( 20, 20 ), Width = 60 };
 			_brightnessBar = new TrackBar { Minimum = 0, Maximum = 200, Value = (int)(SavedBrightness * 100), Location = new Point( 80, 15 ), Width = 200, TickFrequency = 10 };
