@@ -305,12 +305,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdjustForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="AdjustForm.Designer.cs">
-      <DependentUpon>AdjustForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="ClipRepository.cs" />
     <Compile Include="db.cs" />
     <Compile Include="GlobalSuppressions.cs" />
@@ -342,12 +336,6 @@
     </Compile>
     <Compile Include="TransactionDetailRepository.cs" />
     <Compile Include="TransactionRepository.cs" />
-    <Compile Include="UserControl1.xaml.cs">
-      <DependentUpon>UserControl1.xaml</DependentUpon>
-    </Compile>
-    <EmbeddedResource Include="AdjustForm.resx">
-      <DependentUpon>AdjustForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="LaserEditing.resx">
       <DependentUpon>LaserEditing.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -428,12 +416,6 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="UserControl1.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <None Include="ico.jpg" />

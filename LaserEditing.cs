@@ -54,10 +54,8 @@ namespace MusicChange
 		int gwidth, gheight, lwidth, lheight;  // 获取屏幕工作区宽度
 		#endregion
 		private Assembly libVLCSharpWinFormsAssembly;
-		private Type videoViewType;   //	private object videoViewInstance;
-		private VideoView videoView;
 		private LibVLC libVLC;
-		private string filePath = "F:\\newipad\\跳舞3_m.MP4";
+		private string filePath = @"F:\英语学习\MTEY0102.MP4";
 		public MediaPlayer mediaPlayer;
 		bool IsfirstPlaying = false;  //show first play
 		private bool isMuted = false;
@@ -71,59 +69,19 @@ namespace MusicChange
 		private Rectangle normalVideoBounds;
 		private DockStyle normalDockStyle;
 		private AnchorStyles normalAnchorStyle;
-		private Control normalParent;
-		//private Form videoFullScreenForm; // 用于真正的全屏模式
-		private readonly ToolTipEx toolTipEx = new();
-		private bool darkMode = false;
-		private readonly float[] _playbackRates = { 0.25f, 0.5f, 0.75f, 1.0f, 1.25f, 1.5f, 1.75f, 2.0f, 3.0f, 4.0f };
-		private VlcControl vlcControl = new VlcControl();
-		// 在类中添加上下文菜单
-		private ContextMenuStrip speedContextMenu;
-
-
+		private Control normalParent;		//private Form videoFullScreenForm; // 用于真正的全屏模式
+		private readonly ToolTipEx toolTipEx = new();  //private bool darkMode = false; private VlcControl vlcControl = new VlcControl();
+		private ContextMenuStrip speedContextMenu;      // 在类中添加上下文菜单
+		private const int FixedPanelHeight = 300;
+		private const int MIN_WIDTH = 800;
+		private const int MAX_WIDTH = 900;
 		public LaserEditing( )
 		{
-			AutoScaleMode = AutoScaleMode.Dpi; // 根据系统DPI自动缩放
 			InitializeComponent();
 			IsfirstPlaying = false;
-
-
+			AutoScaleMode = AutoScaleMode.Dpi; // 根据系统DPI自动缩放
 
 		}
-		#region  initlibvlc( )
-		//private void initlibvlc( )
-		//{
-		//	//get
-		//		if (libVLC != null)
-		//			return libVLC;
-
-		//		if (!_coreInitialized) {
-		//			lock (_coreLock) {
-		//				if (!_coreInitialized) {
-		//					try {
-		//						Core.Initialize( VlcHelper.VLCLocation );
-		//						_coreInitialized = true;
-		//					}
-		//					catch (VLCException vlcex) {
-		//						Logger.LogException( vlcex );
-		//						throw new ApplicationException( "VLC not found (v3). Set location in settings." );
-		//					}
-		//				}
-		//			}
-
-
-		//		}
-		//		try {
-		//			libVLC = new LibVLC();
-		//		}
-		//		catch (Exception ex) {
-		//			Logger.LogException( ex, "VLC Setup" );
-		//			throw new ApplicationException( "VLC not found (v3). Set location in settings." );
-		//		}
-		//		return libVLC;
-		//	}
-		#endregion
-
 		private void LaserEditing_Load(object sender, EventArgs e)
 		{
 			splitContainer5mouseDown = false;   //splitContainer1.Panel2MinSize = 400;	//buttonx8.BackColor = System.Drawing.Color.Gray;
@@ -132,7 +90,6 @@ namespace MusicChange
 			OfficialMaterialSwitch(); // 初始化官方素材开关状态
 			gwidth = this.Width = Screen.PrimaryScreen.WorkingArea.Width; // 获取屏幕工作区宽度
 			temp.Text = "屏幕工作区宽度: " + gwidth.ToString();
-			temp.Text = filePath;
 			temp1.Text = "屏幕工作区高度: " + Screen.PrimaryScreen.WorkingArea.Height.ToString();
 			gheight = this.Height = Screen.PrimaryScreen.WorkingArea.Height; // 获取屏幕工作区高度
 			this.Size = new System.Drawing.Size( 1550, 900 ); // 设置主窗口初始大小
@@ -146,10 +103,17 @@ namespace MusicChange
 			this.KeyPreview = true;             //darkMode = false;
 			InitializeSpeedMenu();  // 初始化播放速度菜单
 			ConfigureToolTip( toolTipEx );
-			// 	作用：用于存储 VideoView 实例对象•	用途：如果启用，可以动态创建和管理 VideoView 控件实例
-			//videoViewType = libVLCSharpWinFormsAssembly.GetType("LibVLCSharp.WinForms.VideoView");
+			AdjustSplitContainer();
 
+			// 设置下方面板（Panel2）的最小高度为50像素
+			// 这意味着底部边缘向上移动的最小距离受此限制
+			//splitContainer1.Panel2MinSize = 550;
+			//splitContainer1.Panel1MinSize = 29; // 可选：设置上方面板的最小高度
+			//splitContainer1.Height = 700;
+	
 		}
+
+
 
 		#region ------- ToolTip 鼠标进入悬停显示 -------
 
@@ -689,6 +653,7 @@ namespace MusicChange
 		// 按钮事件处理
 		private void playPauseButton_Click(object sender, EventArgs e)
 		{  //			var tt = _mediaPlayer;
+			filePath = @"F:\英语学习\MTEY0102.MP4";
 			float zz;
 			if (!IsfirstPlaying) {
 				IsfirstPlaying = true;
@@ -734,70 +699,7 @@ namespace MusicChange
 				MessageBox.Show( $"停止播放失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error );
 			}
 		}
-		// 播放视频文件
-		private void CleanupResources1( )
-		{
-			try {
-				progressTimer?.Stop();
 
-				if (mediaPlayer != null) {
-					mediaPlayer.Stop();
-					mediaPlayer.TimeChanged -= OnMediaPlayerTimeChanged;
-					mediaPlayer.LengthChanged -= OnMediaPlayerLengthChanged;
-					mediaPlayer.Playing -= OnMediaPlayerPlaying;
-					mediaPlayer.Paused -= OnMediaPlayerPaused;
-					mediaPlayer.Stopped -= OnMediaPlayerStopped;
-					mediaPlayer.EndReached -= OnMediaPlayerEndReached;
-					mediaPlayer.Dispose();
-					mediaPlayer = null;
-				}
-
-				libVLC?.Dispose();
-				libVLC = null;
-
-				videoView?.Dispose();
-				videoView = null;
-			}
-			catch (Exception ex) {
-				Console.WriteLine( $"清理资源时出错: {ex.Message}" );
-			}
-		}
-
-		// 安全更新声道显示UI
-		private void UpdateChannelDisplayUI(int leftVolume, int rightVolume)
-		{
-			try {
-				// 检查窗体状态
-				if (this.IsDisposed || !this.IsHandleCreated)
-					return;
-
-				// 使用 BeginInvoke 异步更新UI
-				this.BeginInvoke( new Action( ( ) =>
-		  {
-			  try {
-				  // 更新左声道进度条
-				  if (leftChannelProgressBar != null && !leftChannelProgressBar.IsDisposed && leftChannelProgressBar.IsHandleCreated) {
-					  leftChannelProgressBar.Value = Math.Max( 0, Math.Min( leftChannelProgressBar.Maximum, leftVolume ) );
-				  }
-
-				  // 更新右声道进度条
-				  if (rightChannelProgressBar != null && !rightChannelProgressBar.IsDisposed && rightChannelProgressBar.IsHandleCreated) {
-					  rightChannelProgressBar.Value = Math.Max( 0, Math.Min( rightChannelProgressBar.Maximum, rightVolume ) );
-				  }
-			  }
-			  catch (Exception uiEx) {
-				  if (System.Diagnostics.Debugger.IsAttached) {
-					  System.Diagnostics.Debug.WriteLine( $"更新声道显示UI时出错: {uiEx.Message}" );
-				  }
-			  }
-		  } ) );
-			}
-			catch (Exception ex) {
-				if (System.Diagnostics.Debugger.IsAttached) {
-					System.Diagnostics.Debug.WriteLine( $"调度UI更新时出错: {ex.Message}" );
-				}
-			}
-		}
 		#endregion
 
 		#region ----------- 鼠标拖动窗口和改变大小问题 快捷键  还没解决-------------------
@@ -1312,24 +1214,24 @@ namespace MusicChange
 		#endregion
 
 		#region   ------------动态加载 LibVLCSharp.WinForms	暂时不用----------------	
-		private void LoadLibVLCSharpDynamically( )
-		{
-			try {
-				// 动态加载 LibVLCSharp.WinForms 程序集 D:\Documents\Visual Studio 2022\MusicChange
-				//string libVLCSharpWinFormsPath = Path.Combine(Application.StartupPath, "LibVLCSharp.WinForms.dll");
-				string libVLCSharpWinFormsPath = Path.Combine( $"D:\\Documents\\Visual Studio 2022\\MusicChange", "LibVLCSharp.WinForms.dll" );
+		//private void LoadLibVLCSharpDynamically( )
+		//{
+		//	try {
+		//		// 动态加载 LibVLCSharp.WinForms 程序集 D:\Documents\Visual Studio 2022\MusicChange
+		//		//string libVLCSharpWinFormsPath = Path.Combine(Application.StartupPath, "LibVLCSharp.WinForms.dll");
+		//		string libVLCSharpWinFormsPath = Path.Combine( $"D:\\Documents\\Visual Studio 2022\\MusicChange", "LibVLCSharp.WinForms.dll" );
 
-				libVLCSharpWinFormsAssembly = Assembly.LoadFrom( libVLCSharpWinFormsPath );
-				// 获取 VideoView 类型
-				videoViewType = libVLCSharpWinFormsAssembly.GetType( "LibVLCSharp.WinForms.VideoView" );
-				// 创建 VideoView 实例 				videoViewInstance = Activator.CreateInstance(videoViewType);  暂时不用
-				// 设置 MediaPlayer 属性（如果需要）
-				// 这需要使用反射来设置属性
-			}
-			catch (Exception ex) {
-				MessageBox.Show( $"动态加载 LibVLCSharp 失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error );
-			}
-		}
+		//		libVLCSharpWinFormsAssembly = Assembly.LoadFrom( libVLCSharpWinFormsPath );
+		//		// 获取 VideoView 类型
+		//		videoViewType = libVLCSharpWinFormsAssembly.GetType( "LibVLCSharp.WinForms.VideoView" );
+		//		// 创建 VideoView 实例 				videoViewInstance = Activator.CreateInstance(videoViewType);  暂时不用
+		//		// 设置 MediaPlayer 属性（如果需要）
+		//		// 这需要使用反射来设置属性
+		//	}
+		//	catch (Exception ex) {
+		//		MessageBox.Show( $"动态加载 LibVLCSharp 失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error );
+		//	}
+		//}
 		#endregion
 
 		#region ------------  全局设置  -------------
@@ -2488,13 +2390,67 @@ namespace MusicChange
 			ApplyAutoScale();
 		}
 
+		private void sC5_Panel2_Paint(object sender, PaintEventArgs e)
+		{
+
+		}
+
+		private void sC6_Panel1_Paint(object sender, PaintEventArgs e)
+		{
+
+		}
+
+		private void sC6_Panel2_Paint(object sender, PaintEventArgs e)
+		{
+					}
+
+		private void splitContainer2_SizeChanged(object sender, EventArgs e)
+		{
+			//AdjustSplitContainer();
+		}
+		private void   AdjustSplitContainer( )
+		{
+			// 确保窗体有足够的高度容纳固定面板
+			if (this.ClientSize.Height > FixedPanelHeight) {
+				textBoxX1.Text =  this.ClientSize.Height.ToString();
+				// 计算上半部分的高度
+				int topPanelHeight = this.ClientSize.Height - FixedPanelHeight;
+				// 设置分割器位置，实现上半部分可变，下半部分固定
+				splitContainer2.SplitterDistance = topPanelHeight;
+				// 确保分割器不会被拖到超出范围
+				splitContainer2.Panel1MinSize = 500; // 上半部分最小高度
+			}
+
+
+		}
+
+		private void LaserEditing_Resize(object sender, EventArgs e)
+		{
+			temp2.Text = this.Width.ToString();
+			temp1.Text = this.Height.ToString();
+			if (this.Height < MAX_WIDTH) {
+				this.Height = MAX_WIDTH;
+				// 防止窗口宽度小于最小宽度
+				if (this.Width < MIN_WIDTH) {
+					// 保持宽度不小于最小宽度
+					this.Width = MIN_WIDTH;
+					
+				}
+				else {
+					// 记录当前有效宽度
+					
+				}
+			}
+			else {
+				// 当高度恢复到1000像素以上时，允许宽度调整
+				// 这里可以根据需要添加其他逻辑
+			}
+		}
+
 		private void LaserEditing_Loadlaod(object sender, EventArgs e)
 		{
-			// ... 现有代码 ...
-
 			// 订阅 videoView 事件以自动调整
 			SubscribeVideoViewEvents();
-
 			// 初始调整视频大小
 			AdjustVideoToViewSize();
 		}
@@ -2579,6 +2535,40 @@ namespace MusicChange
 		//		}
 		#endregion
 
+		#region ------------------initlibvlc( )   创建libvlc实例  没使用
+		//private void initlibvlc( )
+		//{
+		//	//get
+		//		if (libVLC != null)
+		//			return libVLC;
+
+		//		if (!_coreInitialized) {
+		//			lock (_coreLock) {
+		//				if (!_coreInitialized) {
+		//					try {
+		//						Core.Initialize( VlcHelper.VLCLocation );
+		//						_coreInitialized = true;
+		//					}
+		//					catch (VLCException vlcex) {
+		//						Logger.LogException( vlcex );
+		//						throw new ApplicationException( "VLC not found (v3). Set location in settings." );
+		//					}
+		//				}
+		//			}
+
+
+		//		}
+		//		try {
+		//			libVLC = new LibVLC();
+		//		}
+		//		catch (Exception ex) {
+		//			Logger.LogException( ex, "VLC Setup" );
+		//			throw new ApplicationException( "VLC not found (v3). Set location in settings." );
+		//		}
+		//		return libVLC;
+		//	}
+		#endregion
+
 		#region   ------------------  调节视频的色彩 对比度 和 亮度  ---------------
 
 		private void buttonX1_Click(object sender, EventArgs e)  //调节视频的色彩 对比度 和 亮度
@@ -2591,19 +2581,17 @@ namespace MusicChange
 			}
 
 			try {
-				using var settingsForm = new AdjustForm( mediaPlayer );
-				settingsForm.ShowDialog();
+				//using var settingsForm = new AdjustForm( mediaPlayer );
+				//settingsForm.ShowDialog();
 			}
 			catch (Exception ex) {
 				MessageBox.Show( $"打开视频设置失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error );
 			}
 		}
-
-
-
+		#endregion
 	}
 }
-#endregion
+
 
 
 
