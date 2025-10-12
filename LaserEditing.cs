@@ -11,7 +11,8 @@ using Vlc.DotNet.Forms;
 using Color = System.Drawing.Color;
 using MediaPlayer = LibVLCSharp.Shared.MediaPlayer;
 using Point = System.Drawing.Point;
-
+using NAudio.Wave;
+using System.Windows.Forms.VisualStyles;
 
 #endregion
 #region  ------------- 全局变量 -------------
@@ -70,6 +71,8 @@ namespace MusicChange
 		private MediaPlayer _player1, _player2, _player3;
 		private VideoView _videoView1, _videoView2, _videoView3;
 
+		private LibVLC _libVLC; // LibVLC 实例（视频播放用）
+		private AudioPlayer _audioPlayer; // 自定义 AudioPlayer（基于 NAudio，音频播放用）
 
 		public LaserEditing()
 		{
@@ -2815,12 +2818,7 @@ namespace MusicChange
 		}
 
 		#endregion
-
-		#region  ------------------  上左窗口 导入视频   ------------------
-
-
-		#endregion
-
+		#region  ------------------  多窗口 显示视频   ------------------
 		private void buttonX2_Click_1(object sender, EventArgs e)
 		{
 			string videoPath1 = @"F:\newipad\sex.MP4";
@@ -2874,8 +2872,118 @@ namespace MusicChange
 				MessageBox.Show($"文件不存在: {videoPath}");
 			}
 		}
+		#endregion
+		#region  ------------------  上左窗口 导入视频   ------------------
+		//public partial class MainForm:Form
+		//{
+		//	private LibVLC _libVLC; // LibVLC 实例（视频播放用）
+		//	private AudioPlayer _audioPlayer; // 自定义 AudioPlayer（基于 NAudio，音频播放用）
+
+		private void MainForm()
+		{
+			//InitializeComponent();
+			_libVLC = new LibVLC(); // 初始化 LibVLC
+		_audioPlayer = new AudioPlayer(); // 初始化 NAudio 播放器
+
+		// 订阅媒体项的“播放请求”事件
+		flowLayoutPanelMedia.ControlAdded += (s, e) =>
+				{
+					if(e.Control is MediaItemControl mediaItem)
+					{
+						mediaItem.MediaPlayRequested += OnMediaPlayRequested;
+					}
+				};
+			}
+
+			// 导入文件按钮点击事件
+			private void btnImportFiles_Click(object sender, EventArgs e)
+			{
+				using OpenFileDialog ofd = new OpenFileDialog
+				{
+					Multiselect = true,
+					Filter = "媒体文件|*.mp4;*.avi;*.jpg;*.png;*.mp3;*.wav|所有文件|*.*"
+				};
+
+				if(ofd.ShowDialog() == DialogResult.OK)
+				{
+					foreach(string filePath in ofd.FileNames)
+					{
+						MediaType mediaType;
+						// 判断媒体类型
+						if(IsVideoFile(filePath))
+							mediaType = MediaType.Video;
+						else if(IsAudioFile(filePath))
+							mediaType = MediaType.Audio;
+						else if(IsImageFile(filePath))
+							mediaType = MediaType.Image;
+						else
+							continue; // 不支持的格式
+
+						// 创建媒体项控件并添加到 FlowLayoutPanel
+						MediaItemControl mediaItem = new MediaItemControl(filePath, mediaType);
+						flowLayoutPanelMedia.Controls.Add(mediaItem);
+					}
+				}
+			}
+
+			// 媒体播放请求的处理逻辑
+			private void OnMediaPlayRequested(object sender, MediaPlayEventArgs e)
+			{
+				if(e.MediaType == MediaType.Video)
+				{
+					// 使用 LibVLC 播放视频
+					var media = new Media(_libVLC, new Uri(e.FilePath));
+					var mediaPlayer = new MediaPlayer(media);
+					// 假设存在一个 PictureBox 用于显示视频画面：pictureBoxVideoContainer
+					mediaPlayer.Play();
+					mediaPlayer.SetVideoRenderWindow(pictureBoxVideoContainer.Handle);
+				}
+				else if(e.MediaType == MediaType.Audio)
+				{
+					// 使用 NAudio 播放音频
+					_audioPlayer.Play(e.FilePath);
+				}
+				// 图片类型可弹出预览窗口等
+			}
+
+			// 辅助方法：判断文件类型
+			private bool IsVideoFile(string filePath) =>
+				new[] { ".mp4", ".avi", ".mkv" }.Contains(Path.GetExtension(filePath).ToLower());
+
+			private bool IsAudioFile(string filePath) =>
+				new[] { ".mp3", ".wav", ".flac" }.Contains(Path.GetExtension(filePath).ToLower());
+
+			private bool IsImageFile(string filePath) =>
+				new[] { ".jpg", ".png", ".bmp" }.Contains(Path.GetExtension(filePath).ToLower());
+		}
+
+		// 自定义 NAudio 音频播放器（简化示例）
+		public class AudioPlayer
+		{
+			private WaveOutEvent _waveOut;
+			private AudioFileReader _audioReader;
+
+			public void Play(string filePath)
+			{
+				Stop(); // 停止当前播放
+
+				_audioReader = new AudioFileReader(filePath);
+				_waveOut = new WaveOutEvent();
+				_waveOut.Init(_audioReader);
+				_waveOut.Play();
+			}
+
+			public void Stop()
+			{
+				_waveOut?.Stop();
+				_audioReader?.Dispose();
+				_waveOut?.Dispose();
+			}
+		}
+
+		#endregion
 	}
-}
+
 
 
 

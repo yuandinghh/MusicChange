@@ -315,6 +315,12 @@
       <DependentUpon>LaserEditing.cs</DependentUpon>
     </Compile>
     <Compile Include="MediaAssetRepository.cs" />
+    <Compile Include="MediaItemControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MediaItemControl.Designer.cs">
+      <DependentUpon>MediaItemControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Projects.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -339,6 +345,9 @@
     <EmbeddedResource Include="LaserEditing.resx">
       <DependentUpon>LaserEditing.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MediaItemControl.resx">
+      <DependentUpon>MediaItemControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <SubType>Designer</SubType>
@@ -427,6 +436,9 @@
     <None Include="stop.jpg" />
     <None Include="pause.jpg" />
     <None Include="start.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DefaultVideoThumbnail.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

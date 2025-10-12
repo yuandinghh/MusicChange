@@ -37,9 +37,9 @@ namespace MusicChange
 
 		{
 			this.components = new System.ComponentModel.Container();
-			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.Ptop = new DevComponents.DotNetBar.PanelEx();
 			this.button1 = new System.Windows.Forms.Button();
@@ -55,8 +55,6 @@ namespace MusicChange
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
 			this.sC3 = new System.Windows.Forms.SplitContainer();
 			this.upperleft = new System.Windows.Forms.Panel();
-			this.panel1 = new System.Windows.Forms.Panel();
-			this.panel2 = new System.Windows.Forms.Panel();
 			this.panel4 = new System.Windows.Forms.Panel();
 			this.qrcode1 = new System.Windows.Forms.Button();
 			this.openfile = new System.Windows.Forms.Button();
@@ -94,13 +92,16 @@ namespace MusicChange
 			this.stopButton = new System.Windows.Forms.Button();
 			this.muteButton = new DevComponents.DotNetBar.ButtonX();
 			this.rightChannelProgressBar = new System.Windows.Forms.ProgressBar();
+			this.panel2 = new System.Windows.Forms.Panel();
+			this.panel1 = new System.Windows.Forms.Panel();
 			this.textBoxX1 = new DevComponents.DotNetBar.Controls.TextBoxX();
 			this.leftChannelProgressBar = new System.Windows.Forms.ProgressBar();
 			this.temp2 = new System.Windows.Forms.TextBox();
 			this.temp1 = new System.Windows.Forms.TextBox();
 			this.temp = new System.Windows.Forms.TextBox();
-			this.progressTimer = new System.Windows.Forms.Timer(this.components);
 			this.panel3 = new System.Windows.Forms.Panel();
+			this.progressTimer = new System.Windows.Forms.Timer(this.components);
+			this.flowLayoutPanelMedia = new System.Windows.Forms.FlowLayoutPanel();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -409,28 +410,14 @@ namespace MusicChange
 			// upperleft
 			// 
 			this.upperleft.BackColor = System.Drawing.Color.DimGray;
+			this.upperleft.Controls.Add(this.flowLayoutPanelMedia);
 			this.upperleft.Controls.Add(this.panel4);
 			this.upperleft.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.upperleft.Location = new System.Drawing.Point(82, 97);
+			this.upperleft.Margin = new System.Windows.Forms.Padding(5);
 			this.upperleft.Name = "upperleft";
 			this.upperleft.Size = new System.Drawing.Size(599, 591);
 			this.upperleft.TabIndex = 18;
-			// 
-			// panel1
-			// 
-			this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-			this.panel1.Location = new System.Drawing.Point(34, 236);
-			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(233, 122);
-			this.panel1.TabIndex = 2;
-			// 
-			// panel2
-			// 
-			this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-			this.panel2.Location = new System.Drawing.Point(82, 381);
-			this.panel2.Name = "panel2";
-			this.panel2.Size = new System.Drawing.Size(233, 122);
-			this.panel2.TabIndex = 1;
 			// 
 			// panel4
 			// 
@@ -481,35 +468,35 @@ namespace MusicChange
 			// dG
 			// 
 			this.dG.BackgroundColor = System.Drawing.Color.DimGray;
-			dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-			dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
-			dataGridViewCellStyle4.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-			dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-			dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-			dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-			this.dG.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+			dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+			dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+			dataGridViewCellStyle1.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+			dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+			dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+			dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+			this.dG.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
 			this.dG.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-			dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
-			dataGridViewCellStyle5.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
-			dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-			dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-			dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-			this.dG.DefaultCellStyle = dataGridViewCellStyle5;
+			dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+			dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+			dataGridViewCellStyle2.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+			dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+			dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+			dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+			this.dG.DefaultCellStyle = dataGridViewCellStyle2;
 			this.dG.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.dG.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(215)))), ((int)(((byte)(229)))));
 			this.dG.Location = new System.Drawing.Point(0, 0);
 			this.dG.Name = "dG";
-			dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-			dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
-			dataGridViewCellStyle6.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
-			dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-			dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-			dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-			this.dG.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
+			dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+			dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+			dataGridViewCellStyle3.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+			dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+			dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+			dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+			this.dG.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
 			this.dG.RowHeadersWidth = 51;
 			this.dG.RowTemplate.Height = 27;
 			this.dG.Size = new System.Drawing.Size(599, 90);
@@ -1081,6 +1068,22 @@ namespace MusicChange
 			this.rightChannelProgressBar.Size = new System.Drawing.Size(177, 23);
 			this.rightChannelProgressBar.TabIndex = 2;
 			// 
+			// panel2
+			// 
+			this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+			this.panel2.Location = new System.Drawing.Point(82, 381);
+			this.panel2.Name = "panel2";
+			this.panel2.Size = new System.Drawing.Size(233, 122);
+			this.panel2.TabIndex = 1;
+			// 
+			// panel1
+			// 
+			this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+			this.panel1.Location = new System.Drawing.Point(34, 236);
+			this.panel1.Name = "panel1";
+			this.panel1.Size = new System.Drawing.Size(233, 122);
+			this.panel1.TabIndex = 2;
+			// 
 			// textBoxX1
 			// 
 			// 
@@ -1123,10 +1126,6 @@ namespace MusicChange
 			this.temp.TabIndex = 0;
 			this.temp.Text = "F:\\英语学习\\MTEY0102.MP4";
 			// 
-			// progressTimer
-			// 
-			this.progressTimer.Tick += new System.EventHandler(this.ProgressTimer_Tick);
-			// 
 			// panel3
 			// 
 			this.panel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
@@ -1134,6 +1133,18 @@ namespace MusicChange
 			this.panel3.Name = "panel3";
 			this.panel3.Size = new System.Drawing.Size(233, 122);
 			this.panel3.TabIndex = 2;
+			// 
+			// progressTimer
+			// 
+			this.progressTimer.Tick += new System.EventHandler(this.ProgressTimer_Tick);
+			// 
+			// flowLayoutPanelMedia
+			// 
+			this.flowLayoutPanelMedia.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.flowLayoutPanelMedia.Location = new System.Drawing.Point(0, 90);
+			this.flowLayoutPanelMedia.Name = "flowLayoutPanelMedia";
+			this.flowLayoutPanelMedia.Size = new System.Drawing.Size(599, 501);
+			this.flowLayoutPanelMedia.TabIndex = 1;
 			// 
 			// LaserEditing
 			// 
@@ -1258,6 +1269,7 @@ namespace MusicChange
 		private System.Windows.Forms.Panel panel1;
 		private System.Windows.Forms.Button button1;
 		private System.Windows.Forms.Panel panel3;
+		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelMedia;
 	}
 }
 #endregion 
