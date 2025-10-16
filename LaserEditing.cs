@@ -66,13 +66,14 @@ namespace MusicChange
 		private const int MAX_HWIDTH = 1800;
 		private VlcControl vlcControl = new();
 		//int count = 0;
-		
 		private LibVLC _libVLC1, _libVLC2, _libVLC3;
 		private MediaPlayer _player1, _player2, _player3;
 		private VideoView _videoView1, _videoView2, _videoView3;
-
 		private LibVLC _libVLC; // LibVLC 实例（视频播放用）
 		private AudioPlayer _audioPlayer; // 自定义 AudioPlayer（基于 NAudio，音频播放用）
+		bool isShowOnce = false; // 是否已显示一次cut
+
+
 
 		public LaserEditing()
 		{
@@ -98,6 +99,10 @@ namespace MusicChange
 			ConfigureToolTip(toolTipEx);
 			splitContainer1.SplitterWidth = 6;
 			AdjustSplitContainer();
+			initmportfile();
+			flowLayoutPanelMedia.Width = upperleft.ClientSize.Width - 20;
+			upperleft.VerticalScroll.Visible = true; // 强制显示垂直滚动条
+			upperleft.HorizontalScroll.Visible = false; // 隐藏水平滚动条
 
 
 		}
@@ -1037,8 +1042,26 @@ namespace MusicChange
 		}
 
 		private void buttonx6_Click(object sender, EventArgs e)
-		{       //show cut 
-				//Cut cut = new(); 			cut.Show();
+		{
+			//只显示一次Cut 窗口
+
+			if(isShowOnce)
+			{
+				return;
+			}
+			isShowOnce = true;
+			//         if(this.WindowState == FormWindowState.Maximized)
+			//{
+			//	this.WindowState = FormWindowState.Normal;
+			//}
+			//this.Show();
+			//this.Activate();
+			//this.BringToFront();
+			//this.Focus();
+			//this.TopMost = true;
+			Cut cut = new();
+			cut.Show();
+
 		}
 		private bool IsInResizeArea(System.Drawing.Point point)
 		{
@@ -1144,12 +1167,7 @@ namespace MusicChange
 		{
 
 		}
-		//导入素材  Importing the materials
-		private void buttonx7_Click(object sender, EventArgs e)
-		{
-			panel4.Visible = true;
-			openfile.Visible = true;
-		}
+
 
 		private void sC3_SplitterMoved(object sender, SplitterEventArgs e)
 		{
@@ -1161,77 +1179,6 @@ namespace MusicChange
 		/// <summary>
 		/// 导入：视频、音频、图片
 		/// </summary>
-		private void button2_Click(object sender, EventArgs e)
-		{
-			//button2.Visible = false;
-			//qrcode1.Visible = false;
-			panel4.Visible = false;
-			// 获取默认文档目录路径
-			string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-			temp.Text = "默认文档目录: " + documentsPath;
-			string subDirectory = Path.Combine(documentsPath, "ResourceFolder");
-			//判断是否目录存在
-			if(Directory.Exists(subDirectory))
-			{
-				temp.Text = "子目录已存在: " + subDirectory;
-			}
-			else
-			{
-				temp1.Text = "子目录不存在，将创建: " + subDirectory;
-				// 创建子目录
-				try
-				{
-					Directory.CreateDirectory(subDirectory);
-					temp1.Text = "子目录创建成功: " + subDirectory;
-				}
-				catch(Exception ex)
-				{
-					temp1.Text = "创建子目录失败: " + ex.Message;
-				}
-			}
-			//选择目录
-			OpenFileDialog ofd = new OpenFileDialog();
-			//所有音频文件
-			ofd.Title = "请选择要导入的音频、视频或图片文件";
-			//设置缺省文档目录
-			ofd.InitialDirectory = subDirectory;            //ofd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic); //默认打开音乐文件夹
-			ofd.Multiselect = true; //允许多选
-			ofd.Filter = "素材|*.mp3;*.wav;*.wma;*.flac;*.aac;*.ogg;*.mp4;*.avi;*.wmv;*.mov;*.jpg;*.jpeg;*.png;*.bmp;*.gif";
-			if(ofd.ShowDialog() == DialogResult.OK)
-			{ //获取所有的选中文件存入string数组
-				string[] selectedFiles = ofd.FileNames;
-			}
-			if(ofd.FileNames.Length > 0)
-			{
-				// 遍历选中的文件
-				foreach(string file in ofd.FileNames)
-				{
-					try
-					{
-						// 获取文件名
-						string fileName = Path.GetFileName(file);
-						// 构建目标路径
-						string targetPath = Path.Combine(subDirectory, fileName);
-						// 复制文件到目标路径
-						File.Copy(file, targetPath, true); // true表示覆盖同名文件
-						temp1.Text += $"\n已导入: {fileName}";
-					}
-					catch(Exception ex)
-					{
-						temp1.Text += $"\n导入失败: {ex.Message}";
-					}
-				}
-			}
-			else
-			{
-				temp1.Text = "未选择任何文件";
-				//button2.Visible = true;				qrcode1.Visible = true;
-				panel4.Visible = true;
-
-			}
-
-		}
-
 		private void videoView1_Click(object sender, EventArgs e)  //视频 播放 
 		{
 			bool ff = videoView1.Visible;
@@ -1274,20 +1221,6 @@ namespace MusicChange
 			}
 		}
 
-
-		/*// 递归删除子目录及其所有内容
-		try
-		{
-		if (Directory.Exists(subDirectory))
-		{
-		Directory.Delete(subDirectory, recursive: true); // recursive: true 表示删除所有子文件和子目录
-		MessageBox.Show("子目录删除成功");
-		}
-		}
-		catch (Exception ex)
-		{
-		MessageBox.Show("删除子目录失败: " + ex.Message);
-		}*/
 		private void panel4_SizeChanged(object sender, EventArgs e)  // 导入 。。dynamic resize
 		{
 			if(panel4.Visible)
@@ -1300,13 +1233,6 @@ namespace MusicChange
 			}
 		}
 
-		//{
-		//	// 调整按钮位置
-		//	button2.Left = (panel4.Width - button2.Width) / 2; // 水平居中
-		//	button2.Top = (panel4.Height - button2.Height) / 2; // 垂直居中
-		//	qrcode1.Left = button2.Left + 250; // 水平居中	
-
-		//}
 		#endregion
 		#region   ------------动态加载 LibVLCSharp.WinForms	暂时不用----------------	
 		//private void LoadLibVLCSharpDynamically( )
@@ -1607,8 +1533,8 @@ namespace MusicChange
 				// 外部播放器已关闭，恢复主界面
 				this.Invoke(new Action(() =>
 	 {
-		  // 恢复界面状态
-		  if(this.WindowState == FormWindowState.Minimized)
+		 // 恢复界面状态
+		 if(this.WindowState == FormWindowState.Minimized)
 		 {
 			 this.WindowState = FormWindowState.Normal;
 		 }
@@ -2644,110 +2570,6 @@ namespace MusicChange
 			ApplyAutoScale(); // 手动触发自适应调整
 		}
 		#endregion
-		#region ------------  VLC  视频播放 用c# 控制亮度 对比度 色饱和   ------------
-
-		//		/*  ​一、技术基础与核心库​
-
-		//1.​LibVLC 动态库​
-		//VLC 的核心功能通过 libvlc.dll提供，该库包含控制视频参数的底层接口，如亮度（brightness）、对比度（contrast）、色饱和度（saturation）等。
-		//•​参数范围​：
-		//•亮度：-100（全黑）到 100（最亮），默认 0
-		//•对比度：0（无对比）到 200（最大对比），默认 100
-		//•色饱和度：0（灰度）到 300（过饱和），默认 100。
-
-
-		//2.​C# 封装库（VLC.DotNet）​​
-		//使用 NuGet 包 Vlc.DotNet.Forms或 Vlc.DotNet.Wpf简化调用流程，避免直接操作 P/Invoke。
-		//// 创建 VLC 实例
-		//var vlcOptions = new string[] { "--ignore-config" }; // 禁用默认配置
-		//var vlcLibDirectory = @"C:\Path\To\VLC\Libs"; // VLC 库路径
-		//var mediaPlayer = new VlcControl(vlcLibDirectory, vlcOptions);
-
-		//// 设置媒体源
-		//mediaPlayer.SetMedia(new Uri("file:///C:/video.mp4"));
-		//mediaPlayer.Play();
-		//		*/
-		//		[DllImport("libvlc", CallingConvention = CallingConvention.Cdecl)]
-		//		private static extern int libvlc_video_set_adjust_int(
-		//		IntPtr mediaPlayer,
-		//		uint option,
-		//		int value
-		//			);
-
-		//		// 参数选项枚举
-		//		private enum VideoAdjustOption:uint
-		//		{
-		//			Brightness = 0,    // 亮度
-		//			Contrast = 1,      // 对比度
-		//			Saturation = 2     // 色饱和度
-		//		}
-
-		//		// 示例：设置亮度
-
-		//		private void Initvlcbring()
-		//		{
-		//			// 调整亮度（范围：-100 ~ 100）
-		//			vlcControl.mediaPlayer.VideoAdjustments.Brightness = 50;
-
-		//			// 调整对比度（范围：0 ~ 200）
-		//			mediaPlayer.VideoAdjustments.Contrast = 150;
-
-		//			// 调整色饱和度（范围：0 ~ 300）
-		//			libvlc_video_set_adjust_int(
-		//		mediaPlayer.GetInstance(),
-		//		(uint)VideoAdjustOption.Brightness, 50);
-		//		}
-		//		// 亮度滑块事件
-		//		private void trackBarBrightness_Scroll(object sender, EventArgs e)
-		//		{
-		//			mediaPlayer.VideoAdjustments.Brightness = trackBarBrightness.Value;
-		//		}
-
-		//		// 对比度滑块事件
-		//		private void trackBarContrast_Scroll(object sender, EventArgs e)
-		//		{
-		//			mediaPlayer.VideoAdjustments.Contrast = trackBarContrast.Value;
-		//		}
-
-		//		// 饱和度滑块事件
-		//		private void trackBarSaturation_Scroll(object sender, EventArgs e)
-		//		{
-		//			mediaPlayer.VideoAdjustments.Saturation = trackBarSaturation.Value;
-		//		}
-		#endregion
-		#region ------------------initlibvlc( )   创建libvlc实例  没使用
-		//private void initlibvlc( )
-		//{
-		//	//get
-		//		if (libVLC != null)
-		//			return libVLC;
-
-		//		if (!_coreInitialized) {
-		//			lock (_coreLock) {
-		//				if (!_coreInitialized) {
-		//					try {
-		//						Core.Initialize( VlcHelper.VLCLocation );
-		//						_coreInitialized = true;
-		//					}
-		//					catch (VLCException vlcex) {
-		//						Logger.LogException( vlcex );
-		//						throw new ApplicationException( "VLC not found (v3). Set location in settings." );
-		//					}
-		//				}
-		//			}
-
-
-		//		}
-		//		try {
-		//			libVLC = new LibVLC();
-		//		}
-		//		catch (Exception ex) {
-		//			Logger.LogException( ex, "VLC Setup" );
-		//			throw new ApplicationException( "VLC not found (v3). Set location in settings." );
-		//		}
-		//		return libVLC;
-		//	}
-		#endregion
 		#region   ------------------  调节视频的色彩 对比度 和 亮度  ---------------
 
 		private void buttonX1_Click(object sender, EventArgs e)  //调节视频的色彩 对比度 和 亮度
@@ -2771,7 +2593,7 @@ namespace MusicChange
 			}
 		}
 		#endregion
-		#region  ------------------  窗口调节  似乎没解决  但可以用 2025-10-11 ------------------
+		#region  ------------------  主窗口调节  似乎没解决  但可以用 2025-10-11 ------------------
 		private void LaserEditing_Resize(object sender, EventArgs e)
 		{
 			int totalWidth = this.ClientSize.Width;
@@ -2862,10 +2684,8 @@ namespace MusicChange
 		{
 			if(System.IO.File.Exists(videoPath))
 			{
-				using(var media = new Media(_libVLC1, videoPath))
-				{
-					player.Play(media);
-				}
+				using var media = new Media(_libVLC1, videoPath);
+				player.Play(media);
 			}
 			else
 			{
@@ -2873,116 +2693,237 @@ namespace MusicChange
 			}
 		}
 		#endregion
-		#region  ------------------  上左窗口 导入视频   ------------------
-		//public partial class MainForm:Form
-		//{
-		//	private LibVLC _libVLC; // LibVLC 实例（视频播放用）
-		//	private AudioPlayer _audioPlayer; // 自定义 AudioPlayer（基于 NAudio，音频播放用）
+		#region ------------     ------------
 
-		private void MainForm()
-		{
-			//InitializeComponent();
-			_libVLC = new LibVLC(); // 初始化 LibVLC
-		_audioPlayer = new AudioPlayer(); // 初始化 NAudio 播放器
-
-		// 订阅媒体项的“播放请求”事件
-		flowLayoutPanelMedia.ControlAdded += (s, e) =>
-				{
-					if(e.Control is MediaItemControl mediaItem)
-					{
-						mediaItem.MediaPlayRequested += OnMediaPlayRequested;
-					}
-				};
-			}
-
-			// 导入文件按钮点击事件
-			private void btnImportFiles_Click(object sender, EventArgs e)
-			{
-				using OpenFileDialog ofd = new OpenFileDialog
-				{
-					Multiselect = true,
-					Filter = "媒体文件|*.mp4;*.avi;*.jpg;*.png;*.mp3;*.wav|所有文件|*.*"
-				};
-
-				if(ofd.ShowDialog() == DialogResult.OK)
-				{
-					foreach(string filePath in ofd.FileNames)
-					{
-						MediaType mediaType;
-						// 判断媒体类型
-						if(IsVideoFile(filePath))
-							mediaType = MediaType.Video;
-						else if(IsAudioFile(filePath))
-							mediaType = MediaType.Audio;
-						else if(IsImageFile(filePath))
-							mediaType = MediaType.Image;
-						else
-							continue; // 不支持的格式
-
-						// 创建媒体项控件并添加到 FlowLayoutPanel
-						MediaItemControl mediaItem = new MediaItemControl(filePath, mediaType);
-						flowLayoutPanelMedia.Controls.Add(mediaItem);
-					}
-				}
-			}
-
-			// 媒体播放请求的处理逻辑
-			private void OnMediaPlayRequested(object sender, MediaPlayEventArgs e)
-			{
-				if(e.MediaType == MediaType.Video)
-				{
-					// 使用 LibVLC 播放视频
-					var media = new Media(_libVLC, new Uri(e.FilePath));
-					var mediaPlayer = new MediaPlayer(media);
-					// 假设存在一个 PictureBox 用于显示视频画面：pictureBoxVideoContainer
-					mediaPlayer.Play();
-					mediaPlayer.SetVideoRenderWindow(pictureBoxVideoContainer.Handle);
-				}
-				else if(e.MediaType == MediaType.Audio)
-				{
-					// 使用 NAudio 播放音频
-					_audioPlayer.Play(e.FilePath);
-				}
-				// 图片类型可弹出预览窗口等
-			}
-
-			// 辅助方法：判断文件类型
-			private bool IsVideoFile(string filePath) =>
-				new[] { ".mp4", ".avi", ".mkv" }.Contains(Path.GetExtension(filePath).ToLower());
-
-			private bool IsAudioFile(string filePath) =>
-				new[] { ".mp3", ".wav", ".flac" }.Contains(Path.GetExtension(filePath).ToLower());
-
-			private bool IsImageFile(string filePath) =>
-				new[] { ".jpg", ".png", ".bmp" }.Contains(Path.GetExtension(filePath).ToLower());
-		}
-
-		// 自定义 NAudio 音频播放器（简化示例）
-		public class AudioPlayer
-		{
-			private WaveOutEvent _waveOut;
-			private AudioFileReader _audioReader;
-
-			public void Play(string filePath)
-			{
-				Stop(); // 停止当前播放
-
-				_audioReader = new AudioFileReader(filePath);
-				_waveOut = new WaveOutEvent();
-				_waveOut.Init(_audioReader);
-				_waveOut.Play();
-			}
-
-			public void Stop()
-			{
-				_waveOut?.Stop();
-				_audioReader?.Dispose();
-				_waveOut?.Dispose();
-			}
-		}
 
 		#endregion
+		#region  ------------------  上左窗口 导入视频   ------------------
+
+		private void initmportfile()
+		{           //InitializeComponent();
+			flowLayoutPanelMedia.ControlAdded += (s, e) =>  // 订阅媒体项的“播放请求”事件
+			{
+				if(e.Control is MediaItemControl mediaItem)
+				{
+					mediaItem.MediaPlayRequested += OnMediaPlayRequested;
+				}
+			};
+		}
+
+		// 导入文件按钮点击事件
+		//private void btnImportFiles_Click(object sender, EventArgs e)
+		private void button2_Click_1(object sender, EventArgs e)
+		{
+			// 获取默认文档目录路径
+			string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+			temp.Text = "默认文档目录: " + documentsPath;
+			string subDirectory = Path.Combine(documentsPath, "ResourceFolder");
+			//判断是否目录存在
+			if(Directory.Exists(subDirectory))
+			{
+				temp.Text = "子目录已存在: " + subDirectory;
+			}
+			else
+			{
+				temp1.Text = "子目录不存在，将创建: " + subDirectory;
+				// 创建子目录
+				try
+				{
+					Directory.CreateDirectory(subDirectory);
+					temp1.Text = "子目录创建成功: " + subDirectory;
+				}
+				catch(Exception ex)
+				{
+					temp1.Text = "创建子目录失败: " + ex.Message;
+				}
+			}
+			//选择目录
+			OpenFileDialog ofd = new OpenFileDialog();
+			//所有音频文件
+			ofd.Title = "请选择要导入的音频、视频或图片文件";
+			//设置缺省文档目录
+			ofd.InitialDirectory = subDirectory;            //ofd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic); //默认打开音乐文件夹
+			ofd.Multiselect = true; //允许多选
+			ofd.Filter = "素材|*.mp3;*.wav;*.wma;*.flac;*.aac;*.ogg;*.mp4;*.avi;*.wmv;*.mov;*.jpg;*.jpeg;*.png;*.bmp;*.gif";
+			if(ofd.ShowDialog() == DialogResult.OK)
+			{ //获取所有的选中文件存入string数组
+				string[] selectedFiles = ofd.FileNames;
+			}
+			if(ofd.FileNames.Length > 0)
+			{
+				// 遍历选中的文件
+				foreach(string file in ofd.FileNames)
+				{
+					try
+					{
+						// 获取文件名
+						string fileName = Path.GetFileName(file);
+						// 构建目标路径
+						string targetPath = Path.Combine(subDirectory, fileName);
+						// 复制文件到目标路径
+						File.Copy(file, targetPath, true); // true表示覆盖同名文件
+						temp1.Text += $"\n已导入: {fileName}";
+					}
+					catch(Exception ex)
+					{
+						temp1.Text += $"\n导入失败: {ex.Message}";
+					}
+				}
+			}
+			else
+			{
+				temp1.Text = "未选择任何文件";
+				//button2.Visible = true;				qrcode1.Visible = true;
+				panel4.Visible = true;
+
+			}
+		}
+
+		private void importdata_Click(object sender, EventArgs e)
+		{
+			//panel4.Visible = true;
+			button2_Click(sender, e);
+		}
+		private void button2_Click(object sender, EventArgs e)
+		{
+			//导入素材  Importing the materials  			int c = flowLayoutPanel1.Controls.Count;
+			bool hasControls = flowLayoutPanelMedia.Controls.Count > 0;
+			panel4.Visible = false;
+			// 获取默认文档目录路径
+			string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+			temp.Text = "默认文档目录: " + documentsPath;
+			string subDirectory = Path.Combine(documentsPath, "ResourceFolder");
+			//判断是否目录存在
+			if(Directory.Exists(subDirectory))
+			{
+				temp.Text = "子目录已存在: " + subDirectory;
+			}
+			else
+			{
+				temp1.Text = "子目录不存在，将创建: " + subDirectory;
+				// 创建子目录
+				try
+				{
+					Directory.CreateDirectory(subDirectory);
+					temp1.Text = "子目录创建成功: " + subDirectory;
+				}
+				catch(Exception ex)
+				{
+					temp1.Text = "创建子目录失败: " + ex.Message;
+				}
+			}
+			using OpenFileDialog ofd = new OpenFileDialog
+			{
+				Multiselect = true,
+				Filter = "媒体文件|*.mp4;*.avi;*.jpg;*.png;*.mp3;*.wav|所有文件|*.*"
+			};
+			if(ofd.ShowDialog() == DialogResult.OK)
+			{
+				foreach(string filePath in ofd.FileNames)
+				{
+					MediaType mediaType;
+					// 判断媒体类型
+					if(IsVideoFile(filePath))
+						mediaType = MediaType.Video;
+					else if(IsAudioFile(filePath))
+						mediaType = MediaType.Audio;
+					else if(IsImageFile(filePath))
+						mediaType = MediaType.Image;
+					else
+						continue; // 不支持的格式
+
+					// 创建媒体项控件并添加到 FlowLayoutPanel
+					MediaItemControl mediaItem = new(filePath, mediaType);
+					flowLayoutPanelMedia.Controls.Add(mediaItem);
+				}
+			}
+
+
+			listBox1.Items.Clear();
+			foreach(Control control in flowLayoutPanelMedia.Controls)
+			{
+				// 对每个控件进行操作 Console.WriteLine(control.Name);
+				// 显示控件的名称 显示在listbox中
+				//listBox1.Items.Add(control.Control);
+				listBox1.Items.Add(control.Text);
+				//listBox1.Items.Add(control.Tag);
+				listBox1.Items.Add(control.Location);
+				listBox1.Items.Add(control.Size);
+				listBox1.Items.Add(control.Name);
+				listBox1.Items.Add(control.Text);
+				//listBox1.Items.Add(control.);
+			}
+
+			hasControls = flowLayoutPanelMedia.Controls.Count >0;
+			if(hasControls)
+			{
+				panel4.Visible = false;
+			}
+			else
+			{
+				panel4.Visible = true;
+			}
+		}
+
+		// 媒体播放请求的处理逻辑
+		private void OnMediaPlayRequested(object sender, MediaPlayEventArgs e)
+		{
+			if(e.MediaType == MediaType.Video)
+			{
+				// 使用 LibVLC 播放视频
+				var media = new Media(_libVLC, new Uri(e.FilePath));
+				var mediaPlayer = new MediaPlayer(media);
+				// 假设存在一个 PictureBox 用于显示视频画面：pictureBoxVideoContainer
+				mediaPlayer.Play();
+				//mediaPlayer.SetVideoRenderWindow(pictureBoxVideoContainer.Handle);
+			}
+			else if(e.MediaType == MediaType.Audio)
+			{
+				// 使用 NAudio 播放音频
+				_audioPlayer.Play(e.FilePath);
+			}
+			// 图片类型可弹出预览窗口等
+		}
+
+		// 辅助方法：判断文件类型
+		private bool IsVideoFile(string filePath) =>
+			new[] { ".mp4", ".avi", ".mkv" }.Contains(Path.GetExtension(filePath).ToLower());
+
+		private bool IsAudioFile(string filePath) =>
+			new[] { ".mp3", ".wav", ".flac" }.Contains(Path.GetExtension(filePath).ToLower());
+
+		private bool IsImageFile(string filePath) =>
+			new[] { ".jpg", ".png", ".bmp" }.Contains(Path.GetExtension(filePath).ToLower());
 	}
+
+	// 自定义 NAudio 音频播放器（简化示例）
+	public class AudioPlayer
+	{
+		private WaveOutEvent _waveOut;
+		private AudioFileReader _audioReader;
+
+		public void Play(string filePath)
+		{
+			Stop(); // 停止当前播放
+
+			_audioReader = new AudioFileReader(filePath);
+			_waveOut = new WaveOutEvent();
+			_waveOut.Init(_audioReader);
+			_waveOut.Play();
+		}
+
+		public void Stop()
+		{
+			_waveOut?.Stop();
+			_audioReader?.Dispose();
+			_waveOut?.Dispose();
+		}
+	}
+
+	#endregion
+
+
+}
 
 
 

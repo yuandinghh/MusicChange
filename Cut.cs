@@ -181,10 +181,10 @@ namespace MusicChange
 		}
 		private void button8_Click(object sender, EventArgs e)
 		{
-			//退出当前窗口
-			Application.Exit();
+			//退出当前窗口  			Application.Exit();  //退出整个系统
 			this.Close();
 			//释放资源
+            _libVLC.Dispose();
 
 		}
 		//选择目录

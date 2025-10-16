@@ -169,7 +169,7 @@
 			this.tabControl1.Location = new System.Drawing.Point(12, 80);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
-			this.tabControl1.Size = new System.Drawing.Size(749, 851);
+			this.tabControl1.Size = new System.Drawing.Size(829, 851);
 			this.tabControl1.TabIndex = 1;
 			// 
 			// tabPage3
@@ -1329,7 +1329,7 @@
 			// 
 			this.tabPage5.Location = new System.Drawing.Point(4, 27);
 			this.tabPage5.Name = "tabPage5";
-			this.tabPage5.Size = new System.Drawing.Size(741, 820);
+			this.tabPage5.Size = new System.Drawing.Size(821, 820);
 			this.tabPage5.TabIndex = 4;
 			this.tabPage5.Text = "添加字库";
 			this.tabPage5.UseVisualStyleBackColor = true;
@@ -1651,10 +1651,10 @@
 			// videoView1
 			// 
 			this.videoView1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
-			this.videoView1.Location = new System.Drawing.Point(873, 291);
+			this.videoView1.Location = new System.Drawing.Point(885, 170);
 			this.videoView1.MediaPlayer = null;
 			this.videoView1.Name = "videoView1";
-			this.videoView1.Size = new System.Drawing.Size(482, 308);
+			this.videoView1.Size = new System.Drawing.Size(672, 676);
 			this.videoView1.TabIndex = 34;
 			this.videoView1.Text = "videoView1";
 			// 
@@ -1699,7 +1699,7 @@
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Location = new System.Drawing.Point(-1536, 286);
 			this.Name = "Cut";
-			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Cut";
 			this.Load += new System.EventHandler(this.Cut_Load);
 			this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Cut_MouseDown);
