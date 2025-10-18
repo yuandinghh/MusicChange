@@ -306,12 +306,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClipRepository.cs" />
-    <Compile Include="Cut.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Cut.Designer.cs">
-      <DependentUpon>Cut.cs</DependentUpon>
-    </Compile>
     <Compile Include="db.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="LaserEditing.cs">
@@ -348,9 +342,6 @@
     </Compile>
     <Compile Include="TransactionDetailRepository.cs" />
     <Compile Include="TransactionRepository.cs" />
-    <EmbeddedResource Include="Cut.resx">
-      <DependentUpon>Cut.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="LaserEditing.resx">
       <DependentUpon>LaserEditing.cs</DependentUpon>
       <SubType>Designer</SubType>

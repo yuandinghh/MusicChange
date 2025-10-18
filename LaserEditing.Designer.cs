@@ -106,6 +106,7 @@ namespace MusicChange
 			this.temp1 = new System.Windows.Forms.TextBox();
 			this.temp = new System.Windows.Forms.TextBox();
 			this.progressTimer = new System.Windows.Forms.Timer(this.components);
+			this.audioTimer = new System.Windows.Forms.Timer(this.components);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -434,6 +435,7 @@ namespace MusicChange
 			this.flowLayoutPanelMedia.BackColor = System.Drawing.Color.Gray;
 			this.flowLayoutPanelMedia.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.flowLayoutPanelMedia.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.flowLayoutPanelMedia.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
 			this.flowLayoutPanelMedia.Location = new System.Drawing.Point(0, 90);
 			this.flowLayoutPanelMedia.Margin = new System.Windows.Forms.Padding(10);
 			this.flowLayoutPanelMedia.Name = "flowLayoutPanelMedia";
@@ -1331,6 +1333,7 @@ namespace MusicChange
 		private System.Windows.Forms.Button button2;
 		private System.Windows.Forms.ListBox listBox1;
 		private System.Windows.Forms.PictureBox pictureBox1;
+		private System.Windows.Forms.Timer audioTimer;
 	}
 }
 #endregion 

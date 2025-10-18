@@ -70,7 +70,7 @@ namespace MusicChange
 		private MediaPlayer _player1, _player2, _player3;
 		private VideoView _videoView1, _videoView2, _videoView3;
 		//private LibVLC _libVLC; // LibVLC 实例（视频播放用）
-		//private AudioPlayer _audioPlayer; // 自定义 AudioPlayer（基于 NAudio，音频播放用）
+	
 		bool isShowOnce = false; // 是否已显示一次cut
 
 		public LaserEditing()
@@ -96,15 +96,23 @@ namespace MusicChange
 			InitializeSpeedMenu();  // 初始化播放速度菜单
 			ConfigureToolTip(toolTipEx);
 			splitContainer1.SplitterWidth = 6;
-			AdjustSplitContainer();
-			initmportfile();
-			//flowLayoutPanelMedia.Width = upperleft.ClientSize.Width - 20;
-			//upperleft.VerticalScroll.Visible = true; // 强制显示垂直滚动条
-			//upperleft.HorizontalScroll.Visible = false; // 隐藏水平滚动条
-			// 设置滚动条策略 - 垂直滚动条始终显示在右侧
+			AdjustSplitContainer();  // 调整 SplitContainer 的宽度
+			initmportfile(); // 初始化导入文件
 			flowLayoutPanelMedia.HorizontalScroll.Visible = false;
 			flowLayoutPanelMedia.VerticalScroll.Visible = true;
-			Displayvideo();
+			Displayvideo(); // 显示视频
+			InitializeAudioControls();  // 初始化 NAudio 控件
+			_audioPlayer = new AudioPlayer();  // 初始化 NAudio 播放器 	//private AudioPlayer _audioPlayer;播放用）
+			_audioPlayer.PlaybackCompleted += (s, e) =>     // 订阅音频播放完成事件
+			{
+				this.Invoke(new Action(() =>
+				{
+					audioTimer.Stop();
+					UpdateAudioControls();
+					ResetAudioProgress();
+					HideAudioControls();
+				}));
+			};
 		}
 		#region ------- ToolTip 鼠标进入悬停显示 -------
 
@@ -358,7 +366,39 @@ namespace MusicChange
 
 		protected override void OnFormClosing(FormClosingEventArgs e)
 		{
-			//_mediaPlayer.Dispose();			//_libVLC.Dispose();			CleanupResources();  // 清理资源 +++++++++ 的
+			try
+			{
+				// 停止音频播放
+				_audioPlayer?.Stop();
+
+				// 停止视频播放
+				mediaPlayer?.Stop();
+				_player1?.Stop();
+				_player2?.Stop();
+				_player3?.Stop();
+
+				// 清理定时器
+				audioTimer?.Stop();
+				audioTimer?.Dispose();
+
+				// 清理 NAudio 资源
+				_audioPlayer?.Dispose();
+
+				// 清理 LibVLC 资源
+				mediaPlayer?.Dispose();
+				libVLC?.Dispose();
+				_player1?.Dispose();
+				_player2?.Dispose();
+				_player3?.Dispose();
+				_libVLC1?.Dispose();
+				_libVLC2?.Dispose();
+				_libVLC3?.Dispose();
+			}
+			catch(Exception ex)
+			{
+				System.Diagnostics.Debug.WriteLine($"清理资源时出错: {ex.Message}");
+			}
+
 			base.OnFormClosing(e);
 		}
 		private void InitializeUIControls()
@@ -1044,23 +1084,14 @@ namespace MusicChange
 		private void buttonx6_Click(object sender, EventArgs e)
 		{
 			//只显示一次Cut 窗口
-
-			if(isShowOnce)
-			{
-				return;
-			}
-			isShowOnce = true;
-			//         if(this.WindowState == FormWindowState.Maximized)
+			//if(isShowOnce)
 			//{
-			//	this.WindowState = FormWindowState.Normal;
+			//	return;
 			//}
-			//this.Show();
-			//this.Activate();
-			//this.BringToFront();
-			//this.Focus();
-			//this.TopMost = true;
-			Cut cut = new();
-			cut.Show();
+			//isShowOnce = true;
+		
+			//Cut cut = new();
+			//cut.Show();
 
 		}
 		private bool IsInResizeArea(System.Drawing.Point point)
@@ -1397,16 +1428,7 @@ namespace MusicChange
 		}
 		// 使用外部播放器的标志
 		private bool UseExternalPlayerForMaximize = false;
-
-		public AudioPlayer AudioPlayer
-		{
-			get;
-			private set;
-		}
-
-		//private VideoAdjustmentSettings _videoAdjustments;
-
-		// 修改原有的最大化切换方法
+			// 修改原有的最大化切换方法
 		private void ToggleVideoMaximize()
 		{
 			if(videoView1 == null)
@@ -2956,71 +2978,157 @@ namespace MusicChange
 		}
 
 		// 媒体播放请求的处理逻辑
-		private void OnMediaPlayRequested(object sender, MediaPlayEventArgs e)
-		{
-			if(e.MediaType == MediaType.Video)
-			{
-				// 使用 LibVLC 播放视频
-				//var media = new Media(_libVLC, new Uri(e.FilePath));
-				//var mediaPlayer = new MediaPlayer(media);
-				//// 假设存在一个 PictureBox 用于显示视频画面：pictureBoxVideoContainer
-				//mediaPlayer.Play();
-				//mediaPlayer.SetVideoRenderWindow(pictureBoxVideoContainer.Handle);
-				Displayimage();
-				filePath = e.FilePath;
-				PlayVideo();
-			}
-			else if(e.MediaType == MediaType.Audio)
-			{
-				// 使用 NAudio 播放音频
-				Displayvideo();
-				using(var audioFile = new AudioFileReader(e.FilePath))
-                {
-                    var audioPlayer = new WaveOutEvent();
-                    audioPlayer.Init(audioFile);
-                    audioPlayer.Play();
-		
-				}
-				//显示播放进度条用progressBar
-                progressBar.Maximum = (int)audioFile.TotalTime.TotalSeconds;
-			
-                progressBar.Value = 0;
-				progressTimer.Interval = 1000;
-				progressTimer.Tick += (s, e) =>
-                {
-                    progressBar.Value = (int)audioFile.CurrentTime.TotalSeconds;
-                };
-				progressTimer.Start();
-				progressBar.Maximum = (int)audioFile.TotalTime.TotalSeconds;
-            
+		//private void OnMediaPlayRequested(object sender, MediaPlayEventArgs e)
+		//{
+		//	if(e.MediaType == MediaType.Video)
+		//	{
+		//		Displayvideo();
+		//		filePath = e.FilePath;
+		//		PlayVideo();
+		//	}
+		//	else if(e.MediaType == MediaType.Audio)
+		//	{
+		//		// 使用 NAudio 播放音频
+		//		DisplayAudio();
+		//		//using var audioFile = new AudioFileReader(e.FilePath);
+		//		//var audioPlayer = new WaveOutEvent();
+		//		//audioPlayer.Init(audioFile);
+		//		//audioPlayer.Play();
+		//		////取得音频总时长
+		//		//            TimeSpan duration = audioFile.TotalTime;
+		//		//            temp.Text = "音频总时长: " + duration.ToString();
+		//		//播放音频按键
+		//		PlayAudioWithControls(e.FilePath);
 
-				//            AudioPlayer = new AudioPlayer();
-				////AudioPlayer.OnPlaybackCompleted += () =>
-				////{
-				////	// 播放完成时执行清理逻辑
-				////	AudioPlayer.Stop();
-				////};
-				//AudioPlayer.Play(e.FilePath);
-			}
-			else if(e.MediaType == MediaType.Image)
-			{
-				// 使用 WinForms 播放图片
-				Displayvideo();
-				Displayimage();
-				pictureBox1.Image = Image.FromFile(e.FilePath);
-			}
-			// 图片类型可弹出预览窗口等
-		}
+		//	}
+		//	else if(e.MediaType == MediaType.Image)
+		//	{
+		//		// 使用 WinForms 播放图片
+		//		Displayimage();
+		//		pictureBox1.Image = Image.FromFile(e.FilePath);
+		//	}
+		//	// 图片类型可弹出预览窗口等
+		//}
 		private void Displayimage()
 		{
+			// 停止当前音频播放
+			StopCurrentAudioIfPlaying();
+
+			//buttonX1.Visible = false;
+			volumeControlPanel.Visible = false;
 			pictureBox1.Visible = true;
 			videoView1.Visible = false;
 		}
         private void Displayvideo()
 		{
+			// 停止当前音频播放
+			StopCurrentAudioIfPlaying();
+
+			//buttonX1.Visible = false;
+			volumeControlPanel.Visible = true;
 			pictureBox1.Visible = false;
 			videoView1.Visible = true;
 		}
+		private void DisplayAudio()
+		{
+			volumeControlPanel.Visible = false;
+			pictureBox1.Visible = true;
+			videoView1.Visible = false;
+		}
+		// 在 LaserEditing 类中添加以下方法：
+
+		/// <summary>
+		/// 判断当前是否有音频播放，如果有则停止
+		/// </summary>
+		private void StopCurrentAudioIfPlaying()
+		{
+			try
+			{
+				// 检查音频播放器是否存在且正在播放
+				if(_audioPlayer != null && _audioPlayer.IsPlaying)
+				{
+					// 停止音频播放
+					_audioPlayer.Stop();
+
+					// 停止进度更新定时器
+					audioTimer?.Stop();
+
+					// 更新UI控件状态
+					UpdateAudioControls();
+					ResetAudioProgress();
+					HideAudioControls();
+
+					System.Diagnostics.Debug.WriteLine("已停止当前音频播放");
+				}
+				else
+				{
+					System.Diagnostics.Debug.WriteLine("当前没有音频在播放");
+				}
+			}
+			catch(Exception ex)
+			{
+				System.Diagnostics.Debug.WriteLine($"停止音频播放时出错: {ex.Message}");
+			}
+		}
+
+		/// <summary>
+		/// 检查当前是否有媒体在播放
+		/// </summary>
+		/// <returns>如果有媒体在播放返回true，否则返回false</returns>
+		private bool IsAnyMediaPlaying()
+		{
+			try
+			{
+				// 检查音频是否在播放
+				bool isAudioPlaying = _audioPlayer != null && _audioPlayer.IsPlaying;
+
+				// 检查视频是否在播放
+				bool isVideoPlaying = mediaPlayer != null && mediaPlayer.State == VLCState.Playing;
+
+				return isAudioPlaying || isVideoPlaying;
+			}
+			catch(Exception ex)
+			{
+				System.Diagnostics.Debug.WriteLine($"检查媒体播放状态时出错: {ex.Message}");
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// 检查当前是否有音频在播放
+		/// </summary>
+		/// <returns>如果有音频在播放返回true，否则返回false</returns>
+		private bool IsAudioPlaying()
+		{
+			try
+			{
+				return _audioPlayer != null && _audioPlayer.IsPlaying;
+			}
+			catch(Exception ex)
+			{
+				System.Diagnostics.Debug.WriteLine($"检查音频播放状态时出错: {ex.Message}");
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// 检查当前是否有视频在播放
+		/// </summary>
+		/// <returns>如果有视频在播放返回true，否则返回false</returns>
+		private bool IsVideoPlaying()
+		{
+			try
+			{
+				return mediaPlayer != null && mediaPlayer.State == VLCState.Playing;
+			}
+			catch(Exception ex)
+			{
+				System.Diagnostics.Debug.WriteLine($"检查视频播放状态时出错: {ex.Message}");
+				return false;
+			}
+		}
+
+
 		// 辅助方法：判断文件类型
 		private bool IsVideoFile(string filePath) =>
 			new[] { ".mp4", ".avi", ".mkv" }.Contains(Path.GetExtension(filePath).ToLower());
@@ -3030,31 +3138,505 @@ namespace MusicChange
 
 		private bool IsImageFile(string filePath) =>
 			new[] { ".jpg", ".png", ".bmp" }.Contains(Path.GetExtension(filePath).ToLower());
+		// 修改 OnMediaPlayRequested 方法以支持完整的音频控制
+		private void OnMediaPlayRequested(object sender, MediaPlayEventArgs e)
+		{
+			try
+			{
+				// 在播放新内容之前，停止当前播放的任何媒体
+				StopAllMedia(); // 或者使用 StopCurrentAudioIfPlaying();
+
+				switch(e.MediaType)
+				{
+					case MediaType.Video:
+						Displayvideo();
+						filePath = e.FilePath;
+						PlayVideo();
+						HideAudioControls();
+						break;
+
+					case MediaType.Audio:
+						PlayAudioWithControls(e.FilePath);
+						break;
+
+					case MediaType.Image:
+						Displayimage();
+						pictureBox1.Image = Image.FromFile(e.FilePath);
+						HideAudioControls();
+						break;
+				}
+			}
+			catch(Exception ex)
+			{
+				MessageBox.Show($"播放媒体文件时出错: {ex.Message}", "错误",
+							   MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}
+		}
+		/// <summary>
+		/// 停止当前播放的任何媒体（音频或视频）
+		/// </summary>
+		private void StopAllMedia()
+		{
+			try
+			{
+				// 停止音频播放
+				if(_audioPlayer != null && (_audioPlayer.IsPlaying || _audioPlayer.IsPaused))
+				{
+					_audioPlayer.Stop();
+					audioTimer?.Stop();
+					UpdateAudioControls();
+					ResetAudioProgress();
+					HideAudioControls();
+					System.Diagnostics.Debug.WriteLine("已停止音频播放");
+				}
+
+				// 停止视频播放
+				if(mediaPlayer != null && (mediaPlayer.State == VLCState.Playing || mediaPlayer.State == VLCState.Paused))
+				{
+					mediaPlayer.Stop();
+					progressTimer?.Stop();
+					ResetProgress();
+					playPauseButton.Image = Properties.Resources.start;
+					System.Diagnostics.Debug.WriteLine("已停止视频播放");
+				}
+
+				// 重置播放状态
+				IsfirstPlaying = false;
+			}
+			catch(Exception ex)
+			{
+				System.Diagnostics.Debug.WriteLine($"停止媒体播放时出错: {ex.Message}");
+			}
+		}
+
+		private void PlayAudioWithControls(string filePath)     // 播放音频并显示控制界面
+		{
+			try
+			{
+				// 初始化 NAudio 播放器（如果尚未初始化）
+				if(_audioPlayer == null)
+				{
+					_audioPlayer = new AudioPlayer();
+					// 订阅事件
+					_audioPlayer.PlaybackCompleted += (s, e) =>
+					{
+						this.Invoke(new Action(() =>
+						{
+							audioTimer.Stop();
+							UpdateAudioControls();
+							ResetAudioProgress();
+							HideAudioControls();
+						}));
+					};
+				}
+
+				// 停止当前播放
+				_audioPlayer.Stop();
+
+				// 显示音频控制界面
+				DisplayAudio();
+				ShowAudioControls();
+
+				// 播放音频
+				_audioPlayer.Play(filePath);
+
+				// 更新UI
+				temp.Text = $"正在播放: {Path.GetFileName(filePath)}";
+				UpdateAudioControls();
+				ResetAudioProgress();
+
+				// 启动进度更新定时器
+				audioTimer.Start();
+			}
+			catch(Exception ex)
+			{
+				MessageBox.Show($"播放音频失败: {ex.Message}", "错误",
+							   MessageBoxButtons.OK, MessageBoxIcon.Error);
+				HideAudioControls();
+			}
+		}
+		// 在 LaserEditing 类的全局变量区域添加
+		private AudioPlayer _audioPlayer; // NAudio 播放器实例
+
+		// 添加音频控制按钮（如果设计器中没有的话）
+		private Button btnAudioPlay;
+		private Button btnAudioPause;
+		private Button btnAudioStop;
+		private TrackBar audioPositionTrackBar;
+		private Label lblAudioTime;
+
+		// 在 InitializeComponent 方法中初始化音频控件（如果没有在设计器中添加）
+		private void InitializeAudioControls()
+		{
+			// 创建音频控制按钮
+			btnAudioPlay = new Button
+			{
+				Text = "播放",
+				Size = new Size(60, 30),
+				Location = new Point(10, 10),
+				Visible = false
+			};
+			btnAudioPlay.Click += BtnAudioPlay_Click;
+
+			btnAudioPause = new Button
+			{
+				Text = "暂停",
+				Size = new Size(60, 30),
+				Location = new Point(80, 10),
+				Visible = false
+			};
+			btnAudioPause.Click += BtnAudioPause_Click;
+
+			btnAudioStop = new Button
+			{
+				Text = "停止",
+				Size = new Size(60, 30),
+				Location = new Point(150, 10),
+				Visible = false
+			};
+			btnAudioStop.Click += BtnAudioStop_Click;
+
+			// 创建进度条
+			audioPositionTrackBar = new TrackBar
+			{
+				Size = new Size(300, 45),
+				Location = new Point(10, 50),
+				Minimum = 0,
+				Maximum = 1000,
+				Visible = false
+			};
+			audioPositionTrackBar.Scroll += AudioPositionTrackBar_Scroll;
+
+			// 创建时间标签
+			lblAudioTime = new Label
+			{
+				Size = new Size(150, 20),
+				Location = new Point(320, 50),
+				Text = "00:00 / 00:00",
+				Visible = false
+			};
+
+			// 添加控件到窗体
+			// this.Controls.Add(btnAudioPlay);
+			// this.Controls.Add(btnAudioPause);
+			// this.Controls.Add(btnAudioStop);
+			// this.Controls.Add(audioPositionTrackBar);
+			// this.Controls.Add(lblAudioTime);
+
+			// 初始化定时器用于更新进度
+			audioTimer = new Timer
+			{
+				Interval = 100 // 100ms 更新一次
+			};
+			audioTimer.Tick += AudioTimer_Tick;
+		}
+
+		// 音频控制按钮事件处理
+		private void BtnAudioPlay_Click(object sender, EventArgs e)
+		{
+			if(_audioPlayer != null)
+			{
+				if(_audioPlayer.IsPaused)
+				{
+					_audioPlayer.Resume();
+				}
+				else if(_audioPlayer.IsStopped)
+				{
+					// 需要重新播放当前音频文件
+					// 这里需要保存当前播放的文件路径
+				}
+
+				UpdateAudioControls();
+			}
+		}
+
+		private void BtnAudioPause_Click(object sender, EventArgs e)
+		{
+			_audioPlayer?.Pause();
+			UpdateAudioControls();
+		}
+
+		private void BtnAudioStop_Click(object sender, EventArgs e)
+		{
+			_audioPlayer?.Stop();
+			audioTimer.Stop();
+			UpdateAudioControls();
+			ResetAudioProgress();
+		}
+
+		// 进度条滚动事件
+		private void AudioPositionTrackBar_Scroll(object sender, EventArgs e)
+		{
+			if(_audioPlayer != null && _audioPlayer.GetTotalTime().TotalSeconds > 0)
+			{
+				double ratio = (double)audioPositionTrackBar.Value / audioPositionTrackBar.Maximum;
+				TimeSpan newPosition = TimeSpan.FromSeconds(_audioPlayer.GetTotalTime().TotalSeconds * ratio);
+				_audioPlayer.SetCurrentTime(newPosition);
+			}
+		}
+
+		// 定时器更新音频进度
+		private void AudioTimer_Tick(object sender, EventArgs e)
+		{
+			UpdateAudioProgress();
+		}
+
+		// 更新音频进度显示
+		private void UpdateAudioProgress()
+		{
+			if(_audioPlayer != null)
+			{
+				TimeSpan currentTime = _audioPlayer.GetCurrentTime();
+				TimeSpan totalTime = _audioPlayer.GetTotalTime();
+
+				if(totalTime.TotalSeconds > 0)
+				{
+					// 更新进度条
+					int progress = (int)((currentTime.TotalSeconds / totalTime.TotalSeconds) * audioPositionTrackBar.Maximum);
+					audioPositionTrackBar.Value = Math.Max(0, Math.Min(audioPositionTrackBar.Maximum, progress));
+
+					// 更新时间标签
+					lblAudioTime.Text = $"{currentTime:mm\\:ss} / {totalTime:mm\\:ss}";
+				}
+			}
+		}
+
+		// 重置音频进度显示
+		private void ResetAudioProgress()
+		{
+			audioPositionTrackBar.Value = 0;
+			lblAudioTime.Text = "00:00 / 00:00";
+		}
+
+		// 更新音频控制按钮状态
+		private void UpdateAudioControls()
+		{
+			if(_audioPlayer != null)
+			{
+				switch(_audioPlayer.CurrentState)
+				{
+					case AudioPlayer.PlaybackState.Playing:
+						btnAudioPlay.Text = "播放";
+						btnAudioPlay.Enabled = true;
+						btnAudioPause.Text = "暂停";
+						btnAudioPause.Enabled = true;
+						btnAudioStop.Enabled = true;
+						audioTimer.Start();
+						break;
+					case AudioPlayer.PlaybackState.Paused:
+						btnAudioPlay.Text = "继续";
+						btnAudioPlay.Enabled = true;
+						btnAudioPause.Text = "暂停";
+						btnAudioPause.Enabled = false;
+						btnAudioStop.Enabled = true;
+						audioTimer.Stop();
+						break;
+					case AudioPlayer.PlaybackState.Stopped:
+						btnAudioPlay.Text = "播放";
+						btnAudioPlay.Enabled = true;
+						btnAudioPause.Text = "暂停";
+						btnAudioPause.Enabled = false;
+						btnAudioStop.Enabled = false;
+						audioTimer.Stop();
+						break;
+				}
+			}
+		}
+
+		
+		// 显示音频控制界面
+		private void ShowAudioControls()
+		{
+			if(btnAudioPlay != null)
+				btnAudioPlay.Visible = true;
+			if(btnAudioPause != null)
+				btnAudioPause.Visible = true;
+			if(btnAudioStop != null)
+				btnAudioStop.Visible = true;
+			if(audioPositionTrackBar != null)
+				audioPositionTrackBar.Visible = true;
+			if(lblAudioTime != null)
+				lblAudioTime.Visible = true;
+		}
+
+		// 隐藏音频控制界面
+		private void HideAudioControls()
+		{
+			if(btnAudioPlay != null)
+				btnAudioPlay.Visible = false;
+			if(btnAudioPause != null)
+				btnAudioPause.Visible = false;
+			if(btnAudioStop != null)
+				btnAudioStop.Visible = false;
+			if(audioPositionTrackBar != null)
+				audioPositionTrackBar.Visible = false;
+			if(lblAudioTime != null)
+				lblAudioTime.Visible = false;
+		}
+
 	}
 
-	// 自定义 NAudio 音频播放器（简化示例）
-	public class AudioPlayer
+	// 完整的 AudioPlayer 类实现
+	public class AudioPlayer:IDisposable
 	{
 		private WaveOutEvent _waveOut;
 		private AudioFileReader _audioReader;
+		private string _currentFilePath;
+		private bool _isPaused = false;
+
+		public enum PlaybackState
+		{
+			Stopped,
+			Playing,
+			Paused
+		}
+
+		public PlaybackState CurrentState { get; private set; } = PlaybackState.Stopped;
+
+		public event EventHandler PlaybackCompleted;
+		public event EventHandler PlaybackStarted;
+		public event EventHandler PlaybackPaused;
+		public event EventHandler PlaybackResumed;
+
+		public AudioPlayer()
+		{
+			CurrentState = PlaybackState.Stopped;
+		}
 
 		public void Play(string filePath)
 		{
-			Stop(); // 停止当前播放
+			try
+			{
+				// 如果正在播放相同文件，则不做任何操作
+				if(_currentFilePath == filePath && CurrentState == PlaybackState.Playing)
+				{
+					return;
+				}
 
-			_audioReader = new AudioFileReader(filePath);
-			_waveOut = new WaveOutEvent();
-			_waveOut.Init(_audioReader);
-			_waveOut.Play();
+				Stop(); // 停止当前播放
+
+				_audioReader = new AudioFileReader(filePath);
+				_waveOut = new WaveOutEvent();
+				_waveOut.Init(_audioReader);
+
+				// 订阅播放完成事件
+				_waveOut.PlaybackStopped += OnPlaybackStopped;
+
+				_waveOut.Play();
+				_currentFilePath = filePath;
+				CurrentState = PlaybackState.Playing;
+				_isPaused = false;
+
+				PlaybackStarted?.Invoke(this, EventArgs.Empty);
+			}
+			catch(Exception ex)
+			{
+				throw new Exception($"播放音频文件失败: {ex.Message}");
+			}
+		}
+
+		public void Pause()
+		{
+			try
+			{
+				if(_waveOut != null && CurrentState == PlaybackState.Playing)
+				{
+					_waveOut.Pause();
+					CurrentState = PlaybackState.Paused;
+					_isPaused = true;
+					PlaybackPaused?.Invoke(this, EventArgs.Empty);
+				}
+			}
+			catch(Exception ex)
+			{
+				System.Diagnostics.Debug.WriteLine($"暂停音频播放时出错: {ex.Message}");
+			}
+		}
+
+		public void Resume()
+		{
+			try
+			{
+				if(_waveOut != null && CurrentState == PlaybackState.Paused)
+				{
+					//_waveOut.Resume();
+					CurrentState = PlaybackState.Playing;
+					_isPaused = false;
+					PlaybackResumed?.Invoke(this, EventArgs.Empty);
+				}
+			}
+			catch(Exception ex)
+			{
+				System.Diagnostics.Debug.WriteLine($"恢复音频播放时出错: {ex.Message}");
+			}
 		}
 
 		public void Stop()
 		{
-			_waveOut?.Stop();
-			_audioReader?.Dispose();
-			_waveOut?.Dispose();
+			try
+			{
+				if(_waveOut != null)
+				{
+					_waveOut.Stop();
+					_waveOut.Dispose();
+					_waveOut = null;
+				}
+
+				if(_audioReader != null)
+				{
+					_audioReader.Dispose();
+					_audioReader = null;
+				}
+
+				_currentFilePath = null;
+				CurrentState = PlaybackState.Stopped;
+				_isPaused = false;
+			}
+			catch(Exception ex)
+			{
+				System.Diagnostics.Debug.WriteLine($"停止音频播放时出错: {ex.Message}");
+			}
+		}
+
+		private void OnPlaybackStopped(object sender, StoppedEventArgs e)
+		{
+			// 播放完成时自动停止
+			Stop();
+			PlaybackCompleted?.Invoke(this, EventArgs.Empty);
+		}
+
+		public bool IsPlaying => CurrentState == PlaybackState.Playing;
+		public bool IsPaused => CurrentState == PlaybackState.Paused;
+		public bool IsStopped => CurrentState == PlaybackState.Stopped;
+
+		// 获取音频总时长
+		public TimeSpan GetTotalTime()
+		{
+			return _audioReader?.TotalTime ?? TimeSpan.Zero;
+		}
+
+		// 获取当前播放位置
+		public TimeSpan GetCurrentTime()
+		{
+			return _audioReader?.CurrentTime ?? TimeSpan.Zero;
+		}
+
+		// 设置播放位置
+		public void SetCurrentTime(TimeSpan time)
+		{
+			if(_audioReader != null)
+			{
+				_audioReader.CurrentTime = time;
+			}
+		}
+
+		public void Dispose()
+		{
+			Stop();
 		}
 	}
+
+
 
 	#endregion
 
