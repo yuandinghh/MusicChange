@@ -202,8 +202,10 @@ namespace MusicChange
 		private void pictureBoxThumbnail_Click(object sender, EventArgs e)
 		{
             // 触发播放事件
+
             MediaPlayRequested?.Invoke(this, new MediaPlayEventArgs(FilePath, MediaType));
         }
+
 	}
 
 	// 媒体类型枚举

@@ -76,6 +76,7 @@ namespace MusicChange
 			this.material = new DevComponents.DotNetBar.ButtonX();
 			this.audio = new DevComponents.DotNetBar.ButtonX();
 			this.sC4 = new System.Windows.Forms.SplitContainer();
+			this.pictureBox1 = new System.Windows.Forms.PictureBox();
 			this.videoView1 = new LibVLCSharp.WinForms.VideoView();
 			this.middlePanel = new System.Windows.Forms.Panel();
 			this.progressBar = new System.Windows.Forms.TrackBar();
@@ -129,6 +130,7 @@ namespace MusicChange
 			this.sC4.Panel1.SuspendLayout();
 			this.sC4.Panel2.SuspendLayout();
 			this.sC4.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.videoView1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.progressBar)).BeginInit();
 			this.volumeControlPanel.SuspendLayout();
@@ -433,13 +435,16 @@ namespace MusicChange
 			this.flowLayoutPanelMedia.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.flowLayoutPanelMedia.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.flowLayoutPanelMedia.Location = new System.Drawing.Point(0, 90);
-			this.flowLayoutPanelMedia.Margin = new System.Windows.Forms.Padding(2);
+			this.flowLayoutPanelMedia.Margin = new System.Windows.Forms.Padding(10);
 			this.flowLayoutPanelMedia.Name = "flowLayoutPanelMedia";
 			this.flowLayoutPanelMedia.Padding = new System.Windows.Forms.Padding(5);
 			this.flowLayoutPanelMedia.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
 			this.flowLayoutPanelMedia.Size = new System.Drawing.Size(597, 499);
 			this.flowLayoutPanelMedia.TabIndex = 1;
 			this.flowLayoutPanelMedia.TabStop = true;
+			this.flowLayoutPanelMedia.Scroll += new System.Windows.Forms.ScrollEventHandler(this.flowLayoutPanelMedia_Scroll);
+			this.flowLayoutPanelMedia.ControlAdded += new System.Windows.Forms.ControlEventHandler(this.flowLayoutPanelMedia_ControlAdded);
+			this.flowLayoutPanelMedia.Resize += new System.EventHandler(this.flowLayoutPanelMedia_Resize);
 			// 
 			// panel4
 			// 
@@ -792,6 +797,7 @@ namespace MusicChange
 			// 
 			this.sC4.Panel1.AutoScroll = true;
 			this.sC4.Panel1.AutoScrollMinSize = new System.Drawing.Size(630, 0);
+			this.sC4.Panel1.Controls.Add(this.pictureBox1);
 			this.sC4.Panel1.Controls.Add(this.videoView1);
 			this.sC4.Panel1.Controls.Add(this.middlePanel);
 			this.sC4.Panel1.Controls.Add(this.progressBar);
@@ -817,6 +823,18 @@ namespace MusicChange
 			this.sC4.TabIndex = 0;
 			this.sC4.SplitterMoving += new System.Windows.Forms.SplitterCancelEventHandler(this.sC4_SplitterMoving);
 			this.sC4.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.sC4_SplitterMoved);
+			// 
+			// pictureBox1
+			// 
+			this.pictureBox1.BackColor = System.Drawing.Color.White;
+			this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.pictureBox1.Location = new System.Drawing.Point(0, 30);
+			this.pictureBox1.Name = "pictureBox1";
+			this.pictureBox1.Size = new System.Drawing.Size(717, 604);
+			this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+			this.pictureBox1.TabIndex = 6;
+			this.pictureBox1.TabStop = false;
+			this.pictureBox1.Visible = false;
 			// 
 			// videoView1
 			// 
@@ -1235,6 +1253,7 @@ namespace MusicChange
 			this.sC4.Panel2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.sC4)).EndInit();
 			this.sC4.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.videoView1)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.progressBar)).EndInit();
 			this.volumeControlPanel.ResumeLayout(false);
@@ -1311,6 +1330,7 @@ namespace MusicChange
 		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelMedia;
 		private System.Windows.Forms.Button button2;
 		private System.Windows.Forms.ListBox listBox1;
+		private System.Windows.Forms.PictureBox pictureBox1;
 	}
 }
 #endregion 

@@ -69,11 +69,9 @@ namespace MusicChange
 		private LibVLC _libVLC1, _libVLC2, _libVLC3;
 		private MediaPlayer _player1, _player2, _player3;
 		private VideoView _videoView1, _videoView2, _videoView3;
-		private LibVLC _libVLC; // LibVLC 实例（视频播放用）
-		private AudioPlayer _audioPlayer; // 自定义 AudioPlayer（基于 NAudio，音频播放用）
+		//private LibVLC _libVLC; // LibVLC 实例（视频播放用）
+		//private AudioPlayer _audioPlayer; // 自定义 AudioPlayer（基于 NAudio，音频播放用）
 		bool isShowOnce = false; // 是否已显示一次cut
-
-
 
 		public LaserEditing()
 		{
@@ -100,11 +98,13 @@ namespace MusicChange
 			splitContainer1.SplitterWidth = 6;
 			AdjustSplitContainer();
 			initmportfile();
-			flowLayoutPanelMedia.Width = upperleft.ClientSize.Width - 20;
-			upperleft.VerticalScroll.Visible = true; // 强制显示垂直滚动条
-			upperleft.HorizontalScroll.Visible = false; // 隐藏水平滚动条
-
-
+			//flowLayoutPanelMedia.Width = upperleft.ClientSize.Width - 20;
+			//upperleft.VerticalScroll.Visible = true; // 强制显示垂直滚动条
+			//upperleft.HorizontalScroll.Visible = false; // 隐藏水平滚动条
+			// 设置滚动条策略 - 垂直滚动条始终显示在右侧
+			flowLayoutPanelMedia.HorizontalScroll.Visible = false;
+			flowLayoutPanelMedia.VerticalScroll.Visible = true;
+			Displayvideo();
 		}
 		#region ------- ToolTip 鼠标进入悬停显示 -------
 
@@ -725,7 +725,7 @@ namespace MusicChange
 		// 按钮事件处理
 		private void playPauseButton_Click(object sender, EventArgs e)
 		{  //			var tt = _mediaPlayer;
-			filePath = @"F:\英语学习\MTEY0102.MP4";
+		   //filePath = @"F:\英语学习\MTEY0102.MP4";
 			float zz;
 			if(!IsfirstPlaying)
 			{
@@ -1397,6 +1397,13 @@ namespace MusicChange
 		}
 		// 使用外部播放器的标志
 		private bool UseExternalPlayerForMaximize = false;
+
+		public AudioPlayer AudioPlayer
+		{
+			get;
+			private set;
+		}
+
 		//private VideoAdjustmentSettings _videoAdjustments;
 
 		// 修改原有的最大化切换方法
@@ -2778,6 +2785,89 @@ namespace MusicChange
 
 			}
 		}
+		// 设置控件的停靠和锚定
+		private void flowLayoutPanelMedia_ControlAdded(object sender, ControlEventArgs e)
+		{
+
+		}
+
+		private void flowLayoutPanelMedia_Resize(object sender, EventArgs e)
+		{
+			// 当面板大小改变时，重新计算布局
+			AdjustFlowLayoutForRightAlignment();
+		}
+		// 确保滚动条在需要时显示
+		private void flowLayoutPanelMedia_Scroll(object sender, ScrollEventArgs e)
+		{
+			// 可以在这里添加滚动相关的处理逻辑
+			System.Diagnostics.Debug.WriteLine($"滚动位置: {e.NewValue}");
+		}
+		// 调整 FlowLayoutPanel 内容靠右对齐
+		private void AdjustFlowLayoutForRightAlignment()
+		{
+			if(flowLayoutPanelMedia == null || flowLayoutPanelMedia.Controls.Count == 0)
+				return;
+
+			try
+			{
+				// 计算所有控件的总宽度
+				int totalControlWidth = CalculateTotalControlWidth();
+				int availableWidth = flowLayoutPanelMedia.ClientSize.Width -flowLayoutPanelMedia.Padding.Horizontal;
+
+				// 如果内容超出可视区域，确保滚动条显示
+				if(totalControlWidth > availableWidth)
+				{
+					// 内容超出，滚动条会自动显示
+					flowLayoutPanelMedia.AutoScroll = true;
+				}
+				else
+				{
+					// 内容未超出，但仍然保持滚动功能
+					flowLayoutPanelMedia.AutoScroll = true;
+				}
+
+				// 强制重新布局
+				flowLayoutPanelMedia.PerformLayout();
+			}
+			catch(Exception ex)
+			{
+				System.Diagnostics.Debug.WriteLine($"调整对齐时出错: {ex.Message}");
+			}
+		}
+
+		// 计算所有控件的总宽度
+		private int CalculateTotalControlWidth()
+		{
+			if(flowLayoutPanelMedia.Controls.Count == 0)
+				return 0;
+
+			int maxWidth = 0;
+			int currentRowWidth = 0;
+			int controlWidth = 180 + 20; // 控件宽度 + 间距
+
+			int availableWidth = flowLayoutPanelMedia.ClientSize.Width -
+								flowLayoutPanelMedia.Padding.Horizontal;
+
+			foreach(Control control in flowLayoutPanelMedia.Controls)
+			{
+				if(control is MediaItemControl)
+				{
+					currentRowWidth += controlWidth;
+
+					// 如果当前行宽度超过可用宽度，换行
+					if(currentRowWidth > availableWidth)
+					{
+						maxWidth = Math.Max(maxWidth, currentRowWidth - controlWidth);
+						currentRowWidth = controlWidth; // 新行开始
+					}
+				}
+			}
+
+			// 最后一行的宽度
+			maxWidth = Math.Max(maxWidth, currentRowWidth);
+
+			return maxWidth;
+		}
 
 		private void importdata_Click(object sender, EventArgs e)
 		{
@@ -2854,7 +2944,7 @@ namespace MusicChange
 				//listBox1.Items.Add(control.);
 			}
 
-			hasControls = flowLayoutPanelMedia.Controls.Count >0;
+			hasControls = flowLayoutPanelMedia.Controls.Count > 0;
 			if(hasControls)
 			{
 				panel4.Visible = false;
@@ -2871,20 +2961,66 @@ namespace MusicChange
 			if(e.MediaType == MediaType.Video)
 			{
 				// 使用 LibVLC 播放视频
-				var media = new Media(_libVLC, new Uri(e.FilePath));
-				var mediaPlayer = new MediaPlayer(media);
-				// 假设存在一个 PictureBox 用于显示视频画面：pictureBoxVideoContainer
-				mediaPlayer.Play();
+				//var media = new Media(_libVLC, new Uri(e.FilePath));
+				//var mediaPlayer = new MediaPlayer(media);
+				//// 假设存在一个 PictureBox 用于显示视频画面：pictureBoxVideoContainer
+				//mediaPlayer.Play();
 				//mediaPlayer.SetVideoRenderWindow(pictureBoxVideoContainer.Handle);
+				Displayimage();
+				filePath = e.FilePath;
+				PlayVideo();
 			}
 			else if(e.MediaType == MediaType.Audio)
 			{
 				// 使用 NAudio 播放音频
-				_audioPlayer.Play(e.FilePath);
+				Displayvideo();
+				using(var audioFile = new AudioFileReader(e.FilePath))
+                {
+                    var audioPlayer = new WaveOutEvent();
+                    audioPlayer.Init(audioFile);
+                    audioPlayer.Play();
+		
+				}
+				//显示播放进度条用progressBar
+                progressBar.Maximum = (int)audioFile.TotalTime.TotalSeconds;
+			
+                progressBar.Value = 0;
+				progressTimer.Interval = 1000;
+				progressTimer.Tick += (s, e) =>
+                {
+                    progressBar.Value = (int)audioFile.CurrentTime.TotalSeconds;
+                };
+				progressTimer.Start();
+				progressBar.Maximum = (int)audioFile.TotalTime.TotalSeconds;
+            
+
+				//            AudioPlayer = new AudioPlayer();
+				////AudioPlayer.OnPlaybackCompleted += () =>
+				////{
+				////	// 播放完成时执行清理逻辑
+				////	AudioPlayer.Stop();
+				////};
+				//AudioPlayer.Play(e.FilePath);
+			}
+			else if(e.MediaType == MediaType.Image)
+			{
+				// 使用 WinForms 播放图片
+				Displayvideo();
+				Displayimage();
+				pictureBox1.Image = Image.FromFile(e.FilePath);
 			}
 			// 图片类型可弹出预览窗口等
 		}
-
+		private void Displayimage()
+		{
+			pictureBox1.Visible = true;
+			videoView1.Visible = false;
+		}
+        private void Displayvideo()
+		{
+			pictureBox1.Visible = false;
+			videoView1.Visible = true;
+		}
 		// 辅助方法：判断文件类型
 		private bool IsVideoFile(string filePath) =>
 			new[] { ".mp4", ".avi", ".mkv" }.Contains(Path.GetExtension(filePath).ToLower());
