@@ -56,11 +56,11 @@ namespace MusicChange
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
 			this.sC3 = new System.Windows.Forms.SplitContainer();
 			this.upperleft = new System.Windows.Forms.Panel();
-			this.flowLayoutPanelMedia = new System.Windows.Forms.FlowLayoutPanel();
 			this.panel4 = new System.Windows.Forms.Panel();
 			this.qrcode1 = new System.Windows.Forms.Button();
 			this.openfile = new System.Windows.Forms.Button();
 			this.dG = new DevComponents.DotNetBar.Controls.DataGridViewX();
+			this.flowLayoutPanelMedia = new System.Windows.Forms.FlowLayoutPanel();
 			this.lefttopfile = new System.Windows.Forms.Panel();
 			this.button2 = new System.Windows.Forms.Button();
 			this.qrcode0 = new DevComponents.DotNetBar.ButtonX();
@@ -76,6 +76,7 @@ namespace MusicChange
 			this.material = new DevComponents.DotNetBar.ButtonX();
 			this.audio = new DevComponents.DotNetBar.ButtonX();
 			this.sC4 = new System.Windows.Forms.SplitContainer();
+			this.dispVfilename = new System.Windows.Forms.Label();
 			this.pictureBox1 = new System.Windows.Forms.PictureBox();
 			this.videoView1 = new LibVLCSharp.WinForms.VideoView();
 			this.middlePanel = new System.Windows.Forms.Panel();
@@ -419,8 +420,8 @@ namespace MusicChange
 			this.upperleft.AutoScroll = true;
 			this.upperleft.BackColor = System.Drawing.Color.DimGray;
 			this.upperleft.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.upperleft.Controls.Add(this.flowLayoutPanelMedia);
 			this.upperleft.Controls.Add(this.panel4);
+			this.upperleft.Controls.Add(this.flowLayoutPanelMedia);
 			this.upperleft.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.upperleft.Location = new System.Drawing.Point(82, 97);
 			this.upperleft.Margin = new System.Windows.Forms.Padding(5);
@@ -428,25 +429,6 @@ namespace MusicChange
 			this.upperleft.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
 			this.upperleft.Size = new System.Drawing.Size(599, 591);
 			this.upperleft.TabIndex = 18;
-			// 
-			// flowLayoutPanelMedia
-			// 
-			this.flowLayoutPanelMedia.AutoSize = true;
-			this.flowLayoutPanelMedia.BackColor = System.Drawing.Color.Gray;
-			this.flowLayoutPanelMedia.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.flowLayoutPanelMedia.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.flowLayoutPanelMedia.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-			this.flowLayoutPanelMedia.Location = new System.Drawing.Point(0, 90);
-			this.flowLayoutPanelMedia.Margin = new System.Windows.Forms.Padding(10, 2, 10, 2);
-			this.flowLayoutPanelMedia.Name = "flowLayoutPanelMedia";
-			this.flowLayoutPanelMedia.Padding = new System.Windows.Forms.Padding(5);
-			this.flowLayoutPanelMedia.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-			this.flowLayoutPanelMedia.Size = new System.Drawing.Size(597, 499);
-			this.flowLayoutPanelMedia.TabIndex = 1;
-			this.flowLayoutPanelMedia.TabStop = true;
-			this.flowLayoutPanelMedia.Scroll += new System.Windows.Forms.ScrollEventHandler(this.flowLayoutPanelMedia_Scroll);
-			this.flowLayoutPanelMedia.ControlAdded += new System.Windows.Forms.ControlEventHandler(this.flowLayoutPanelMedia_ControlAdded);
-			this.flowLayoutPanelMedia.Resize += new System.EventHandler(this.flowLayoutPanelMedia_Resize);
 			// 
 			// panel4
 			// 
@@ -530,6 +512,25 @@ namespace MusicChange
 			this.dG.RowTemplate.Height = 27;
 			this.dG.Size = new System.Drawing.Size(597, 90);
 			this.dG.TabIndex = 1;
+			// 
+			// flowLayoutPanelMedia
+			// 
+			this.flowLayoutPanelMedia.AutoSize = true;
+			this.flowLayoutPanelMedia.BackColor = System.Drawing.Color.Gray;
+			this.flowLayoutPanelMedia.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.flowLayoutPanelMedia.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.flowLayoutPanelMedia.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
+			this.flowLayoutPanelMedia.Location = new System.Drawing.Point(0, 0);
+			this.flowLayoutPanelMedia.Margin = new System.Windows.Forms.Padding(10, 2, 10, 2);
+			this.flowLayoutPanelMedia.Name = "flowLayoutPanelMedia";
+			this.flowLayoutPanelMedia.Padding = new System.Windows.Forms.Padding(5);
+			this.flowLayoutPanelMedia.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+			this.flowLayoutPanelMedia.Size = new System.Drawing.Size(597, 589);
+			this.flowLayoutPanelMedia.TabIndex = 1;
+			this.flowLayoutPanelMedia.TabStop = true;
+			this.flowLayoutPanelMedia.Scroll += new System.Windows.Forms.ScrollEventHandler(this.flowLayoutPanelMedia_Scroll);
+			this.flowLayoutPanelMedia.ControlAdded += new System.Windows.Forms.ControlEventHandler(this.flowLayoutPanelMedia_ControlAdded);
+			this.flowLayoutPanelMedia.Resize += new System.EventHandler(this.flowLayoutPanelMedia_Resize);
 			// 
 			// lefttopfile
 			// 
@@ -799,6 +800,7 @@ namespace MusicChange
 			// 
 			this.sC4.Panel1.AutoScroll = true;
 			this.sC4.Panel1.AutoScrollMinSize = new System.Drawing.Size(630, 0);
+			this.sC4.Panel1.Controls.Add(this.dispVfilename);
 			this.sC4.Panel1.Controls.Add(this.pictureBox1);
 			this.sC4.Panel1.Controls.Add(this.videoView1);
 			this.sC4.Panel1.Controls.Add(this.middlePanel);
@@ -826,9 +828,26 @@ namespace MusicChange
 			this.sC4.SplitterMoving += new System.Windows.Forms.SplitterCancelEventHandler(this.sC4_SplitterMoving);
 			this.sC4.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.sC4_SplitterMoved);
 			// 
+			// dispVfilename
+			// 
+			this.dispVfilename.AutoEllipsis = true;
+			this.dispVfilename.BackColor = System.Drawing.Color.White;
+			this.dispVfilename.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+			this.dispVfilename.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.dispVfilename.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.dispVfilename.ForeColor = System.Drawing.Color.Navy;
+			this.dispVfilename.Location = new System.Drawing.Point(0, 612);
+			this.dispVfilename.Margin = new System.Windows.Forms.Padding(0, 0, 0, 15);
+			this.dispVfilename.Name = "dispVfilename";
+			this.dispVfilename.Size = new System.Drawing.Size(717, 22);
+			this.dispVfilename.TabIndex = 7;
+			this.dispVfilename.Text = "label1";
+			this.dispVfilename.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
 			// pictureBox1
 			// 
-			this.pictureBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+			this.pictureBox1.BackColor = System.Drawing.Color.Black;
+			this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.pictureBox1.Location = new System.Drawing.Point(0, 30);
 			this.pictureBox1.Name = "pictureBox1";
@@ -1334,6 +1353,7 @@ namespace MusicChange
 		private System.Windows.Forms.ListBox listBox1;
 		private System.Windows.Forms.PictureBox pictureBox1;
 		private System.Windows.Forms.Timer audioTimer;
+		private System.Windows.Forms.Label dispVfilename;
 	}
 }
 #endregion 

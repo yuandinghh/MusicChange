@@ -68,8 +68,7 @@ namespace MusicChange
 		//int count = 0;
 		private LibVLC _libVLC1, _libVLC2, _libVLC3;
 		private MediaPlayer _player1, _player2, _player3;
-		private VideoView _videoView1, _videoView2, _videoView3;
-		//private LibVLC _libVLC; // LibVLC 实例（视频播放用）
+		private VideoView _videoView1, _videoView2, _videoView3;		//private LibVLC _libVLC; // LibVLC 实例（视频播放用）
 
 		bool isShowOnce = false; // 是否已显示一次cut
 
@@ -3126,7 +3125,6 @@ namespace MusicChange
 				}
 			}
 
-
 			listBox1.Items.Clear();
 			foreach(Control control in flowLayoutPanelMedia.Controls)
 			{
@@ -3141,50 +3139,20 @@ namespace MusicChange
 				listBox1.Items.Add(control.Text);
 				//listBox1.Items.Add(control.);
 			}
-
 			hasControls = flowLayoutPanelMedia.Controls.Count > 0;
 			if(hasControls)
 			{
 				panel4.Visible = false;
+				//dG.Visible = false;
 			}
 			else
 			{
 				panel4.Visible = true;
+				//dG.Visible = false;
 			}
 		}
 
-		// 媒体播放请求的处理逻辑
-		//private void OnMediaPlayRequested(object sender, MediaPlayEventArgs e)
-		//{
-		//	if(e.MediaType == MediaType.Video)
-		//	{
-		//		Displayvideo();
-		//		filePath = e.FilePath;
-		//		PlayVideo();
-		//	}
-		//	else if(e.MediaType == MediaType.Audio)
-		//	{
-		//		// 使用 NAudio 播放音频
-		//		DisplayAudio();
-		//		//using var audioFile = new AudioFileReader(e.FilePath);
-		//		//var audioPlayer = new WaveOutEvent();
-		//		//audioPlayer.Init(audioFile);
-		//		//audioPlayer.Play();
-		//		////取得音频总时长
-		//		//            TimeSpan duration = audioFile.TotalTime;
-		//		//            temp.Text = "音频总时长: " + duration.ToString();
-		//		//播放音频按键
-		//		PlayAudioWithControls(e.FilePath);
-
-		//	}
-		//	else if(e.MediaType == MediaType.Image)
-		//	{
-		//		// 使用 WinForms 播放图片
-		//		Displayimage();
-		//		pictureBox1.Image = Image.FromFile(e.FilePath);
-		//	}
-		//	// 图片类型可弹出预览窗口等
-		//}
+	
 		private void Displayimage()
 		{
 			// 停止当前音频播放
@@ -3192,12 +3160,13 @@ namespace MusicChange
 			volumeControlPanel.Visible = false;
 			pictureBox1.Visible = true;
 			videoView1.Visible = false;
+			dispVfilename.Visible=false;
 		}
 		private void Displayvideo()
 		{
 			// 停止当前音频播放
 			StopCurrentAudioIfPlaying();
-
+			dispVfilename.Visible = false;
 			//buttonX1.Visible = false;
 			volumeControlPanel.Visible = true;
 			pictureBox1.Visible = false;
@@ -3208,6 +3177,8 @@ namespace MusicChange
 			volumeControlPanel.Visible = false;
 			pictureBox1.Visible = true;
 			videoView1.Visible = false;
+			dispVfilename.Visible = true;
+			pictureBox1.Image = Properties.Resources.music;
 		}
 		/// <summary>
 		/// 判断当前是否有音频播放，如果有则停止
@@ -3397,19 +3368,11 @@ namespace MusicChange
 						}));
 					};
 				}
-
-				// 停止当前播放
-				_audioPlayer.Stop();
-
-				// 显示音频控制界面
-				DisplayAudio();
+				_audioPlayer.Stop();    // 停止当前播放
+				DisplayAudio();  // 显示音频控制界面
 				ShowAudioControls();
-
-				// 播放音频
-				_audioPlayer.Play(filePath);
-
-				// 更新UI
-				temp.Text = $"正在播放: {Path.GetFileName(filePath)}";
+				_audioPlayer.Play(filePath);    // 播放音频
+				dispVfilename.Text = $"正在播放: {Path.GetFileName(filePath)}";      // 更新UI
 				UpdateAudioControls();
 				ResetAudioProgress();
 
@@ -3670,7 +3633,6 @@ namespace MusicChange
 		{
 			CurrentState = PlaybackState.Stopped;
 		}
-
 		public void Play(string filePath)
 		{
 			try
@@ -3705,7 +3667,6 @@ namespace MusicChange
 				throw new Exception($"播放音频文件失败: {ex.Message}");
 			}
 		}
-
 		public void Pause()
 		{
 			try
@@ -3726,7 +3687,6 @@ namespace MusicChange
 				System.Diagnostics.Debug.WriteLine($"暂停音频播放时出错: {ex.Message}");
 			}
 		}
-
 		public void Resume()
 		{
 			try
@@ -3762,7 +3722,6 @@ namespace MusicChange
 						_waveOut.Dispose();
 						_waveOut = null;
 					}
-
 					if(_audioReader != null)
 					{
 						_audioReader.Dispose();
@@ -3784,22 +3743,17 @@ namespace MusicChange
 			Stop(); // Stop内部已加锁，确保线程安全
 			PlaybackCompleted?.Invoke(this, EventArgs.Empty);
 		}
-
 		public bool IsPlaying => CurrentState == PlaybackState.Playing;
 		public bool IsPaused => CurrentState == PlaybackState.Paused;
 		public bool IsStopped => CurrentState == PlaybackState.Stopped;
-
-		// 获取音频总时长
-		public TimeSpan GetTotalTime()
+		public TimeSpan GetTotalTime()      // 获取音频总时长
 		{
 			lock(_syncLock) // 加锁：避免访问时资源已释放
 			{
 				return _audioReader?.TotalTime ?? TimeSpan.Zero;
 			}
 		}
-
-		// 获取当前播放位置
-		public TimeSpan GetCurrentTime()
+		public TimeSpan GetCurrentTime()    // 获取当前播放位置
 		{
 			lock(_syncLock) // 加锁：避免访问时资源已释放
 			{
@@ -3818,7 +3772,6 @@ namespace MusicChange
 				}
 			}
 		}
-
 		public void Dispose()
 		{
 			Stop(); // 释放时调用Stop，内部已加锁
