@@ -437,7 +437,7 @@ namespace MusicChange
 			this.flowLayoutPanelMedia.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.flowLayoutPanelMedia.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
 			this.flowLayoutPanelMedia.Location = new System.Drawing.Point(0, 90);
-			this.flowLayoutPanelMedia.Margin = new System.Windows.Forms.Padding(10);
+			this.flowLayoutPanelMedia.Margin = new System.Windows.Forms.Padding(10, 2, 10, 2);
 			this.flowLayoutPanelMedia.Name = "flowLayoutPanelMedia";
 			this.flowLayoutPanelMedia.Padding = new System.Windows.Forms.Padding(5);
 			this.flowLayoutPanelMedia.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -828,7 +828,7 @@ namespace MusicChange
 			// 
 			// pictureBox1
 			// 
-			this.pictureBox1.BackColor = System.Drawing.Color.White;
+			this.pictureBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
 			this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.pictureBox1.Location = new System.Drawing.Point(0, 30);
 			this.pictureBox1.Name = "pictureBox1";
