@@ -138,7 +138,6 @@
 			this.label23 = new System.Windows.Forms.Label();
 			this.button3 = new System.Windows.Forms.Button();
 			this.button42 = new System.Windows.Forms.Button();
-			this.buttonX1 = new DevComponents.DotNetBar.ButtonX();
 			this.checkBoxX1 = new DevComponents.DotNetBar.Controls.CheckBoxX();
 			this.comboBoxEx1 = new DevComponents.DotNetBar.Controls.ComboBoxEx();
 			this.buttonX2 = new DevComponents.DotNetBar.ButtonX();
@@ -177,7 +176,7 @@
 			this.tabPage3.Controls.Add(this.button41);
 			this.tabPage3.Location = new System.Drawing.Point(4, 27);
 			this.tabPage3.Name = "tabPage3";
-			this.tabPage3.Size = new System.Drawing.Size(741, 820);
+			this.tabPage3.Size = new System.Drawing.Size(821, 820);
 			this.tabPage3.TabIndex = 2;
 			this.tabPage3.Text = "测试";
 			this.tabPage3.UseVisualStyleBackColor = true;
@@ -213,7 +212,7 @@
 			this.tabPage2.Location = new System.Drawing.Point(4, 27);
 			this.tabPage2.Name = "tabPage2";
 			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage2.Size = new System.Drawing.Size(741, 820);
+			this.tabPage2.Size = new System.Drawing.Size(821, 820);
 			this.tabPage2.TabIndex = 1;
 			this.tabPage2.Text = "视频旋转";
 			this.tabPage2.UseVisualStyleBackColor = true;
@@ -429,7 +428,7 @@
 			this.tabPage6.Location = new System.Drawing.Point(4, 27);
 			this.tabPage6.Name = "tabPage6";
 			this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage6.Size = new System.Drawing.Size(741, 820);
+			this.tabPage6.Size = new System.Drawing.Size(821, 820);
 			this.tabPage6.TabIndex = 5;
 			this.tabPage6.Text = "视频裁剪";
 			this.tabPage6.UseVisualStyleBackColor = true;
@@ -1032,7 +1031,7 @@
 			this.tabPage1.Location = new System.Drawing.Point(4, 27);
 			this.tabPage1.Name = "tabPage1";
 			this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage1.Size = new System.Drawing.Size(741, 820);
+			this.tabPage1.Size = new System.Drawing.Size(821, 820);
 			this.tabPage1.TabIndex = 0;
 			this.tabPage1.Text = "视频压缩";
 			this.tabPage1.UseVisualStyleBackColor = true;
@@ -1320,7 +1319,7 @@
 			// 
 			this.tabPage4.Location = new System.Drawing.Point(4, 27);
 			this.tabPage4.Name = "tabPage4";
-			this.tabPage4.Size = new System.Drawing.Size(741, 820);
+			this.tabPage4.Size = new System.Drawing.Size(821, 820);
 			this.tabPage4.TabIndex = 3;
 			this.tabPage4.Text = "视频叠加";
 			this.tabPage4.UseVisualStyleBackColor = true;
@@ -1543,20 +1542,6 @@
 			this.button42.UseVisualStyleBackColor = false;
 			this.button42.Click += new System.EventHandler(this.button42_Click);
 			// 
-			// buttonX1
-			// 
-			this.buttonX1.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-			this.buttonX1.AutoSize = true;
-			this.buttonX1.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-			this.buttonX1.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.buttonX1.Location = new System.Drawing.Point(1908, 17);
-			this.buttonX1.Name = "buttonX1";
-			this.buttonX1.Size = new System.Drawing.Size(137, 32);
-			this.buttonX1.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-			this.buttonX1.TabIndex = 26;
-			this.buttonX1.Text = "各种图片转换";
-			this.buttonX1.Click += new System.EventHandler(this.buttonX1_Click);
-			// 
 			// checkBoxX1
 			// 
 			this.checkBoxX1.BackColor = System.Drawing.Color.LightGray;
@@ -1674,7 +1659,6 @@
 			this.Controls.Add(this.buttonX2);
 			this.Controls.Add(this.comboBoxEx1);
 			this.Controls.Add(this.checkBoxX1);
-			this.Controls.Add(this.buttonX1);
 			this.Controls.Add(this.button42);
 			this.Controls.Add(this.button3);
 			this.Controls.Add(this.label23);
@@ -1830,7 +1814,6 @@
 		private System.Windows.Forms.Label label23;
 		private System.Windows.Forms.Button button3;
 		private System.Windows.Forms.Button button42;
-		private DevComponents.DotNetBar.ButtonX buttonX1;
 		private DevComponents.DotNetBar.Controls.CheckBoxX checkBoxX1;
 		private DevComponents.DotNetBar.Controls.ComboBoxEx comboBoxEx1;
 		private DevComponents.DotNetBar.ButtonX buttonX2;

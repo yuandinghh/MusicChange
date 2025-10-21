@@ -76,6 +76,11 @@ namespace MusicChange
 			this.material = new DevComponents.DotNetBar.ButtonX();
 			this.audio = new DevComponents.DotNetBar.ButtonX();
 			this.sC4 = new System.Windows.Forms.SplitContainer();
+			this.audioPositionTrackBar = new System.Windows.Forms.TrackBar();
+			this.lblAudioTime = new DevComponents.DotNetBar.LabelX();
+			this.btnAudioPause = new DevComponents.DotNetBar.ButtonX();
+			this.btnAudioStop = new DevComponents.DotNetBar.ButtonX();
+			this.btnAudioPlay = new DevComponents.DotNetBar.ButtonX();
 			this.dispVfilename = new System.Windows.Forms.Label();
 			this.pictureBox1 = new System.Windows.Forms.PictureBox();
 			this.videoView1 = new LibVLCSharp.WinForms.VideoView();
@@ -132,6 +137,7 @@ namespace MusicChange
 			this.sC4.Panel1.SuspendLayout();
 			this.sC4.Panel2.SuspendLayout();
 			this.sC4.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.audioPositionTrackBar)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.videoView1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.progressBar)).BeginInit();
@@ -259,6 +265,7 @@ namespace MusicChange
 			this.Modifythephoto.Text = "处理图片";
 			this.Modifythephoto.TextAlignment = DevComponents.DotNetBar.eButtonTextAlignment.Left;
 			this.Modifythephoto.TextColor = System.Drawing.Color.Black;
+			this.Modifythephoto.Click += new System.EventHandler(this.Modifythephoto_Click);
 			// 
 			// topleft
 			// 
@@ -800,6 +807,11 @@ namespace MusicChange
 			// 
 			this.sC4.Panel1.AutoScroll = true;
 			this.sC4.Panel1.AutoScrollMinSize = new System.Drawing.Size(630, 0);
+			this.sC4.Panel1.Controls.Add(this.audioPositionTrackBar);
+			this.sC4.Panel1.Controls.Add(this.lblAudioTime);
+			this.sC4.Panel1.Controls.Add(this.btnAudioPause);
+			this.sC4.Panel1.Controls.Add(this.btnAudioStop);
+			this.sC4.Panel1.Controls.Add(this.btnAudioPlay);
 			this.sC4.Panel1.Controls.Add(this.dispVfilename);
 			this.sC4.Panel1.Controls.Add(this.pictureBox1);
 			this.sC4.Panel1.Controls.Add(this.videoView1);
@@ -827,6 +839,96 @@ namespace MusicChange
 			this.sC4.TabIndex = 0;
 			this.sC4.SplitterMoving += new System.Windows.Forms.SplitterCancelEventHandler(this.sC4_SplitterMoving);
 			this.sC4.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.sC4_SplitterMoved);
+			// 
+			// audioPositionTrackBar
+			// 
+			this.audioPositionTrackBar.AutoSize = false;
+			this.audioPositionTrackBar.BackColor = System.Drawing.Color.Gray;
+			this.audioPositionTrackBar.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.audioPositionTrackBar.Location = new System.Drawing.Point(0, 586);
+			this.audioPositionTrackBar.Margin = new System.Windows.Forms.Padding(5);
+			this.audioPositionTrackBar.Maximum = 1000;
+			this.audioPositionTrackBar.Name = "audioPositionTrackBar";
+			this.audioPositionTrackBar.RightToLeft = System.Windows.Forms.RightToLeft.No;
+			this.audioPositionTrackBar.Size = new System.Drawing.Size(717, 26);
+			this.audioPositionTrackBar.TabIndex = 12;
+			this.audioPositionTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
+			// 
+			// lblAudioTime
+			// 
+			this.lblAudioTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+			this.lblAudioTime.BackColor = System.Drawing.Color.White;
+			// 
+			// 
+			// 
+			this.lblAudioTime.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+			this.lblAudioTime.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.lblAudioTime.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+			this.lblAudioTime.Location = new System.Drawing.Point(80, 581);
+			this.lblAudioTime.Name = "lblAudioTime";
+			this.lblAudioTime.Size = new System.Drawing.Size(50, 5);
+			this.lblAudioTime.TabIndex = 11;
+			// 
+			// btnAudioPause
+			// 
+			this.btnAudioPause.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+			this.btnAudioPause.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnAudioPause.BackColor = System.Drawing.Color.Black;
+			this.btnAudioPause.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
+			this.btnAudioPause.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.btnAudioPause.Location = new System.Drawing.Point(356, 581);
+			this.btnAudioPause.Name = "btnAudioPause";
+			this.btnAudioPause.Size = new System.Drawing.Size(28, 28);
+			this.btnAudioPause.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+			this.btnAudioPause.Symbol = "";
+			this.btnAudioPause.SymbolColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+			this.btnAudioPause.SymbolSize = 15F;
+			this.btnAudioPause.TabIndex = 10;
+			this.btnAudioPause.Tooltip = "播放音乐";
+			this.btnAudioPause.Click += new System.EventHandler(this.playPauseButton_Click);
+			// 
+			// btnAudioStop
+			// 
+			this.btnAudioStop.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+			this.btnAudioStop.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnAudioStop.BackColor = System.Drawing.Color.Black;
+			this.btnAudioStop.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
+			this.btnAudioStop.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.btnAudioStop.Location = new System.Drawing.Point(405, 581);
+			this.btnAudioStop.Name = "btnAudioStop";
+			this.btnAudioStop.Size = new System.Drawing.Size(28, 28);
+			this.btnAudioStop.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+			this.btnAudioStop.Symbol = "";
+			this.btnAudioStop.SymbolColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+			this.btnAudioStop.SymbolSize = 15F;
+			this.btnAudioStop.TabIndex = 9;
+			this.btnAudioStop.Tooltip = "停止音乐";
+			this.btnAudioStop.Click += new System.EventHandler(this.BtnAudioStop_Click);
+			// 
+			// btnAudioPlay
+			// 
+			this.btnAudioPlay.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+			this.btnAudioPlay.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnAudioPlay.BackColor = System.Drawing.Color.Black;
+			this.btnAudioPlay.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
+			this.btnAudioPlay.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.btnAudioPlay.Location = new System.Drawing.Point(305, 581);
+			this.btnAudioPlay.Name = "btnAudioPlay";
+			this.btnAudioPlay.Size = new System.Drawing.Size(28, 28);
+			this.btnAudioPlay.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+			this.btnAudioPlay.Symbol = "";
+			this.btnAudioPlay.SymbolColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+			this.btnAudioPlay.SymbolSize = 15F;
+			this.btnAudioPlay.TabIndex = 8;
+			this.btnAudioPlay.Tooltip = "播放音乐";
+			this.btnAudioPlay.Click += new System.EventHandler(this.BtnAudioPlay_Click);
 			// 
 			// dispVfilename
 			// 
@@ -1137,14 +1239,14 @@ namespace MusicChange
 			// 
 			this.listBox1.FormattingEnabled = true;
 			this.listBox1.ItemHeight = 15;
-			this.listBox1.Location = new System.Drawing.Point(52, 390);
+			this.listBox1.Location = new System.Drawing.Point(17, 390);
 			this.listBox1.Name = "listBox1";
-			this.listBox1.Size = new System.Drawing.Size(278, 154);
+			this.listBox1.Size = new System.Drawing.Size(383, 214);
 			this.listBox1.TabIndex = 5;
 			// 
 			// rightChannelProgressBar
 			// 
-			this.rightChannelProgressBar.Location = new System.Drawing.Point(34, 634);
+			this.rightChannelProgressBar.Location = new System.Drawing.Point(17, 660);
 			this.rightChannelProgressBar.Name = "rightChannelProgressBar";
 			this.rightChannelProgressBar.Size = new System.Drawing.Size(177, 23);
 			this.rightChannelProgressBar.TabIndex = 2;
@@ -1190,7 +1292,7 @@ namespace MusicChange
 			// 
 			// leftChannelProgressBar
 			// 
-			this.leftChannelProgressBar.Location = new System.Drawing.Point(34, 582);
+			this.leftChannelProgressBar.Location = new System.Drawing.Point(17, 631);
 			this.leftChannelProgressBar.Name = "leftChannelProgressBar";
 			this.leftChannelProgressBar.Size = new System.Drawing.Size(177, 23);
 			this.leftChannelProgressBar.TabIndex = 1;
@@ -1274,6 +1376,7 @@ namespace MusicChange
 			this.sC4.Panel2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.sC4)).EndInit();
 			this.sC4.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.audioPositionTrackBar)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.videoView1)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.progressBar)).EndInit();
@@ -1354,6 +1457,11 @@ namespace MusicChange
 		private System.Windows.Forms.PictureBox pictureBox1;
 		private System.Windows.Forms.Timer audioTimer;
 		private System.Windows.Forms.Label dispVfilename;
+		private DevComponents.DotNetBar.ButtonX btnAudioPlay;
+		private DevComponents.DotNetBar.ButtonX btnAudioPause;
+		private DevComponents.DotNetBar.ButtonX btnAudioStop;
+		private DevComponents.DotNetBar.LabelX lblAudioTime;
+		private System.Windows.Forms.TrackBar audioPositionTrackBar;
 	}
 }
 #endregion 

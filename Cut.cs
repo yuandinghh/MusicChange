@@ -1342,8 +1342,8 @@ bilinear=1：使用双线性插值提高旋转后的画质
 		{
 			//跳转到changepictuer窗口
 			//this.Hide();
-			//ChangePictuer change = new ChangePictuer(); //???
-			//change.Show();
+			ChangePictuer change = new ChangePictuer(); //???
+			change.Show();
 
 		}
 

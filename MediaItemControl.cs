@@ -42,6 +42,7 @@ namespace MusicChange
 			lblFileName.AutoEllipsis = false;
 			lblFileName.Visible = true;
 			lblFileName.BringToFront();
+
 			btnPlay.Visible = false;
 			btnPlay.BringToFront();
 
@@ -53,8 +54,8 @@ namespace MusicChange
 			{
 				LoadVideoThumbnailAsync(filePath);
 			}
-			btnPlay.Click += (s, e) => PlayMedia();     // 播放按钮点击事件
 
+			btnPlay.Click += (s, e) => PlayMedia();     // 播放按钮点击事件
 			// 订阅点击事件
 			pictureBoxThumbnail.Click += (s, e) => PlayMedia();
 			lblFileName.Click += (s, e) => PlayMedia();
@@ -433,33 +434,7 @@ namespace MusicChange
 				pictureBoxThumbnail.Image = Properties.Resources.DefaultVideoThumbnail;
 			}
 		}
-
-		//private async void LoadVideoThumbnailAsync(string videoPath)
-		//{
-		//	try
-		//	{
-		//		// 在后台线程加载缩略图
-		//		Image thumbnail = await Task.Run(() => ExtractVideoThumbnail(videoPath));
-
-		//		// 在 UI 线程更新图片
-		//		if(thumbnail != null && !this.IsDisposed)
-		//		{
-		//			this.Invoke(new Action(() =>
-		//			{
-		//				if(!pictureBoxThumbnail.IsDisposed)
-		//				{
-		//					pictureBoxThumbnail.Image = ResizeImage(thumbnail, 120, 90);
-		//				}
-		//				thumbnail.Dispose();
-		//			}));
-		//		}
-		//	}
-		//	catch(Exception ex)
-		//	{
-		//		System.Diagnostics.Debug.WriteLine($"异步加载缩略图失败: {ex.Message}");
-		//	}
-		//}
-
+	
 		private void PlayMedia()
 		{
 			// 触发播放事件
