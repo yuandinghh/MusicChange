@@ -13,6 +13,9 @@ using MediaPlayer = LibVLCSharp.Shared.MediaPlayer;
 using Point = System.Drawing.Point;
 using NAudio.Wave;
 using System.Windows.Forms.VisualStyles;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Drawing.Imaging;
 
 #endregion
 #region  ------------- 全局变量 -------------
@@ -69,7 +72,7 @@ namespace MusicChange
 		private LibVLC _libVLC1, _libVLC2, _libVLC3;
 		private MediaPlayer _player1, _player2, _player3;
 		private VideoView _videoView1, _videoView2, _videoView3;        //private LibVLC _libVLC; // LibVLC 实例（视频播放用）
-
+		private static readonly Random _random = new( Guid.NewGuid().GetHashCode() );
 		bool isShowOnce = false; // 是否已显示一次cut
 
 		public LaserEditing()
@@ -2678,15 +2681,10 @@ namespace MusicChange
 			string videoPath1 = @"F:\newipad\sex.MP4";
 			string videoPath2 = @"F:\newipad\已经压缩\让古画活起来_medium.mp4";
 			string videoPath3 = @"F:\newipad\已经压缩\背部跳舞_s.mp4";
-
-			// 播放第一个视频
-			PlayVideo(_player1, videoPath1);
-
-			// 播放第二个视频
-			PlayVideo(_player2, videoPath2);
-
-			// 播放第三个视频
-			PlayVideo(_player3, videoPath3);
+			
+			PlayVideo(_player1, videoPath1);  // 播放第一个视频
+			PlayVideo(_player2, videoPath2);   // 播放第二个视频
+			PlayVideo(_player3, videoPath3); 
 
 		}
 
@@ -3113,13 +3111,12 @@ namespace MusicChange
 		private void importdata_Click(object sender, EventArgs e)
 		{
 			//panel4.Visible = true;
-			button2_Click(sender, e);
+			_ = button2_ClickAsync( sender, e );
 		}
-		private void button2_Click(object sender, EventArgs e)
+		private async Task button2_ClickAsync(object sender, EventArgs e)
 		{
 			//导入素材  Importing the materials  			int c = flowLayoutPanel1.Controls.Count;
 			listBox1.Items.Clear();
-
 			string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);  // 获取默认文档目录路径
 			temp.Text = "默认文档目录: " + documentsPath;
 			string subDirectory = Path.Combine(documentsPath, "ResourceFolder");
@@ -3177,10 +3174,18 @@ namespace MusicChange
 					if(mediaType == MediaType.Video)
 					{
 						//根据文件名显示视频文件的时长
-						var duration = GetVideoDurationByVLC(mediaItem.FilePath);
-						if (duration != null)
+						var videoInfo = await GetVideoInfo(mediaItem.FilePath);
+						//Console.WriteLine($"视频时长：{videoInfo.DurationSeconds} 秒");
+
+						// 保存首帧图片（示例）
+						if(videoInfo.Thumbnail != null)
 						{
-							string durationText = $"时长: {duration}";
+							videoInfo.Thumbnail.Save("thumbnail.jpg");
+							textBoxX1.Text = "首帧图片已保存";
+						}
+						if (videoInfo != null)
+						{
+							string durationText = $"时长: {videoInfo.DurationSeconds}";
 							listBox1.Items.Add(durationText);
 						}
 						else
@@ -3199,46 +3204,224 @@ namespace MusicChange
 				panel4.Visible = true; 				//dG.Visible = false;
 			}
 		}
-
-		public static string GetVideoDurationByVLC(string filePath)
+		public static async Task<VideoInfo> GetVideoInfo(string filePath)
 		{
-			// 初始化 LibVLC 环境（需确保 VLC 运行时已安装并配置）
-			Core.Initialize();
+			var result = new VideoInfo();
+			try {
+				// 初始化 LibVLC
+				using var libVlc = new LibVLC();
+				using var media = new Media( libVlc, filePath, FromType.FromPath );
+				using var player = new MediaPlayer( media );
 
-			using var libVlc = new LibVLC();
-			using var media = new Media(libVlc, filePath);
-			try
-			{
-				// 解析媒体元数据（必须调用此方法才能获取时长）
-				//bool parseSuccess = media.Parse(MediaParseOptions.ParseLocal, 5000);
-				//if(!parseSuccess)
-				//{
-				//	Console.WriteLine("解析超时或失败");
-				//	return "0";
-				//}
-				//stop2秒
-                Thread.Sleep(2000);
-				media.Parse(MediaParseOptions.ParseLocal, 100000);
+				// 启动播放以便 LibVLC 填充 Length 并允许 TakeSnapshot
+				player.Play();
 
-				// 时长单位：微秒（1 秒 = 1,000,000 微秒）
-				long durationMicroseconds = media.Duration;
-				if(durationMicroseconds <= 0)
-				{
-					return null; // 解析失败
+				// 等待播放器进入 Playing 或拿到长度，最多等待 3 秒
+				var sw = System.Diagnostics.Stopwatch.StartNew();
+				while (sw.ElapsedMilliseconds < 3000) {
+					if (player.Length > 0 || player.State == VLCState.Playing)
+						break;
+					await Task.Delay( 100 );
 				}
-				// 转换为总秒数（四舍五入取整）
-				int totalSeconds =(int) (durationMicroseconds / 100);
-				return totalSeconds.ToString(); // 返回秒数字符串
+
+				// 获取视频时长
+				long lengthMs = player.Length;
+				var ts = TimeSpan.FromMilliseconds( Math.Max( 0, lengthMs ) );
+				result.DurationSeconds = ts.Hours > 0 ? ts.ToString( @"hh\:mm\:ss" ) : ts.ToString( @"mm\:ss" );
+
+				// 保存封面到当前文件夹
+				// 1. 生成当前 Unix 毫秒级时间戳（UTC时间，从1970-01-01开始）
+				long unixTimestamp = (long)(DateTime.UtcNow - new DateTime( 1970, 1, 1, 0, 0, 0, DateTimeKind.Utc )).TotalMilliseconds;
+				string timestampStr = unixTimestamp.ToString();
+
+				// 2. 生成三位随机数（000-999）
+				int randomNum;
+				lock (_random) // 锁定随机数生成，确保多线程安全
+				{
+					randomNum = _random.Next( 0, 1000 ); // 范围 [0, 999]
+				}
+				string randomStr = randomNum.ToString( "D3" ); // 确保三位，不足补零（如 5 → "005"）
+
+				// 3. 组合结果（时间戳 + 分隔符 + 随机数）
+				string filename = $"{timestampStr}_{randomStr}.jpg";
+				// 
+				string thumbnailPath = Path.Combine( Directory.GetCurrentDirectory(), filename );
+				bool snapshotSuccess = player.TakeSnapshot( 0u, thumbnailPath, 0u, 0u );
+
+				if (snapshotSuccess && File.Exists( thumbnailPath )) {
+					result.Thumbnail = Image.FromFile( thumbnailPath );
+				}
+
+				// 停止播放
+				player.Stop();
+				player.Dispose();
 			}
-			catch(Exception ex)
-			{
-				// 处理异常窗口模式
-				MessageBox.Show($"获取时长失败：{ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				return null;
+			catch (Exception ex) {
+				System.Diagnostics.Debug.WriteLine( $"获取视频信息时出错: {ex.Message}" );
 			}
+
+			return result;
 		}
+		//public static async Task<VideoInfo> GetVideoInfo(string filePath)
+		//{
+		//	var result = new VideoInfo();
+		//	try {
+		//		// Core.Initialize(); // 如果外部已经初始化可注释掉
+		//		using var libVlc = new LibVLC();
+		//		using var media = new Media( libVlc, filePath, FromType.FromPath );
+		//		using var player = new MediaPlayer( media );
+
+		//		// 启动播放以便 LibVLC 填充 Length 并允许 TakeSnapshot
+		//		player.Play();
+
+		//		// 等待播放器进入 Playing 或拿到长度，最多等待 5 秒
+		//		var sw = System.Diagnostics.Stopwatch.StartNew();
+		//		while (sw.ElapsedMilliseconds < 3000) {
+		//			if (player.Length > 0 || player.State == VLCState.Playing)
+		//				break;
+		//			await Task.Delay( 100 );
+		//		}
+
+		//		// 获取并格式化时长为 MM:SS（若超过1小时则使用 HH:MM:SS）
+		//		long lengthMs = player.Length;
+		//		var ts = TimeSpan.FromMilliseconds( Math.Max( 0, lengthMs ) );
+		//		result.DurationSeconds = ts.Hours > 0 ? ts.ToString( @"hh\:mm\:ss" ) : ts.ToString( @"mm\:ss" );
+
+		//		// 先尝试用 TakeSnapshot 保存到临时文件（LibVLC 常用签名）
+		//		string tmpPath = Path.Combine( Path.GetTempPath(), Guid.NewGuid().ToString( "N" ) + ".png" );
+		//		//图片文件存入 当前文件夹
+		//		//图片文件存入 当前文件夹
 
 
+		//		try {
+		//			bool snapOk = player.TakeSnapshot( 0u, tmpPath, 0u, 0u );
+		//			if (snapOk && File.Exists( tmpPath )) {
+		//				// 读取到内存副本，避免文件锁定问题
+		//				using (var img = Image.FromFile( tmpPath )) {
+		//					result.Thumbnail = new Bitmap( img );
+		//				}
+		//				try {
+		//					File.Delete( tmpPath );
+		//				}
+		//				catch { /* 忽略删除失败 */ }
+		//			}
+		//		}
+		//		catch {
+		//			// 忽略快照异常，返回可能的时长即可
+		//			try {
+		//				if (File.Exists( tmpPath ))
+		//					File.Delete( tmpPath );
+		//			}
+		//			catch { }
+		//		}
+
+		//		// 停止播放
+		//		player.Stop();  
+		//		player.Dispose();
+		//	}
+		//	catch (Exception) {
+		//		// 保持安静：返回可能为空的 result，调用方可判空或重试
+		//	}
+
+		//	return result;
+		//}
+		////public static async Task<VideoInfo> GetVideoInfo(string filePath)
+		////{
+		////	Core.Initialize();
+		////	var result = new VideoInfo();
+		////	var tcs = new TaskCompletionSource<VideoInfo>();
+		////	LibVLC libVlc = null;
+		////	MediaPlayer mediaPlayer = null;
+		////	Media media = null;
+		////	bool isCompleted = false;
+
+		////	try
+		////	{
+		////		libVlc = new LibVLC();
+		////		media = new Media(libVlc, filePath);
+		////		mediaPlayer = new MediaPlayer(media);
+
+		////		// 监听播放状态变化
+		////		mediaPlayer.TimeChanged += (s, e) =>
+		////		{
+		////			if(isCompleted)
+		////				return;
+
+		////			// 获取时长（毫秒 -> 秒）
+		////			if(mediaPlayer.Length > 0)
+		////			{
+		////				result.DurationSeconds = ((int)(mediaPlayer.Length / 1000)).ToString();
+		////			}
+
+
+		////			// 替换 TakeSnapshot 调用部分
+		////			using (var ms = new MemoryStream()) {
+		////				// 检查 MediaPlayer 是否支持 TakeSnapshot 方法
+		////				if (mediaPlayer != null && mediaPlayer.CanTakeSnapshot) {
+		////					// 使用 TakeSnapshot 方法保存快照
+		////					bool snapshotSuccess = mediaPlayer.TakeSnapshot( 0, ms, 0, 0 );
+		////					if (snapshotSuccess && ms.Length > 0) {
+		////						ms.Position = 0; // 重置流位置
+		////						result.Thumbnail = Image.FromStream( ms ); // 转换为 Image
+		////					}
+		////					else {
+		////						MessageBox.Show( "无法截取快照，请检查播放器状态或视频内容。", "错误", MessageBoxButtons.OK, MessageBoxIcon.Warning );
+		////					}
+		////				}
+		////				else {
+		////					MessageBox.Show( "当前 MediaPlayer 不支持截取快照功能。", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error );
+		////				}
+		////			}
+
+		////			// 满足条件后停止并返回结果
+		////			if (!string.IsNullOrEmpty(result.DurationSeconds) && result.Thumbnail != null)
+		////			{
+		////				isCompleted = true;
+		////				mediaPlayer.Stop();
+		////				tcs.TrySetResult(result);
+		////			}
+		////		};
+
+		////		// 播放失败处理
+		////		mediaPlayer.EncounteredError += (s, e) =>
+		////		{
+		////			if(!isCompleted)
+		////			{
+		////				isCompleted = true;
+		////				mediaPlayer.Stop();
+		////				tcs.TrySetResult(result);
+		////			}
+		////		};
+
+		////		// 启动播放
+		////		mediaPlayer.Play();
+
+		////		// 超时机制（5秒）
+		////		_ = Task.Delay(5000).ContinueWith(_ =>
+		////		{
+		////			if(!isCompleted)
+		////			{
+		////				isCompleted = true;
+		////				mediaPlayer?.Stop();
+		////				tcs.TrySetResult(result);
+		////			}
+		////		});
+		////	}
+		////	catch(Exception ex)
+		////	{
+		////		Console.WriteLine($"错误：{ex.Message}");
+		////		tcs.TrySetResult(result);
+		////	}
+
+		////	// 释放资源并返回结果
+		////	return await tcs.Task.ContinueWith(task =>
+		////	{
+		////		mediaPlayer?.Dispose();
+		////		media?.Dispose();
+		////		libVlc?.Dispose();
+		////		return task.Result;
+		////	});
+		////}
 		private void Displayimage()
 		{
 			// 停止当前音频播放
@@ -3383,7 +3566,6 @@ namespace MusicChange
 					HideAudioControls();
 					System.Diagnostics.Debug.WriteLine("已停止音频播放");
 				}
-
 				// 停止视频播放
 				if(mediaPlayer != null && (mediaPlayer.State == VLCState.Playing || mediaPlayer.State == VLCState.Paused))
 				{
@@ -3402,7 +3584,6 @@ namespace MusicChange
 				System.Diagnostics.Debug.WriteLine($"停止媒体播放时出错: {ex.Message}");
 			}
 		}
-
 		private void PlayAudioWithControls(string filePath)     // 播放音频并显示控制界面
 		{
 			try
@@ -3443,73 +3624,11 @@ namespace MusicChange
 		}
 		// 在 LaserEditing 类的全局变量区域添加
 		private AudioPlayer _audioPlayer; // NAudio 播放器实例
-
 		// 在 InitializeComponent 方法中初始化音频控件（如果没有在设计器中添加）
 		private void InitializeAudioControls()
 		{
-			// 创建音频控制按钮
-			//btnAudioPlay = new ButtonX
-			//{
-			//	Text = "播放",
-			//	Size = new Size(60, 30),
-			//	Location = new Point(10, 10),
-			//	Visible = false
-			//};
-			//btnAudioPlay.Click += BtnAudioPlay_Click;
-
-			//btnAudioPause = new ButtonX
-			//{
-			//	Text = "暂停",
-			//	Size = new Size(60, 30),
-			//	Location = new Point(80, 10),
-			//	Visible = false
-			//};
-			//btnAudioPause.Click += BtnAudioPause_Click;
-
-			//btnAudioStop = new ButtonX
-			//{
-			//	Text = "停止",
-			//	Size = new Size(60, 30),
-			//	Location = new Point(150, 10),
-			//	Visible = false
-			//};
-			//btnAudioStop.Click += BtnAudioStop_Click;
-
-			//// 创建进度条
-			//audioPositionTrackBar = new TrackBar
-			//{
-			//	Size = new Size(300, 45),
-			//	Location = new Point(10, 50),
-			//	Minimum = 0,
-			//	Maximum = 1000,
-			//	Visible = false
-			//};
-			//audioPositionTrackBar.Scroll += AudioPositionTrackBar_Scroll;
-
-			//// 创建时间标签
-			//lblAudioTime = new Label
-			//{
-			//	Size = new Size(150, 20),
-			//	Location = new Point(320, 50),
-			//	Text = "00:00 / 00:00",
-			//	Visible = false
-			//};
-
 			// 添加控件到窗体
-			this.sC4.Panel1.Controls.Add(btnAudioPlay);
-			this.sC4.Panel1.Controls.Add(btnAudioPause);
-			this.sC4.Panel1.Controls.Add(btnAudioStop);
-			this.sC4.Panel1.Controls.Add(audioPositionTrackBar);
-			this.sC4.Panel1.Controls.Add(lblAudioTime);
-
-			// 初始化定时器用于更新进度
-			audioTimer = new Timer
-			{
-				Interval = 100 // 100ms 更新一次
-			};
-			audioTimer.Tick += AudioTimer_Tick;
-		}
-
+			}
 		// 音频控制按钮事件处理
 		private void BtnAudioPlay_Click(object sender, EventArgs e)
 		{
@@ -3534,7 +3653,6 @@ namespace MusicChange
 			_audioPlayer?.Pause();
 			UpdateAudioControls();
 		}
-
 		private void BtnAudioStop_Click(object sender, EventArgs e)
 		{
 			_audioPlayer?.Stop();
@@ -3542,7 +3660,6 @@ namespace MusicChange
 			UpdateAudioControls();
 			ResetAudioProgress();
 		}
-
 		// 进度条滚动事件
 		private void AudioPositionTrackBar_Scroll(object sender, EventArgs e)
 		{
@@ -3558,17 +3675,10 @@ namespace MusicChange
 		{
 
 		}
-
 		// 定时器更新音频进度
 		private void AudioTimer_Tick(object sender, EventArgs e)
 		{
-			UpdateAudioProgress();
-		}
-
-		// 更新音频进度显示
-		private void UpdateAudioProgress()
-		{
-			if(_audioPlayer != null)
+			if(_audioPlayer != null)  // 更新音频进度显示
 			{
 				TimeSpan currentTime = _audioPlayer.GetCurrentTime();
 				TimeSpan totalTime = _audioPlayer.GetTotalTime();
@@ -3584,16 +3694,13 @@ namespace MusicChange
 				}
 			}
 		}
-
 		// 重置音频进度显示
 		private void ResetAudioProgress()
 		{
 			audioPositionTrackBar.Value = 0;
 			lblAudioTime.Text = "00:00 / 00:00";
 		}
-
-		// 更新音频控制按钮状态
-		private void UpdateAudioControls()
+		private void UpdateAudioControls()  // 更新音频控制按钮状态
 		{
 			if(_audioPlayer != null)
 			{
@@ -3626,8 +3733,6 @@ namespace MusicChange
 				}
 			}
 		}
-
-
 		// 显示音频控制界面
 		private void ShowAudioControls()
 		{
@@ -3642,7 +3747,6 @@ namespace MusicChange
 			if(lblAudioTime != null)
 				lblAudioTime.Visible = true;
 		}
-
 		// 隐藏音频控制界面
 		private void HideAudioControls()
 		{
@@ -3657,9 +3761,9 @@ namespace MusicChange
 			if(lblAudioTime != null)
 				lblAudioTime.Visible = false;
 		}
-
+		#endregion
 	}
-
+	#region ------------ calss  AudioPlayer  VideoInfo 属性类 获取  ------------
 	public class AudioPlayer:IDisposable
 	{
 		private WaveOutEvent _waveOut;
@@ -3761,35 +3865,61 @@ namespace MusicChange
 				System.Diagnostics.Debug.WriteLine($"恢复音频播放时出错: {ex.Message}");
 			}
 		}
-		public void Stop()
+
+		public void Stop( )
 		{
-			try
-			{
-				lock(_syncLock) // 加锁：确保资源释放时无其他线程访问
-				{
-					if(_waveOut != null)
-					{
-						// 先取消事件订阅，避免释放后事件仍触发
-						_waveOut.PlaybackStopped -= OnPlaybackStopped;
+			try {
+				lock (_syncLock) {
+					if (_waveOut != null) {
+						_waveOut.PlaybackStopped -= OnPlaybackStopped; // 取消事件订阅
 						_waveOut.Stop();
 						_waveOut.Dispose();
 						_waveOut = null;
 					}
-					if(_audioReader != null)
-					{
-						_audioReader.Dispose();
+
+					if (_audioReader != null) {
+						//_audioReader.Dispose();     //????????????????
 						_audioReader = null;
 					}
+
 					_currentFilePath = null;
 					CurrentState = PlaybackState.Stopped;
 					_isPaused = false;
 				}
 			}
-			catch(Exception ex)
-			{
-				System.Diagnostics.Debug.WriteLine($"停止音频播放时出错: {ex.Message}");
+			catch (Exception ex) {
+				System.Diagnostics.Debug.WriteLine( $"停止音频播放时出错: {ex.Message}" );
 			}
 		}
+		//public void Stop()
+		//{
+		//	try
+		//	{
+		//		lock(_syncLock) // 加锁：确保资源释放时无其他线程访问
+		//		{
+		//			if(_waveOut != null)
+		//			{
+		//				// 先取消事件订阅，避免释放后事件仍触发
+		//				_waveOut.PlaybackStopped -= OnPlaybackStopped;
+		//				_waveOut.Stop();
+		//				_waveOut.Dispose();
+		//				_waveOut = null;
+		//			}
+		//			if(_audioReader != null)
+		//			{
+		//				_audioReader.Dispose();
+		//				_audioReader = null;
+		//			}
+		//			_currentFilePath = null;
+		//			CurrentState = PlaybackState.Stopped;
+		//			_isPaused = false;
+		//		}
+		//	}
+		//	catch(Exception ex)
+		//	{
+		//		System.Diagnostics.Debug.WriteLine($"停止音频播放时出错: {ex.Message}");
+		//	}
+		//}
 		private void OnPlaybackStopped(object sender, StoppedEventArgs e)
 		{
 			// 事件可能在非UI线程触发，通过锁同步调用Stop
@@ -3830,7 +3960,17 @@ namespace MusicChange
 			Stop(); // 释放时调用Stop，内部已加锁
 		}
 	}
-
+	public class VideoInfo
+	{
+		public string DurationSeconds
+		{
+			get; set;
+		} // 时长（秒）
+		public Image Thumbnail
+		{
+			get; set;
+		} // 首帧图片
+	}
 	#endregion
 
 	#region ------------     ------------

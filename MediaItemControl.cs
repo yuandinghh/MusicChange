@@ -62,159 +62,6 @@ namespace MusicChange
 			this.Click += (s, e) => PlayMedia();
 
 		}
-		//private Image ExtractFrameWithVLC(string videoPath)
-		//{
-		//	try
-		//	{
-		//		// 创建临时目录存储截图
-		//		string tempDir = Path.Combine(Path.GetTempPath(), "VideoThumbnails");
-		//		Directory.CreateDirectory(tempDir);
-
-		//		string screenshotPath = Path.Combine(tempDir, $"{Guid.NewGuid()}.png");
-
-		//		// 使用 VLC 命令行截图
-		//		var processInfo = new ProcessStartInfo
-		//		{
-		//			FileName = "vlc",
-		//			Arguments = $"\"{videoPath}\" --intf dummy --dummy-quiet --snapshot-path \"{tempDir}\" --snapshot-format png --snapshot-preview 0 --start-time 1 --stop-time 1 --run-time 1 vlc://quit",
-		//			UseShellExecute = false,
-		//			CreateNoWindow = true
-		//		};
-
-		//		using(var process = Process.Start(processInfo))
-		//		{
-		//			process.WaitForExit(5000); // 等待最多5秒
-
-		//			if(File.Exists(screenshotPath))
-		//			{
-		//				using(var fs = new FileStream(screenshotPath, FileMode.Open, FileAccess.Read))
-		//				{
-		//					Image thumbnail = Image.FromStream(fs);
-		//					File.Delete(screenshotPath);
-		//					Directory.Delete(tempDir, true);
-		//					return thumbnail;
-		//				}
-		//			}
-		//		}
-		//	}
-		//	catch(Exception ex)
-		//	{
-		//		System.Diagnostics.Debug.WriteLine($"VLC 截图失败: {ex.Message}");
-		//	}
-
-		//	return null;
-		//}
-
-		//private void SetThumbnail(string filePath, MediaType mediaType)
-		//{
-		//    try
-		//    {
-		//        if(mediaType == MediaType.Image && File.Exists(filePath))
-		//        {
-		//            // 对于图片文件，尝试加载缩略图
-		//            Image originalImage = Image.FromFile(filePath);
-		//            pictureBoxThumbnail.Image = ResizeImage(originalImage, 120, 90);
-		//            originalImage.Dispose();
-		//        }
-		//        else if(mediaType == MediaType.Video)
-		//        {
-		//            // 视频文件使用默认图标
-		//            //视频文件使用视频封面
-		//            //using(var video = new VideoPlayer(filePath))
-		//            //{
-		//            //    pictureBoxThumbnail.Image = video.GetThumbnail();
-		//            //}
-		//            //pictureBoxThumbnail.SizeMode = PictureBoxSizeMode.Zoom;
-
-		//            pictureBoxThumbnail.Image = Properties.Resources.DefaultVideoThumbnail;
-		//        }
-		//        else if(mediaType == MediaType.Audio)
-		//        {
-		//            // 音频文件使用默认图标
-		//            pictureBoxThumbnail.Image = Properties.Resources.music43;  //DefaultAudioThumbnail
-		//        }
-		//        else
-		//        {
-		//            // 其他类型使用默认图标
-		//            pictureBoxThumbnail.Image = Properties.Resources.music43;  //DefaultFileIcon;
-		//        }
-		//    }
-		//    catch(Exception ex)
-		//    {
-		//        // 出错时使用默认图标
-		//        pictureBoxThumbnail.Image = Properties.Resources.DefaultVideoThumbnail;  //DefaultFileIcon;
-		//        System.Diagnostics.Debug.WriteLine($"加载缩略图失败: {ex.Message}");
-		//    }
-		//}
-		//private void SetThumbnail(string filePath, MediaType mediaType)
-		//{
-		//	try
-		//	{
-		//		if(mediaType == MediaType.Image && File.Exists(filePath))
-		//		{
-		//			// 对于图片文件，尝试加载缩略图
-		//			using(Image originalImage = Image.FromFile(filePath))
-		//			{
-		//				pictureBoxThumbnail.Image = ResizeImage(originalImage, 120, 90);
-		//			}
-		//		}
-		//		else if(mediaType == MediaType.Video && File.Exists(filePath))
-		//		{
-		//			// 对于视频文件，提取第一帧作为缩略图
-		//			Image videoThumbnail = ExtractVideoThumbnail(filePath);
-		//			if(videoThumbnail != null)
-		//			{
-		//				pictureBoxThumbnail.Image = ResizeImage(videoThumbnail, 120, 90);
-		//				videoThumbnail.Dispose();
-		//			}
-		//			else
-		//			{
-		//				// 如果无法提取缩略图，使用默认视频图标
-		//				pictureBoxThumbnail.Image = Properties.Resources.DefaultVideoThumbnail;
-		//			}
-		//		}
-		//		else if(mediaType == MediaType.Audio)
-		//		{
-		//			// 音频文件使用默认图标
-		//			pictureBoxThumbnail.Image = Properties.Resources.music43;
-		//		}
-		//		//else
-		//		//{
-		//		//	// 其他类型使用默认图标
-		//		//	pictureBoxThumbnail.Image = Properties.Resources.DefaultVideoThumbnail;
-		//		//}
-		//	}
-		//	catch(Exception ex)
-		//	{
-		//		// 出错时使用默认图标
-		//		pictureBoxThumbnail.Image = Properties.Resources.DefaultVideoThumbnail;
-		//		System.Diagnostics.Debug.WriteLine($"加载缩略图失败: {ex.Message}");
-		//	}
-		//}
-
-		//private Image ExtractVideoThumbnail(string videoPath)
-		//{
-		//	try
-		//	{
-		//		// 使用 FFmpeg 提取视频第一帧
-		//		return ExtractFrameWithFFmpeg(videoPath);
-		//	}
-		//	catch(Exception ex)
-		//	{
-		//		System.Diagnostics.Debug.WriteLine($"使用 FFmpeg 提取缩略图失败: {ex.Message}");
-		//		try
-		//		{
-		//			// 备用方案：使用系统 Shell 获取缩略图
-		//			return ExtractThumbnailWithShell(videoPath);
-		//		}
-		//		catch(Exception ex2)
-		//		{
-		//			System.Diagnostics.Debug.WriteLine($"使用 Shell 提取缩略图失败: {ex2.Message}");
-		//			return null;
-		//		}
-		//	}
-		//}
-
 		private Image ExtractFrameWithFFmpeg(string videoPath)
 		{
 			try
@@ -284,28 +131,6 @@ namespace MusicChange
 			}
 		}
 		// 移除或注释掉有问题的 ExtractFrameUsingVLC 方法，添加以下正确的实现：
-		private Image ExtractFrameWithLibVLC(string videoPath)
-		{
-			try
-			{
-				// 初始化 LibVLC（如果尚未初始化）
-				Core.Initialize();
-
-				// 创建 LibVLC 实例
-				using(var libVLC = new LibVLC())
-				using(var media = new Media(libVLC, videoPath, FromType.FromPath))
-				{
-					// 使用更简单的方法：通过系统 API 获取缩略图
-					// 或者使用 Windows API 获取缩略图
-					return ExtractThumbnailWithWindowsAPI(videoPath);
-				}
-			}
-			catch(Exception ex)
-			{
-				System.Diagnostics.Debug.WriteLine($"使用 LibVLC 提取帧失败: {ex.Message}");
-				return null;
-			}
-		}
 
 		private Image ExtractThumbnailWithWindowsAPI(string filePath)
 		{
@@ -331,29 +156,6 @@ namespace MusicChange
 			return null;
 		}
 
-		private Image ExtractThumbnailWithShell(string filePath)
-		{
-			try
-			{
-				// 使用 Windows Shell 获取文件缩略图
-				// 这需要添加对 Shell32 的引用
-
-				// 简化版本：使用系统图标
-				Icon icon = System.Drawing.Icon.ExtractAssociatedIcon(filePath);
-				if(icon != null)
-				{
-					Image image = icon.ToBitmap();
-					icon.Dispose();
-					return image;
-				}
-			}
-			catch(Exception ex)
-			{
-				System.Diagnostics.Debug.WriteLine($"提取 Shell 缩略图失败: {ex.Message}");
-			}
-
-			return null;
-		}
 		private Image ResizeImage(Image image, int maxWidth, int maxHeight)
 		{
 			// 计算缩放比例
@@ -408,33 +210,6 @@ namespace MusicChange
 		}
 
 
-		private void SetDefaultThumbnail(MediaType mediaType)
-		{
-			try
-			{
-				if(mediaType == MediaType.Image)
-				{
-					pictureBoxThumbnail.Image = Properties.Resources.DefaultVideoThumbnail;
-				}
-				else if(mediaType == MediaType.Video)
-				{
-					pictureBoxThumbnail.Image = Properties.Resources.DefaultVideoThumbnail;
-				}
-				else if(mediaType == MediaType.Audio)
-				{
-					pictureBoxThumbnail.Image = Properties.Resources.music43;
-				}
-				else
-				{
-					pictureBoxThumbnail.Image = Properties.Resources.DefaultVideoThumbnail;
-				}
-			}
-			catch
-			{
-				pictureBoxThumbnail.Image = Properties.Resources.DefaultVideoThumbnail;
-			}
-		}
-	
 		private void PlayMedia()
 		{
 			// 触发播放事件

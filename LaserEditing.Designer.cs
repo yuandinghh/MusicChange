@@ -76,14 +76,13 @@ namespace MusicChange
 			this.material = new DevComponents.DotNetBar.ButtonX();
 			this.audio = new DevComponents.DotNetBar.ButtonX();
 			this.sC4 = new System.Windows.Forms.SplitContainer();
-			this.audioPositionTrackBar = new System.Windows.Forms.TrackBar();
+			this.videoView1 = new LibVLCSharp.WinForms.VideoView();
 			this.lblAudioTime = new DevComponents.DotNetBar.LabelX();
 			this.btnAudioPause = new DevComponents.DotNetBar.ButtonX();
 			this.btnAudioStop = new DevComponents.DotNetBar.ButtonX();
 			this.btnAudioPlay = new DevComponents.DotNetBar.ButtonX();
 			this.dispVfilename = new System.Windows.Forms.Label();
 			this.pictureBox1 = new System.Windows.Forms.PictureBox();
-			this.videoView1 = new LibVLCSharp.WinForms.VideoView();
 			this.middlePanel = new System.Windows.Forms.Panel();
 			this.progressBar = new System.Windows.Forms.TrackBar();
 			this.volumeControlPanel = new System.Windows.Forms.Panel();
@@ -101,13 +100,12 @@ namespace MusicChange
 			this.zoomOutButton = new DevComponents.DotNetBar.ButtonX();
 			this.stopButton = new System.Windows.Forms.Button();
 			this.muteButton = new DevComponents.DotNetBar.ButtonX();
+			this.audioPositionTrackBar = new System.Windows.Forms.TrackBar();
 			this.listBox1 = new System.Windows.Forms.ListBox();
-			this.rightChannelProgressBar = new System.Windows.Forms.ProgressBar();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.panel2 = new System.Windows.Forms.Panel();
 			this.panel3 = new System.Windows.Forms.Panel();
 			this.textBoxX1 = new DevComponents.DotNetBar.Controls.TextBoxX();
-			this.leftChannelProgressBar = new System.Windows.Forms.ProgressBar();
 			this.temp2 = new System.Windows.Forms.TextBox();
 			this.temp1 = new System.Windows.Forms.TextBox();
 			this.temp = new System.Windows.Forms.TextBox();
@@ -137,12 +135,12 @@ namespace MusicChange
 			this.sC4.Panel1.SuspendLayout();
 			this.sC4.Panel2.SuspendLayout();
 			this.sC4.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.audioPositionTrackBar)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.videoView1)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.progressBar)).BeginInit();
 			this.volumeControlPanel.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.volumeTrackBar)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.audioPositionTrackBar)).BeginInit();
 			this.panel1.SuspendLayout();
 			this.panel2.SuspendLayout();
 			this.SuspendLayout();
@@ -481,7 +479,7 @@ namespace MusicChange
 			this.openfile.TabIndex = 1;
 			this.openfile.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
 			this.openfile.UseVisualStyleBackColor = false;
-			this.openfile.Click += new System.EventHandler(this.button2_Click);
+			this.openfile.Click += new System.EventHandler(this.importdata_Click);
 			// 
 			// dG
 			// 
@@ -807,28 +805,26 @@ namespace MusicChange
 			// 
 			this.sC4.Panel1.AutoScroll = true;
 			this.sC4.Panel1.AutoScrollMinSize = new System.Drawing.Size(630, 0);
-			this.sC4.Panel1.Controls.Add(this.audioPositionTrackBar);
+			this.sC4.Panel1.Controls.Add(this.videoView1);
 			this.sC4.Panel1.Controls.Add(this.lblAudioTime);
 			this.sC4.Panel1.Controls.Add(this.btnAudioPause);
 			this.sC4.Panel1.Controls.Add(this.btnAudioStop);
 			this.sC4.Panel1.Controls.Add(this.btnAudioPlay);
 			this.sC4.Panel1.Controls.Add(this.dispVfilename);
 			this.sC4.Panel1.Controls.Add(this.pictureBox1);
-			this.sC4.Panel1.Controls.Add(this.videoView1);
 			this.sC4.Panel1.Controls.Add(this.middlePanel);
 			this.sC4.Panel1.Controls.Add(this.progressBar);
 			this.sC4.Panel1.Controls.Add(this.volumeControlPanel);
-			this.sC4.Panel1.Margin = new System.Windows.Forms.Padding(2);
+			this.sC4.Panel1.Controls.Add(this.audioPositionTrackBar);
+			this.sC4.Panel1.Margin = new System.Windows.Forms.Padding(5);
 			this.sC4.Panel1MinSize = 630;
 			// 
 			// sC4.Panel2
 			// 
 			this.sC4.Panel2.BackColor = System.Drawing.Color.DimGray;
 			this.sC4.Panel2.Controls.Add(this.listBox1);
-			this.sC4.Panel2.Controls.Add(this.rightChannelProgressBar);
 			this.sC4.Panel2.Controls.Add(this.panel1);
 			this.sC4.Panel2.Controls.Add(this.textBoxX1);
-			this.sC4.Panel2.Controls.Add(this.leftChannelProgressBar);
 			this.sC4.Panel2.Controls.Add(this.temp2);
 			this.sC4.Panel2.Controls.Add(this.temp1);
 			this.sC4.Panel2.Controls.Add(this.temp);
@@ -840,19 +836,16 @@ namespace MusicChange
 			this.sC4.SplitterMoving += new System.Windows.Forms.SplitterCancelEventHandler(this.sC4_SplitterMoving);
 			this.sC4.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.sC4_SplitterMoved);
 			// 
-			// audioPositionTrackBar
+			// videoView1
 			// 
-			this.audioPositionTrackBar.AutoSize = false;
-			this.audioPositionTrackBar.BackColor = System.Drawing.Color.Gray;
-			this.audioPositionTrackBar.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.audioPositionTrackBar.Location = new System.Drawing.Point(0, 586);
-			this.audioPositionTrackBar.Margin = new System.Windows.Forms.Padding(5);
-			this.audioPositionTrackBar.Maximum = 1000;
-			this.audioPositionTrackBar.Name = "audioPositionTrackBar";
-			this.audioPositionTrackBar.RightToLeft = System.Windows.Forms.RightToLeft.No;
-			this.audioPositionTrackBar.Size = new System.Drawing.Size(717, 26);
-			this.audioPositionTrackBar.TabIndex = 12;
-			this.audioPositionTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
+			this.videoView1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+			this.videoView1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.videoView1.Location = new System.Drawing.Point(0, 30);
+			this.videoView1.MediaPlayer = null;
+			this.videoView1.Name = "videoView1";
+			this.videoView1.Size = new System.Drawing.Size(717, 556);
+			this.videoView1.TabIndex = 13;
+			this.videoView1.Text = "videoView1";
 			// 
 			// lblAudioTime
 			// 
@@ -938,7 +931,7 @@ namespace MusicChange
 			this.dispVfilename.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.dispVfilename.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.dispVfilename.ForeColor = System.Drawing.Color.Navy;
-			this.dispVfilename.Location = new System.Drawing.Point(0, 612);
+			this.dispVfilename.Location = new System.Drawing.Point(0, 586);
 			this.dispVfilename.Margin = new System.Windows.Forms.Padding(0, 0, 0, 15);
 			this.dispVfilename.Name = "dispVfilename";
 			this.dispVfilename.Size = new System.Drawing.Size(717, 22);
@@ -953,22 +946,11 @@ namespace MusicChange
 			this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.pictureBox1.Location = new System.Drawing.Point(0, 30);
 			this.pictureBox1.Name = "pictureBox1";
-			this.pictureBox1.Size = new System.Drawing.Size(717, 604);
+			this.pictureBox1.Size = new System.Drawing.Size(717, 578);
 			this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
 			this.pictureBox1.TabIndex = 6;
 			this.pictureBox1.TabStop = false;
 			this.pictureBox1.Visible = false;
-			// 
-			// videoView1
-			// 
-			this.videoView1.BackColor = System.Drawing.Color.Green;
-			this.videoView1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.videoView1.Location = new System.Drawing.Point(0, 30);
-			this.videoView1.MediaPlayer = null;
-			this.videoView1.Name = "videoView1";
-			this.videoView1.Size = new System.Drawing.Size(717, 604);
-			this.videoView1.TabIndex = 5;
-			this.videoView1.Text = "videoView1";
 			// 
 			// middlePanel
 			// 
@@ -983,7 +965,7 @@ namespace MusicChange
 			this.progressBar.AutoSize = false;
 			this.progressBar.BackColor = System.Drawing.Color.Gray;
 			this.progressBar.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.progressBar.Location = new System.Drawing.Point(0, 634);
+			this.progressBar.Location = new System.Drawing.Point(0, 608);
 			this.progressBar.Margin = new System.Windows.Forms.Padding(0, 5, 0, 0);
 			this.progressBar.Maximum = 1000;
 			this.progressBar.Name = "progressBar";
@@ -1014,7 +996,7 @@ namespace MusicChange
 			this.volumeControlPanel.Controls.Add(this.muteButton);
 			this.volumeControlPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.volumeControlPanel.ForeColor = System.Drawing.Color.White;
-			this.volumeControlPanel.Location = new System.Drawing.Point(0, 660);
+			this.volumeControlPanel.Location = new System.Drawing.Point(0, 634);
 			this.volumeControlPanel.MaximumSize = new System.Drawing.Size(0, 30);
 			this.volumeControlPanel.MinimumSize = new System.Drawing.Size(0, 30);
 			this.volumeControlPanel.Name = "volumeControlPanel";
@@ -1235,6 +1217,20 @@ namespace MusicChange
 			this.muteButton.TabIndex = 3;
 			this.muteButton.Click += new System.EventHandler(this.MuteButton_Click);
 			// 
+			// audioPositionTrackBar
+			// 
+			this.audioPositionTrackBar.AutoSize = false;
+			this.audioPositionTrackBar.BackColor = System.Drawing.Color.Gray;
+			this.audioPositionTrackBar.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.audioPositionTrackBar.Location = new System.Drawing.Point(0, 664);
+			this.audioPositionTrackBar.Margin = new System.Windows.Forms.Padding(5);
+			this.audioPositionTrackBar.Maximum = 1000;
+			this.audioPositionTrackBar.Name = "audioPositionTrackBar";
+			this.audioPositionTrackBar.RightToLeft = System.Windows.Forms.RightToLeft.No;
+			this.audioPositionTrackBar.Size = new System.Drawing.Size(717, 26);
+			this.audioPositionTrackBar.TabIndex = 12;
+			this.audioPositionTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
+			// 
 			// listBox1
 			// 
 			this.listBox1.FormattingEnabled = true;
@@ -1243,13 +1239,6 @@ namespace MusicChange
 			this.listBox1.Name = "listBox1";
 			this.listBox1.Size = new System.Drawing.Size(383, 214);
 			this.listBox1.TabIndex = 5;
-			// 
-			// rightChannelProgressBar
-			// 
-			this.rightChannelProgressBar.Location = new System.Drawing.Point(17, 660);
-			this.rightChannelProgressBar.Name = "rightChannelProgressBar";
-			this.rightChannelProgressBar.Size = new System.Drawing.Size(177, 23);
-			this.rightChannelProgressBar.TabIndex = 2;
 			// 
 			// panel1
 			// 
@@ -1287,15 +1276,8 @@ namespace MusicChange
 			this.textBoxX1.Location = new System.Drawing.Point(34, 184);
 			this.textBoxX1.Name = "textBoxX1";
 			this.textBoxX1.PreventEnterBeep = true;
-			this.textBoxX1.Size = new System.Drawing.Size(168, 25);
+			this.textBoxX1.Size = new System.Drawing.Size(261, 25);
 			this.textBoxX1.TabIndex = 4;
-			// 
-			// leftChannelProgressBar
-			// 
-			this.leftChannelProgressBar.Location = new System.Drawing.Point(17, 631);
-			this.leftChannelProgressBar.Name = "leftChannelProgressBar";
-			this.leftChannelProgressBar.Size = new System.Drawing.Size(177, 23);
-			this.leftChannelProgressBar.TabIndex = 1;
 			// 
 			// temp2
 			// 
@@ -1322,6 +1304,10 @@ namespace MusicChange
 			// progressTimer
 			// 
 			this.progressTimer.Tick += new System.EventHandler(this.ProgressTimer_Tick);
+			// 
+			// audioTimer
+			// 
+			this.audioTimer.Tick += new System.EventHandler(this.AudioTimer_Tick);
 			// 
 			// LaserEditing
 			// 
@@ -1376,13 +1362,13 @@ namespace MusicChange
 			this.sC4.Panel2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.sC4)).EndInit();
 			this.sC4.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.audioPositionTrackBar)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.videoView1)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.progressBar)).EndInit();
 			this.volumeControlPanel.ResumeLayout(false);
 			this.volumeControlPanel.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.volumeTrackBar)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.audioPositionTrackBar)).EndInit();
 			this.panel1.ResumeLayout(false);
 			this.panel2.ResumeLayout(false);
 			this.ResumeLayout(false);
@@ -1440,13 +1426,10 @@ namespace MusicChange
 		private DevComponents.DotNetBar.ButtonX zoomOutButton;
 		private System.Windows.Forms.Button stopButton;
 		private DevComponents.DotNetBar.ButtonX muteButton;
-		private System.Windows.Forms.ProgressBar rightChannelProgressBar;
 		private DevComponents.DotNetBar.Controls.TextBoxX textBoxX1;
-		private System.Windows.Forms.ProgressBar leftChannelProgressBar;
 		private System.Windows.Forms.TextBox temp2;
 		private System.Windows.Forms.TextBox temp1;
 		private System.Windows.Forms.TextBox temp;
-		private LibVLCSharp.WinForms.VideoView videoView1;
 		private System.Windows.Forms.Panel panel2;
 		private System.Windows.Forms.Panel panel1;
 		private System.Windows.Forms.Button button1;
@@ -1462,6 +1445,7 @@ namespace MusicChange
 		private DevComponents.DotNetBar.ButtonX btnAudioStop;
 		private DevComponents.DotNetBar.LabelX lblAudioTime;
 		private System.Windows.Forms.TrackBar audioPositionTrackBar;
+		private LibVLCSharp.WinForms.VideoView videoView1;
 	}
 }
 #endregion 
