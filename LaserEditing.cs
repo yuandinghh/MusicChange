@@ -1,21 +1,22 @@
 ﻿#region ------------- 系统加载部分  无需改变的变量 -------------
 using System;
+using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 using LibVLCSharp.Shared;
 using LibVLCSharp.WinForms;
+using NAudio.Wave;
 using Vlc.DotNet.Forms;
 using Color = System.Drawing.Color;
 using MediaPlayer = LibVLCSharp.Shared.MediaPlayer;
 using Point = System.Drawing.Point;
-using NAudio.Wave;
-using System.Windows.Forms.VisualStyles;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Drawing.Imaging;
 
 #endregion
 #region  ------------- 全局变量 -------------
@@ -72,16 +73,64 @@ namespace MusicChange
 		private LibVLC _libVLC1, _libVLC2, _libVLC3;
 		private MediaPlayer _player1, _player2, _player3;
 		private VideoView _videoView1, _videoView2, _videoView3;        //private LibVLC _libVLC; // LibVLC 实例（视频播放用）
-		private static readonly Random _random = new( Guid.NewGuid().GetHashCode() );
-		bool isShowOnce = false; // 是否已显示一次cut
+		private AudioPlayer _audioPlayer; // NAudio 播放器实例
+		bool isShowOnce = false; // 是否已显示一次cut 			 //private LibVLCSharp.WinForms.VideoView videoView1;
+	
+		string subDirectory; // 子目录名称
+
+
 
 		public LaserEditing()
 		{
 			InitializeComponent();
 			IsfirstPlaying = false;
-			AutoScaleMode = AutoScaleMode.Dpi; // 根据系统DPI自动缩放
+			AutoScaleMode = AutoScaleMode.Dpi; // 根据系统DPI自动缩放	EnsureVideoViewInitialized();  //动态加载 videoView1
 
 		}
+		//private void EnsureVideoViewInitialized( )
+		//{
+		//	this.videoView1 = new LibVLCSharp.WinForms.VideoView();
+		//	((System.ComponentModel.ISupportInitialize)(this.videoView1)).BeginInit();
+		//	this.sC4.Panel1.Controls.Add( this.videoView1 );
+
+		//	this.videoView1.BackColor = System.Drawing.Color.FromArgb( ((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))) );
+		//	this.videoView1.Dock = System.Windows.Forms.DockStyle.Fill;
+		//	this.videoView1.Location = new System.Drawing.Point( 0, 30 );
+		//	this.videoView1.MediaPlayer = null;
+		//	this.videoView1.Name = "videoView1";
+		//	this.videoView1.Size = new System.Drawing.Size( 717, 556 );
+		//	this.videoView1.TabIndex = 13;
+		//	((System.ComponentModel.ISupportInitialize)(this.videoView1)).EndInit();
+		//	try {
+		//		// 检查 videoView1 是否已存在
+		//		if (videoView1 == null || videoView1.IsDisposed) {
+		//			// 如果不存在，则动态创建
+		//			videoView1 = new VideoView
+		//			{
+		//				Name = "videoView1",
+		//				Dock = DockStyle.Fill, // 填充父容器
+		//				Visible = true
+		//			};
+
+		//			// 将 videoView1 添加到父容器（如 Panel）
+		//			if (panel1 != null) {
+		//				panel1.Controls.Clear(); // 清空旧控件
+		//				panel1.Controls.Add( videoView1 );
+		//			}
+
+		//			// 重新绑定 MediaPlayer
+		//			if (mediaPlayer != null) {
+		//				videoView1.MediaPlayer = mediaPlayer;
+		//			}
+
+		//			System.Diagnostics.Debug.WriteLine( "videoView1 已成功动态加载" );
+		//		}
+		//	}
+		//	catch (Exception ex) {
+		//		MessageBox.Show( $"动态加载 videoView1 时出错: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error );
+		//	}
+		//}
+
 		private void LaserEditing_Load(object sender, EventArgs e)
 		{
 			splitContainer5mouseDown = false;   //splitContainer1.Panel2MinSize = 400;	//buttonx8.BackColor = System.Drawing.Color.Gray;
@@ -103,7 +152,6 @@ namespace MusicChange
 			flowLayoutPanelMedia.HorizontalScroll.Visible = false;
 			flowLayoutPanelMedia.VerticalScroll.Visible = true;
 			Displayvideo(); // 显示视频
-			InitializeAudioControls();  // 初始化 NAudio 控件 和 NAudio 播放器 的控件
 			_audioPlayer = new AudioPlayer();  // 初始化 NAudio 播放器 	//private AudioPlayer _audioPlayer;播放用）
 			_audioPlayer.PlaybackCompleted += (s, e) =>     // 订阅音频播放完成事件
 			{
@@ -1260,13 +1308,13 @@ namespace MusicChange
 
 		private void panel4_SizeChanged(object sender, EventArgs e)  // 导入 。。dynamic resize
 		{
-			if(panel4.Visible)
+			if(Fileupperleft.Visible)
 			{
 				// 调整按钮和二维码的位置
-				openfile.Left = (panel4.Width - openfile.Width) / 2 - 20; // 水平居中
-				openfile.Top = (panel4.Height - openfile.Height) / 2; // 垂直居中
+				openfile.Left = (Fileupperleft.Width - openfile.Width) / 2 - 20; // 水平居中
+				openfile.Top = (Fileupperleft.Height - openfile.Height) / 2; // 垂直居中
 				qrcode1.Left = openfile.Left + 290; // 水平居中	
-				qrcode1.Top = (panel4.Height - qrcode1.Height) / 2; // 水平居中	
+				qrcode1.Top = (Fileupperleft.Height - qrcode1.Height) / 2; // 水平居中	
 			}
 		}
 
@@ -1332,44 +1380,6 @@ namespace MusicChange
 				MessageBox.Show($"无法启动外部播放器: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				// 如果外部播放器启动失败，回退到内置最大化
 				ToggleVideoMaximize();
-			}
-		}
-
-		// 使用特定外部播放器
-		private void LaunchWithSpecificPlayer(string videoPath)
-		{
-			try
-			{
-				// VLC 媒体播放器
-				string vlcPath = FindVLCPath();
-				if(!string.IsNullOrEmpty(vlcPath) && File.Exists(vlcPath))
-				{
-					System.Diagnostics.Process.Start(vlcPath, $"\"{videoPath}\" --fullscreen");
-					return;
-				}
-
-				// MPC-HC 播放器
-				string mpcPath = FindMPCPath();
-				if(!string.IsNullOrEmpty(mpcPath) && File.Exists(mpcPath))
-				{
-					System.Diagnostics.Process.Start(mpcPath, $"\"{videoPath}\" /fullscreen");
-					return;
-				}
-
-				// Windows Media Player
-				string wmpPath = @"C:\Program Files\Windows Media Player\wmplayer.exe";
-				if(File.Exists(wmpPath))
-				{
-					System.Diagnostics.Process.Start(wmpPath, $"/fullscreen \"{videoPath}\"");
-					return;
-				}
-
-				// 如果都没找到，使用系统默认播放器
-				System.Diagnostics.Process.Start(videoPath);
-			}
-			catch(Exception ex)
-			{
-				MessageBox.Show($"无法启动指定播放器: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 		}
 
@@ -2681,10 +2691,10 @@ namespace MusicChange
 			string videoPath1 = @"F:\newipad\sex.MP4";
 			string videoPath2 = @"F:\newipad\已经压缩\让古画活起来_medium.mp4";
 			string videoPath3 = @"F:\newipad\已经压缩\背部跳舞_s.mp4";
-			
+
 			PlayVideo(_player1, videoPath1);  // 播放第一个视频
 			PlayVideo(_player2, videoPath2);   // 播放第二个视频
-			PlayVideo(_player3, videoPath3); 
+			PlayVideo(_player3, videoPath3);
 
 		}
 
@@ -2727,7 +2737,7 @@ namespace MusicChange
 		#endregion
 
 		#region  ------------------  上左窗口 导入视频   ------------------
-		private void ConfigureFlowLayoutPanel()
+		private void ConfigureFlowLayoutPanel()  //配置 FlowLayoutPanel
 		{
 			if(flowLayoutPanelMedia == null)
 				return;
@@ -2753,45 +2763,7 @@ namespace MusicChange
 			}
 		}
 
-		// 添加方法来动态调整所有控件的间距
-		private void AdjustAllMediaItemMargins()
-		{
-			try
-			{
-				foreach(Control control in flowLayoutPanelMedia.Controls)
-				{
-					if(control is MediaItemControl mediaItem)
-					{
-						// 统一设置较小的边距
-						mediaItem.Margin = new Padding(3, 3, 3, 3);
-					}
-				}
-
-				// 强制重新布局
-				flowLayoutPanelMedia.PerformLayout();
-			}
-			catch(Exception ex)
-			{
-				System.Diagnostics.Debug.WriteLine($"调整控件边距时出错: {ex.Message}");
-			}
-		}
-
-		private int CalculateTextHeight(string text, Font font, int width)
-		{
-			try
-			{
-				using(Graphics g = flowLayoutPanelMedia.CreateGraphics())
-				{
-					SizeF size = g.MeasureString(text, font, width);
-					return (int)size.Height + 10; // 添加一些边距
-				}
-			}
-			catch
-			{
-				return 20; // 默认高度
-			}
-		}
-		private void ConfigureFlowLayoutPanelScrolling()
+		private void ConfigureFlowLayoutPanelScrolling()  //配置 FlowLayoutPanel 滚动
 		{
 			if(flowLayoutPanelMedia == null)
 				return;
@@ -2823,7 +2795,7 @@ namespace MusicChange
 				System.Diagnostics.Debug.WriteLine($"配置 FlowLayoutPanel 滚动时出错: {ex.Message}");
 			}
 		}
-		private void initmportfile()
+		private void initmportfile()  //初始化导入文件
 		{           //InitializeComponent();
 			flowLayoutPanelMedia.ControlAdded += (s, e) =>  // 订阅媒体项的“播放请求”事件
 			{
@@ -2836,72 +2808,7 @@ namespace MusicChange
 
 		// 导入文件按钮点击事件
 		//private void btnImportFiles_Click(object sender, EventArgs e)
-		private void button2_Click_1(object sender, EventArgs e)
-		{
-			// 获取默认文档目录路径
-			string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-			temp.Text = "默认文档目录: " + documentsPath;
-			string subDirectory = Path.Combine(documentsPath, "ResourceFolder");
-			//判断是否目录存在
-			if(Directory.Exists(subDirectory))
-			{
-				temp.Text = "子目录已存在: " + subDirectory;
-			}
-			else
-			{
-				temp1.Text = "子目录不存在，将创建: " + subDirectory;
-				// 创建子目录
-				try
-				{
-					Directory.CreateDirectory(subDirectory);
-					temp1.Text = "子目录创建成功: " + subDirectory;
-				}
-				catch(Exception ex)
-				{
-					temp1.Text = "创建子目录失败: " + ex.Message;
-				}
-			}
-			//选择目录
-			OpenFileDialog ofd = new OpenFileDialog();
-			//所有音频文件
-			ofd.Title = "请选择要导入的音频、视频或图片文件";
-			//设置缺省文档目录
-			ofd.InitialDirectory = subDirectory;            //ofd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic); //默认打开音乐文件夹
-			ofd.Multiselect = true; //允许多选
-			ofd.Filter = "素材|*.mp3;*.wav;*.wma;*.flac;*.aac;*.ogg;*.mp4;*.avi;*.wmv;*.mov;*.jpg;*.jpeg;*.png;*.bmp;*.gif";
-			if(ofd.ShowDialog() == DialogResult.OK)
-			{ //获取所有的选中文件存入string数组
-				string[] selectedFiles = ofd.FileNames;
-			}
-			if(ofd.FileNames.Length > 0)
-			{
-				// 遍历选中的文件
-				foreach(string file in ofd.FileNames)
-				{
-					try
-					{
-						// 获取文件名
-						string fileName = Path.GetFileName(file);
-						// 构建目标路径
-						string targetPath = Path.Combine(subDirectory, fileName);
-						// 复制文件到目标路径
-						File.Copy(file, targetPath, true); // true表示覆盖同名文件
-						temp1.Text += $"\n已导入: {fileName}";
-					}
-					catch(Exception ex)
-					{
-						temp1.Text += $"\n导入失败: {ex.Message}";
-					}
-				}
-			}
-			else
-			{
-				temp1.Text = "未选择任何文件";
-				//button2.Visible = true;				qrcode1.Visible = true;
-				panel4.Visible = true;
-
-			}
-		}
+	
 		// 设置控件的停靠和锚定
 		private void flowLayoutPanelMedia_ControlAdded(object sender, ControlEventArgs e)
 		{
@@ -2951,64 +2858,6 @@ namespace MusicChange
 				System.Diagnostics.Debug.WriteLine($"延迟调整滚动时出错: {ex.Message}");
 			}
 		}
-
-		//private void UpdateFlowLayoutPanelContentSize()
-		//{
-		//	try
-		//	{
-		//		if(flowLayoutPanelMedia == null || flowLayoutPanelMedia.Controls.Count == 0)
-		//			return;
-
-		//		// 计算内容总高度
-		//		int totalHeight = CalculateTotalContentHeight();
-		//		int totalWidth = CalculateTotalContentWidth();
-
-		//		// 设置最小内容大小
-		//		flowLayoutPanelMedia.AutoScrollMinSize = new Size(totalWidth, totalHeight);
-
-		//		// 确保滚动条启用
-		//		flowLayoutPanelMedia.VerticalScroll.Enabled = true;
-		//		flowLayoutPanelMedia.HorizontalScroll.Enabled = false;
-
-		//		System.Diagnostics.Debug.WriteLine($"内容大小: {totalWidth} x {totalHeight}, " +
-		//										  $"控件数: {flowLayoutPanelMedia.Controls.Count}");
-		//	}
-		//	catch(Exception ex)
-		//	{
-		//		System.Diagnostics.Debug.WriteLine($"更新内容大小时出错: {ex.Message}");
-		//	}
-		//}
-		//手动计算和设置内容大小
-		//private int CalculateTotalContentHeight()
-		//{
-		//	try
-		//	{
-		//		if(flowLayoutPanelMedia.Controls.Count == 0)
-		//			return 0;
-
-		//		int controlHeight = 230; // 每个控件的高度
-		//		int controlsPerRow = Math.Max(1, flowLayoutPanelMedia.ClientSize.Width / 200); // 每行控件数
-		//		int rows = (int)Math.Ceiling((double)flowLayoutPanelMedia.Controls.Count / controlsPerRow);
-
-		//		return rows * controlHeight + flowLayoutPanelMedia.Padding.Vertical + 50; // 添加一些边距
-		//	}
-		//	catch
-		//	{
-		//		return flowLayoutPanelMedia.Controls.Count * 230 + 100;
-		//	}
-		//}
-
-		//private int CalculateTotalContentWidth()
-		//{
-		//	try
-		//	{
-		//		return flowLayoutPanelMedia.ClientSize.Width;
-		//	}
-		//	catch
-		//	{
-		//		return 800; // 默认宽度
-		//	}
-		//}
 		private void ForceScrollAdjustment()
 		{
 			try
@@ -3041,110 +2890,47 @@ namespace MusicChange
 			// 可以在这里添加滚动相关的处理逻辑
 			System.Diagnostics.Debug.WriteLine($"滚动位置: {e.NewValue}");
 		}
-		// 调整 FlowLayoutPanel 内容靠右对齐
-		private void AdjustFlowLayoutForRightAlignment()
+		private void importdata_Click(object sender, EventArgs e)  //导入素材文件
 		{
-			if(flowLayoutPanelMedia == null || flowLayoutPanelMedia.Controls.Count == 0)
-				return;
-
-			try
-			{
-				// 计算所有控件的总宽度
-				int totalControlWidth = CalculateTotalControlWidth();
-				int availableWidth = flowLayoutPanelMedia.ClientSize.Width - flowLayoutPanelMedia.Padding.Horizontal;
-
-				// 如果内容超出可视区域，确保滚动条显示
-				if(totalControlWidth > availableWidth)
-				{
-					// 内容超出，滚动条会自动显示
-					flowLayoutPanelMedia.AutoScroll = true;
-				}
-				else
-				{
-					// 内容未超出，但仍然保持滚动功能
-					flowLayoutPanelMedia.AutoScroll = true;
-				}
-
-				// 强制重新布局
-				flowLayoutPanelMedia.PerformLayout();
-			}
-			catch(Exception ex)
-			{
-				System.Diagnostics.Debug.WriteLine($"调整对齐时出错: {ex.Message}");
-			}
+			_ = ClickAsync(sender, e);
 		}
-
-		// 计算所有控件的总宽度
-		private int CalculateTotalControlWidth()
-		{
-			if(flowLayoutPanelMedia.Controls.Count == 0)
-				return 0;
-
-			int maxWidth = 0;
-			int currentRowWidth = 0;
-			int controlWidth = 180 + 20; // 控件宽度 + 间距
-
-			int availableWidth = flowLayoutPanelMedia.ClientSize.Width -
-								flowLayoutPanelMedia.Padding.Horizontal;
-
-			foreach(Control control in flowLayoutPanelMedia.Controls)
-			{
-				if(control is MediaItemControl)
-				{
-					currentRowWidth += controlWidth;
-
-					// 如果当前行宽度超过可用宽度，换行
-					if(currentRowWidth > availableWidth)
-					{
-						maxWidth = Math.Max(maxWidth, currentRowWidth - controlWidth);
-						currentRowWidth = controlWidth; // 新行开始
-					}
-				}
-			}
-
-			// 最后一行的宽度
-			maxWidth = Math.Max(maxWidth, currentRowWidth);
-
-			return maxWidth;
-		}
-
-		private void importdata_Click(object sender, EventArgs e)
-		{
-			//panel4.Visible = true;
-			_ = button2_ClickAsync( sender, e );
-		}
-		private async Task button2_ClickAsync(object sender, EventArgs e)
+		private async Task ClickAsync(object sender, EventArgs e)
 		{
 			//导入素材  Importing the materials  			int c = flowLayoutPanel1.Controls.Count;
 			listBox1.Items.Clear();
 			string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);  // 获取默认文档目录路径
-			temp.Text = "默认文档目录: " + documentsPath;
-			string subDirectory = Path.Combine(documentsPath, "ResourceFolder");
-			//判断是否目录存在
-			if(Directory.Exists(subDirectory))
+			Debug.WriteLine("默认文档目录: " + documentsPath);
+			subDirectory = Path.Combine(documentsPath, "ResourceFolder");
+			if(Directory.Exists(subDirectory))      //判断是否目录存在
 			{
-				temp.Text = "子目录已存在: " + subDirectory;
+				Debug.WriteLine("子目录已存在: " + subDirectory);
 			}
 			else
 			{
-				temp1.Text = "子目录不存在，将创建: " + subDirectory;
+				Debug.WriteLine("子目录不存在，将创建: " + subDirectory);
 				// 创建子目录
 				try
 				{
 					Directory.CreateDirectory(subDirectory);
-					temp1.Text = "子目录创建成功: " + subDirectory;
+					Debug.WriteLine("子目录创建成功: " + subDirectory);
 				}
 				catch(Exception ex)
 				{
-					temp1.Text = "创建子目录失败: " + ex.Message;
+					//窗口提示
+					MessageBox.Show("创建子目录失败: " + ex.Message);
 				}
 			}
-			// 选择目录
-			using OpenFileDialog ofd = new OpenFileDialog
+		
+			using OpenFileDialog ofd = new()
 			{
+				//Filter = "媒体文件|*.mp4;*.avi;*.jpg;*.png;*.mp3;*.wav|所有文件|*.*"
 				Multiselect = true,
-				Filter = "媒体文件|*.mp4;*.avi;*.jpg;*.png;*.mp3;*.wav|所有文件|*.*"
+				Filter = "媒体文件|*.mp4;*.avi;*.jpg;*.png;*.mp3;*.wav|视频文件|*.mp4;*.avi|音频文件|*.mp3;*.wav|图片文件|*.jpg;*.png",
+				InitialDirectory = documentsPath
 			};
+			ofd.Title = "请选择要导入的音频、视频或图片文件";    //设置缺省文档目录
+			ofd.InitialDirectory = subDirectory;  //指定初始目录 文件夹
+			//ofd.InitialDirectory =   Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 			if(ofd.ShowDialog() == DialogResult.OK)
 			{
 				foreach(string filePath in ofd.FileNames)
@@ -3165,263 +2951,34 @@ namespace MusicChange
 					flowLayoutPanelMedia.Controls.Add(mediaItem);
 
 					listBox1.Items.Add(mediaItem.MediaType);
-					//listBox1.Items.Add(control.Tag);
 					listBox1.Items.Add(mediaItem.FilePath);
 					listBox1.Items.Add(mediaItem.Size);
-					
 					listBox1.Items.Add(mediaItem.Location.X);
 					listBox1.Items.Add(mediaItem.Location.Y);
-					if(mediaType == MediaType.Video)
-					{
-						//根据文件名显示视频文件的时长
-						var videoInfo = await GetVideoInfo(mediaItem.FilePath);
-						//Console.WriteLine($"视频时长：{videoInfo.DurationSeconds} 秒");
-
-						// 保存首帧图片（示例）
-						if(videoInfo.Thumbnail != null)
-						{
-							videoInfo.Thumbnail.Save("thumbnail.jpg");
-							textBoxX1.Text = "首帧图片已保存";
-						}
-						if (videoInfo != null)
-						{
-							string durationText = $"时长: {videoInfo.DurationSeconds}";
-							listBox1.Items.Add(durationText);
-						}
-						else
-							listBox1.Items.Add("no time");
-					}
-
+					//if(mediaType == MediaType.Video)
+					//{
+					
+					//		listBox1.Items.Add(mediaItem.ImagePath);
+					//		listBox1.Items.Add(mediaItem.TimeLength);
+					//}
+					//else if(mediaType == MediaType.Audio)
+					//{
+					//		listBox1.Items.Add(mediaItem.TimeLength);
+					//}
 				}
 			}
+
 			bool hasControls = flowLayoutPanelMedia.Controls.Count > 0;
 			if(hasControls)
 			{
-				panel4.Visible = false; 				//dG.Visible = false;
+				Fileupperleft.Visible = false;              //dG.Visible = false;
 			}
 			else
 			{
-				panel4.Visible = true; 				//dG.Visible = false;
+				Fileupperleft.Visible = true;               //dG.Visible = false;
 			}
 		}
-		public static async Task<VideoInfo> GetVideoInfo(string filePath)
-		{
-			var result = new VideoInfo();
-			try {
-				// 初始化 LibVLC
-				using var libVlc = new LibVLC();
-				using var media = new Media( libVlc, filePath, FromType.FromPath );
-				using var player = new MediaPlayer( media );
-
-				// 启动播放以便 LibVLC 填充 Length 并允许 TakeSnapshot
-				player.Play();
-
-				// 等待播放器进入 Playing 或拿到长度，最多等待 3 秒
-				var sw = System.Diagnostics.Stopwatch.StartNew();
-				while (sw.ElapsedMilliseconds < 3000) {
-					if (player.Length > 0 || player.State == VLCState.Playing)
-						break;
-					await Task.Delay( 100 );
-				}
-
-				// 获取视频时长
-				long lengthMs = player.Length;
-				var ts = TimeSpan.FromMilliseconds( Math.Max( 0, lengthMs ) );
-				result.DurationSeconds = ts.Hours > 0 ? ts.ToString( @"hh\:mm\:ss" ) : ts.ToString( @"mm\:ss" );
-
-				// 保存封面到当前文件夹
-				// 1. 生成当前 Unix 毫秒级时间戳（UTC时间，从1970-01-01开始）
-				long unixTimestamp = (long)(DateTime.UtcNow - new DateTime( 1970, 1, 1, 0, 0, 0, DateTimeKind.Utc )).TotalMilliseconds;
-				string timestampStr = unixTimestamp.ToString();
-
-				// 2. 生成三位随机数（000-999）
-				int randomNum;
-				lock (_random) // 锁定随机数生成，确保多线程安全
-				{
-					randomNum = _random.Next( 0, 1000 ); // 范围 [0, 999]
-				}
-				string randomStr = randomNum.ToString( "D3" ); // 确保三位，不足补零（如 5 → "005"）
-
-				// 3. 组合结果（时间戳 + 分隔符 + 随机数）
-				string filename = $"{timestampStr}_{randomStr}.jpg";
-				// 
-				string thumbnailPath = Path.Combine( Directory.GetCurrentDirectory(), filename );
-				bool snapshotSuccess = player.TakeSnapshot( 0u, thumbnailPath, 0u, 0u );
-
-				if (snapshotSuccess && File.Exists( thumbnailPath )) {
-					result.Thumbnail = Image.FromFile( thumbnailPath );
-				}
-
-				// 停止播放
-				player.Stop();
-				player.Dispose();
-			}
-			catch (Exception ex) {
-				System.Diagnostics.Debug.WriteLine( $"获取视频信息时出错: {ex.Message}" );
-			}
-
-			return result;
-		}
-		//public static async Task<VideoInfo> GetVideoInfo(string filePath)
-		//{
-		//	var result = new VideoInfo();
-		//	try {
-		//		// Core.Initialize(); // 如果外部已经初始化可注释掉
-		//		using var libVlc = new LibVLC();
-		//		using var media = new Media( libVlc, filePath, FromType.FromPath );
-		//		using var player = new MediaPlayer( media );
-
-		//		// 启动播放以便 LibVLC 填充 Length 并允许 TakeSnapshot
-		//		player.Play();
-
-		//		// 等待播放器进入 Playing 或拿到长度，最多等待 5 秒
-		//		var sw = System.Diagnostics.Stopwatch.StartNew();
-		//		while (sw.ElapsedMilliseconds < 3000) {
-		//			if (player.Length > 0 || player.State == VLCState.Playing)
-		//				break;
-		//			await Task.Delay( 100 );
-		//		}
-
-		//		// 获取并格式化时长为 MM:SS（若超过1小时则使用 HH:MM:SS）
-		//		long lengthMs = player.Length;
-		//		var ts = TimeSpan.FromMilliseconds( Math.Max( 0, lengthMs ) );
-		//		result.DurationSeconds = ts.Hours > 0 ? ts.ToString( @"hh\:mm\:ss" ) : ts.ToString( @"mm\:ss" );
-
-		//		// 先尝试用 TakeSnapshot 保存到临时文件（LibVLC 常用签名）
-		//		string tmpPath = Path.Combine( Path.GetTempPath(), Guid.NewGuid().ToString( "N" ) + ".png" );
-		//		//图片文件存入 当前文件夹
-		//		//图片文件存入 当前文件夹
-
-
-		//		try {
-		//			bool snapOk = player.TakeSnapshot( 0u, tmpPath, 0u, 0u );
-		//			if (snapOk && File.Exists( tmpPath )) {
-		//				// 读取到内存副本，避免文件锁定问题
-		//				using (var img = Image.FromFile( tmpPath )) {
-		//					result.Thumbnail = new Bitmap( img );
-		//				}
-		//				try {
-		//					File.Delete( tmpPath );
-		//				}
-		//				catch { /* 忽略删除失败 */ }
-		//			}
-		//		}
-		//		catch {
-		//			// 忽略快照异常，返回可能的时长即可
-		//			try {
-		//				if (File.Exists( tmpPath ))
-		//					File.Delete( tmpPath );
-		//			}
-		//			catch { }
-		//		}
-
-		//		// 停止播放
-		//		player.Stop();  
-		//		player.Dispose();
-		//	}
-		//	catch (Exception) {
-		//		// 保持安静：返回可能为空的 result，调用方可判空或重试
-		//	}
-
-		//	return result;
-		//}
-		////public static async Task<VideoInfo> GetVideoInfo(string filePath)
-		////{
-		////	Core.Initialize();
-		////	var result = new VideoInfo();
-		////	var tcs = new TaskCompletionSource<VideoInfo>();
-		////	LibVLC libVlc = null;
-		////	MediaPlayer mediaPlayer = null;
-		////	Media media = null;
-		////	bool isCompleted = false;
-
-		////	try
-		////	{
-		////		libVlc = new LibVLC();
-		////		media = new Media(libVlc, filePath);
-		////		mediaPlayer = new MediaPlayer(media);
-
-		////		// 监听播放状态变化
-		////		mediaPlayer.TimeChanged += (s, e) =>
-		////		{
-		////			if(isCompleted)
-		////				return;
-
-		////			// 获取时长（毫秒 -> 秒）
-		////			if(mediaPlayer.Length > 0)
-		////			{
-		////				result.DurationSeconds = ((int)(mediaPlayer.Length / 1000)).ToString();
-		////			}
-
-
-		////			// 替换 TakeSnapshot 调用部分
-		////			using (var ms = new MemoryStream()) {
-		////				// 检查 MediaPlayer 是否支持 TakeSnapshot 方法
-		////				if (mediaPlayer != null && mediaPlayer.CanTakeSnapshot) {
-		////					// 使用 TakeSnapshot 方法保存快照
-		////					bool snapshotSuccess = mediaPlayer.TakeSnapshot( 0, ms, 0, 0 );
-		////					if (snapshotSuccess && ms.Length > 0) {
-		////						ms.Position = 0; // 重置流位置
-		////						result.Thumbnail = Image.FromStream( ms ); // 转换为 Image
-		////					}
-		////					else {
-		////						MessageBox.Show( "无法截取快照，请检查播放器状态或视频内容。", "错误", MessageBoxButtons.OK, MessageBoxIcon.Warning );
-		////					}
-		////				}
-		////				else {
-		////					MessageBox.Show( "当前 MediaPlayer 不支持截取快照功能。", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error );
-		////				}
-		////			}
-
-		////			// 满足条件后停止并返回结果
-		////			if (!string.IsNullOrEmpty(result.DurationSeconds) && result.Thumbnail != null)
-		////			{
-		////				isCompleted = true;
-		////				mediaPlayer.Stop();
-		////				tcs.TrySetResult(result);
-		////			}
-		////		};
-
-		////		// 播放失败处理
-		////		mediaPlayer.EncounteredError += (s, e) =>
-		////		{
-		////			if(!isCompleted)
-		////			{
-		////				isCompleted = true;
-		////				mediaPlayer.Stop();
-		////				tcs.TrySetResult(result);
-		////			}
-		////		};
-
-		////		// 启动播放
-		////		mediaPlayer.Play();
-
-		////		// 超时机制（5秒）
-		////		_ = Task.Delay(5000).ContinueWith(_ =>
-		////		{
-		////			if(!isCompleted)
-		////			{
-		////				isCompleted = true;
-		////				mediaPlayer?.Stop();
-		////				tcs.TrySetResult(result);
-		////			}
-		////		});
-		////	}
-		////	catch(Exception ex)
-		////	{
-		////		Console.WriteLine($"错误：{ex.Message}");
-		////		tcs.TrySetResult(result);
-		////	}
-
-		////	// 释放资源并返回结果
-		////	return await tcs.Task.ContinueWith(task =>
-		////	{
-		////		mediaPlayer?.Dispose();
-		////		media?.Dispose();
-		////		libVlc?.Dispose();
-		////		return task.Result;
-		////	});
-		////}
+	
 		private void Displayimage()
 		{
 			// 停止当前音频播放
@@ -3510,7 +3067,7 @@ namespace MusicChange
 				System.Diagnostics.Debug.WriteLine($"停止音频播放时出错: {ex.Message}");
 			}
 		}
-			// 辅助方法：判断文件类型
+		// 辅助方法：判断文件类型
 		private bool IsVideoFile(string filePath) =>
 			new[] { ".mp4", ".avi", ".mkv" }.Contains(Path.GetExtension(filePath).ToLower());
 		private bool IsAudioFile(string filePath) =>
@@ -3545,8 +3102,7 @@ namespace MusicChange
 			}
 			catch(Exception ex)
 			{
-				MessageBox.Show($"播放媒体文件时出错: {ex.Message}", "错误",
-							   MessageBoxButtons.OK, MessageBoxIcon.Error);
+				MessageBox.Show($"播放媒体文件时出错: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 		}
 		/// <summary>
@@ -3622,15 +3178,8 @@ namespace MusicChange
 				HideAudioControls();
 			}
 		}
-		// 在 LaserEditing 类的全局变量区域添加
-		private AudioPlayer _audioPlayer; // NAudio 播放器实例
-		// 在 InitializeComponent 方法中初始化音频控件（如果没有在设计器中添加）
-		private void InitializeAudioControls()
-		{
-			// 添加控件到窗体
-			}
-		// 音频控制按钮事件处理
-		private void BtnAudioPlay_Click(object sender, EventArgs e)
+	
+		private void BtnAudioPlay_Click(object sender, EventArgs e)     // 音频控制按钮事件处理
 		{
 			if(_audioPlayer != null)
 			{
@@ -3671,12 +3220,12 @@ namespace MusicChange
 			}
 		}
 
-		private void Modifythephoto_Click(object sender, EventArgs e)
+		private void Modifythephoto_Click(object sender, EventArgs e)   // 修改图片
 		{
 
 		}
-		// 定时器更新音频进度
-		private void AudioTimer_Tick(object sender, EventArgs e)
+		
+		private void AudioTimer_Tick(object sender, EventArgs e)   //// 定时器更新音频进度
 		{
 			if(_audioPlayer != null)  // 更新音频进度显示
 			{
@@ -3694,8 +3243,8 @@ namespace MusicChange
 				}
 			}
 		}
-		// 重置音频进度显示
-		private void ResetAudioProgress()
+		
+		private void ResetAudioProgress()  // 重置音频进度显示
 		{
 			audioPositionTrackBar.Value = 0;
 			lblAudioTime.Text = "00:00 / 00:00";
@@ -3866,18 +3415,22 @@ namespace MusicChange
 			}
 		}
 
-		public void Stop( )
+		public void Stop()
 		{
-			try {
-				lock (_syncLock) {
-					if (_waveOut != null) {
+			try
+			{
+				lock(_syncLock)
+				{
+					if(_waveOut != null)
+					{
 						_waveOut.PlaybackStopped -= OnPlaybackStopped; // 取消事件订阅
 						_waveOut.Stop();
 						_waveOut.Dispose();
 						_waveOut = null;
 					}
 
-					if (_audioReader != null) {
+					if(_audioReader != null)
+					{
 						//_audioReader.Dispose();     //????????????????
 						_audioReader = null;
 					}
@@ -3887,39 +3440,12 @@ namespace MusicChange
 					_isPaused = false;
 				}
 			}
-			catch (Exception ex) {
-				System.Diagnostics.Debug.WriteLine( $"停止音频播放时出错: {ex.Message}" );
+			catch(Exception ex)
+			{
+				System.Diagnostics.Debug.WriteLine($"停止音频播放时出错: {ex.Message}");
 			}
 		}
-		//public void Stop()
-		//{
-		//	try
-		//	{
-		//		lock(_syncLock) // 加锁：确保资源释放时无其他线程访问
-		//		{
-		//			if(_waveOut != null)
-		//			{
-		//				// 先取消事件订阅，避免释放后事件仍触发
-		//				_waveOut.PlaybackStopped -= OnPlaybackStopped;
-		//				_waveOut.Stop();
-		//				_waveOut.Dispose();
-		//				_waveOut = null;
-		//			}
-		//			if(_audioReader != null)
-		//			{
-		//				_audioReader.Dispose();
-		//				_audioReader = null;
-		//			}
-		//			_currentFilePath = null;
-		//			CurrentState = PlaybackState.Stopped;
-		//			_isPaused = false;
-		//		}
-		//	}
-		//	catch(Exception ex)
-		//	{
-		//		System.Diagnostics.Debug.WriteLine($"停止音频播放时出错: {ex.Message}");
-		//	}
-		//}
+	
 		private void OnPlaybackStopped(object sender, StoppedEventArgs e)
 		{
 			// 事件可能在非UI线程触发，通过锁同步调用Stop
@@ -3970,6 +3496,10 @@ namespace MusicChange
 		{
 			get; set;
 		} // 首帧图片
+		public string FilePath
+		{
+			get; set;
+		} 
 	}
 	#endregion
 

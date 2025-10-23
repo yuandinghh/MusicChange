@@ -10,14 +10,31 @@ using LibVLCSharp.WinForms;
 using Vlc.DotNet.Forms;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using NAudio.Wave;
+using MediaPlayer = LibVLCSharp.Shared.MediaPlayer;
 
 namespace MusicChange
 {
 	public partial class MediaItemControl:UserControl
 	{
+		private AudioPlayer _audioPlayer; // NAudio 播放器实例
+		private static System.Windows.Media.MediaPlayer player;
+		private static readonly Random _random = new(Guid.NewGuid().GetHashCode());
 		public string FilePath
 		{
 			get; private set;
+		}
+		public string TimeLength
+		{
+			get; set;
+		}
+		public Image Image
+		{
+			get; set;
+		}
+		public string ImagePath
+		{
+			get; set;
 		}
 		public MediaType MediaType
 		{
@@ -34,7 +51,7 @@ namespace MusicChange
 			//this.Margin = new Padding(10, 10, 10, 10);
 			//this.Padding = new Padding(5);
 			this.Size = new Size(120, 180); // 增加高度以容纳更多信息
-			// 显示文件名
+											// 显示文件名
 			lblFileName.Height = 25; //40 增加标签高度
 			lblFileName.Text = Path.GetFileName(filePath);
 			lblFileName.Dock = DockStyle.Bottom;
@@ -48,112 +65,19 @@ namespace MusicChange
 
 			// 先显示默认图标
 			//SetDefaultThumbnail(mediaType);
-			SetThumbnail(filePath, mediaType);
+			SetThumbnailAsync(filePath, mediaType);  // 显示缩略图
 			// 异步加载视频缩略图
-			if(mediaType == MediaType.Video && File.Exists(filePath))
-			{
-				LoadVideoThumbnailAsync(filePath);
-			}
+			//if(mediaType == MediaType.Video && File.Exists(filePath))
+			//{
+			//	LoadVideoThumbnailAsync(filePath);
+			//}
 
 			btnPlay.Click += (s, e) => PlayMedia();     // 播放按钮点击事件
-			// 订阅点击事件
+														// 订阅点击事件
 			pictureBoxThumbnail.Click += (s, e) => PlayMedia();
 			lblFileName.Click += (s, e) => PlayMedia();
 			this.Click += (s, e) => PlayMedia();
 
-		}
-		private Image ExtractFrameWithFFmpeg(string videoPath)
-		{
-			try
-			{
-				// 使用 Process 调用 ffmpeg 来提取第一帧
-				string tempImagePath = Path.GetTempFileName() + ".jpg";
-
-				var processInfo = new ProcessStartInfo
-				{
-					FileName = "ffmpeg",
-					Arguments = $"-i \"{videoPath}\" -ss 00:00:01.000 -vframes 1 -f image2 \"{tempImagePath}\"",
-					UseShellExecute = false,
-					CreateNoWindow = true,
-					RedirectStandardOutput = true,
-					RedirectStandardError = true
-				};
-
-				using(var process = Process.Start(processInfo))
-				{
-					process.WaitForExit();
-
-					if(File.Exists(tempImagePath) && new FileInfo(tempImagePath).Length > 0)
-					{
-						using(var fs = new FileStream(tempImagePath, FileMode.Open, FileAccess.Read))
-						{
-							Image thumbnail = Image.FromStream(fs);
-							File.Delete(tempImagePath);
-							return thumbnail;
-						}
-					}
-				}
-			}
-			catch(Exception ex)
-			{
-				System.Diagnostics.Debug.WriteLine($"FFmpeg 提取失败: {ex.Message}");
-			}
-
-			return null;
-		}
-		private Image ExtractVideoThumbnail(string videoPath)
-		{
-			try
-			{
-				// 按优先级顺序尝试不同的方法
-
-				// 方法1：使用 Windows Shell 获取缩略图
-				Image shellThumbnail = ExtractThumbnailWithWindowsAPI(videoPath);
-				if(shellThumbnail != null)
-					return shellThumbnail;
-
-				// 方法2：使用 FFmpeg（如果可用）
-				Image ffmpegThumbnail = ExtractFrameWithFFmpeg(videoPath);
-				if(ffmpegThumbnail != null)
-					return ffmpegThumbnail;
-
-				// 方法3：使用 VLC 命令行
-				Image vlcThumbnail = ExtractFrameWithVLC(videoPath);
-				if(vlcThumbnail != null)
-					return vlcThumbnail;
-
-				return null;
-			}
-			catch(Exception ex)
-			{
-				System.Diagnostics.Debug.WriteLine($"提取视频缩略图失败: {ex.Message}");
-				return null;
-			}
-		}
-		// 移除或注释掉有问题的 ExtractFrameUsingVLC 方法，添加以下正确的实现：
-
-		private Image ExtractThumbnailWithWindowsAPI(string filePath)
-		{
-			try
-			{
-				// 使用 Windows Shell 获取缩略图
-				// 这需要引用 System.Windows.Forms 和相关 COM 组件
-
-				// 方法1：使用系统图标
-				Icon icon = System.Drawing.Icon.ExtractAssociatedIcon(filePath);
-				if(icon != null)
-				{
-					Image image = icon.ToBitmap();
-					icon.Dispose();
-					return image;
-				}
-			}
-			catch(Exception ex)
-			{
-				System.Diagnostics.Debug.WriteLine($"使用 Windows API 提取缩略图失败: {ex.Message}");
-			}
-
-			return null;
 		}
 
 		private Image ResizeImage(Image image, int maxWidth, int maxHeight)
@@ -175,41 +99,7 @@ namespace MusicChange
 
 			return newImage;
 		}
-		private async void LoadVideoThumbnailAsync(string videoPath)
-		{
-			try
-			{
-				// 在后台线程加载缩略图
-				Image thumbnail = await Task.Run(() => ExtractVideoThumbnail(videoPath));
-
-				// 在 UI 线程更新图片
-				if(thumbnail != null && !this.IsDisposed)
-				{
-					this.Invoke(new Action(() =>
-					{
-						if(!pictureBoxThumbnail.IsDisposed && pictureBoxThumbnail != null)
-						{
-							pictureBoxThumbnail.Image = ResizeImage(thumbnail, 100, 75);
-						}
-						thumbnail?.Dispose();
-					}));
-				}
-			}
-			catch(Exception ex)
-			{
-				System.Diagnostics.Debug.WriteLine($"异步加载缩略图失败: {ex.Message}");
-				// 出错时使用默认图标
-				this.Invoke(new Action(() =>
-				{
-					if(!pictureBoxThumbnail.IsDisposed && pictureBoxThumbnail != null)
-					{
-						pictureBoxThumbnail.Image = Properties.Resources.DefaultVideoThumbnail;
-					}
-				}));
-			}
-		}
-
-
+	
 		private void PlayMedia()
 		{
 			// 触发播放事件
@@ -220,9 +110,7 @@ namespace MusicChange
 		public event EventHandler<MediaPlayEventArgs> MediaPlayRequested;
 
 		private void pictureBoxThumbnail_Click(object sender, EventArgs e)
-		{
-			// 触发播放事件
-
+		{           // 触发播放事件
 			MediaPlayRequested?.Invoke(this, new MediaPlayEventArgs(FilePath, MediaType));
 		}
 		private Image ExtractFrameWithVLC(string videoPath)
@@ -308,7 +196,7 @@ namespace MusicChange
 
 			return "vlc"; // 尝试使用 PATH 中的 vlc
 		}
-		private void SetThumbnail(string filePath, MediaType mediaType)
+		private async Task SetThumbnailAsync(string filePath, MediaType mediaType)  // 设置缩略图
 		{
 			try
 			{
@@ -322,15 +210,27 @@ namespace MusicChange
 				}
 				else if(mediaType == MediaType.Video && File.Exists(filePath))
 				{
-					// 对于视频文件，异步提取缩略图
-					LoadVideoThumbnailAsync(filePath);
+					var videoInfo = await GetVideoInfo(FilePath);
+					// 保存首帧图片（示例）
+					if(videoInfo.Thumbnail != null)
+					{
+						ImagePath = videoInfo.FilePath;
+						Image = videoInfo.Thumbnail;
+						pictureBoxThumbnail.Image = Image;
+					}
+					if(videoInfo != null)
+					{
+						string durationText = $"时长: {videoInfo.DurationSeconds}";
+						TimeLength = videoInfo.DurationSeconds;
+						TimeLength = durationText;
+					}
 				}
 				else if(mediaType == MediaType.Audio)
 				{
 					// 音频文件使用默认图标
 					pictureBoxThumbnail.Image = Properties.Resources.music43;
 				}
-		
+
 			}
 			catch(Exception ex)
 			{
@@ -339,6 +239,92 @@ namespace MusicChange
 				System.Diagnostics.Debug.WriteLine($"加载缩略图失败: {ex.Message}");
 			}
 		}
+		public static async Task<VideoInfo> GetVideoInfo(string filePath)   //获取视频信息
+		{
+			var result = new VideoInfo();
+			try
+			{
+				// 初始化 LibVLC
+				using var libVlc = new LibVLC();
+				using var media = new Media(libVlc, filePath, FromType.FromPath);
+				using var player = new MediaPlayer(media);
+
+				// 启动播放以便 LibVLC 填充 Length 并允许 TakeSnapshot
+				player.Play();
+
+				// 等待播放器进入 Playing 或拿到长度，最多等待 3 秒
+				var sw = System.Diagnostics.Stopwatch.StartNew();
+				while(sw.ElapsedMilliseconds < 5000)
+				{
+					if(player.Length > 0 || player.State == VLCState.Playing)
+						break;
+					await Task.Delay(100);
+				}
+
+				// 获取视频时长
+				long lengthMs = player.Length;
+				var ts = TimeSpan.FromMilliseconds(Math.Max(0, lengthMs));
+				result.DurationSeconds = ts.Hours > 0 ? ts.ToString(@"hh\:mm\:ss") : ts.ToString(@"mm\:ss");
+
+				// 保存封面到当前文件夹
+				// 1. 生成当前 Unix 毫秒级时间戳（UTC时间，从1970-01-01开始）
+				long unixTimestamp = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
+				//string timestampStr = unixTimestamp.ToString(); 将时间戳转换为本地时间字符串精确到毫秒
+				DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeMilliseconds(unixTimestamp);
+				string timestampStr = dateTimeOffset.ToLocalTime().ToString("yyyyMMddHHmmssfff");
+				int randomNum;  // 2. 生成三位随机数（000-999）
+				lock(_random) // 锁定随机数生成，确保多线程安全
+				{
+					randomNum = _random.Next(0, 1000); // 范围 [0, 999]
+				}
+				string randomStr = randomNum.ToString("D3"); // 确保三位，不足补零（如 5 → "005"）
+				string filename = $"{timestampStr}_{randomStr}.jpg";
+				// 
+				string thumbnailPath = Path.Combine(Directory.GetCurrentDirectory(), filename);
+				bool snapshotSuccess = player.TakeSnapshot(0u, thumbnailPath, 0u, 0u);
+
+				if(snapshotSuccess && File.Exists(thumbnailPath))
+				{
+					result.Thumbnail = Image.FromFile(thumbnailPath);
+					result.FilePath = thumbnailPath;
+				}
+				player.Stop();      // 停止播放
+				//player.Dispose();
+			}
+			catch(Exception ex)
+			{
+				System.Diagnostics.Debug.WriteLine($"获取视频信息时出错: {ex.Message}");
+			}
+
+			return result;
+		}
+		public static string GetAudioDuration(string filePath)  //获取音频时长
+		{
+			try
+			{
+				using(var audioReader = new AudioFileReader(filePath))
+				{
+					TimeSpan duration = audioReader.TotalTime;
+
+					// 格式化输出为mm:ss
+					string formattedDuration = duration.ToString(@"mm\:ss");
+					// 处理超过1小时的情况（可选）
+					//if(duration.TotalHours > 0)
+					//{
+					//	formattedDuration = duration.ToString(@"hh\:mm\:ss");
+					//}
+
+					return formattedDuration;
+				}
+			}
+			catch(Exception ex)
+			{
+				// 异常处理（文件不存在/格式不支持等）
+				Debug.WriteLine($"获取音频时长失败: {ex.Message}");
+				return "00:00";
+			}
+		}
+
 
 	}  // 类结束
 
