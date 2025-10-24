@@ -845,9 +845,9 @@ namespace MusicChange
 			this.lblAudioTime.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
 			this.lblAudioTime.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.lblAudioTime.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-			this.lblAudioTime.Location = new System.Drawing.Point(80, 581);
+			this.lblAudioTime.Location = new System.Drawing.Point(83, 576);
 			this.lblAudioTime.Name = "lblAudioTime";
-			this.lblAudioTime.Size = new System.Drawing.Size(50, 5);
+			this.lblAudioTime.Size = new System.Drawing.Size(47, 10);
 			this.lblAudioTime.TabIndex = 11;
 			// 
 			// btnAudioPause

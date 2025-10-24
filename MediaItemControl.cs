@@ -1,15 +1,11 @@
 ﻿// MediaItemControl.cs
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Windows.Forms;
-using System.Windows.Media.Imaging;
-using System.Windows.Media;
-using LibVLCSharp.Shared;
-using LibVLCSharp.WinForms;
-using Vlc.DotNet.Forms;
-using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using LibVLCSharp.Shared;
 using NAudio.Wave;
 using MediaPlayer = LibVLCSharp.Shared.MediaPlayer;
 
@@ -17,8 +13,7 @@ namespace MusicChange
 {
 	public partial class MediaItemControl:UserControl
 	{
-		private AudioPlayer _audioPlayer; // NAudio 播放器实例
-		private static System.Windows.Media.MediaPlayer player;
+
 		private static readonly Random _random = new(Guid.NewGuid().GetHashCode());
 		public string FilePath
 		{
@@ -50,37 +45,248 @@ namespace MusicChange
 			//this.Size = new Size(180, 220);
 			//this.Margin = new Padding(10, 10, 10, 10);
 			//this.Padding = new Padding(5);
-			this.Size = new Size(120, 180); // 增加高度以容纳更多信息
-											// 显示文件名
+			//this.Size = new Size(120, 180); // 增加高度以容纳更多信息
+											
 			lblFileName.Height = 25; //40 增加标签高度
 			lblFileName.Text = Path.GetFileName(filePath);
 			lblFileName.Dock = DockStyle.Bottom;
 			lblFileName.TextAlign = ContentAlignment.MiddleCenter;
-			lblFileName.AutoEllipsis = false;
-			lblFileName.Visible = true;
-			lblFileName.BringToFront();
+			lblFileName.AutoEllipsis = true;
+			lblFileName.Visible = true;             //lblFileName.WordWrap = V;			//lblFileName.BringToFront();
+			LTimeLength.ForeColor = Color.Black;
 
 			btnPlay.Visible = false;
 			btnPlay.BringToFront();
 
-			// 先显示默认图标
-			//SetDefaultThumbnail(mediaType);
-			SetThumbnailAsync(filePath, mediaType);  // 显示缩略图
-			// 异步加载视频缩略图
+			_ = SetThumbnailAsync(filePath, mediaType);  // 根据媒体类型设置初始显示
+														 // 异步加载视频缩略图
 			//if(mediaType == MediaType.Video && File.Exists(filePath))
 			//{
-			//	LoadVideoThumbnailAsync(filePath);
+			//	_ = LoadVideoThumbnailAsync(filePath);
 			//}
 
 			btnPlay.Click += (s, e) => PlayMedia();     // 播放按钮点击事件
-														// 订阅点击事件
-			pictureBoxThumbnail.Click += (s, e) => PlayMedia();
+			pictureBoxThumbnail.Click += (s, e) => PlayMedia();  // 订阅点击事件
 			lblFileName.Click += (s, e) => PlayMedia();
 			this.Click += (s, e) => PlayMedia();
 
 		}
+		//private async Task LoadVideoThumbnailAsync(string filePath)
+		//{
+		//	try
+		//	{
+		//		// 在后台线程获取视频信息
+		//		//VideoInfo videoInfo = await Task.Run(() => GetVideoInfoSync(filePath));
 
-		private Image ResizeImage(Image image, int maxWidth, int maxHeight)
+		//		// 在UI线程更新显示
+		//		if(!this.IsDisposed && pictureBoxThumbnail != null && !pictureBoxThumbnail.IsDisposed)
+		//		{
+		//			this.Invoke(new Action(() =>
+		//			{
+		//				if(videoInfo != null && videoInfo.Thumbnail != null)
+		//				{
+		//					try
+		//					{
+		//						pictureBoxThumbnail.Image = ResizeImage(videoInfo.Thumbnail, 100, 75);
+		//						TimeLength = videoInfo.DurationSeconds;
+		//						Image = videoInfo.Thumbnail;
+		//						ImagePath = videoInfo.FilePath;
+		//					}
+		//					catch(Exception ex)
+		//					{
+		//						System.Diagnostics.Debug.WriteLine($"设置视频缩略图失败: {ex.Message}");
+		//					}
+		//					finally
+		//					{
+		//						videoInfo.Thumbnail?.Dispose();
+		//					}
+		//				}
+		//				else
+		//				{
+		//					// 如果无法获取缩略图，保持默认图标
+		//					pictureBoxThumbnail.Image = Properties.Resources.DefaultVideoThumbnail;
+		//				}
+		//			}));
+		//		}
+		//	}
+		//	catch(Exception ex)
+		//	{
+		//		System.Diagnostics.Debug.WriteLine($"加载视频缩略图失败: {ex.Message}");
+		//		// 确保在UI线程上更新默认图标
+		//		if(!this.IsDisposed && pictureBoxThumbnail != null && !pictureBoxThumbnail.IsDisposed)
+		//		{
+		//			this.Invoke(new Action(() =>
+		//			{
+		//				pictureBoxThumbnail.Image = Properties.Resources.DefaultVideoThumbnail;
+		//			}));
+		//		}
+		//	}
+		//}
+		//private VideoInfo GetVideoInfoSync(string filePath)
+		//{
+		//	var result = new VideoInfo();
+		//	try
+		//	{
+		//		// 使用 LibVLCSharp 获取视频信息（不创建新的播放器实例）
+		//		using var libVLC = new LibVLC();
+		//		using var media = new Media(libVLC, filePath, FromType.FromPath);
+
+		//		// 解析媒体信息
+		//		media.Parse(MediaParseOptions.ParseNetwork);
+
+		//		// 获取视频时长
+		//		long durationMs = media.Duration;
+		//		if(durationMs > 0)
+		//		{
+		//			var ts = TimeSpan.FromMilliseconds(durationMs);
+		//			result.DurationSeconds = ts.Hours > 0 ? ts.ToString(@"hh\:mm\:ss") : ts.ToString(@"mm\:ss");
+		//		}
+		//		else
+		//		{
+		//			result.DurationSeconds = "未知";
+		//		}
+
+		//		// 尝试获取缩略图（使用更安全的方法）
+		//		result.Thumbnail = ExtractThumbnailWithFFmpeg(filePath);
+
+		//		return result;
+		//	}
+		//	catch(Exception ex)
+		//	{
+		//		System.Diagnostics.Debug.WriteLine($"同步获取视频信息失败: {ex.Message}");
+		//		result.DurationSeconds = "未知";
+		//		return result;
+		//	}
+		//}
+
+		//private Image ExtractThumbnailWithFFmpeg(string videoPath)
+		//{
+		//	try
+		//	{
+		//		// 检查 ffmpeg 是否可用
+		//		if(!IsFFmpegAvailable())
+		//		{
+		//			return null;
+		//		}
+
+		//		// 生成临时文件名
+		//		string tempImagePath = Path.GetTempFileName() + ".jpg";
+
+		//		var processInfo = new ProcessStartInfo
+		//		{
+		//			FileName = "ffmpeg",
+		//			Arguments = $"-i \"{videoPath}\" -ss 00:00:01.000 -vframes 1 -f image2 \"{tempImagePath}\" -y",
+		//			UseShellExecute = false,
+		//			CreateNoWindow = true,
+		//			RedirectStandardOutput = true,
+		//			RedirectStandardError = true,
+		//			WindowStyle = ProcessWindowStyle.Hidden
+		//		};
+
+		//		using(var process = Process.Start(processInfo))
+		//		{
+		//			if(process?.WaitForExit(5000) == true) // 5秒超时
+		//			{
+		//				if(File.Exists(tempImagePath) && new FileInfo(tempImagePath).Length > 0)
+		//				{
+		//					using(var fs = new FileStream(tempImagePath, FileMode.Open, FileAccess.Read))
+		//					{
+		//						Image thumbnail = Image.FromStream(fs);
+		//						File.Delete(tempImagePath);
+		//						return thumbnail;
+		//					}
+		//				}
+		//			}
+		//		}
+
+		//		// 清理临时文件
+		//		if(File.Exists(tempImagePath))
+		//		{
+		//			File.Delete(tempImagePath);
+		//		}
+		//	}
+		//	catch(Exception ex)
+		//	{
+		//		System.Diagnostics.Debug.WriteLine($"FFmpeg 提取缩略图失败: {ex.Message}");
+		//	}
+
+		//	return null;
+		//}
+
+		//private bool IsFFmpegAvailable()
+		//{
+		//	try
+		//	{
+		//		var processInfo = new ProcessStartInfo
+		//		{
+		//			FileName = "ffmpeg",
+		//			Arguments = "-version",
+		//			UseShellExecute = false,
+		//			CreateNoWindow = true,
+		//			RedirectStandardOutput = true
+		//		};
+
+		//		using(var process = Process.Start(processInfo))
+		//		{
+		//			return process?.WaitForExit(3000) == true; // 3秒超时
+		//		}
+		//	}
+		//	catch
+		//	{
+		//		return false;
+		//	}
+		//}
+
+		//protected override void Dispose(bool disposing)
+		//{
+		//	if(disposing)
+		//	{
+		//		try
+		//		{
+		//			// 清理图像资源
+		//			if(Image != null)
+		//			{
+		//				Image.Dispose();
+		//				Image = null;
+		//			}
+
+		//			// 清理 pictureBox 中的图像
+		//			if(pictureBoxThumbnail?.Image != null)
+		//			{
+		//				pictureBoxThumbnail.Image.Dispose();
+		//				pictureBoxThumbnail.Image = null;
+		//			}
+		//		}
+		//		catch(Exception ex)
+		//		{
+		//			System.Diagnostics.Debug.WriteLine($"清理 MediaItemControl 资源时出错: {ex.Message}");
+		//		}
+		//	}
+
+		//	base.Dispose(disposing);
+		//}
+		public class VideoInfo
+		{
+			public string DurationSeconds { get; set; } = "未知";
+			public Image Thumbnail
+			{
+				get; set;
+			}
+			public string FilePath
+			{
+				get; set;
+			}
+			public int Width
+			{
+				get; set;
+			}
+			public int Height
+			{
+				get; set;
+			}
+		}
+
+		private Image ResizeImage(Image image, int maxWidth, int maxHeight)  // 缩略图缩放
 		{
 			// 计算缩放比例
 			double ratioX = (double)maxWidth / image.Width;
@@ -113,69 +319,6 @@ namespace MusicChange
 		{           // 触发播放事件
 			MediaPlayRequested?.Invoke(this, new MediaPlayEventArgs(FilePath, MediaType));
 		}
-		private Image ExtractFrameWithVLC(string videoPath)
-		{
-			try
-			{
-				// 检查 VLC 是否安装
-				string vlcPath = FindVLCPath();
-				if(string.IsNullOrEmpty(vlcPath) || !File.Exists(vlcPath))
-				{
-					System.Diagnostics.Debug.WriteLine("VLC 未安装或路径无效");
-					return null;
-				}
-
-				// 创建临时目录存储截图
-				string tempDir = Path.Combine(Path.GetTempPath(), "VideoThumbnails");
-				Directory.CreateDirectory(tempDir);
-
-				string screenshotPath = Path.Combine(tempDir, $"{Guid.NewGuid()}.png");
-
-				// 使用 VLC 命令行截图
-				var processInfo = new ProcessStartInfo
-				{
-					FileName = vlcPath,
-					Arguments = $"\"{videoPath}\" --intf dummy --dummy-quiet --snapshot-path \"{tempDir}\" --snapshot-format png --snapshot-preview 0 --start-time 1 --stop-time 1 --run-time 1 vlc://quit",
-					UseShellExecute = false,
-					CreateNoWindow = true,
-					WindowStyle = ProcessWindowStyle.Hidden
-				};
-
-				using(var process = Process.Start(processInfo))
-				{
-					// 等待最多10秒
-					if(process.WaitForExit(10000))
-					{
-						// 检查截图是否生成
-						if(File.Exists(screenshotPath))
-						{
-							using(var fs = new FileStream(screenshotPath, FileMode.Open, FileAccess.Read))
-							{
-								Image thumbnail = Image.FromStream(fs);
-								// 清理临时文件
-								try
-								{
-									File.Delete(screenshotPath);
-									Directory.Delete(tempDir, true);
-								}
-								catch(Exception cleanupEx)
-								{
-									System.Diagnostics.Debug.WriteLine($"清理临时文件失败: {cleanupEx.Message}");
-								}
-								return thumbnail;
-							}
-						}
-					}
-				}
-			}
-			catch(Exception ex)
-			{
-				System.Diagnostics.Debug.WriteLine($"VLC 截图失败: {ex.Message}");
-			}
-
-			return null;
-		}
-
 		private string FindVLCPath()
 		{
 			// 常见的 VLC 安装路径
@@ -203,10 +346,10 @@ namespace MusicChange
 				if(mediaType == MediaType.Image && File.Exists(filePath))
 				{
 					// 对于图片文件，尝试加载缩略图
-					using(Image originalImage = Image.FromFile(filePath))
-					{
-						pictureBoxThumbnail.Image = ResizeImage(originalImage, 100, 75); // 调整为适合控件的大小
-					}
+					using Image originalImage = Image.FromFile(filePath);
+					pictureBoxThumbnail.Image = ResizeImage(originalImage, 100, 75); // 调整为适合控件的大小
+					LTimeLength.Visible = false;
+
 				}
 				else if(mediaType == MediaType.Video && File.Exists(filePath))
 				{
@@ -220,15 +363,15 @@ namespace MusicChange
 					}
 					if(videoInfo != null)
 					{
-						string durationText = $"时长: {videoInfo.DurationSeconds}";
 						TimeLength = videoInfo.DurationSeconds;
-						TimeLength = durationText;
+						LTimeLength.Text = TimeLength;
 					}
 				}
 				else if(mediaType == MediaType.Audio)
 				{
 					// 音频文件使用默认图标
 					pictureBoxThumbnail.Image = Properties.Resources.music43;
+					LTimeLength.Text = GetAudioDuration(FilePath);
 				}
 
 			}
@@ -324,16 +467,11 @@ namespace MusicChange
 				return "00:00";
 			}
 		}
-
-
 	}  // 类结束
-
-	// 媒体类型枚举
-	public enum MediaType
+	public enum MediaType       // 媒体类型枚举
 	{
 		Video, Audio, Image
 	}
-
 	// 播放事件参数
 	public class MediaPlayEventArgs:EventArgs
 	{

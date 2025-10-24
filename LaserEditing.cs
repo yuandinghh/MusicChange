@@ -44,7 +44,7 @@ namespace MusicChange
 		[DllImport("user32.dll")]
 		public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
 		private const int WM_NCLBUTTONDOWN = 0xA1;
-		private const int HTCAPTION = 0x2;
+		private const int HTCAPTION = 0x2;  //
 		private bool splitContainer5mouseDown;
 		bool IsOfficialMaterialSwitch = false; //官方素材开关
 		bool Ismaterial = true;
@@ -2796,7 +2796,7 @@ namespace MusicChange
 			}
 		}
 		private void initmportfile()  //初始化导入文件
-		{           //InitializeComponent();
+		{         
 			flowLayoutPanelMedia.ControlAdded += (s, e) =>  // 订阅媒体项的“播放请求”事件
 			{
 				if(e.Control is MediaItemControl mediaItem)
@@ -2892,9 +2892,9 @@ namespace MusicChange
 		}
 		private void importdata_Click(object sender, EventArgs e)  //导入素材文件
 		{
-			_ = ClickAsync(sender, e);
+			Click(sender, e);
 		}
-		private async Task ClickAsync(object sender, EventArgs e)
+		private new void Click(object sender, EventArgs e)
 		{
 			//导入素材  Importing the materials  			int c = flowLayoutPanel1.Controls.Count;
 			listBox1.Items.Clear();
@@ -2920,7 +2920,7 @@ namespace MusicChange
 					MessageBox.Show("创建子目录失败: " + ex.Message);
 				}
 			}
-		
+
 			using OpenFileDialog ofd = new()
 			{
 				//Filter = "媒体文件|*.mp4;*.avi;*.jpg;*.png;*.mp3;*.wav|所有文件|*.*"
@@ -2930,7 +2930,7 @@ namespace MusicChange
 			};
 			ofd.Title = "请选择要导入的音频、视频或图片文件";    //设置缺省文档目录
 			ofd.InitialDirectory = subDirectory;  //指定初始目录 文件夹
-			//ofd.InitialDirectory =   Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+												  //ofd.InitialDirectory =   Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 			if(ofd.ShowDialog() == DialogResult.OK)
 			{
 				foreach(string filePath in ofd.FileNames)
@@ -2957,7 +2957,7 @@ namespace MusicChange
 					listBox1.Items.Add(mediaItem.Location.Y);
 					//if(mediaType == MediaType.Video)
 					//{
-					
+
 					//		listBox1.Items.Add(mediaItem.ImagePath);
 					//		listBox1.Items.Add(mediaItem.TimeLength);
 					//}
@@ -2978,7 +2978,7 @@ namespace MusicChange
 				Fileupperleft.Visible = true;               //dG.Visible = false;
 			}
 		}
-	
+
 		private void Displayimage()
 		{
 			// 停止当前音频播放
