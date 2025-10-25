@@ -420,8 +420,7 @@ namespace MusicChange
 			// 
 			// upperleft
 			// 
-			this.upperleft.AutoScroll = true;
-			this.upperleft.BackColor = System.Drawing.Color.DimGray;
+			this.upperleft.BackColor = System.Drawing.Color.Black;
 			this.upperleft.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.upperleft.Controls.Add(this.Fileupperleft);
 			this.upperleft.Controls.Add(this.flowLayoutPanelMedia);
@@ -429,6 +428,7 @@ namespace MusicChange
 			this.upperleft.Location = new System.Drawing.Point(82, 97);
 			this.upperleft.Margin = new System.Windows.Forms.Padding(5);
 			this.upperleft.Name = "upperleft";
+			this.upperleft.Padding = new System.Windows.Forms.Padding(5);
 			this.upperleft.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
 			this.upperleft.Size = new System.Drawing.Size(599, 591);
 			this.upperleft.TabIndex = 18;
@@ -440,10 +440,10 @@ namespace MusicChange
 			this.Fileupperleft.Controls.Add(this.openfile);
 			this.Fileupperleft.Controls.Add(this.dG);
 			this.Fileupperleft.Dock = System.Windows.Forms.DockStyle.Top;
-			this.Fileupperleft.Location = new System.Drawing.Point(0, 0);
+			this.Fileupperleft.Location = new System.Drawing.Point(5, 5);
 			this.Fileupperleft.Margin = new System.Windows.Forms.Padding(5);
 			this.Fileupperleft.Name = "Fileupperleft";
-			this.Fileupperleft.Size = new System.Drawing.Size(597, 90);
+			this.Fileupperleft.Size = new System.Drawing.Size(587, 90);
 			this.Fileupperleft.TabIndex = 0;
 			this.Fileupperleft.SizeChanged += new System.EventHandler(this.panel4_SizeChanged);
 			// 
@@ -452,7 +452,7 @@ namespace MusicChange
 			this.qrcode1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
 			this.qrcode1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.qrcode1.Image = global::MusicChange.Properties.Resources.QRcode;
-			this.qrcode1.Location = new System.Drawing.Point(335, 0);
+			this.qrcode1.Location = new System.Drawing.Point(330, 0);
 			this.qrcode1.Margin = new System.Windows.Forms.Padding(0);
 			this.qrcode1.Name = "qrcode1";
 			this.qrcode1.Size = new System.Drawing.Size(70, 80);
@@ -513,22 +513,20 @@ namespace MusicChange
 			this.dG.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
 			this.dG.RowHeadersWidth = 51;
 			this.dG.RowTemplate.Height = 27;
-			this.dG.Size = new System.Drawing.Size(597, 90);
+			this.dG.Size = new System.Drawing.Size(587, 90);
 			this.dG.TabIndex = 1;
 			// 
 			// flowLayoutPanelMedia
 			// 
-			this.flowLayoutPanelMedia.AutoSize = true;
-			this.flowLayoutPanelMedia.BackColor = System.Drawing.Color.Gray;
+			this.flowLayoutPanelMedia.BackColor = System.Drawing.Color.Black;
 			this.flowLayoutPanelMedia.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.flowLayoutPanelMedia.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.flowLayoutPanelMedia.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-			this.flowLayoutPanelMedia.Location = new System.Drawing.Point(0, 0);
+			this.flowLayoutPanelMedia.Location = new System.Drawing.Point(5, 5);
 			this.flowLayoutPanelMedia.Margin = new System.Windows.Forms.Padding(10, 2, 10, 2);
 			this.flowLayoutPanelMedia.Name = "flowLayoutPanelMedia";
 			this.flowLayoutPanelMedia.Padding = new System.Windows.Forms.Padding(5);
 			this.flowLayoutPanelMedia.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-			this.flowLayoutPanelMedia.Size = new System.Drawing.Size(597, 589);
+			this.flowLayoutPanelMedia.Size = new System.Drawing.Size(587, 579);
 			this.flowLayoutPanelMedia.TabIndex = 1;
 			this.flowLayoutPanelMedia.TabStop = true;
 			this.flowLayoutPanelMedia.Scroll += new System.Windows.Forms.ScrollEventHandler(this.flowLayoutPanelMedia_Scroll);
@@ -825,7 +823,7 @@ namespace MusicChange
 			// 
 			// videoView1
 			// 
-			this.videoView1.BackColor = System.Drawing.Color.DodgerBlue;
+			this.videoView1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
 			this.videoView1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.videoView1.Location = new System.Drawing.Point(0, 30);
 			this.videoView1.MediaPlayer = null;
@@ -845,7 +843,7 @@ namespace MusicChange
 			this.lblAudioTime.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
 			this.lblAudioTime.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.lblAudioTime.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-			this.lblAudioTime.Location = new System.Drawing.Point(83, 576);
+			this.lblAudioTime.Location = new System.Drawing.Point(90, 594);
 			this.lblAudioTime.Name = "lblAudioTime";
 			this.lblAudioTime.Size = new System.Drawing.Size(47, 10);
 			this.lblAudioTime.TabIndex = 11;
@@ -1335,7 +1333,6 @@ namespace MusicChange
 			((System.ComponentModel.ISupportInitialize)(this.sC3)).EndInit();
 			this.sC3.ResumeLayout(false);
 			this.upperleft.ResumeLayout(false);
-			this.upperleft.PerformLayout();
 			this.Fileupperleft.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.dG)).EndInit();
 			this.lefttopfile.ResumeLayout(false);
@@ -1430,6 +1427,7 @@ namespace MusicChange
 		private DevComponents.DotNetBar.LabelX lblAudioTime;
 		private System.Windows.Forms.TrackBar audioPositionTrackBar;
 		private LibVLCSharp.WinForms.VideoView videoView1;
+		//private LibVLCSharp.WinForms.VideoView videoView1;
 	}
 }
 #endregion 
