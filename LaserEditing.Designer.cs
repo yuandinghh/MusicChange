@@ -48,20 +48,17 @@ namespace MusicChange
 			this.buttonX2 = new DevComponents.DotNetBar.ButtonX();
 			this.Modifythephoto = new DevComponents.DotNetBar.ButtonX();
 			this.topleft = new System.Windows.Forms.Panel();
-			this.min = new System.Windows.Forms.Button();
-			this.max = new System.Windows.Forms.Button();
 			this.quit = new System.Windows.Forms.Button();
 			this.logo = new DevComponents.DotNetBar.ButtonX();
 			this.cut = new DevComponents.DotNetBar.ButtonX();
-			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+			this.VerticalHorizontalDivision = new System.Windows.Forms.SplitContainer();
 			this.sC3 = new System.Windows.Forms.SplitContainer();
 			this.upperleft = new System.Windows.Forms.Panel();
 			this.Fileupperleft = new System.Windows.Forms.Panel();
-			this.qrcode1 = new System.Windows.Forms.Button();
-			this.openfile = new System.Windows.Forms.Button();
 			this.dG = new DevComponents.DotNetBar.Controls.DataGridViewX();
 			this.flowLayoutPanelMedia = new System.Windows.Forms.FlowLayoutPanel();
 			this.lefttopfile = new System.Windows.Forms.Panel();
+			this.lcontrolnum = new System.Windows.Forms.Label();
 			this.qrcode0 = new DevComponents.DotNetBar.ButtonX();
 			this.importdata = new DevComponents.DotNetBar.ButtonX();
 			this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
@@ -81,7 +78,6 @@ namespace MusicChange
 			this.btnAudioStop = new DevComponents.DotNetBar.ButtonX();
 			this.btnAudioPlay = new DevComponents.DotNetBar.ButtonX();
 			this.dispVfilename = new System.Windows.Forms.Label();
-			this.pictureBox1 = new System.Windows.Forms.PictureBox();
 			this.middlePanel = new System.Windows.Forms.Panel();
 			this.progressBar = new System.Windows.Forms.TrackBar();
 			this.volumeControlPanel = new System.Windows.Forms.Panel();
@@ -91,13 +87,11 @@ namespace MusicChange
 			this.vieweMax = new DevComponents.DotNetBar.ButtonX();
 			this.volumenum = new System.Windows.Forms.Label();
 			this.volumeTrackBar = new System.Windows.Forms.TrackBar();
-			this.playPauseButton = new System.Windows.Forms.Button();
 			this.fitToWindowButton = new DevComponents.DotNetBar.ButtonX();
 			this.totalTimeLabel = new System.Windows.Forms.Label();
 			this.currentTimeLabel = new System.Windows.Forms.Label();
 			this.zoomInButton = new DevComponents.DotNetBar.ButtonX();
 			this.zoomOutButton = new DevComponents.DotNetBar.ButtonX();
-			this.stopButton = new System.Windows.Forms.Button();
 			this.muteButton = new DevComponents.DotNetBar.ButtonX();
 			this.audioPositionTrackBar = new System.Windows.Forms.TrackBar();
 			this.listBox1 = new System.Windows.Forms.ListBox();
@@ -110,15 +104,22 @@ namespace MusicChange
 			this.temp = new System.Windows.Forms.TextBox();
 			this.progressTimer = new System.Windows.Forms.Timer(this.components);
 			this.audioTimer = new System.Windows.Forms.Timer(this.components);
+			this.min = new System.Windows.Forms.Button();
+			this.max = new System.Windows.Forms.Button();
+			this.qrcode1 = new System.Windows.Forms.Button();
+			this.openfile = new System.Windows.Forms.Button();
+			this.pictureBox1 = new System.Windows.Forms.PictureBox();
+			this.playPauseButton = new System.Windows.Forms.Button();
+			this.stopButton = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
 			this.Ptop.SuspendLayout();
 			this.topleft.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
-			this.splitContainer2.Panel1.SuspendLayout();
-			this.splitContainer2.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.VerticalHorizontalDivision)).BeginInit();
+			this.VerticalHorizontalDivision.Panel1.SuspendLayout();
+			this.VerticalHorizontalDivision.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.sC3)).BeginInit();
 			this.sC3.Panel1.SuspendLayout();
 			this.sC3.Panel2.SuspendLayout();
@@ -135,12 +136,12 @@ namespace MusicChange
 			this.sC4.Panel2.SuspendLayout();
 			this.sC4.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.videoView1)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.progressBar)).BeginInit();
 			this.volumeControlPanel.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.volumeTrackBar)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.audioPositionTrackBar)).BeginInit();
 			this.panel1.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// splitContainer1
@@ -157,13 +158,13 @@ namespace MusicChange
 			// 
 			this.splitContainer1.Panel1.BackColor = System.Drawing.Color.Teal;
 			this.splitContainer1.Panel1.Controls.Add(this.Ptop);
-			this.splitContainer1.Panel1.Margin = new System.Windows.Forms.Padding(2);
+			this.splitContainer1.Panel1.Margin = new System.Windows.Forms.Padding(3);
 			this.splitContainer1.Panel1MinSize = 30;
 			// 
 			// splitContainer1.Panel2
 			// 
-			this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-			this.splitContainer1.Panel2.Margin = new System.Windows.Forms.Padding(2);
+			this.splitContainer1.Panel2.Controls.Add(this.VerticalHorizontalDivision);
+			this.splitContainer1.Panel2.Margin = new System.Windows.Forms.Padding(3);
 			this.splitContainer1.Panel2MinSize = 800;
 			this.splitContainer1.Size = new System.Drawing.Size(2097, 1128);
 			this.splitContainer1.SplitterDistance = 30;
@@ -275,37 +276,6 @@ namespace MusicChange
 			this.topleft.Size = new System.Drawing.Size(150, 30);
 			this.topleft.TabIndex = 2;
 			// 
-			// min
-			// 
-			this.min.BackColor = System.Drawing.Color.Black;
-			this.min.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-			this.min.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.min.ForeColor = System.Drawing.Color.White;
-			this.min.Image = global::MusicChange.Properties.Resources.最小化;
-			this.min.Location = new System.Drawing.Point(26, -2);
-			this.min.Margin = new System.Windows.Forms.Padding(5);
-			this.min.Name = "min";
-			this.min.Size = new System.Drawing.Size(30, 30);
-			this.min.TabIndex = 27;
-			this.min.UseVisualStyleBackColor = false;
-			this.min.Click += new System.EventHandler(this.button42_Click);
-			// 
-			// max
-			// 
-			this.max.Anchor = System.Windows.Forms.AnchorStyles.Right;
-			this.max.BackColor = System.Drawing.Color.Black;
-			this.max.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.max.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-			this.max.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.max.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-			this.max.Image = global::MusicChange.Properties.Resources.最大化;
-			this.max.Location = new System.Drawing.Point(64, 4);
-			this.max.Name = "max";
-			this.max.Size = new System.Drawing.Size(30, 30);
-			this.max.TabIndex = 26;
-			this.max.UseVisualStyleBackColor = false;
-			this.max.Click += new System.EventHandler(this.button3_Click);
-			// 
 			// quit
 			// 
 			this.quit.AutoSize = true;
@@ -362,31 +332,31 @@ namespace MusicChange
 			this.cut.TextColor = System.Drawing.Color.Black;
 			this.cut.Click += new System.EventHandler(this.buttonx6_Click);
 			// 
-			// splitContainer2
+			// VerticalHorizontalDivision
 			// 
-			this.splitContainer2.BackColor = System.Drawing.SystemColors.ActiveCaption;
-			this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.splitContainer2.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-			this.splitContainer2.Location = new System.Drawing.Point(0, 0);
-			this.splitContainer2.Name = "splitContainer2";
-			this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
+			this.VerticalHorizontalDivision.BackColor = System.Drawing.SystemColors.ActiveCaption;
+			this.VerticalHorizontalDivision.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VerticalHorizontalDivision.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+			this.VerticalHorizontalDivision.Location = new System.Drawing.Point(0, 0);
+			this.VerticalHorizontalDivision.Name = "VerticalHorizontalDivision";
+			this.VerticalHorizontalDivision.Orientation = System.Windows.Forms.Orientation.Horizontal;
 			// 
-			// splitContainer2.Panel1
+			// VerticalHorizontalDivision.Panel1
 			// 
-			this.splitContainer2.Panel1.BackColor = System.Drawing.Color.Blue;
-			this.splitContainer2.Panel1.Controls.Add(this.sC3);
-			this.splitContainer2.Panel1MinSize = 600;
+			this.VerticalHorizontalDivision.Panel1.BackColor = System.Drawing.Color.Blue;
+			this.VerticalHorizontalDivision.Panel1.Controls.Add(this.sC3);
+			this.VerticalHorizontalDivision.Panel1MinSize = 600;
 			// 
-			// splitContainer2.Panel2
+			// VerticalHorizontalDivision.Panel2
 			// 
-			this.splitContainer2.Panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-			this.splitContainer2.Panel2.ForeColor = System.Drawing.Color.Black;
-			this.splitContainer2.Panel2.Margin = new System.Windows.Forms.Padding(2);
-			this.splitContainer2.Panel2MinSize = 300;
-			this.splitContainer2.Size = new System.Drawing.Size(2097, 1094);
-			this.splitContainer2.SplitterDistance = 690;
-			this.splitContainer2.TabIndex = 0;
-			this.splitContainer2.SizeChanged += new System.EventHandler(this.splitContainer2_SizeChanged);
+			this.VerticalHorizontalDivision.Panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+			this.VerticalHorizontalDivision.Panel2.ForeColor = System.Drawing.Color.Black;
+			this.VerticalHorizontalDivision.Panel2.Margin = new System.Windows.Forms.Padding(2);
+			this.VerticalHorizontalDivision.Panel2MinSize = 400;
+			this.VerticalHorizontalDivision.Size = new System.Drawing.Size(2097, 1094);
+			this.VerticalHorizontalDivision.SplitterDistance = 652;
+			this.VerticalHorizontalDivision.TabIndex = 0;
+			this.VerticalHorizontalDivision.SizeChanged += new System.EventHandler(this.splitContainer2_SizeChanged);
 			// 
 			// sC3
 			// 
@@ -413,7 +383,7 @@ namespace MusicChange
 			this.sC3.Panel2.Controls.Add(this.sC4);
 			this.sC3.Panel2.Margin = new System.Windows.Forms.Padding(3);
 			this.sC3.Panel2MinSize = 800;
-			this.sC3.Size = new System.Drawing.Size(2097, 690);
+			this.sC3.Size = new System.Drawing.Size(2097, 652);
 			this.sC3.SplitterDistance = 683;
 			this.sC3.TabIndex = 0;
 			this.sC3.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.sC3_SplitterMoved);
@@ -430,7 +400,7 @@ namespace MusicChange
 			this.upperleft.Name = "upperleft";
 			this.upperleft.Padding = new System.Windows.Forms.Padding(5);
 			this.upperleft.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-			this.upperleft.Size = new System.Drawing.Size(599, 591);
+			this.upperleft.Size = new System.Drawing.Size(599, 553);
 			this.upperleft.TabIndex = 18;
 			// 
 			// Fileupperleft
@@ -446,38 +416,6 @@ namespace MusicChange
 			this.Fileupperleft.Size = new System.Drawing.Size(587, 90);
 			this.Fileupperleft.TabIndex = 0;
 			this.Fileupperleft.SizeChanged += new System.EventHandler(this.panel4_SizeChanged);
-			// 
-			// qrcode1
-			// 
-			this.qrcode1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-			this.qrcode1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.qrcode1.Image = global::MusicChange.Properties.Resources.QRcode;
-			this.qrcode1.Location = new System.Drawing.Point(330, 0);
-			this.qrcode1.Margin = new System.Windows.Forms.Padding(0);
-			this.qrcode1.Name = "qrcode1";
-			this.qrcode1.Size = new System.Drawing.Size(70, 80);
-			this.qrcode1.TabIndex = 2;
-			this.qrcode1.UseVisualStyleBackColor = true;
-			this.qrcode1.Click += new System.EventHandler(this.buttonX12_Click);
-			// 
-			// openfile
-			// 
-			this.openfile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-			this.openfile.BackColor = System.Drawing.Color.DimGray;
-			this.openfile.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.openfile.Font = new System.Drawing.Font("楷体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.openfile.ForeColor = System.Drawing.Color.White;
-			this.openfile.Image = global::MusicChange.Properties.Resources.loading;
-			this.openfile.Location = new System.Drawing.Point(22, 3);
-			this.openfile.Margin = new System.Windows.Forms.Padding(0, 3, 3, 3);
-			this.openfile.Name = "openfile";
-			this.openfile.RightToLeft = System.Windows.Forms.RightToLeft.No;
-			this.openfile.Size = new System.Drawing.Size(246, 80);
-			this.openfile.TabIndex = 1;
-			this.openfile.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-			this.openfile.UseVisualStyleBackColor = false;
-			this.openfile.Click += new System.EventHandler(this.importdata_Click);
 			// 
 			// dG
 			// 
@@ -526,7 +464,7 @@ namespace MusicChange
 			this.flowLayoutPanelMedia.Name = "flowLayoutPanelMedia";
 			this.flowLayoutPanelMedia.Padding = new System.Windows.Forms.Padding(5);
 			this.flowLayoutPanelMedia.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-			this.flowLayoutPanelMedia.Size = new System.Drawing.Size(587, 579);
+			this.flowLayoutPanelMedia.Size = new System.Drawing.Size(587, 541);
 			this.flowLayoutPanelMedia.TabIndex = 1;
 			this.flowLayoutPanelMedia.TabStop = true;
 			this.flowLayoutPanelMedia.Scroll += new System.Windows.Forms.ScrollEventHandler(this.flowLayoutPanelMedia_Scroll);
@@ -536,6 +474,7 @@ namespace MusicChange
 			// lefttopfile
 			// 
 			this.lefttopfile.BackColor = System.Drawing.Color.Black;
+			this.lefttopfile.Controls.Add(this.lcontrolnum);
 			this.lefttopfile.Controls.Add(this.qrcode0);
 			this.lefttopfile.Controls.Add(this.importdata);
 			this.lefttopfile.Dock = System.Windows.Forms.DockStyle.Top;
@@ -545,6 +484,20 @@ namespace MusicChange
 			this.lefttopfile.Size = new System.Drawing.Size(599, 35);
 			this.lefttopfile.TabIndex = 11;
 			this.lefttopfile.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
+			// 
+			// lcontrolnum
+			// 
+			this.lcontrolnum.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.lcontrolnum.AutoSize = true;
+			this.lcontrolnum.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.lcontrolnum.ForeColor = System.Drawing.Color.White;
+			this.lcontrolnum.Location = new System.Drawing.Point(574, 5);
+			this.lcontrolnum.Name = "lcontrolnum";
+			this.lcontrolnum.Size = new System.Drawing.Size(19, 20);
+			this.lcontrolnum.TabIndex = 3;
+			this.lcontrolnum.Text = "0";
+			this.lcontrolnum.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// qrcode0
 			// 
@@ -695,7 +648,7 @@ namespace MusicChange
 			this.leftmaitrial.Dock = System.Windows.Forms.DockStyle.Left;
 			this.leftmaitrial.Location = new System.Drawing.Point(2, 62);
 			this.leftmaitrial.Name = "leftmaitrial";
-			this.leftmaitrial.Size = new System.Drawing.Size(80, 626);
+			this.leftmaitrial.Size = new System.Drawing.Size(80, 588);
 			this.leftmaitrial.Style.Alignment = System.Drawing.StringAlignment.Center;
 			this.leftmaitrial.Style.BackColor1.Color = System.Drawing.Color.Black;
 			this.leftmaitrial.Style.BackColor2.Color = System.Drawing.Color.Black;
@@ -815,7 +768,7 @@ namespace MusicChange
 			this.sC4.Panel2.Controls.Add(this.temp);
 			this.sC4.Panel2.Margin = new System.Windows.Forms.Padding(5);
 			this.sC4.Panel2MinSize = 300;
-			this.sC4.Size = new System.Drawing.Size(1410, 690);
+			this.sC4.Size = new System.Drawing.Size(1410, 652);
 			this.sC4.SplitterDistance = 717;
 			this.sC4.TabIndex = 0;
 			this.sC4.SplitterMoving += new System.Windows.Forms.SplitterCancelEventHandler(this.sC4_SplitterMoving);
@@ -824,11 +777,12 @@ namespace MusicChange
 			// videoView1
 			// 
 			this.videoView1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
+			this.videoView1.BackgroundImage = global::MusicChange.Properties.Resources.fm;
 			this.videoView1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.videoView1.Location = new System.Drawing.Point(0, 30);
 			this.videoView1.MediaPlayer = null;
 			this.videoView1.Name = "videoView1";
-			this.videoView1.Size = new System.Drawing.Size(717, 556);
+			this.videoView1.Size = new System.Drawing.Size(717, 518);
 			this.videoView1.TabIndex = 13;
 			this.videoView1.Text = "videoView1";
 			// 
@@ -845,7 +799,7 @@ namespace MusicChange
 			this.lblAudioTime.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
 			this.lblAudioTime.Location = new System.Drawing.Point(90, 594);
 			this.lblAudioTime.Name = "lblAudioTime";
-			this.lblAudioTime.Size = new System.Drawing.Size(47, 10);
+			this.lblAudioTime.Size = new System.Drawing.Size(47, 0);
 			this.lblAudioTime.TabIndex = 11;
 			// 
 			// btnAudioPause
@@ -859,7 +813,7 @@ namespace MusicChange
 			this.btnAudioPause.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.btnAudioPause.Location = new System.Drawing.Point(356, 581);
 			this.btnAudioPause.Name = "btnAudioPause";
-			this.btnAudioPause.Size = new System.Drawing.Size(28, 28);
+			this.btnAudioPause.Size = new System.Drawing.Size(28, 0);
 			this.btnAudioPause.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
 			this.btnAudioPause.Symbol = "";
 			this.btnAudioPause.SymbolColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
@@ -879,7 +833,7 @@ namespace MusicChange
 			this.btnAudioStop.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.btnAudioStop.Location = new System.Drawing.Point(405, 581);
 			this.btnAudioStop.Name = "btnAudioStop";
-			this.btnAudioStop.Size = new System.Drawing.Size(28, 28);
+			this.btnAudioStop.Size = new System.Drawing.Size(28, 0);
 			this.btnAudioStop.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
 			this.btnAudioStop.Symbol = "";
 			this.btnAudioStop.SymbolColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
@@ -899,7 +853,7 @@ namespace MusicChange
 			this.btnAudioPlay.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.btnAudioPlay.Location = new System.Drawing.Point(305, 581);
 			this.btnAudioPlay.Name = "btnAudioPlay";
-			this.btnAudioPlay.Size = new System.Drawing.Size(28, 28);
+			this.btnAudioPlay.Size = new System.Drawing.Size(28, 0);
 			this.btnAudioPlay.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
 			this.btnAudioPlay.Symbol = "";
 			this.btnAudioPlay.SymbolColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
@@ -916,25 +870,12 @@ namespace MusicChange
 			this.dispVfilename.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.dispVfilename.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.dispVfilename.ForeColor = System.Drawing.Color.Navy;
-			this.dispVfilename.Location = new System.Drawing.Point(0, 586);
+			this.dispVfilename.Location = new System.Drawing.Point(0, 548);
 			this.dispVfilename.Margin = new System.Windows.Forms.Padding(0, 0, 0, 15);
 			this.dispVfilename.Name = "dispVfilename";
 			this.dispVfilename.Size = new System.Drawing.Size(717, 22);
 			this.dispVfilename.TabIndex = 7;
 			this.dispVfilename.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// pictureBox1
-			// 
-			this.pictureBox1.BackColor = System.Drawing.Color.Black;
-			this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.pictureBox1.Location = new System.Drawing.Point(0, 30);
-			this.pictureBox1.Name = "pictureBox1";
-			this.pictureBox1.Size = new System.Drawing.Size(717, 578);
-			this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-			this.pictureBox1.TabIndex = 6;
-			this.pictureBox1.TabStop = false;
-			this.pictureBox1.Visible = false;
 			// 
 			// middlePanel
 			// 
@@ -949,7 +890,7 @@ namespace MusicChange
 			this.progressBar.AutoSize = false;
 			this.progressBar.BackColor = System.Drawing.Color.Gray;
 			this.progressBar.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.progressBar.Location = new System.Drawing.Point(0, 608);
+			this.progressBar.Location = new System.Drawing.Point(0, 570);
 			this.progressBar.Margin = new System.Windows.Forms.Padding(0, 5, 0, 0);
 			this.progressBar.Maximum = 1000;
 			this.progressBar.Name = "progressBar";
@@ -980,7 +921,7 @@ namespace MusicChange
 			this.volumeControlPanel.Controls.Add(this.muteButton);
 			this.volumeControlPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.volumeControlPanel.ForeColor = System.Drawing.Color.White;
-			this.volumeControlPanel.Location = new System.Drawing.Point(0, 634);
+			this.volumeControlPanel.Location = new System.Drawing.Point(0, 596);
 			this.volumeControlPanel.MaximumSize = new System.Drawing.Size(0, 30);
 			this.volumeControlPanel.MinimumSize = new System.Drawing.Size(0, 30);
 			this.volumeControlPanel.Name = "volumeControlPanel";
@@ -1074,22 +1015,6 @@ namespace MusicChange
 			this.volumeTrackBar.Value = 80;
 			this.volumeTrackBar.Scroll += new System.EventHandler(this.VolumeTrackBar_Scroll);
 			// 
-			// playPauseButton
-			// 
-			this.playPauseButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-			this.playPauseButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-			this.playPauseButton.Font = new System.Drawing.Font("宋体", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.playPauseButton.ForeColor = System.Drawing.Color.Black;
-			this.playPauseButton.Image = global::MusicChange.Properties.Resources.start;
-			this.playPauseButton.Location = new System.Drawing.Point(335, 2);
-			this.playPauseButton.Margin = new System.Windows.Forms.Padding(4);
-			this.playPauseButton.Name = "playPauseButton";
-			this.playPauseButton.Size = new System.Drawing.Size(30, 26);
-			this.playPauseButton.TabIndex = 4;
-			this.playPauseButton.UseVisualStyleBackColor = true;
-			this.playPauseButton.Click += new System.EventHandler(this.playPauseButton_Click);
-			// 
 			// fitToWindowButton
 			// 
 			this.fitToWindowButton.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
@@ -1168,22 +1093,6 @@ namespace MusicChange
 			this.zoomOutButton.TabIndex = 6;
 			this.zoomOutButton.Click += new System.EventHandler(this.ZoomOutButton_Click);
 			// 
-			// stopButton
-			// 
-			this.stopButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-			this.stopButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-			this.stopButton.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.stopButton.ForeColor = System.Drawing.Color.Black;
-			this.stopButton.Image = global::MusicChange.Properties.Resources.stop;
-			this.stopButton.Location = new System.Drawing.Point(373, 4);
-			this.stopButton.Margin = new System.Windows.Forms.Padding(4);
-			this.stopButton.Name = "stopButton";
-			this.stopButton.Size = new System.Drawing.Size(26, 26);
-			this.stopButton.TabIndex = 5;
-			this.stopButton.UseVisualStyleBackColor = true;
-			this.stopButton.Click += new System.EventHandler(this.StopButton_Click);
-			// 
 			// muteButton
 			// 
 			this.muteButton.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
@@ -1206,7 +1115,7 @@ namespace MusicChange
 			this.audioPositionTrackBar.AutoSize = false;
 			this.audioPositionTrackBar.BackColor = System.Drawing.Color.Gray;
 			this.audioPositionTrackBar.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.audioPositionTrackBar.Location = new System.Drawing.Point(0, 664);
+			this.audioPositionTrackBar.Location = new System.Drawing.Point(0, 626);
 			this.audioPositionTrackBar.Margin = new System.Windows.Forms.Padding(5);
 			this.audioPositionTrackBar.Maximum = 1000;
 			this.audioPositionTrackBar.Name = "audioPositionTrackBar";
@@ -1267,14 +1176,14 @@ namespace MusicChange
 			// 
 			this.temp2.Location = new System.Drawing.Point(34, 127);
 			this.temp2.Name = "temp2";
-			this.temp2.Size = new System.Drawing.Size(261, 25);
+			this.temp2.Size = new System.Drawing.Size(330, 25);
 			this.temp2.TabIndex = 2;
 			// 
 			// temp1
 			// 
 			this.temp1.Location = new System.Drawing.Point(34, 72);
 			this.temp1.Name = "temp1";
-			this.temp1.Size = new System.Drawing.Size(261, 25);
+			this.temp1.Size = new System.Drawing.Size(330, 25);
 			this.temp1.TabIndex = 1;
 			// 
 			// temp
@@ -1292,6 +1201,114 @@ namespace MusicChange
 			// audioTimer
 			// 
 			this.audioTimer.Tick += new System.EventHandler(this.AudioTimer_Tick);
+			// 
+			// min
+			// 
+			this.min.BackColor = System.Drawing.Color.Black;
+			this.min.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+			this.min.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.min.ForeColor = System.Drawing.Color.White;
+			this.min.Image = global::MusicChange.Properties.Resources.最小化;
+			this.min.Location = new System.Drawing.Point(26, -2);
+			this.min.Margin = new System.Windows.Forms.Padding(5);
+			this.min.Name = "min";
+			this.min.Size = new System.Drawing.Size(30, 30);
+			this.min.TabIndex = 27;
+			this.min.UseVisualStyleBackColor = false;
+			this.min.Click += new System.EventHandler(this.button42_Click);
+			// 
+			// max
+			// 
+			this.max.Anchor = System.Windows.Forms.AnchorStyles.Right;
+			this.max.BackColor = System.Drawing.Color.Black;
+			this.max.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			this.max.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+			this.max.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.max.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			this.max.Image = global::MusicChange.Properties.Resources.最大化;
+			this.max.Location = new System.Drawing.Point(64, 4);
+			this.max.Name = "max";
+			this.max.Size = new System.Drawing.Size(30, 30);
+			this.max.TabIndex = 26;
+			this.max.UseVisualStyleBackColor = false;
+			this.max.Click += new System.EventHandler(this.button3_Click);
+			// 
+			// qrcode1
+			// 
+			this.qrcode1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+			this.qrcode1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.qrcode1.Image = global::MusicChange.Properties.Resources.QRcode;
+			this.qrcode1.Location = new System.Drawing.Point(330, 0);
+			this.qrcode1.Margin = new System.Windows.Forms.Padding(0);
+			this.qrcode1.Name = "qrcode1";
+			this.qrcode1.Size = new System.Drawing.Size(70, 80);
+			this.qrcode1.TabIndex = 2;
+			this.qrcode1.UseVisualStyleBackColor = true;
+			this.qrcode1.Click += new System.EventHandler(this.buttonX12_Click);
+			// 
+			// openfile
+			// 
+			this.openfile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+			this.openfile.BackColor = System.Drawing.Color.DimGray;
+			this.openfile.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.openfile.Font = new System.Drawing.Font("楷体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.openfile.ForeColor = System.Drawing.Color.White;
+			this.openfile.Image = global::MusicChange.Properties.Resources.loading;
+			this.openfile.Location = new System.Drawing.Point(22, 3);
+			this.openfile.Margin = new System.Windows.Forms.Padding(0, 3, 3, 3);
+			this.openfile.Name = "openfile";
+			this.openfile.RightToLeft = System.Windows.Forms.RightToLeft.No;
+			this.openfile.Size = new System.Drawing.Size(246, 80);
+			this.openfile.TabIndex = 1;
+			this.openfile.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+			this.openfile.UseVisualStyleBackColor = false;
+			this.openfile.Click += new System.EventHandler(this.importdata_Click);
+			// 
+			// pictureBox1
+			// 
+			this.pictureBox1.BackColor = System.Drawing.Color.Black;
+			this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.pictureBox1.Location = new System.Drawing.Point(0, 30);
+			this.pictureBox1.Name = "pictureBox1";
+			this.pictureBox1.Size = new System.Drawing.Size(717, 540);
+			this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+			this.pictureBox1.TabIndex = 6;
+			this.pictureBox1.TabStop = false;
+			this.pictureBox1.Visible = false;
+			// 
+			// playPauseButton
+			// 
+			this.playPauseButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+			this.playPauseButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+			this.playPauseButton.Font = new System.Drawing.Font("宋体", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.playPauseButton.ForeColor = System.Drawing.Color.Black;
+			this.playPauseButton.Image = global::MusicChange.Properties.Resources.start;
+			this.playPauseButton.Location = new System.Drawing.Point(335, 2);
+			this.playPauseButton.Margin = new System.Windows.Forms.Padding(4);
+			this.playPauseButton.Name = "playPauseButton";
+			this.playPauseButton.Size = new System.Drawing.Size(30, 26);
+			this.playPauseButton.TabIndex = 4;
+			this.playPauseButton.UseVisualStyleBackColor = true;
+			this.playPauseButton.Click += new System.EventHandler(this.playPauseButton_Click);
+			// 
+			// stopButton
+			// 
+			this.stopButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+			this.stopButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+			this.stopButton.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.stopButton.ForeColor = System.Drawing.Color.Black;
+			this.stopButton.Image = global::MusicChange.Properties.Resources.stop;
+			this.stopButton.Location = new System.Drawing.Point(373, 4);
+			this.stopButton.Margin = new System.Windows.Forms.Padding(4);
+			this.stopButton.Name = "stopButton";
+			this.stopButton.Size = new System.Drawing.Size(26, 26);
+			this.stopButton.TabIndex = 5;
+			this.stopButton.UseVisualStyleBackColor = true;
+			this.stopButton.Click += new System.EventHandler(this.StopButton_Click);
 			// 
 			// LaserEditing
 			// 
@@ -1325,9 +1342,9 @@ namespace MusicChange
 			this.Ptop.PerformLayout();
 			this.topleft.ResumeLayout(false);
 			this.topleft.PerformLayout();
-			this.splitContainer2.Panel1.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
-			this.splitContainer2.ResumeLayout(false);
+			this.VerticalHorizontalDivision.Panel1.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.VerticalHorizontalDivision)).EndInit();
+			this.VerticalHorizontalDivision.ResumeLayout(false);
 			this.sC3.Panel1.ResumeLayout(false);
 			this.sC3.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.sC3)).EndInit();
@@ -1336,6 +1353,7 @@ namespace MusicChange
 			this.Fileupperleft.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.dG)).EndInit();
 			this.lefttopfile.ResumeLayout(false);
+			this.lefttopfile.PerformLayout();
 			this.flowLayoutPanel2.ResumeLayout(false);
 			this.flowLayoutPanel2.PerformLayout();
 			this.leftmatrial.ResumeLayout(false);
@@ -1346,13 +1364,13 @@ namespace MusicChange
 			((System.ComponentModel.ISupportInitialize)(this.sC4)).EndInit();
 			this.sC4.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.videoView1)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.progressBar)).EndInit();
 			this.volumeControlPanel.ResumeLayout(false);
 			this.volumeControlPanel.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.volumeTrackBar)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.audioPositionTrackBar)).EndInit();
 			this.panel1.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -1370,7 +1388,7 @@ namespace MusicChange
 		private DevComponents.DotNetBar.ButtonX globalsetting;
 		private System.Windows.Forms.Timer progressTimer;
 		private DevComponents.DotNetBar.ButtonX buttonX2;
-		private System.Windows.Forms.SplitContainer splitContainer2;
+		private System.Windows.Forms.SplitContainer VerticalHorizontalDivision;
 		private System.Windows.Forms.SplitContainer sC3;
 		private System.Windows.Forms.Panel upperleft;
 		private System.Windows.Forms.Panel Fileupperleft;
@@ -1427,7 +1445,7 @@ namespace MusicChange
 		private DevComponents.DotNetBar.LabelX lblAudioTime;
 		private System.Windows.Forms.TrackBar audioPositionTrackBar;
 		private LibVLCSharp.WinForms.VideoView videoView1;
-		//private LibVLCSharp.WinForms.VideoView videoView1;
+		private System.Windows.Forms.Label lcontrolnum;
 	}
 }
 #endregion 

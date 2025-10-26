@@ -46,10 +46,10 @@ namespace MusicChange
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.pictureBoxThumbnail.BackColor = System.Drawing.Color.Transparent;
 			this.pictureBoxThumbnail.Location = new System.Drawing.Point(0, 0);
-			this.pictureBoxThumbnail.Margin = new System.Windows.Forms.Padding(10, 10, 10, 13);
+			this.pictureBoxThumbnail.Margin = new System.Windows.Forms.Padding(5, 5, 5, 10);
 			this.pictureBoxThumbnail.Name = "pictureBoxThumbnail";
 			this.pictureBoxThumbnail.Padding = new System.Windows.Forms.Padding(1);
-			this.pictureBoxThumbnail.Size = new System.Drawing.Size(160, 120);
+			this.pictureBoxThumbnail.Size = new System.Drawing.Size(180, 120);
 			this.pictureBoxThumbnail.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
 			this.pictureBoxThumbnail.TabIndex = 2;
 			this.pictureBoxThumbnail.TabStop = false;
@@ -65,9 +65,9 @@ namespace MusicChange
 			this.lblFileName.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Bold);
 			this.lblFileName.ForeColor = System.Drawing.Color.Black;
 			this.lblFileName.Location = new System.Drawing.Point(0, 116);
-			this.lblFileName.Margin = new System.Windows.Forms.Padding(0, 5, 0, 0);
+			this.lblFileName.Margin = new System.Windows.Forms.Padding(0, 10, 0, 0);
 			this.lblFileName.Name = "lblFileName";
-			this.lblFileName.Size = new System.Drawing.Size(160, 25);
+			this.lblFileName.Size = new System.Drawing.Size(180, 25);
 			this.lblFileName.TabIndex = 1;
 			this.lblFileName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
@@ -78,7 +78,7 @@ namespace MusicChange
 			this.btnPlay.Location = new System.Drawing.Point(5, 5);
 			this.btnPlay.Margin = new System.Windows.Forms.Padding(4);
 			this.btnPlay.Name = "btnPlay";
-			this.btnPlay.Size = new System.Drawing.Size(150, 135);
+			this.btnPlay.Size = new System.Drawing.Size(170, 135);
 			this.btnPlay.TabIndex = 0;
 			// 
 			// LTimeLength
@@ -104,7 +104,7 @@ namespace MusicChange
 			this.Margin = new System.Windows.Forms.Padding(10, 10, 10, 18);
 			this.Name = "MediaItemControl";
 			this.Padding = new System.Windows.Forms.Padding(5);
-			this.Size = new System.Drawing.Size(160, 145);
+			this.Size = new System.Drawing.Size(180, 145);
 			((System.ComponentModel.ISupportInitialize)(this.pictureBoxThumbnail)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();

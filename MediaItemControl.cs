@@ -16,6 +16,18 @@ namespace MusicChange
 	public partial class MediaItemControl:UserControl
 	{
 		//private static readonly Random _random = new(Guid.NewGuid().GetHashCode());
+		private bool _isSelected = false;
+		private Color _originalBackColor;
+
+		public bool IsSelected
+		{
+			get => _isSelected;
+			set
+			{
+				_isSelected = value;
+				UpdateSelectionAppearance();
+			}
+		}
 		public string FilePath
 		{
 			get; private set;
@@ -39,12 +51,11 @@ namespace MusicChange
 		public MediaItemControl(string filePath, MediaType mediaType)
 		{
 			InitializeComponent();
-
-
-
+			TimeLength = "未知";
 			FilePath = filePath;
 			MediaType = mediaType;
-
+			// 保存原始背景色
+			_originalBackColor = this.BackColor;
 			// 设置控件尺寸
 			//this.Size = new Size(180, 220);
 			//this.Margin = new Padding(10, 10, 10, 10);
@@ -63,8 +74,36 @@ namespace MusicChange
 			pictureBoxThumbnail.Click += (s, e) => PlayMedia();  // 订阅点击事件
 			lblFileName.Click += (s, e) => PlayMedia();
 			this.Click += (s, e) => PlayMedia();
+			// 添加点击事件来切换选中状态
+			this.Click += MediaItemControl_Click;
+			pictureBoxThumbnail.Click += MediaItemControl_Click;
+			lblFileName.Click += MediaItemControl_Click;
 
 		}
+
+		// 点击控件切换选中状态
+		private void MediaItemControl_Click(object sender, EventArgs e)
+		{
+			IsSelected = !IsSelected;
+		}
+
+		// 更新选中状态的外观
+		private void UpdateSelectionAppearance()
+		{
+			if(_isSelected)
+			{
+				// 选中状态：蓝色边框和背景
+				this.BackColor = Color.LightBlue;
+				this.BorderStyle = BorderStyle.FixedSingle;
+			}
+			else
+			{
+				// 未选中状态：恢复原始样式
+				this.BackColor = _originalBackColor;
+				this.BorderStyle = BorderStyle.None;
+			}
+		}
+
 		public class VideoInfo
 		{
 			public string DurationSeconds { get; set; } = "未知";
@@ -119,6 +158,7 @@ namespace MusicChange
 
 		private async Task SetThumbnailAsync(string filePath, MediaType mediaType)  // 设置缩略图
 		{
+
 			try
 			{
 				if(mediaType == MediaType.Image && File.Exists(filePath))
@@ -143,23 +183,20 @@ namespace MusicChange
 						TimeLength = videoInfo.DurationSeconds;
 						LTimeLength.Text = TimeLength;
 					}
-					else
-					{
-						//延时一秒    ？？？？？？？？？？？？？？
-                        await Task.Delay(2000);
-						videoInfo = await GetVideoInfo(FilePath);
-						if(videoInfo.Thumbnail != null)
-						{
-
-							ImagePath = videoInfo.FilePath;
-							Image = videoInfo.Thumbnail;
-							pictureBoxThumbnail.Image = Image;
-							TimeLength = videoInfo.DurationSeconds;
-							LTimeLength.Text = TimeLength;
-						}
-					}
-
-				
+					//else  
+					//{
+					//	//延时一秒    ？？？？？？？？？？？？？？
+					//	await Task.Delay(2000);
+					//	videoInfo = await GetVideoInfo(FilePath);
+					//	if(videoInfo.Thumbnail != null)
+					//	{
+					//		ImagePath = videoInfo.FilePath;
+					//		Image = videoInfo.Thumbnail;
+					//		pictureBoxThumbnail.Image = Image;
+					//		TimeLength = videoInfo.DurationSeconds;
+					//		LTimeLength.Text = TimeLength;
+					//	}
+					//}
 				}
 				else if(mediaType == MediaType.Audio)
 				{
@@ -184,9 +221,7 @@ namespace MusicChange
 				using var libVlc = new LibVLC(new[] { "--no-audio", "--no-video-title-show" });
 				using var media = new Media(libVlc, filePath, FromType.FromPath);
 				using var player = new MediaPlayer(media);
-
-				// 尝试先解析媒体元数据（可获得 duration）
-				try
+				try // 尝试先解析媒体元数据（可获得 duration）
 				{
 					// Parse 可以在不完全播放的情况下填充媒体信息（异步或同步行为依版本）
 					_ = media.Parse(MediaParseOptions.ParseNetwork);
@@ -210,7 +245,7 @@ namespace MusicChange
 				player.Play();
 				player.Mute = false; // 额外保证不出声音
 				var sw = System.Diagnostics.Stopwatch.StartNew();   // 等待播放器进入可用状态或直到超时
-				while(sw.ElapsedMilliseconds < 1000)
+				while(sw.ElapsedMilliseconds < 2000)
 				{
 					if(player.Length > 0 || player.State == VLCState.Playing)
 						break;
@@ -239,7 +274,7 @@ namespace MusicChange
 				{
 					// 等待文件被写入（最多等待 3 秒）
 					var waitSw = System.Diagnostics.Stopwatch.StartNew();
-					while(waitSw.ElapsedMilliseconds < 1000)
+					while(waitSw.ElapsedMilliseconds < 2000)
 					{
 						if(File.Exists(snapshotPath) && new FileInfo(snapshotPath).Length > 0)
 							break;
@@ -796,7 +831,7 @@ namespace MusicChange
 
 			base.Dispose(disposing);
 		}
-	
+
 		public static string GetAudioDuration(string filePath)  //获取音频时长
 		{
 			try
