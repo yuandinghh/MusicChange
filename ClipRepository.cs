@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.Data.Sqlite;
+using System.Data.SQLite;
+
 //using static MusicChange.db;
 
 namespace MusicChange
@@ -17,7 +18,7 @@ namespace MusicChange
 		// 创建剪辑片段
 		public int Create(Clip clip)
 		{
-			using (var connection = new SqliteConnection( _connectionString )) {
+			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
 
 				string sql = @"
@@ -32,7 +33,7 @@ namespace MusicChange
                     );
                     SELECT last_insert_rowid();";
 
-				using (var command = new SqliteCommand( sql, connection )) {
+				using (var command = new SQLiteCommand( sql, connection )) {
 					command.Parameters.AddWithValue( "@project_id", clip.ProjectId );
 					command.Parameters.AddWithValue( "@track_id", clip.TrackId );
 					command.Parameters.AddWithValue( "@media_asset_id", clip.MediaAssetId ?? (object)DBNull.Value );
@@ -57,7 +58,7 @@ namespace MusicChange
 		// 根据ID获取剪辑片段
 		public Clip GetById(int id)
 		{
-			using (var connection = new SqliteConnection( _connectionString )) {
+			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
 
 				string sql = @"
@@ -67,7 +68,7 @@ namespace MusicChange
                     FROM clips 
                     WHERE id = @id";
 
-				using (var command = new SqliteCommand( sql, connection )) {
+				using (var command = new SQLiteCommand( sql, connection )) {
 					command.Parameters.AddWithValue( "@id", id );
 
 					using (var reader = command.ExecuteReader()) {
@@ -106,7 +107,7 @@ namespace MusicChange
 		{
 			var clips = new List<Clip>();
 
-			using (var connection = new SqliteConnection( _connectionString )) {
+			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
 
 				string sql = @"
@@ -117,7 +118,7 @@ namespace MusicChange
                     WHERE track_id = @track_id
                     ORDER BY start_time";
 
-				using (var command = new SqliteCommand( sql, connection )) {
+				using (var command = new SQLiteCommand( sql, connection )) {
 					command.Parameters.AddWithValue( "@track_id", trackId );
 
 					using (var reader = command.ExecuteReader()) {
@@ -156,7 +157,7 @@ namespace MusicChange
 		{
 			var clips = new List<Clip>();
 
-			using (var connection = new SqliteConnection( _connectionString )) {
+			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
 
 				string sql = @"
@@ -167,7 +168,7 @@ namespace MusicChange
                     WHERE project_id = @project_id
                     ORDER BY track_id, start_time";
 
-				using (var command = new SqliteCommand( sql, connection )) {
+				using (var command = new SQLiteCommand( sql, connection )) {
 					command.Parameters.AddWithValue( "@project_id", projectId );
 
 					using (var reader = command.ExecuteReader()) {
@@ -204,7 +205,7 @@ namespace MusicChange
 		// 更新剪辑片段
 		public bool Update(Clip clip)
 		{
-			using (var connection = new SqliteConnection( _connectionString )) {
+			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
 
 				string sql = @"
@@ -216,7 +217,7 @@ namespace MusicChange
                         scale_y = @scale_y, rotation = @rotation, volume = @volume, is_muted = @is_muted
                     WHERE id = @id";
 
-				using (var command = new SqliteCommand( sql, connection )) {
+				using (var command = new SQLiteCommand( sql, connection )) {
 					command.Parameters.AddWithValue( "@project_id", clip.ProjectId );
 					command.Parameters.AddWithValue( "@track_id", clip.TrackId );
 					command.Parameters.AddWithValue( "@media_asset_id", clip.MediaAssetId ?? (object)DBNull.Value );
@@ -242,12 +243,12 @@ namespace MusicChange
 		// 删除剪辑片段
 		public bool Delete(int id)
 		{
-			using (var connection = new SqliteConnection( _connectionString )) {
+			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
 
 				string sql = "DELETE FROM clips WHERE id = @id";
 
-				using (var command = new SqliteCommand( sql, connection )) {
+				using (var command = new SQLiteCommand( sql, connection )) {
 					command.Parameters.AddWithValue( "@id", id );
 					return command.ExecuteNonQuery() > 0;
 				}

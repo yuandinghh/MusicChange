@@ -23,7 +23,11 @@ namespace MusicChange {
 			{
 				if(createNew)
 				{
-					Application.Run(new LaserEditing());
+                    // C#
+                    //SQLitePCL.Batteries_V2.Init();
+                    Application.EnableVisualStyles();
+                    Application.SetCompatibleTextRenderingDefault( false );
+                    Application.Run( new LaserEditing() );
 				}
 				else
 				{

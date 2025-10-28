@@ -132,9 +132,9 @@ namespace MusicChange
 			this.SetStatus.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
 			this.SetStatus.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.SetStatus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
-			this.SetStatus.Location = new System.Drawing.Point(395, 463);
+			this.SetStatus.Location = new System.Drawing.Point(355, 463);
 			this.SetStatus.Name = "SetStatus";
-			this.SetStatus.Size = new System.Drawing.Size(451, 92);
+			this.SetStatus.Size = new System.Drawing.Size(491, 120);
 			this.SetStatus.TabIndex = 15;
 			this.SetStatus.WordWrap = true;
 			// 
@@ -186,6 +186,7 @@ namespace MusicChange
 			this.txtConfirm.PreventEnterBeep = true;
 			this.txtConfirm.Size = new System.Drawing.Size(326, 30);
 			this.txtConfirm.TabIndex = 19;
+			this.txtConfirm.Text = "111111";
 			this.txtConfirm.WatermarkColor = System.Drawing.SystemColors.ButtonHighlight;
 			this.txtConfirm.WatermarkImage = global::MusicChange.Properties.Resources.required;
 			this.txtConfirm.WatermarkImageAlignment = System.Drawing.ContentAlignment.MiddleRight;
@@ -204,6 +205,7 @@ namespace MusicChange
 			this.txtPassword.PreventEnterBeep = true;
 			this.txtPassword.Size = new System.Drawing.Size(326, 30);
 			this.txtPassword.TabIndex = 18;
+			this.txtPassword.Text = "111111";
 			this.txtPassword.WatermarkColor = System.Drawing.SystemColors.ButtonHighlight;
 			this.txtPassword.WatermarkImage = global::MusicChange.Properties.Resources.required;
 			this.txtPassword.WatermarkImageAlignment = System.Drawing.ContentAlignment.MiddleRight;
@@ -222,6 +224,7 @@ namespace MusicChange
 			this.txtEmail.PreventEnterBeep = true;
 			this.txtEmail.Size = new System.Drawing.Size(326, 30);
 			this.txtEmail.TabIndex = 17;
+			this.txtEmail.Text = "yd@qq.com";
 			this.txtEmail.WatermarkColor = System.Drawing.SystemColors.ButtonHighlight;
 			this.txtEmail.WatermarkImage = global::MusicChange.Properties.Resources.required;
 			this.txtEmail.WatermarkImageAlignment = System.Drawing.ContentAlignment.MiddleRight;
@@ -240,6 +243,7 @@ namespace MusicChange
 			this.txtUsername.PreventEnterBeep = true;
 			this.txtUsername.Size = new System.Drawing.Size(326, 30);
 			this.txtUsername.TabIndex = 16;
+			this.txtUsername.Text = "yyy";
 			this.txtUsername.WatermarkColor = System.Drawing.SystemColors.ButtonHighlight;
 			this.txtUsername.WatermarkImage = global::MusicChange.Properties.Resources.required;
 			this.txtUsername.WatermarkImageAlignment = System.Drawing.ContentAlignment.MiddleRight;
@@ -249,7 +253,7 @@ namespace MusicChange
 			this.btnRegister.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
 			this.btnRegister.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
 			this.btnRegister.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.btnRegister.Location = new System.Drawing.Point(535, 578);
+			this.btnRegister.Location = new System.Drawing.Point(537, 592);
 			this.btnRegister.Name = "btnRegister";
 			this.btnRegister.Size = new System.Drawing.Size(96, 33);
 			this.btnRegister.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
@@ -262,7 +266,7 @@ namespace MusicChange
 			this.btnCancel.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
 			this.btnCancel.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
 			this.btnCancel.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.btnCancel.Location = new System.Drawing.Point(753, 578);
+			this.btnCancel.Location = new System.Drawing.Point(753, 592);
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.Size = new System.Drawing.Size(93, 33);
 			this.btnCancel.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
@@ -293,7 +297,7 @@ namespace MusicChange
 			this.Controls.Add(this.txtEmail);
 			this.Controls.Add(this.txtUsername);
 			this.Name = "user";
-			this.Text = "user";
+			this.Text = "用户信息";
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

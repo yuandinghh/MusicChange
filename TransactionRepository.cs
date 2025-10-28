@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.Data.Sqlite;
+using System.Data.SQLite;
 using static MusicChange.db;
 
 namespace MusicChange
@@ -14,7 +14,7 @@ namespace MusicChange
 		// 创建事务
 		public int Create(Transaction transaction)
 		{
-			using (var connection = new SqliteConnection( _connectionString )) {
+			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
 
 				string sql = @"
@@ -25,7 +25,7 @@ namespace MusicChange
                     );
                     SELECT last_insert_rowid();";
 
-				using (var command = new SqliteCommand( sql, connection )) {
+				using (var command = new SQLiteCommand( sql, connection )) {
 					command.Parameters.AddWithValue( "@project_id", transaction.ProjectId );
 					command.Parameters.AddWithValue( "@user_id", transaction.UserId );
 					command.Parameters.AddWithValue( "@transaction_type", transaction.TransactionType );
@@ -40,7 +40,7 @@ namespace MusicChange
 		// 根据ID获取事务
 		public Transaction GetById(int id)
 		{
-			using (var connection = new SqliteConnection( _connectionString )) {
+			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
 
 				string sql = @"
@@ -48,7 +48,7 @@ namespace MusicChange
                     FROM transactions 
                     WHERE id = @id";
 
-				using (var command = new SqliteCommand( sql, connection )) {
+				using (var command = new SQLiteCommand( sql, connection )) {
 					command.Parameters.AddWithValue( "@id", id );
 
 					using (var reader = command.ExecuteReader()) {
@@ -76,7 +76,7 @@ namespace MusicChange
 		{
 			var transactions = new List<Transaction>();
 
-			using (var connection = new SqliteConnection( _connectionString )) {
+			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
 
 				string sql = @"
@@ -85,7 +85,7 @@ namespace MusicChange
                     WHERE project_id = @project_id
                     ORDER BY timestamp DESC";
 
-				using (var command = new SqliteCommand( sql, connection )) {
+				using (var command = new SQLiteCommand( sql, connection )) {
 					command.Parameters.AddWithValue( "@project_id", projectId );
 
 					using (var reader = command.ExecuteReader()) {
@@ -113,7 +113,7 @@ namespace MusicChange
 		{
 			var transactions = new List<Transaction>();
 
-			using (var connection = new SqliteConnection( _connectionString )) {
+			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
 
 				string sql = @"
@@ -122,7 +122,7 @@ namespace MusicChange
                     WHERE user_id = @user_id
                     ORDER BY timestamp DESC";
 
-				using (var command = new SqliteCommand( sql, connection )) {
+				using (var command = new SQLiteCommand( sql, connection )) {
 					command.Parameters.AddWithValue( "@user_id", userId );
 
 					using (var reader = command.ExecuteReader()) {
@@ -148,12 +148,12 @@ namespace MusicChange
 		// 更新事务（标记为已撤销）
 		public bool MarkAsUndone(int id)
 		{
-			using (var connection = new SqliteConnection( _connectionString )) {
+			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
 
 				string sql = "UPDATE transactions SET is_undone = 1 WHERE id = @id";
 
-				using (var command = new SqliteCommand( sql, connection )) {
+				using (var command = new SQLiteCommand( sql, connection )) {
 					command.Parameters.AddWithValue( "@id", id );
 					return command.ExecuteNonQuery() > 0;
 				}
@@ -163,12 +163,12 @@ namespace MusicChange
 		// 删除事务
 		public bool Delete(int id)
 		{
-			using (var connection = new SqliteConnection( _connectionString )) {
+			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
 
 				string sql = "DELETE FROM transactions WHERE id = @id";
 
-				using (var command = new SqliteCommand( sql, connection )) {
+				using (var command = new SQLiteCommand( sql, connection )) {
 					command.Parameters.AddWithValue( "@id", id );
 					return command.ExecuteNonQuery() > 0;
 				}

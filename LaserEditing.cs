@@ -213,7 +213,6 @@ namespace MusicChange
 
 		#endregion
 		#region   ------------初始化 LibVLC 核心 播放视频文件 播放 继续 停止等	 -----------------	
-
 		private void InitializeLibVLC()
 		{
 			try
@@ -1229,7 +1228,7 @@ namespace MusicChange
 		#region ------------  全局设置  -------------
 		private void buttonx11_Click(object sender, EventArgs e)
 		{
-	
+
 
 		}
 
@@ -2844,7 +2843,13 @@ namespace MusicChange
 
 			int addedCount = 0;
 			int duplicateCount = 0;
-
+			//?????  加一个虚的 图片
+			//filePath = subDirectory + @"\\tempyd580415.mp4";
+			//MediaItemControl mediaItemadd = new(filePath, MediaType.Video);
+			////mediaItemadd = new(filePath, MediaType.Video);
+			//mediaItemadd.IsSelected = true;
+			//flowLayoutPanelMedia.Controls.Add(mediaItemadd);
+			//DeleteSelectedItems_Click(null, null);
 			foreach(string filePath in ofd.FileNames)
 			{
 				MediaType mediaType;
@@ -2952,13 +2957,7 @@ namespace MusicChange
 					Debug.WriteLine($"写入媒体资源到数据库失败: {ex.Message}");
 				}
 			}
-			//?????  加一个虚的 图片
-			filePath = subDirectory + @"\\tempyd580415.mp4";
-			MediaItemControl mediaItemadd = new(filePath, MediaType.Video);
-			//mediaItemadd = new(filePath, MediaType.Video);
-			mediaItemadd.IsSelected = true;
-			flowLayoutPanelMedia.Controls.Add(mediaItemadd);
-			//DeleteSelectedItems_Click(null, null);
+		
 
 			// 更新面板可见性与状态显示
 			UpdateFlowLayoutVisibility();
@@ -3397,8 +3396,7 @@ namespace MusicChange
 			}
 			catch(Exception ex)
 			{
-				MessageBox.Show($"清空素材时出错: {ex.Message}", "错误",
-							   MessageBoxButtons.OK, MessageBoxIcon.Error);
+				MessageBox.Show($"清空素材时出错: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 		}
 		// 实际清空控件的方法
@@ -3449,7 +3447,7 @@ namespace MusicChange
 				MessageBox.Show($"清空素材失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 		}
-	
+
 		private void UpdateFlowLayoutVisibility()
 		{
 			try
@@ -3485,7 +3483,7 @@ namespace MusicChange
 					{
 						flowLayoutPanelContextMenu.Show(flowLayoutPanelMedia, e.Location);
 					}
-				}       
+				}
 			}
 			catch(Exception ex)
 			{
@@ -3643,12 +3641,8 @@ namespace MusicChange
 		}
 		private void Userimage_Click(object sender, EventArgs e)  // 用户设置图片 
 		{
-			//RegistrationForm registrationForm = new();
-			//registrationForm.ShowDialog();
 			user user = new();
 			user.ShowDialog();
-
-		
 		}
 		// 删除选中的控件
 		private void DeleteSelectedItems_Click(object sender, EventArgs e)

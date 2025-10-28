@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.Data.Sqlite;
+using System.Data.SQLite;
 using static MusicChange.db;
 
 namespace MusicChange
@@ -15,7 +15,7 @@ namespace MusicChange
 		// 创建项目
 		public int Create(Project project)
 		{
-			using (var connection = new SqliteConnection( _connectionString )) {
+			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
 
 				string sql = @"
@@ -26,7 +26,7 @@ namespace MusicChange
                     );
                     SELECT last_insert_rowid();";
 
-				using (var command = new SqliteCommand( sql, connection )) {
+				using (var command = new SQLiteCommand( sql, connection )) {
 					command.Parameters.AddWithValue( "@user_id", project.UserId );
 					command.Parameters.AddWithValue( "@name", project.Name );
 					command.Parameters.AddWithValue( "@description", project.Description ?? "" );
@@ -44,7 +44,7 @@ namespace MusicChange
 		// 根据ID获取项目
 		public Project GetById(int id)
 		{
-			using (var connection = new SqliteConnection( _connectionString )) {
+			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
 
 				string sql = @"
@@ -53,7 +53,7 @@ namespace MusicChange
                     FROM projects 
                     WHERE id = @id";
 
-				using (var command = new SqliteCommand( sql, connection )) {
+				using (var command = new SQLiteCommand( sql, connection )) {
 					command.Parameters.AddWithValue( "@id", id );
 
 					using (var reader = command.ExecuteReader()) {
@@ -85,7 +85,7 @@ namespace MusicChange
 		{
 			var projects = new List<Project>();
 
-			using (var connection = new SqliteConnection( _connectionString )) {
+			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
 
 				string sql = @"
@@ -95,7 +95,7 @@ namespace MusicChange
                     WHERE user_id = @user_id
                     ORDER BY created_at DESC";
 
-				using (var command = new SqliteCommand( sql, connection )) {
+				using (var command = new SQLiteCommand( sql, connection )) {
 					command.Parameters.AddWithValue( "@user_id", userId );
 
 					using (var reader = command.ExecuteReader()) {
@@ -125,7 +125,7 @@ namespace MusicChange
 		// 更新项目
 		public bool Update(Project project)
 		{
-			using (var connection = new SqliteConnection( _connectionString )) {
+			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
 
 				string sql = @"
@@ -135,7 +135,7 @@ namespace MusicChange
                         duration = @duration, thumbnail_path = @thumbnail_path
                     WHERE id = @id";
 
-				using (var command = new SqliteCommand( sql, connection )) {
+				using (var command = new SQLiteCommand( sql, connection )) {
 					command.Parameters.AddWithValue( "@user_id", project.UserId );
 					command.Parameters.AddWithValue( "@name", project.Name );
 					command.Parameters.AddWithValue( "@description", project.Description ?? "" );
@@ -154,12 +154,12 @@ namespace MusicChange
 		// 删除项目
 		public bool Delete(int id)
 		{
-			using (var connection = new SqliteConnection( _connectionString )) {
+			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
 
 				string sql = "DELETE FROM projects WHERE id = @id";
 
-				using (var command = new SqliteCommand( sql, connection )) {
+				using (var command = new SQLiteCommand( sql, connection )) {
 					command.Parameters.AddWithValue( "@id", id );
 					return command.ExecuteNonQuery() > 0;
 				}

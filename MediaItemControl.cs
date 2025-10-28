@@ -56,14 +56,7 @@ namespace MusicChange
 			MediaType = mediaType;
 			// 保存原始背景色
 			_originalBackColor = this.BackColor;
-			// 设置控件尺寸
-			//this.Size = new Size(180, 220);
-			//this.Margin = new Padding(10, 10, 10, 10);
-			//this.Padding = new Padding(5);
-			//this.Size = new Size(120, 180); // 增加高度以容纳更多信息
-			// 如果是视频文件，禁止显示视频内容
 			lblFileName.Text = Path.GetFileName(filePath);
-
 
 			btnPlay.Visible = false;
 			btnPlay.BringToFront();
@@ -387,38 +380,6 @@ namespace MusicChange
 
 		//	return null;
 		//}
-
-		private void SetInitialDisplay(MediaType mediaType)
-		{
-			try
-			{
-				switch(mediaType)
-				{
-					case MediaType.Image:
-						pictureBoxThumbnail.Image = Properties.Resources.DefaultVideoThumbnail;
-						LTimeLength.Visible = false;
-						break;
-					case MediaType.Video:
-						pictureBoxThumbnail.Image = Properties.Resources.DefaultVideoThumbnail;
-						LTimeLength.Visible = true;
-						LTimeLength.Text = "加载中...";
-						break;
-					case MediaType.Audio:
-						pictureBoxThumbnail.Image = Properties.Resources.music43;
-						LTimeLength.Visible = true;
-						break;
-					default:
-						pictureBoxThumbnail.Image = Properties.Resources.DefaultVideoThumbnail;
-						LTimeLength.Visible = false;
-						break;
-				}
-			}
-			catch
-			{
-				pictureBoxThumbnail.Image = Properties.Resources.DefaultVideoThumbnail;
-				LTimeLength.Visible = false;
-			}
-		}
 
 		//private async Task SetThumbnailAsync(string filePath, MediaType mediaType)
 		//{

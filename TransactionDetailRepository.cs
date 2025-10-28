@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.Data.Sqlite;
+using System.Data.SQLite;
 
 namespace MusicChange
 {
@@ -23,7 +23,7 @@ namespace MusicChange
 		// 创建事务详情
 		public int Create(TransactionDetail detail)
 		{
-			using (var connection = new SqliteConnection( _connectionString )) {
+			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
 
 				string sql = @"
@@ -34,7 +34,7 @@ namespace MusicChange
                     );
                     SELECT last_insert_rowid();";
 
-				using (var command = new SqliteCommand( sql, connection )) {
+				using (var command = new SQLiteCommand( sql, connection )) {
 					command.Parameters.AddWithValue( "@transaction_id", detail.TransactionId );
 					command.Parameters.AddWithValue( "@operation_type", detail.OperationType );
 					command.Parameters.AddWithValue( "@table_name", detail.TableName );
@@ -50,7 +50,7 @@ namespace MusicChange
 		// 根据ID获取事务详情
 		public TransactionDetail GetById(int id)
 		{
-			using (var connection = new SqliteConnection( _connectionString )) {
+			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
 
 				string sql = @"
@@ -58,7 +58,7 @@ namespace MusicChange
                     FROM transaction_details 
                     WHERE id = @id";
 
-				using (var command = new SqliteCommand( sql, connection )) {
+				using (var command = new SQLiteCommand( sql, connection )) {
 					command.Parameters.AddWithValue( "@id", id );
 
 					using (var reader = command.ExecuteReader()) {
@@ -87,7 +87,7 @@ namespace MusicChange
 		{
 			var details = new List<TransactionDetail>();
 
-			using (var connection = new SqliteConnection( _connectionString )) {
+			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
 
 				string sql = @"
@@ -96,7 +96,7 @@ namespace MusicChange
                     WHERE transaction_id = @transaction_id
                     ORDER BY created_at";
 
-				using (var command = new SqliteCommand( sql, connection )) {
+				using (var command = new SQLiteCommand( sql, connection )) {
 					command.Parameters.AddWithValue( "@transaction_id", transactionId );
 
 					using (var reader = command.ExecuteReader()) {
@@ -123,7 +123,7 @@ namespace MusicChange
 		// 更新事务详情
 		public bool Update(TransactionDetail detail)
 		{
-			using (var connection = new SqliteConnection( _connectionString )) {
+			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
 
 				string sql = @"
@@ -133,7 +133,7 @@ namespace MusicChange
                         old_values = @old_values, new_values = @new_values
                     WHERE id = @id";
 
-				using (var command = new SqliteCommand( sql, connection )) {
+				using (var command = new SQLiteCommand( sql, connection )) {
 					command.Parameters.AddWithValue( "@transaction_id", detail.TransactionId );
 					command.Parameters.AddWithValue( "@operation_type", detail.OperationType );
 					command.Parameters.AddWithValue( "@table_name", detail.TableName );
@@ -150,12 +150,12 @@ namespace MusicChange
 		// 删除事务详情
 		public bool Delete(int id)
 		{
-			using (var connection = new SqliteConnection( _connectionString )) {
+			using (var connection = new SQLiteConnection( _connectionString )) {
 				connection.Open();
 
 				string sql = "DELETE FROM transaction_details WHERE id = @id";
 
-				using (var command = new SqliteCommand( sql, connection )) {
+				using (var command = new SQLiteCommand( sql, connection )) {
 					command.Parameters.AddWithValue( "@id", id );
 					return command.ExecuteNonQuery() > 0;
 				}

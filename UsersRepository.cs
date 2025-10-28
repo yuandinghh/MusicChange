@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.Data.Sqlite;
+using System.Data.SQLite;
 using static MusicChange.db;
 
 namespace MusicChange
@@ -11,6 +11,7 @@ namespace MusicChange
 	/// </summary>
 	public class UsersRepository
 	{
+		private readonly string _connectionString;
 		public UsersRepository(string dbPath)
 		{
 			// 使用与现有 db 类相同的连接字符串变量（保持项目内一致性）
@@ -20,16 +21,17 @@ namespace MusicChange
 		// Create: 插入用户，返回新记录的 id
 		public int Create(Users user)
 		{
-			using var connection = new SqliteConnection( _connectionString );
+			//_connectionString = $"Data Source={D:\\Documents\\Visual Studio 2022\\MusicChange\\LaserEditing.db};Version=3;";
+			using var connection = new SQLiteConnection(_connectionString);
 			connection.Open();
 
 			string sql = @"
                 INSERT INTO users 
-                    (username, email, password_hash, iphone, full_name, avatar_path, is_active, created_at, updated_at, draftposition, is_locked, is_deleted, is_modified, note)
+                    (username, email, password_hash, iphone, full_name, avatar_path, is_active, created_at, updated_at, draftposition, is_locked, is_deleted, is_modified)
                 VALUES
-                    (@username, @email, @password_hash, @iphone, @full_name, @avatar_path, @is_active, @created_at, @updated_at, @draftposition, @is_locked, @is_deleted, @is_modified, @note);
+                    (@username, @email, @password_hash, @iphone, @full_name, @avatar_path, @is_active, @created_at, @updated_at, @draftposition, @is_locked, @is_deleted, @is_modified);
                 SELECT last_insert_rowid();";
-			using var cmd = new SqliteCommand( sql, connection );
+			using var cmd = new SQLiteCommand( sql, connection );
 			cmd.Parameters.AddWithValue( "@username", user.Username ?? "" );
 			cmd.Parameters.AddWithValue( "@email", user.Email ?? "" );
 			cmd.Parameters.AddWithValue( "@password_hash", user.PasswordHash ?? "" );
@@ -43,8 +45,6 @@ namespace MusicChange
 			cmd.Parameters.AddWithValue( "@is_locked", user.IsLocked ? 1 : 0 );
 			cmd.Parameters.AddWithValue( "@is_deleted", user.IsDeleted ? 1 : 0 );
 			cmd.Parameters.AddWithValue( "@is_modified", user.IsModified ? 1 : 0 );
-			cmd.Parameters.AddWithValue( "@note", user.Note ?? "" );
-
 			var res = cmd.ExecuteScalar();
 			return Convert.ToInt32( res );
 		}
@@ -52,11 +52,11 @@ namespace MusicChange
 		// Read: 根据 ID 获取用户（找不到返回 null）
 		public Users GetById(int id)
 		{
-			using var connection = new SqliteConnection( _connectionString );
+			using var connection = new SQLiteConnection( _connectionString );
 			connection.Open();
 
 			string sql = "SELECT * FROM users WHERE id = @id LIMIT 1";
-			using var cmd = new SqliteCommand( sql, connection );
+			using var cmd = new SQLiteCommand( sql, connection );
 			cmd.Parameters.AddWithValue( "@id", id );
 
 			using var reader = cmd.ExecuteReader();
@@ -70,11 +70,11 @@ namespace MusicChange
 		// Read: 根据用户名获取用户（找不到返回 null）
 		public Users GetByUsername(string username)
 		{
-			using var connection = new SqliteConnection( _connectionString );
+			using var connection = new SQLiteConnection( _connectionString );
 			connection.Open();
 
 			string sql = "SELECT * FROM users WHERE username = @username LIMIT 1";
-			using var cmd = new SqliteCommand( sql, connection );
+			using var cmd = new SQLiteCommand( sql, connection );
 			cmd.Parameters.AddWithValue( "@username", username ?? "" );
 
 			using var reader = cmd.ExecuteReader();
@@ -89,11 +89,11 @@ namespace MusicChange
 		public List<Users> GetAll( )
 		{
 			var list = new List<Users>();
-			using var connection = new SqliteConnection( _connectionString );
+			using var connection = new SQLiteConnection( _connectionString );
 			connection.Open();
 
 			string sql = "SELECT * FROM users ORDER BY id";
-			using var cmd = new SqliteCommand( sql, connection );
+			using var cmd = new SQLiteCommand( sql, connection );
 			using var reader = cmd.ExecuteReader();
 			while (reader.Read()) {
 				list.Add( MapReaderToUser( reader ) );
@@ -104,7 +104,7 @@ namespace MusicChange
 		// Update: 更新用户信息（返回是否成功）
 		public bool Update(Users user)
 		{
-			using var connection = new SqliteConnection( _connectionString );
+			using var connection = new SQLiteConnection( _connectionString );
 			connection.Open();
 
 			string sql = @"
@@ -121,10 +121,9 @@ namespace MusicChange
                     is_locked = @is_locked,
                     is_deleted = @is_deleted,
                     is_modified = @is_modified,
-                    note = @note
                 WHERE id = @id";
 
-			using var cmd = new SqliteCommand( sql, connection );
+			using var cmd = new SQLiteCommand( sql, connection );
 			cmd.Parameters.AddWithValue( "@username", user.Username ?? "" );
 			cmd.Parameters.AddWithValue( "@email", user.Email ?? "" );
 			cmd.Parameters.AddWithValue( "@password_hash", user.PasswordHash ?? "" );
@@ -137,20 +136,18 @@ namespace MusicChange
 			cmd.Parameters.AddWithValue( "@is_locked", user.IsLocked ? 1 : 0 );
 			cmd.Parameters.AddWithValue( "@is_deleted", user.IsDeleted ? 1 : 0 );
 			cmd.Parameters.AddWithValue( "@is_modified", user.IsModified ? 1 : 0 );
-			cmd.Parameters.AddWithValue( "@note", user.Note ?? "" );
 			cmd.Parameters.AddWithValue( "@id", user.Id );
-
 			return cmd.ExecuteNonQuery() > 0;
 		}
 
 		// Delete: 按 ID 删除用户（返回是否成功）
 		public bool Delete(int id)
 		{
-			using var connection = new SqliteConnection( _connectionString );
+			using var connection = new SQLiteConnection( _connectionString );
 			connection.Open();
 
 			string sql = "DELETE FROM users WHERE id = @id";
-			using var cmd = new SqliteCommand( sql, connection );
+			using var cmd = new SQLiteCommand( sql, connection );
 			cmd.Parameters.AddWithValue( "@id", id );
 
 			return cmd.ExecuteNonQuery() > 0;
@@ -159,11 +156,11 @@ namespace MusicChange
 		// 辅助：检查用户名是否存在
 		public bool ExistsByUsername(string username)
 		{
-			using var connection = new SqliteConnection( _connectionString );
+			using var connection = new SQLiteConnection( _connectionString );
 			connection.Open();
 
 			string sql = "SELECT 1 FROM users WHERE username = @username LIMIT 1";
-			using var cmd = new SqliteCommand( sql, connection );
+			using var cmd = new SQLiteCommand( sql, connection );
 			cmd.Parameters.AddWithValue( "@username", username ?? "" );
 
 			var res = cmd.ExecuteScalar();
@@ -171,7 +168,7 @@ namespace MusicChange
 		}
 
 		// 私有映射方法：将 SQLiteDataReader 映射为 Users 实例
-		private Users MapReaderToUser(SqliteDataReader reader)
+		private Users MapReaderToUser(SQLiteDataReader reader)
 		{
 			return new Users
 			{
@@ -188,8 +185,7 @@ namespace MusicChange
 				Draftposition = reader["draftposition"]?.ToString(),
 				IsLocked = reader["is_locked"] != DBNull.Value && Convert.ToInt32( reader["is_locked"] ) == 1,
 				IsDeleted = reader["is_deleted"] != DBNull.Value && Convert.ToInt32( reader["is_deleted"] ) == 1,
-				IsModified = reader["is_modified"] != DBNull.Value && Convert.ToInt32( reader["is_modified"] ) == 1,
-				Note = reader["note"]?.ToString()
+				IsModified = reader["is_modified"] != DBNull.Value && Convert.ToInt32( reader["is_modified"] ) == 1
 			};
 		}
 	}

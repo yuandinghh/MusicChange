@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
-using Microsoft.Data.Sqlite;
+using System.Data;
+using System.Data.SQLite;
+
+//Install-Package System.Data.SQLite.Core
 
 namespace MusicChange  // 数据库操作封装类
 {
@@ -27,11 +30,11 @@ namespace MusicChange  // 数据库操作封装类
 			else
 			{
 				MessageBox.Show("数据库文件已存在，正在检查表结构...");
-				using(var connection = new SqliteConnection(_connectionString))
+				using(var connection = new SQLiteConnection(_connectionString))
 				{
 					connection.Open();
 					string checkTableSql = "SELECT name FROM sqlite_master WHERE type='table' AND name='Users'";
-					using(var command = new SqliteCommand(checkTableSql, connection))
+					using(var command = new SQLiteCommand(checkTableSql, connection))
 					{
 						var result = command.ExecuteScalar();
 						if(result != null)
@@ -44,7 +47,7 @@ namespace MusicChange  // 数据库操作封装类
 			}
 			try
 			{
-				using(var connection = new SqliteConnection(_connectionString))
+				using(var connection = new SQLiteConnection(_connectionString))
 				{
 					connection.Open();
 					string createTableSql = @"
@@ -54,7 +57,7 @@ namespace MusicChange  // 数据库操作封装类
                             Age INTEGER CHECK(Age > 0),  -- 年龄必须为正数
                             Address TEXT
                         )";
-					using(var command = new SqliteCommand(createTableSql, connection))
+					using(var command = new SQLiteCommand(createTableSql, connection))
 					{
 						command.ExecuteNonQuery();
 					}
@@ -89,7 +92,7 @@ namespace MusicChange  // 数据库操作封装类
 		public int InsertProject(Project project)
 		{
 #pragma warning disable IDE0063 // 使用简单的 "using" 语句
-			using(var connection = new SqliteConnection(_connectionString))
+			using(var connection = new SQLiteConnection(_connectionString))
 			{
 #pragma warning restore IDE0063 // 使用简单的 "using" 语句
 				connection.Open();
@@ -98,7 +101,7 @@ namespace MusicChange  // 数据库操作封装类
                     VALUES (@name, @description, @created_at, @updated_at);
                     SELECT last_insert_rowid();";
 
-				using var command = new SqliteCommand(sql, connection);
+				using var command = new SQLiteCommand(sql, connection);
 				command.Parameters.AddWithValue("@name", project.Name);
 				command.Parameters.AddWithValue("@description", project.Description ?? "");
 				command.Parameters.AddWithValue("@created_at", project.CreatedAt);
@@ -116,11 +119,11 @@ namespace MusicChange  // 数据库操作封装类
 		/// if no project with the given ID exists.</returns>
 		public Project GetProjectById(int id)
 		{
-			using(var connection = new SqliteConnection(_connectionString))
+			using(var connection = new SQLiteConnection(_connectionString))
 			{
 				connection.Open();
 				string sql = "SELECT * FROM projects WHERE id = @id";
-				using var command = new SqliteCommand(sql, connection);
+				using var command = new SQLiteCommand(sql, connection);
 				command.Parameters.AddWithValue("@id", id);
 				using var reader = command.ExecuteReader();
 				if(reader.Read())
@@ -144,11 +147,11 @@ namespace MusicChange  // 数据库操作封装类
 		public List<Project> GetAllProjects()
 		{
 			var projects = new List<Project>();
-			using(var connection = new SqliteConnection(_connectionString))
+			using(var connection = new SQLiteConnection(_connectionString))
 			{
 				connection.Open();
 				string sql = "SELECT * FROM projects ORDER BY created_at DESC";
-				using var command = new SqliteCommand(sql, connection);
+				using var command = new SQLiteCommand(sql, connection);
 				using var reader = command.ExecuteReader();
 				while(reader.Read())
 				{
@@ -170,7 +173,7 @@ namespace MusicChange  // 数据库操作封装类
 		/// </summary>
 		public bool UpdateProject(Project project)
 		{
-			using var connection = new SqliteConnection(_connectionString);
+			using var connection = new SQLiteConnection(_connectionString);
 			connection.Open();
 
 			string sql = @"
@@ -178,7 +181,7 @@ namespace MusicChange  // 数据库操作封装类
                     SET name = @name, description = @description, updated_at = @updated_at
                     WHERE id = @id";
 
-			using var command = new SqliteCommand(sql, connection);
+			using var command = new SQLiteCommand(sql, connection);
 			command.Parameters.AddWithValue("@name", project.Name);
 			command.Parameters.AddWithValue("@description", project.Description ?? "");
 			command.Parameters.AddWithValue("@updated_at", DateTime.Now);
@@ -194,10 +197,10 @@ namespace MusicChange  // 数据库操作封装类
 
 		public bool DeleteProject(int id)
 		{
-			using var connection = new SqliteConnection(_connectionString);
+			using var connection = new SQLiteConnection(_connectionString);
 			connection.Open();
 			string sql = "DELETE FROM projects WHERE id = @id";
-			using var command = new SqliteCommand(sql, connection);
+			using var command = new SQLiteCommand(sql, connection);
 			command.Parameters.AddWithValue("@id", id);
 			return command.ExecuteNonQuery() > 0;
 		}
@@ -208,14 +211,14 @@ namespace MusicChange  // 数据库操作封装类
 		/// <returns></returns>
 		public int InsertClip(Clipold clip)
 		{
-			using var connection = new SqliteConnection(_connectionString);
+			using var connection = new SQLiteConnection(_connectionString);
 			connection.Open();
 
 			string sql = @"
                     INSERT INTO clips (name, type,file_path, project_id, start_position, end_position, speed, pitch, created_at, updated_at)
                     VALUES (@name, @file_path, @project_id, @start_position, @end_position, @speed, @pitch, @created_at, @updated_at);
                     SELECT last_insert_rowid();";
-			using var command = new SqliteCommand(sql, connection);
+			using var command = new SQLiteCommand(sql, connection);
 			command.Parameters.AddWithValue("@name", clip.Name);
 			command.Parameters.AddWithValue("@file_path", clip.FilePath);
 			command.Parameters.AddWithValue("@project_id", clip.ProjectId);
@@ -235,11 +238,11 @@ namespace MusicChange  // 数据库操作封装类
 		/// <returns></returns>
 		public Clipold GetClipById(int id)
 		{
-			using(var connection = new SqliteConnection(_connectionString))
+			using(var connection = new SQLiteConnection(_connectionString))
 			{
 				connection.Open();
 				string sql = "SELECT * FROM clips WHERE id = @id";
-				using var command = new SqliteCommand(sql, connection);
+				using var command = new SQLiteCommand(sql, connection);
 				command.Parameters.AddWithValue("@id", id);
 				using var reader = command.ExecuteReader();
 				if(reader.Read())
@@ -270,11 +273,11 @@ namespace MusicChange  // 数据库操作封装类
 		public List<Clipold> GetClipsByProjectId(int projectId)
 		{
 			var clips = new List<Clipold>();
-			using(var connection = new SqliteConnection(_connectionString))
+			using(var connection = new SQLiteConnection(_connectionString))
 			{
 				connection.Open();
 				string sql = "SELECT * FROM clips WHERE project_id = @project_id ORDER BY created_at DESC";
-				using var command = new SqliteCommand(sql, connection);
+				using var command = new SQLiteCommand(sql, connection);
 				command.Parameters.AddWithValue("@project_id", projectId);
 				using var reader = command.ExecuteReader();
 				while(reader.Read())
@@ -307,11 +310,11 @@ namespace MusicChange  // 数据库操作封装类
 		{
 			var clips = new List<Clipold>();
 
-			using(var connection = new SqliteConnection(_connectionString))
+			using(var connection = new SQLiteConnection(_connectionString))
 			{
 				connection.Open();
 				string sql = "SELECT * FROM clips ORDER BY created_at DESC";
-				using var command = new SqliteCommand(sql, connection);
+				using var command = new SQLiteCommand(sql, connection);
 				using var reader = command.ExecuteReader();
 				while(reader.Read())
 				{
@@ -340,7 +343,7 @@ namespace MusicChange  // 数据库操作封装类
 		/// <returns></returns>
 		public bool UpdateClip(Clipold clip)
 		{
-			using var connection = new SqliteConnection(_connectionString);
+			using var connection = new SQLiteConnection(_connectionString);
 			connection.Open();
 
 			string sql = @"
@@ -350,7 +353,7 @@ namespace MusicChange  // 数据库操作封装类
                         speed = @speed, pitch = @pitch, updated_at = @updated_at
                     WHERE id = @id";
 
-			using var command = new SqliteCommand(sql, connection);
+			using var command = new SQLiteCommand(sql, connection);
 			command.Parameters.AddWithValue("@name", clip.Name);
 			command.Parameters.AddWithValue("@type", clip.Type);
 			command.Parameters.AddWithValue("@file_path", clip.FilePath);
@@ -371,12 +374,12 @@ namespace MusicChange  // 数据库操作封装类
 		/// <returns></returns>
 		public bool DeleteClip(int id)
 		{
-			using var connection = new SqliteConnection(_connectionString);
+			using var connection = new SQLiteConnection(_connectionString);
 			connection.Open();
 
 			// 先删除相关的clip_effects
 			string deleteEffectsSql = "DELETE FROM clip_effects WHERE clip_id = @clip_id";
-			using(var command = new SqliteCommand(deleteEffectsSql, connection))
+			using(var command = new SQLiteCommand(deleteEffectsSql, connection))
 			{
 				command.Parameters.AddWithValue("@clip_id", id);
 				command.ExecuteNonQuery();
@@ -384,7 +387,7 @@ namespace MusicChange  // 数据库操作封装类
 
 			// 再删除clip
 			string deleteClipSql = "DELETE FROM clips WHERE id = @id";
-			using(var command = new SqliteCommand(deleteClipSql, connection))
+			using(var command = new SQLiteCommand(deleteClipSql, connection))
 			{
 				command.Parameters.AddWithValue("@id", id);
 				return command.ExecuteNonQuery() > 0;
@@ -398,13 +401,13 @@ namespace MusicChange  // 数据库操作封装类
 		// ClipEffects 表操作
 		public int InsertClipEffect(ClipEffectold effect)
 		{
-			using var connection = new SqliteConnection(_connectionString);
+			using var connection = new SQLiteConnection(_connectionString);
 			connection.Open();
 			string sql = @"
                     INSERT INTO clip_effects (clip_id, effect_type, value, created_at)
                     VALUES (@clip_id, @effect_type, @value, @created_at);
                     SELECT last_insert_rowid();";
-			using var command = new SqliteCommand(sql, connection);
+			using var command = new SQLiteCommand(sql, connection);
 			command.Parameters.AddWithValue("@clip_id", effect.ClipId);
 			command.Parameters.AddWithValue("@effect_type", effect.EffectType);
 			command.Parameters.AddWithValue("@value", effect.Value);
@@ -419,13 +422,13 @@ namespace MusicChange  // 数据库操作封装类
 		/// <returns></returns>
 		public ClipEffectold GetClipEffectById(int id)
 		{
-			using(var connection = new SqliteConnection(_connectionString))
+			using(var connection = new SQLiteConnection(_connectionString))
 			{
 				connection.Open();
 
 				string sql = "SELECT * FROM clip_effects WHERE id = @id";
 
-				using var command = new SqliteCommand(sql, connection);
+				using var command = new SQLiteCommand(sql, connection);
 				command.Parameters.AddWithValue("@id", id);
 
 				using var reader = command.ExecuteReader();
@@ -449,13 +452,13 @@ namespace MusicChange  // 数据库操作封装类
 		{
 			var effects = new List<ClipEffectold>();
 
-			using(var connection = new SqliteConnection(_connectionString))
+			using(var connection = new SQLiteConnection(_connectionString))
 			{
 				connection.Open();
 
 				string sql = "SELECT * FROM clip_effects WHERE clip_id = @clip_id ORDER BY created_at DESC";
 
-				using var command = new SqliteCommand(sql, connection);
+				using var command = new SQLiteCommand(sql, connection);
 				command.Parameters.AddWithValue("@clip_id", clipId);
 
 				using var reader = command.ExecuteReader();
@@ -481,7 +484,7 @@ namespace MusicChange  // 数据库操作封装类
 		/// <returns></returns>
 		public bool UpdateClipEffect(ClipEffectold effect)
 		{
-			using var connection = new SqliteConnection(_connectionString);
+			using var connection = new SQLiteConnection(_connectionString);
 			connection.Open();
 
 			string sql = @"
@@ -489,7 +492,7 @@ namespace MusicChange  // 数据库操作封装类
                     SET clip_id = @clip_id, effect_type = @effect_type, value = @value
                     WHERE id = @id";
 
-			using var command = new SqliteCommand(sql, connection);
+			using var command = new SQLiteCommand(sql, connection);
 			command.Parameters.AddWithValue("@clip_id", effect.ClipId);
 			command.Parameters.AddWithValue("@effect_type", effect.EffectType);
 			command.Parameters.AddWithValue("@value", effect.Value);
@@ -500,12 +503,12 @@ namespace MusicChange  // 数据库操作封装类
 
 		public bool DeleteClipEffect(int id)
 		{
-			using var connection = new SqliteConnection(_connectionString);
+			using var connection = new SQLiteConnection(_connectionString);
 			connection.Open();
 
 			string sql = "DELETE FROM clip_effects WHERE id = @id";
 
-			using var command = new SqliteCommand(sql, connection);
+			using var command = new SQLiteCommand(sql, connection);
 			command.Parameters.AddWithValue("@id", id);
 			return command.ExecuteNonQuery() > 0;
 		}
@@ -633,7 +636,7 @@ namespace MusicChange  // 数据库操作封装类
 		/// </summary>
 		public void CreateDatabaseTables()
 		{
-			using var connection = new SqliteConnection(_connectionString);
+			using var connection = new SQLiteConnection(_connectionString);
 			connection.Open();
 
 			//CreateUserTable( connection );
@@ -645,7 +648,7 @@ namespace MusicChange  // 数据库操作封装类
 			Debug.WriteLine("用户数据库表创建完成");
 		}
 
-		//private void CreateUserTable(SqliteConnection connection)
+		//private void CreateUserTable(SQLiteConnection connection)
 		//{
 		//	string createUsersTable = @"
 		//              CREATE TABLE IF NOT EXISTS users (
@@ -661,14 +664,14 @@ namespace MusicChange  // 数据库操作封装类
 		//			annotations TEXT
 		//              )";
 
-		//	using (var command = new SqliteCommand( createUsersTable, connection )) {
+		//	using (var command = new SQLiteCommand( createUsersTable, connection )) {
 		//		command.ExecuteNonQuery();
 		//	}
 
 		//	// 创建用户名索引
 		//	string createUsernameIndex = @"CREATE INDEX IF NOT EXISTS idx_users_username ON users (username)";
 
-		//	using (var command = new SqliteCommand( createUsernameIndex, connection )) {
+		//	using (var command = new SQLiteCommand( createUsernameIndex, connection )) {
 		//		command.ExecuteNonQuery();
 		//	}
 
@@ -677,12 +680,12 @@ namespace MusicChange  // 数据库操作封装类
 		//              CREATE INDEX IF NOT EXISTS idx_users_email 
 		//              ON users (email)";
 
-		//	using (var command = new SqliteCommand( createEmailIndex, connection )) {
+		//	using (var command = new SQLiteCommand( createEmailIndex, connection )) {
 		//		command.ExecuteNonQuery();
 		//	}
 		//}
 
-		private void CreateUserProfileTable(SqliteConnection connection)
+		private void CreateUserProfileTable(SQLiteConnection connection)
 		{
 			string createProfilesTable = @"
                 CREATE TABLE IF NOT EXISTS user_profiles (
@@ -698,11 +701,11 @@ namespace MusicChange  // 数据库操作封装类
                     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
                 )";
 
-			using var command = new SqliteCommand(createProfilesTable, connection);
+			using var command = new SQLiteCommand(createProfilesTable, connection);
 			command.ExecuteNonQuery();
 		}
 
-		private void CreateUserSessionTable(SqliteConnection connection)
+		private void CreateUserSessionTable(SQLiteConnection connection)
 		{
 			string createSessionsTable = @"
                 CREATE TABLE IF NOT EXISTS user_sessions (
@@ -716,7 +719,7 @@ namespace MusicChange  // 数据库操作封装类
                     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
                 )";
 
-			using(var command = new SqliteCommand(createSessionsTable, connection))
+			using(var command = new SQLiteCommand(createSessionsTable, connection))
 			{
 				command.ExecuteNonQuery();
 			}
@@ -726,7 +729,7 @@ namespace MusicChange  // 数据库操作封装类
                 CREATE INDEX IF NOT EXISTS idx_sessions_token 
                 ON user_sessions (session_token)";
 
-			using(var command = new SqliteCommand(createSessionTokenIndex, connection))
+			using(var command = new SQLiteCommand(createSessionTokenIndex, connection))
 			{
 				command.ExecuteNonQuery();
 			}
@@ -736,13 +739,13 @@ namespace MusicChange  // 数据库操作封装类
                 CREATE INDEX IF NOT EXISTS idx_sessions_expires 
                 ON user_sessions (expires_at)";
 
-			using(var command = new SqliteCommand(createExpiresAtIndex, connection))
+			using(var command = new SQLiteCommand(createExpiresAtIndex, connection))
 			{
 				command.ExecuteNonQuery();
 			}
 		}
 
-		//private void CreateUserPreferencesTable(SqliteConnection connection)
+		//private void CreateUserPreferencesTable(SQLiteConnection connection)
 		//{
 		//	string createPreferencesTable = @"
 		//              CREATE TABLE IF NOT EXISTS user_preferences (
@@ -755,7 +758,7 @@ namespace MusicChange  // 数据库操作封装类
 		//                  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 		//              )";
 
-		//	using (var command = new SqliteCommand( createPreferencesTable, connection )) {
+		//	using (var command = new SQLiteCommand( createPreferencesTable, connection )) {
 		//		command.ExecuteNonQuery();
 		//	}
 
@@ -764,12 +767,12 @@ namespace MusicChange  // 数据库操作封装类
 		//              CREATE INDEX IF NOT EXISTS idx_user_preferences 
 		//              ON user_preferences (user_id, preference_key)";
 
-		//	using (var command = new SqliteCommand( createUserPrefIndex, connection )) {
+		//	using (var command = new SQLiteCommand( createUserPrefIndex, connection )) {
 		//		command.ExecuteNonQuery();
 		//	}
 		//}
 
-		private void CreateUserLoginTable(SqliteConnection connection)
+		private void CreateUserLoginTable(SQLiteConnection connection)
 		{
 			string createPreferencesTable = @"
                 CREATE TABLE IF NOT EXISTS user_logintime (
@@ -782,14 +785,14 @@ namespace MusicChange  // 数据库操作封装类
                     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
                 )";
 
-			using var command = new SqliteCommand(createPreferencesTable, connection);
+			using var command = new SQLiteCommand(createPreferencesTable, connection);
 			command.ExecuteNonQuery();
 
 			// 创建用户偏好组合索引
 			//string createUserPrefIndex = @"
 			//             CREATE INDEX IF NOT EXISTS idx_user_preferences 
 			//             ON user_preferences (user_id, preference_key)";
-			//using (var command = new SqliteCommand( createUserPrefIndex, connection )) {
+			//using (var command = new SQLiteCommand( createUserPrefIndex, connection )) {
 			//	command.ExecuteNonQuery();
 		}
 
@@ -799,7 +802,7 @@ namespace MusicChange  // 数据库操作封装类
 		/// </summary>
 		public void InsertDefaultData()
 		{
-			using var connection = new SqliteConnection(_connectionString);
+			using var connection = new SQLiteConnection(_connectionString);
 			connection.Open();
 
 			// 插入默认用户
@@ -807,7 +810,7 @@ namespace MusicChange  // 数据库操作封装类
                     INSERT OR IGNORE INTO users (username, email, password_hash, full_name)
                     VALUES (@username, @email, @password_hash, @full_name)";
 
-			using(var command = new SqliteCommand(insertDefaultUser, connection))
+			using(var command = new SQLiteCommand(insertDefaultUser, connection))
 			{
 				command.Parameters.AddWithValue("@username", "admin");
 				command.Parameters.AddWithValue("@email", "admin@example.com");
@@ -819,7 +822,7 @@ namespace MusicChange  // 数据库操作封装类
 			// 获取默认用户ID
 			int userId = 0;
 			string getUserId = "SELECT id FROM users WHERE username = 'admin'";
-			using(var command = new SqliteCommand(getUserId, connection))
+			using(var command = new SQLiteCommand(getUserId, connection))
 			{
 				var result = command.ExecuteScalar();
 				if(result != null)
@@ -836,7 +839,7 @@ namespace MusicChange  // 数据库操作封装类
                         (user_id, preferred_language, theme, auto_save_interval, max_undo_steps)
                         VALUES (@user_id, @language, @theme, @auto_save, @undo_steps)";
 
-				using(var command = new SqliteCommand(insertDefaultProfile, connection))
+				using(var command = new SQLiteCommand(insertDefaultProfile, connection))
 				{
 					command.Parameters.AddWithValue("@user_id", userId);
 					command.Parameters.AddWithValue("@language", "zh-CN");
@@ -856,13 +859,13 @@ namespace MusicChange  // 数据库操作封装类
 			Debug.WriteLine("默认数据插入完成");
 		}
 
-		private void InsertDefaultPreference(SqliteConnection connection, int userId, string key, string value)
+		private void InsertDefaultPreference(SQLiteConnection connection, int userId, string key, string value)
 		{
 			string insertPreference = @"
                 INSERT OR IGNORE INTO user_preferences (user_id, preference_key, preference_value)
                 VALUES (@user_id, @key, @value)";
 
-			using var command = new SqliteCommand(insertPreference, connection);
+			using var command = new SQLiteCommand(insertPreference, connection);
 			command.Parameters.AddWithValue("@user_id", userId);
 			command.Parameters.AddWithValue("@key", key);
 			command.Parameters.AddWithValue("@value", value);
@@ -871,7 +874,7 @@ namespace MusicChange  // 数据库操作封装类
 
 		public void CreateTriggers()
 		{
-			using var connection = new SqliteConnection(_connectionString);
+			using var connection = new SQLiteConnection(_connectionString);
 			connection.Open();
 
 			// 创建更新时间触发器
@@ -882,7 +885,7 @@ namespace MusicChange  // 数据库操作封装类
                         UPDATE users SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
                     END";
 
-			using(var command = new SqliteCommand(createUsersTrigger, connection))
+			using(var command = new SQLiteCommand(createUsersTrigger, connection))
 			{
 				command.ExecuteNonQuery();
 			}
@@ -894,7 +897,7 @@ namespace MusicChange  // 数据库操作封装类
                         UPDATE user_profiles SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
                     END";
 
-			using(var command = new SqliteCommand(createProfilesTrigger, connection))
+			using(var command = new SQLiteCommand(createProfilesTrigger, connection))
 			{
 				command.ExecuteNonQuery();
 			}
@@ -906,7 +909,7 @@ namespace MusicChange  // 数据库操作封装类
                         UPDATE user_preferences SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
                     END";
 
-			using(var command = new SqliteCommand(createPreferencesTrigger, connection))
+			using(var command = new SQLiteCommand(createPreferencesTrigger, connection))
 			{
 				command.ExecuteNonQuery();
 			}
@@ -1065,7 +1068,7 @@ C# SQLite 事务表创建程序
 		/// </summary>
 		public void CreateTransactionTables()
 		{
-			using var connection = new SqliteConnection(_connectionString);
+			using var connection = new SQLiteConnection(_connectionString);
 			connection.Open();
 
 			// 创建项目表
@@ -1101,7 +1104,7 @@ C# SQLite 事务表创建程序
 			Debug.WriteLine("视频剪辑事务数据库表创建完成");
 		}
 		#region  -----------  old  clip  creat table -----------
-		//private void CreateProjectsTable(SqliteConnection connection)
+		//private void CreateProjectsTable(SQLiteConnection connection)
 		//{
 		//	string sql = @"
 		//              CREATE TABLE IF NOT EXISTS projects (
@@ -1120,12 +1123,12 @@ C# SQLite 事务表创建程序
 		//                  FOREIGN KEY (user_id) REFERENCES users (id)
 		//              )";
 
-		//	using (var command = new SqliteCommand( sql, connection )) {
+		//	using (var command = new SQLiteCommand( sql, connection )) {
 		//		command.ExecuteNonQuery();
 		//	}
 		//}
 
-		//private void CreateMediaAssetsTable(SqliteConnection connection)
+		//private void CreateMediaAssetsTable(SQLiteConnection connection)
 		//{
 		//	string sql = @"
 		//              CREATE TABLE IF NOT EXISTS media_assets (
@@ -1146,12 +1149,12 @@ C# SQLite 事务表创建程序
 		//                  FOREIGN KEY (user_id) REFERENCES users (id)
 		//              )";
 
-		//	using (var command = new SqliteCommand( sql, connection )) {
+		//	using (var command = new SQLiteCommand( sql, connection )) {
 		//		command.ExecuteNonQuery();
 		//	}
 		//}
 
-		//private void CreateTimelineTracksTable(SqliteConnection connection)
+		//private void CreateTimelineTracksTable(SQLiteConnection connection)
 		//{
 		//	string sql = @"
 		//              CREATE TABLE IF NOT EXISTS timeline_tracks (
@@ -1169,12 +1172,12 @@ C# SQLite 事务表创建程序
 		//                  FOREIGN KEY (project_id) REFERENCES projects (id)
 		//              )";
 
-		//	using (var command = new SqliteCommand( sql, connection )) {
+		//	using (var command = new SQLiteCommand( sql, connection )) {
 		//		command.ExecuteNonQuery();
 		//	}
 		//}
 
-		//private void CreateClipsTable(SqliteConnection connection)
+		//private void CreateClipsTable(SQLiteConnection connection)
 		//{
 		//	string sql = @"
 		//              CREATE TABLE IF NOT EXISTS clips (
@@ -1202,12 +1205,12 @@ C# SQLite 事务表创建程序
 		//                  FOREIGN KEY (media_asset_id) REFERENCES media_assets (id)
 		//              )";
 
-		//	using (var command = new SqliteCommand( sql, connection )) {
+		//	using (var command = new SQLiteCommand( sql, connection )) {
 		//		command.ExecuteNonQuery();
 		//	}
 		//}
 
-		//private void CreateTransactionsTable(SqliteConnection connection)
+		//private void CreateTransactionsTable(SQLiteConnection connection)
 		//{
 		//	string sql = @"
 		//              CREATE TABLE IF NOT EXISTS transactions (
@@ -1226,12 +1229,12 @@ C# SQLite 事务表创建程序
 		//                  FOREIGN KEY (user_id) REFERENCES users (id)
 		//              )";
 
-		//	using (var command = new SqliteCommand( sql, connection )) {
+		//	using (var command = new SQLiteCommand( sql, connection )) {
 		//		command.ExecuteNonQuery();
 		//	}
 		//}
 
-		//private void CreateTransactionDetailsTable(SqliteConnection connection)
+		//private void CreateTransactionDetailsTable(SQLiteConnection connection)
 		//{
 		//	string sql = @"
 		//              CREATE TABLE IF NOT EXISTS transaction_details (
@@ -1247,12 +1250,12 @@ C# SQLite 事务表创建程序
 		//                  FOREIGN KEY (transaction_id) REFERENCES transactions (id)
 		//              )";
 
-		//	using (var command = new SqliteCommand( sql, connection )) {
+		//	using (var command = new SQLiteCommand( sql, connection )) {
 		//		command.ExecuteNonQuery();
 		//	}
 		//}
 
-		//private void CreateEffectsTable(SqliteConnection connection)
+		//private void CreateEffectsTable(SQLiteConnection connection)
 		//{
 		//	string sql = @"
 		//              CREATE TABLE IF NOT EXISTS effects (
@@ -1266,12 +1269,12 @@ C# SQLite 事务表创建程序
 
 		//              )";
 
-		//	using (var command = new SqliteCommand( sql, connection )) {
+		//	using (var command = new SQLiteCommand( sql, connection )) {
 		//		command.ExecuteNonQuery();
 		//	}
 		//}
 
-		//private void CreateClipEffectsTable(SqliteConnection connection)
+		//private void CreateClipEffectsTable(SQLiteConnection connection)
 		//{
 		//	string sql = @"
 		//              CREATE TABLE IF NOT EXISTS clip_effects (
@@ -1289,7 +1292,7 @@ C# SQLite 事务表创建程序
 		//                  FOREIGN KEY (effect_id) REFERENCES effects (id)
 		//              )";
 
-		//	using (var command = new SqliteCommand( sql, connection )) {
+		//	using (var command = new SQLiteCommand( sql, connection )) {
 		//		command.ExecuteNonQuery();
 		//	}
 		//}
@@ -1298,77 +1301,77 @@ C# SQLite 事务表创建程序
 		/// 项目索引
 		/// </summary>
 		/// <param name="connection"></param>
-		private void CreateIndexes(SqliteConnection connection)
+		private void CreateIndexes(SQLiteConnection connection)
 		{
 
 			string projectIndex = "CREATE INDEX IF NOT EXISTS idx_projects_user ON projects (user_id)";
-			using(var command = new SqliteCommand(projectIndex, connection))
+			using(var command = new SQLiteCommand(projectIndex, connection))
 			{
 				command.ExecuteNonQuery();
 			}
 
 			// 媒体资源索引
 			string mediaIndex = "CREATE INDEX IF NOT EXISTS idx_media_assets_user ON media_assets (user_id)";
-			using(var command = new SqliteCommand(mediaIndex, connection))
+			using(var command = new SQLiteCommand(mediaIndex, connection))
 			{
 				command.ExecuteNonQuery();
 			}
 
 			// 轨道索引
 			string trackIndex = "CREATE INDEX IF NOT EXISTS idx_timeline_tracks_project ON timeline_tracks (project_id)";
-			using(var command = new SqliteCommand(trackIndex, connection))
+			using(var command = new SQLiteCommand(trackIndex, connection))
 			{
 				command.ExecuteNonQuery();
 			}
 
 			// 剪辑索引
 			string clipIndex1 = "CREATE INDEX IF NOT EXISTS idx_clips_project ON clips (project_id)";
-			using(var command = new SqliteCommand(clipIndex1, connection))
+			using(var command = new SQLiteCommand(clipIndex1, connection))
 			{
 				command.ExecuteNonQuery();
 			}
 
 			string clipIndex2 = "CREATE INDEX IF NOT EXISTS idx_clips_track ON clips (track_id)";
-			using(var command = new SqliteCommand(clipIndex2, connection))
+			using(var command = new SQLiteCommand(clipIndex2, connection))
 			{
 				command.ExecuteNonQuery();
 			}
 
 			// 事务索引
 			string transactionIndex1 = "CREATE INDEX IF NOT EXISTS idx_transactions_project ON transactions (project_id)";
-			using(var command = new SqliteCommand(transactionIndex1, connection))
+			using(var command = new SQLiteCommand(transactionIndex1, connection))
 			{
 				command.ExecuteNonQuery();
 			}
 
 			string transactionIndex2 = "CREATE INDEX IF NOT EXISTS idx_transactions_user ON transactions (user_id)";
-			using(var command = new SqliteCommand(transactionIndex2, connection))
+			using(var command = new SQLiteCommand(transactionIndex2, connection))
 			{
 				command.ExecuteNonQuery();
 			}
 
 			// 事务详情索引
 			string detailIndex = "CREATE INDEX IF NOT EXISTS idx_transaction_details_transaction ON transaction_details (transaction_id)";
-			using(var command = new SqliteCommand(detailIndex, connection))
+			using(var command = new SQLiteCommand(detailIndex, connection))
 			{
 				command.ExecuteNonQuery();
 			}
 
 			// 剪辑效果索引
 			string clipEffectIndex1 = "CREATE INDEX IF NOT EXISTS idx_clip_effects_clip ON clip_effects (clip_id)";
-			using(var command = new SqliteCommand(clipEffectIndex1, connection))
+			using(var command = new SQLiteCommand(clipEffectIndex1, connection))
 			{
 				command.ExecuteNonQuery();
 			}
 
 			string clipEffectIndex2 = "CREATE INDEX IF NOT EXISTS idx_clip_effects_effect ON clip_effects (effect_id)";
-			using(var command = new SqliteCommand(clipEffectIndex2, connection))
+			using(var command = new SQLiteCommand(clipEffectIndex2, connection))
 			{
 				command.ExecuteNonQuery();
 			}
 		}
 
-		private void CreateTriggers(SqliteConnection connection)
+		private void CreateTriggers(SQLiteConnection connection)
 		{
 			// 项目更新时间触发器
 			string projectTrigger = @"
@@ -1377,7 +1380,7 @@ C# SQLite 事务表创建程序
                 BEGIN
                     UPDATE projects SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
                 END";
-			using(var command = new SqliteCommand(projectTrigger, connection))
+			using(var command = new SQLiteCommand(projectTrigger, connection))
 			{
 				command.ExecuteNonQuery();
 			}
@@ -1389,7 +1392,7 @@ C# SQLite 事务表创建程序
                 BEGIN
                     UPDATE clips SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
                 END";
-			using(var command = new SqliteCommand(clipTrigger, connection))
+			using(var command = new SQLiteCommand(clipTrigger, connection))
 			{
 				command.ExecuteNonQuery();
 			}
@@ -1401,7 +1404,7 @@ C# SQLite 事务表创建程序
 		// 记录事务
 		public int RecordTransaction(int projectId, int userId, string transactionType, string description)
 		{
-			using var connection = new SqliteConnection(_connectionString);
+			using var connection = new SQLiteConnection(_connectionString);
 			connection.Open();
 
 			string sql = @"
@@ -1409,7 +1412,7 @@ C# SQLite 事务表创建程序
                     VALUES (@project_id, @user_id, @transaction_type, @description);
                     SELECT last_insert_rowid();";
 
-			using var command = new SqliteCommand(sql, connection);
+			using var command = new SQLiteCommand(sql, connection);
 			command.Parameters.AddWithValue("@project_id", projectId);
 			command.Parameters.AddWithValue("@user_id", userId);
 			command.Parameters.AddWithValue("@transaction_type", transactionType);
@@ -1423,13 +1426,13 @@ C# SQLite 事务表创建程序
 		//当前时间 怎么输入表中
 
 		{
-			using var connection = new SqliteConnection(_connectionString);
+			using var connection = new SQLiteConnection(_connectionString);
 			connection.Open();
 			string sql = @"
                     INSERT INTO transaction_details 
                     (transaction_id, operation_type, table_name, record_id, old_values, new_values, created_at,note)
                     VALUES (@transaction_id, @operation_type, @table_name, @record_id, @old_values, @new_values,@created_at, @note)";
-			using var command = new SqliteCommand(sql, connection);
+			using var command = new SQLiteCommand(sql, connection);
 			command.Parameters.AddWithValue("@transaction_id", transactionId);
 			command.Parameters.AddWithValue("@operation_type", operationType);
 			command.Parameters.AddWithValue("@table_name", tableName);
@@ -1444,7 +1447,7 @@ C# SQLite 事务表创建程序
 		// 获取项目事务历史
 		public void GetProjectTransactions(int projectId)
 		{
-			using var connection = new SqliteConnection(_connectionString);
+			using var connection = new SQLiteConnection(_connectionString);
 			connection.Open();
 			string sql = @"
                     SELECT t.*, u.username 
@@ -1453,7 +1456,7 @@ C# SQLite 事务表创建程序
                     WHERE t.project_id = @project_id
                     ORDER BY t.timestamp DESC
                     LIMIT 100";
-			using var command = new SqliteCommand(sql, connection);
+			using var command = new SQLiteCommand(sql, connection);
 			command.Parameters.AddWithValue("@project_id", projectId);
 			using var reader = command.ExecuteReader();
 			while(reader.Read())
@@ -1464,14 +1467,14 @@ C# SQLite 事务表创建程序
 		// 撤销事务
 		public bool UndoTransaction(int transactionId)
 		{
-			using var connection = new SqliteConnection(_connectionString);
+			using var connection = new SQLiteConnection(_connectionString);
 			connection.Open();
 			using var transaction = connection.BeginTransaction();
 			try
 			{
 				// 标记事务为已撤销
 				string updateSql = "UPDATE transactions SET is_undone = 1 WHERE id = @id";
-				using(var command = new SqliteCommand(updateSql, connection))
+				using(var command = new SQLiteCommand(updateSql, connection))
 				{
 					command.Parameters.AddWithValue("@id", transactionId);
 					command.ExecuteNonQuery();
@@ -1605,12 +1608,12 @@ C# SQLite 事务表创建程序
 			try
 			{
 				string connectionString = $"Data Source={databasePath};Version=3;";
-				using var connection = new SqliteConnection(connectionString);
+				using var connection = new SQLiteConnection(connectionString);
 				connection.Open();
 
 				// 测试查询
 				string sql = "SELECT name FROM sqlite_master WHERE type='table'";
-				using var command = new SqliteCommand(sql, connection);
+				using var command = new SQLiteCommand(sql, connection);
 				using var reader = command.ExecuteReader();
 				Debug.WriteLine("\n数据库中的表:");
 				while(reader.Read())
@@ -1631,7 +1634,7 @@ C# SQLite 事务表创建程序
 		/// </summary>
 		public void InitializeAllTables()
 		{
-			using var connection = new SqliteConnection(_connectionString);
+			using var connection = new SQLiteConnection(_connectionString);
 			connection.Open();
 			// 按依赖顺序创建表
 			CreateUserTable(connection);
@@ -1658,7 +1661,7 @@ C# SQLite 事务表创建程序
 		#region -------------最终 事务 表创建方法 --------------------
 
 
-		private void CreateProjectsTable(SqliteConnection connection)
+		private void CreateProjectsTable(SQLiteConnection connection)
 		{
 			string sql = @"
                 CREATE TABLE IF NOT EXISTS projects (
@@ -1676,11 +1679,11 @@ C# SQLite 事务表创建程序
                     FOREIGN KEY (user_id) REFERENCES users (id)
                 )";
 
-			using var command = new SqliteCommand(sql, connection);
+			using var command = new SQLiteCommand(sql, connection);
 			command.ExecuteNonQuery();
 		}
 
-		private void CreateMediaAssetsTable(SqliteConnection connection)
+		private void CreateMediaAssetsTable(SQLiteConnection connection)
 		{
 			string sql = @"
                 CREATE TABLE IF NOT EXISTS media_assets (
@@ -1699,11 +1702,11 @@ C# SQLite 事务表创建程序
                     FOREIGN KEY (user_id) REFERENCES users (id)
                 )";
 
-			using var command = new SqliteCommand(sql, connection);
+			using var command = new SQLiteCommand(sql, connection);
 			command.ExecuteNonQuery();
 		}
 
-		private void CreateTimelineTracksTable(SqliteConnection connection)
+		private void CreateTimelineTracksTable(SQLiteConnection connection)
 		{
 			string sql = @"
                 CREATE TABLE IF NOT EXISTS timeline_tracks (
@@ -1719,11 +1722,11 @@ C# SQLite 事务表创建程序
                     FOREIGN KEY (project_id) REFERENCES projects (id)
                 )";
 
-			using var command = new SqliteCommand(sql, connection);
+			using var command = new SQLiteCommand(sql, connection);
 			command.ExecuteNonQuery();
 		}
 
-		private void CreateClipsTable(SqliteConnection connection)
+		private void CreateClipsTable(SQLiteConnection connection)
 		{
 			string sql = @"
                 CREATE TABLE IF NOT EXISTS clips (
@@ -1750,10 +1753,10 @@ C# SQLite 事务表创建程序
                     FOREIGN KEY (media_asset_id) REFERENCES media_assets (id)
                 )";
 
-			using var command = new SqliteCommand(sql, connection);
+			using var command = new SQLiteCommand(sql, connection);
 			command.ExecuteNonQuery();
 		}
-		private void CreateTransactionsTable(SqliteConnection connection)
+		private void CreateTransactionsTable(SQLiteConnection connection)
 		{
 			string sql = @"
                 CREATE TABLE IF NOT EXISTS transactions (
@@ -1768,11 +1771,11 @@ C# SQLite 事务表创建程序
                     FOREIGN KEY (user_id) REFERENCES users (id)
                 )";
 
-			using var command = new SqliteCommand(sql, connection);
+			using var command = new SQLiteCommand(sql, connection);
 			command.ExecuteNonQuery();
 		}
 
-		private void CreateTransactionDetailsTable(SqliteConnection connection)
+		private void CreateTransactionDetailsTable(SQLiteConnection connection)
 		{
 			string sql = @"
                 CREATE TABLE IF NOT EXISTS transaction_details (
@@ -1787,13 +1790,13 @@ C# SQLite 事务表创建程序
                     FOREIGN KEY (transaction_id) REFERENCES transactions (id)
                 )";
 
-			using(var command = new SqliteCommand(sql, connection))
+			using(var command = new SQLiteCommand(sql, connection))
 			{
 				command.ExecuteNonQuery();
 			}
 		}
 
-		private void CreateEffectsTable(SqliteConnection connection)
+		private void CreateEffectsTable(SQLiteConnection connection)
 		{
 			string sql = @"
                 CREATE TABLE IF NOT EXISTS effects (
@@ -1805,13 +1808,13 @@ C# SQLite 事务表创建程序
                     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
                 )";
 
-			using(var command = new SqliteCommand(sql, connection))
+			using(var command = new SQLiteCommand(sql, connection))
 			{
 				command.ExecuteNonQuery();
 			}
 		}
 
-		private void CreateClipEffectsTable(SqliteConnection connection)
+		private void CreateClipEffectsTable(SQLiteConnection connection)
 		{
 			string sql = @"
                 CREATE TABLE IF NOT EXISTS clip_effects (
@@ -1828,13 +1831,13 @@ C# SQLite 事务表创建程序
                     FOREIGN KEY (effect_id) REFERENCES effects (id)
                 )";
 
-			using(var command = new SqliteCommand(sql, connection))
+			using(var command = new SQLiteCommand(sql, connection))
 			{
 				command.ExecuteNonQuery();
 			}
 		}
 
-		private void CreateUserProfilesTable(SqliteConnection connection)
+		private void CreateUserProfilesTable(SQLiteConnection connection)
 		{
 			string sql = @"
                 CREATE TABLE IF NOT EXISTS user_profiles (
@@ -1850,13 +1853,13 @@ C# SQLite 事务表创建程序
                     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
                 )";
 
-			using(var command = new SqliteCommand(sql, connection))
+			using(var command = new SQLiteCommand(sql, connection))
 			{
 				command.ExecuteNonQuery();
 			}
 		}
 
-		private void CreateUserSessionsTable(SqliteConnection connection)
+		private void CreateUserSessionsTable(SQLiteConnection connection)
 		{
 			string sql = @"
                 CREATE TABLE IF NOT EXISTS user_sessions (
@@ -1870,12 +1873,12 @@ C# SQLite 事务表创建程序
                     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
                 )";
 
-			using(var command = new SqliteCommand(sql, connection))
+			using(var command = new SQLiteCommand(sql, connection))
 			{
 				command.ExecuteNonQuery();
 			}
 		}
-		private void CreateUserPreferencesTable(SqliteConnection connection)
+		private void CreateUserPreferencesTable(SQLiteConnection connection)
 		{
 			string sql = @"
                 CREATE TABLE IF NOT EXISTS user_preferences (
@@ -1888,7 +1891,7 @@ C# SQLite 事务表创建程序
                     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
                 )";
 
-			using(var command = new SqliteCommand(sql, connection))
+			using(var command = new SQLiteCommand(sql, connection))
 			{
 				command.ExecuteNonQuery();
 			}
@@ -1898,7 +1901,7 @@ C# SQLite 事务表创建程序
 
 		#region -------------------  索引创建方法  ---------------------
 
-		private void CreateAllIndexes(SqliteConnection connection)
+		private void CreateAllIndexes(SQLiteConnection connection)
 		{
 			// 用户相关索引
 			ExecuteNonQuery(connection, "CREATE INDEX IF NOT EXISTS idx_users_username ON users (username)");
@@ -1943,7 +1946,7 @@ C# SQLite 事务表创建程序
 
 		#region --------------------- 触发器创建方法 ------------------------
 
-		private void CreateAllTriggers(SqliteConnection connection)
+		private void CreateAllTriggers(SQLiteConnection connection)
 		{
 			// 用户更新时间触发器
 			string userTrigger = @"
@@ -1999,9 +2002,9 @@ C# SQLite 事务表创建程序
 
 		#region ---------------- 辅助方法  -------------------------
 
-		private void ExecuteNonQuery(SqliteConnection connection, string sql)
+		private void ExecuteNonQuery(SQLiteConnection connection, string sql)
 		{
-			using(var command = new SqliteCommand(sql, connection))
+			using(var command = new SQLiteCommand(sql, connection))
 			{
 				command.ExecuteNonQuery();
 			}
@@ -2012,7 +2015,7 @@ C# SQLite 事务表创建程序
 		/// </summary>
 		//public void InsertDefaultData( )
 		//{
-		//	using (var connection = new SqliteConnection( _connectionString )) {
+		//	using (var connection = new SQLiteConnection( _connectionString )) {
 		//		connection.Open();
 		//		// 插入默认效果  已做
 		//		//InsertDefaultEffects( connection );
@@ -2022,7 +2025,7 @@ C# SQLite 事务表创建程序
 		//	}
 		//}
 
-		private void InsertDefaultEffects(SqliteConnection connection)
+		private void InsertDefaultEffects(SQLiteConnection connection)
 		{
 			string[] effects = {
 				"亮度调整", "对比度调整", "饱和度调整", "色调调整",
@@ -2039,7 +2042,7 @@ C# SQLite 事务表创建程序
 			for(int i = 0 ;i < effects.Length ;i++)
 			{
 				string checkSql = "SELECT COUNT(*) FROM effects WHERE name = @name";
-				using(var checkCommand = new SqliteCommand(checkSql, connection))
+				using(var checkCommand = new SQLiteCommand(checkSql, connection))
 				{
 					checkCommand.Parameters.AddWithValue("@name", effects[i]);
 					var count = Convert.ToInt32(checkCommand.ExecuteScalar());
@@ -2050,7 +2053,7 @@ C# SQLite 事务表创建程序
                             INSERT INTO effects (name, effect_type, description)
                             VALUES (@name, @effect_type, @description)";
 
-						using(var insertCommand = new SqliteCommand(insertSql, connection))
+						using(var insertCommand = new SQLiteCommand(insertSql, connection))
 						{
 							insertCommand.Parameters.AddWithValue("@name", effects[i]);
 							insertCommand.Parameters.AddWithValue("@effect_type", effectTypes[i]);
@@ -2062,10 +2065,10 @@ C# SQLite 事务表创建程序
 			}
 		}
 
-		private void InsertDefaultUser(SqliteConnection connection)
+		private void InsertDefaultUser(SQLiteConnection connection)
 		{
 			string checkSql = "SELECT COUNT(*) FROM users WHERE username = 'admin'";
-			using(var checkCommand = new SqliteCommand(checkSql, connection))
+			using(var checkCommand = new SQLiteCommand(checkSql, connection))
 			{
 				var count = Convert.ToInt32(checkCommand.ExecuteScalar());
 
@@ -2075,7 +2078,7 @@ C# SQLite 事务表创建程序
                         INSERT INTO users (username, email, passwordhash, fullname)
                         VALUES (@username, @email, @passwordhash, @full_name)";
 
-					using(var insertCommand = new SqliteCommand(insertSql, connection))
+					using(var insertCommand = new SQLiteCommand(insertSql, connection))
 					{
 						insertCommand.Parameters.AddWithValue("@username", "admin");
 						insertCommand.Parameters.AddWithValue("@email", "admin@example.com");
@@ -2092,7 +2095,7 @@ C# SQLite 事务表创建程序
 
 		public void InitializeDatabase()  //创建两个表  不能运行了
 		{
-			using(var connection = new SqliteConnection(_connectionString))
+			using(var connection = new SQLiteConnection(_connectionString))
 			{
 				connection.Open();
 				// 创建 users 表
@@ -2103,7 +2106,7 @@ C# SQLite 事务表创建程序
 			}
 		}
 
-		private void CreateUserTable(SqliteConnection connection)
+		private void CreateUserTable(SQLiteConnection connection)
 		{
 			string sql = @"
                 CREATE TABLE IF NOT EXISTS users (
@@ -2124,12 +2127,12 @@ C# SQLite 事务表创建程序
                     note TEXT
                 )";
 
-			using(var command = new SqliteCommand(sql, connection))
+			using(var command = new SQLiteCommand(sql, connection))
 			{
 				command.ExecuteNonQuery();
 			}
 		}
-		private void CreateSettingsTable(SqliteConnection connection)
+		private void CreateSettingsTable(SQLiteConnection connection)
 		{
 			string sql = @"
                 CREATE TABLE IF NOT EXISTS settings (
@@ -2175,7 +2178,7 @@ C# SQLite 事务表创建程序
                     note TEXT
                 )";
 
-			using(var command = new SqliteCommand(sql, connection))
+			using(var command = new SQLiteCommand(sql, connection))
 			{
 				command.ExecuteNonQuery();
 			}
@@ -2187,7 +2190,7 @@ C# SQLite 事务表创建程序
 		// 插入用户
 		public int InsertUser(Users user)
 		{
-			using(var connection = new SqliteConnection(_connectionString))
+			using(var connection = new SQLiteConnection(_connectionString))
 			{
 				connection.Open();
 				/*INSERT OR IGNORE INTO 是 SQLite 特有的语法（其他数据库有类似但语法不同的实现），作用是：
@@ -2204,7 +2207,7 @@ C# SQLite 事务表创建程序
                     );
                     SELECT last_insert_rowid();";
 
-				using(var command = new SqliteCommand(sql, connection))
+				using(var command = new SQLiteCommand(sql, connection))
 				{
 					command.Parameters.AddWithValue("@username", user.Username);
 					command.Parameters.AddWithValue("@email", user.Email);
@@ -2219,8 +2222,6 @@ C# SQLite 事务表创建程序
 					command.Parameters.AddWithValue("@is_locked", user.IsLocked ? 1 : 0);
 					command.Parameters.AddWithValue("@is_deleted", user.IsDeleted ? 1 : 0);
 					command.Parameters.AddWithValue("@is_modified", user.IsModified ? 1 : 0);
-					command.Parameters.AddWithValue("@note", user.Note ?? "");
-
 					return Convert.ToInt32(command.ExecuteScalar());
 				}
 			}
@@ -2230,13 +2231,13 @@ C# SQLite 事务表创建程序
 		{
 			var users = new List<Users>();
 
-			using(var connection = new SqliteConnection(_connectionString))
+			using(var connection = new SQLiteConnection(_connectionString))
 			{
 				connection.Open();
 
 				string sql = "SELECT * FROM users ORDER BY id";
 
-				using(var command = new SqliteCommand(sql, connection))
+				using(var command = new SQLiteCommand(sql, connection))
 				using(var reader = command.ExecuteReader())
 				{
 					while(reader.Read())
@@ -2257,7 +2258,6 @@ C# SQLite 事务表创建程序
 							IsLocked = Convert.ToInt32(reader["is_locked"]) == 1,
 							IsDeleted = Convert.ToInt32(reader["is_deleted"]) == 1,
 							IsModified = Convert.ToInt32(reader["is_modified"]) == 1,
-							Note = reader["note"].ToString()
 						});
 					}
 				}
@@ -2268,13 +2268,13 @@ C# SQLite 事务表创建程序
 		// 根据ID获取用户
 		public Users GetUserById(int id)
 		{
-			using(var connection = new SqliteConnection(_connectionString))
+			using(var connection = new SQLiteConnection(_connectionString))
 			{
 				connection.Open();
 
 				string sql = "SELECT * FROM users WHERE id = @id";
 
-				using(var command = new SqliteCommand(sql, connection))
+				using(var command = new SQLiteCommand(sql, connection))
 				{
 					command.Parameters.AddWithValue("@id", id);
 
@@ -2298,7 +2298,6 @@ C# SQLite 事务表创建程序
 								IsLocked = Convert.ToInt32(reader["is_locked"]) == 1,
 								IsDeleted = Convert.ToInt32(reader["is_deleted"]) == 1,
 								IsModified = Convert.ToInt32(reader["is_modified"]) == 1,
-								Note = reader["note"].ToString()
 							};
 						}
 					}
@@ -2310,7 +2309,7 @@ C# SQLite 事务表创建程序
 		// 更新用户
 		public bool UpdateUser(Users user)
 		{
-			using(var connection = new SqliteConnection(_connectionString))
+			using(var connection = new SQLiteConnection(_connectionString))
 			{
 				connection.Open();
 
@@ -2331,7 +2330,7 @@ C# SQLite 事务表创建程序
                         note = @note
                     WHERE id = @id";
 
-				using(var command = new SqliteCommand(sql, connection))
+				using(var command = new SQLiteCommand(sql, connection))
 				{
 					command.Parameters.AddWithValue("@id", user.Id);
 					command.Parameters.AddWithValue("@username", user.Username);
@@ -2346,8 +2345,6 @@ C# SQLite 事务表创建程序
 					command.Parameters.AddWithValue("@is_locked", user.IsLocked ? 1 : 0);
 					command.Parameters.AddWithValue("@is_deleted", user.IsDeleted ? 1 : 0);
 					command.Parameters.AddWithValue("@is_modified", user.IsModified ? 1 : 0);
-					command.Parameters.AddWithValue("@note", user.Note ?? "");
-
 					return command.ExecuteNonQuery() > 0;
 				}
 			}
@@ -2355,13 +2352,13 @@ C# SQLite 事务表创建程序
 		// 删除用户
 		public bool DeleteUser(int id)
 		{
-			using(var connection = new SqliteConnection(_connectionString))
+			using(var connection = new SQLiteConnection(_connectionString))
 			{
 				connection.Open();
 
 				string sql = "DELETE FROM users WHERE id = @id";
 
-				using(var command = new SqliteCommand(sql, connection))
+				using(var command = new SQLiteCommand(sql, connection))
 				{
 					command.Parameters.AddWithValue("@id", id);
 					return command.ExecuteNonQuery() > 0;
@@ -2376,7 +2373,7 @@ C# SQLite 事务表创建程序
 		// 插入设置
 		public int InsertSettings(Settings settings)
 		{
-			using(var connection = new SqliteConnection(_connectionString))
+			using(var connection = new SQLiteConnection(_connectionString))
 			{
 				connection.Open();
 
@@ -2406,7 +2403,7 @@ C# SQLite 事务表创建程序
                     );
                     SELECT last_insert_rowid();";
 
-				using(var command = new SqliteCommand(sql, connection))
+				using(var command = new SQLiteCommand(sql, connection))
 				{
 					command.Parameters.AddWithValue("@lfdm", settings.Lfdm ?? "");
 					command.Parameters.AddWithValue("@bm", settings.Bm ? 1 : 0);
@@ -2458,13 +2455,13 @@ C# SQLite 事务表创建程序
 		{
 			var settingsList = new List<Settings>();
 
-			using(var connection = new SqliteConnection(_connectionString))
+			using(var connection = new SQLiteConnection(_connectionString))
 			{
 				connection.Open();
 
 				string sql = "SELECT * FROM settings ORDER BY id";
 
-				using(var command = new SqliteCommand(sql, connection))
+				using(var command = new SQLiteCommand(sql, connection))
 				using(var reader = command.ExecuteReader())
 				{
 					while(reader.Read())
@@ -2480,13 +2477,13 @@ C# SQLite 事务表创建程序
 		// 根据ID获取设置
 		public Settings GetSettingsById(int id)
 		{
-			using(var connection = new SqliteConnection(_connectionString))
+			using(var connection = new SQLiteConnection(_connectionString))
 			{
 				connection.Open();
 
 				string sql = "SELECT * FROM settings WHERE id = @id";
 
-				using var command = new SqliteCommand(sql, connection);
+				using var command = new SQLiteCommand(sql, connection);
 				command.Parameters.AddWithValue("@id", id);
 
 				using var reader = command.ExecuteReader();
@@ -2502,7 +2499,7 @@ C# SQLite 事务表创建程序
 		// 更新设置
 		public bool UpdateSettings(Settings settings)
 		{
-			using var connection = new SqliteConnection(_connectionString);
+			using var connection = new SQLiteConnection(_connectionString);
 			connection.Open();
 
 			string sql = @"
@@ -2548,7 +2545,7 @@ C# SQLite 事务表创建程序
                         note = @note
                     WHERE id = @id";
 
-			using(var command = new SqliteCommand(sql, connection))
+			using(var command = new SQLiteCommand(sql, connection))
 			{
 				command.Parameters.AddWithValue("@id", settings.Id);
 				command.Parameters.AddWithValue("@lfdm", settings.Lfdm ?? "");
@@ -2598,13 +2595,13 @@ C# SQLite 事务表创建程序
 		// 删除设置
 		public bool DeleteSettings(int id)
 		{
-			using(var connection = new SqliteConnection(_connectionString))
+			using(var connection = new SQLiteConnection(_connectionString))
 			{
 				connection.Open();
 
 				string sql = "DELETE FROM settings WHERE id = @id";
 
-				using(var command = new SqliteCommand(sql, connection))
+				using(var command = new SQLiteCommand(sql, connection))
 				{
 					command.Parameters.AddWithValue("@id", id);
 					return command.ExecuteNonQuery() > 0;
@@ -2613,7 +2610,7 @@ C# SQLite 事务表创建程序
 		}
 
 		// 从DataReader创建Settings对象
-		private Settings CreateSettingsFromReader(SqliteDataReader reader)
+		private Settings CreateSettingsFromReader(SQLiteDataReader reader)
 		{
 			return new Settings
 			{
@@ -2685,7 +2682,7 @@ C# SQLite 事务表创建程序
 		// 新增到 db 类（db.cs），靠近其他插入方法位置
 		public int InsertMediaAsset(MediaAsset asset)
 		{
-			using var connection = new SqliteConnection(_connectionString);
+			using var connection = new SQLiteConnection(_connectionString);
 			connection.Open();
 
 			string sql = @"
@@ -2695,7 +2692,7 @@ C# SQLite 事务表创建程序
         (@user_id, @name, @file_path, @file_size, @media_type, @duration, @width, @height, @framerate, @codec, @created_at);
         SELECT last_insert_rowid();";
 
-			using var command = new SqliteCommand(sql, connection);
+			using var command = new SQLiteCommand(sql, connection);
 
 			command.Parameters.AddWithValue("@user_id", asset.UserId);
 			command.Parameters.AddWithValue("@name", asset.Name ?? "");
@@ -3276,10 +3273,6 @@ C# SQLite 事务表创建程序
 			get; set;
 		}
 		public bool IsModified
-		{
-			get; set;
-		}
-		public string Note
 		{
 			get; set;
 		}

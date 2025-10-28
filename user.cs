@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using DevComponents.AdvTree;
 
 namespace MusicChange
 {
@@ -16,7 +17,7 @@ namespace MusicChange
 			InitializeComponent();
 		}
 
-		private void btnRegister_Click(object sender, EventArgs e)
+		private void btnRegister_Click(object sender, EventArgs e)  // 注册
 		{
 			try
 			{
@@ -55,11 +56,11 @@ namespace MusicChange
 					return;
 				}
 				// 检查用户名是否存在
-				if(_usersRepo.ExistsByUsername(username))
-				{
-					SetStatus.Text = $"用户名已存在，请更换";
-					return;
-				}
+				//if(_usersRepo.ExistsByUsername(username))
+				//{
+				//	SetStatus.Text = $"用户名已存在，请更换";
+				//	return;
+				//}
 
 				// 生成密码哈希（格式： iterations.salt.hash）
 				string passwordHash = PasswordHelper.HashPassword(password);
@@ -74,10 +75,14 @@ namespace MusicChange
 					AvatarPath = "",
 					IsActive = true,
 					CreatedAt = DateTime.Now,
-					UpdatedAt = DateTime.Now
+					UpdatedAt = DateTime.Now,
+					Draftposition = "",
+					IsLocked = false,
+					IsDeleted = false,
+					IsModified = false,
 				};
-
 				newId = _usersRepo.Create(user);
+				//int i =   _usersRepo.Create(user);
 				if(newId > 0)
 				{
 					SetStatus.Text = "注册成功";
@@ -92,7 +97,9 @@ namespace MusicChange
 			}
 			catch(Exception ex)
 			{
-				SetStatus.Text = "发生错误: " + ex.Message;
+				SetStatus.Text = ex.Message;
+                MessageBox.Show("发生错误: " + ex.Message, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				
 			}
 		}
 
