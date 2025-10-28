@@ -128,6 +128,7 @@ namespace MusicChange
 
 
 		}
+
 		#region ------- ToolTip 鼠标进入悬停显示 -------
 
 		private void ConfigureToolTip(ToolTipEx toolTip1)
@@ -206,6 +207,7 @@ namespace MusicChange
 									 new RectangleF(e.Bounds.X, e.Bounds.Y, 200, e.Bounds.Height));
 			};
 			toolTip1.SetToolTip(buttonX2, "提示", "这是一个可以自动换行的长文本提示，当达到指定宽度时会自动换行显示...");
+			toolTip1.SetToolTip(Userimage, "提示", "个人用户信息和注册");
 
 		}
 
@@ -354,8 +356,6 @@ namespace MusicChange
 			var media = new Media(libVLC, "your_video_file.mp4", FromType.FromPath);
 			mediaPlayer.Play(media);
 		}
-
-
 		private void InitializeUIControls()
 		{
 
@@ -1229,18 +1229,7 @@ namespace MusicChange
 		#region ------------  全局设置  -------------
 		private void buttonx11_Click(object sender, EventArgs e)
 		{
-			//	db dr = new db( dbPath );			dr.dbinit();
-			OpenFileDialog ofd = new OpenFileDialog();
-			ofd.Filter = "视频文件|*.mp4;*.avi;*.wmv;*.mov|所有文件|*.*";
-			if(ofd.ShowDialog() == DialogResult.OK)
-			{
-				temp.Text = ofd.FileName;
-			}
-			filePath = ofd.FileName;
-			PlayVideo();
-			var fsize = mediaPlayer.Scale;
-			temp1.Text = fsize.ToString();
-			temp2.Text = $"缩放: {mediaPlayer.Scale:P0}"; // 显示为百分比
+	
 
 		}
 
@@ -2665,7 +2654,6 @@ namespace MusicChange
 			}
 		}
 		#endregion
-
 		#region  ------------------  上左窗口 导入视频   ------------------
 		private void ConfigureFlowLayoutPanel()  //配置 FlowLayoutPanel
 		{
@@ -2677,10 +2665,8 @@ namespace MusicChange
 				flowLayoutPanelMedia.FlowDirection = FlowDirection.LeftToRight;
 				flowLayoutPanelMedia.WrapContents = true;
 				//flowLayoutPanelMedia.AutoScroll = true;
-
 				// 减少内边距
 				flowLayoutPanelMedia.Padding = new Padding(5);
-
 				// 确保控件紧密排列
 				//flowLayoutPanelMedia.FlowLayoutPanel.FlowDirection = FlowDirection.LeftToRight;
 				flowLayoutPanelMedia.FlowDirection = FlowDirection.LeftToRight;
@@ -2972,7 +2958,7 @@ namespace MusicChange
 			//mediaItemadd = new(filePath, MediaType.Video);
 			mediaItemadd.IsSelected = true;
 			flowLayoutPanelMedia.Controls.Add(mediaItemadd);
-			DeleteSelectedItems_Click(null, null);
+			//DeleteSelectedItems_Click(null, null);
 
 			// 更新面板可见性与状态显示
 			UpdateFlowLayoutVisibility();
@@ -3463,48 +3449,7 @@ namespace MusicChange
 				MessageBox.Show($"清空素材失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 		}
-		//private void SelectAllMediaItems_Click(object sender, EventArgs e)      // 选择所有媒体控件  old
-		//{
-		//	try
-		//	{
-		//		foreach(Control control in flowLayoutPanelMedia.Controls)
-		//		{
-		//			if(control is MediaItemControl mediaItem)
-		//			{
-		//				// 这里可以设置控件的选中状态
-		//				// 例如改变背景色或边框
-		//				control.BackColor = Color.LightBlue;
-		//			}
-		//		}
-		//	}
-		//	catch(Exception ex)
-		//	{
-		//		MessageBox.Show($"选择素材失败: {ex.Message}", "错误",
-		//					   MessageBoxButtons.OK, MessageBoxIcon.Error);
-		//	}
-		//}
-
-		// 取消选择所有媒体控件
-		//private void DeselectAllMediaItems_Click(object sender, EventArgs e)
-		//{
-		//	try
-		//	{
-		//		foreach(Control control in flowLayoutPanelMedia.Controls)
-		//		{
-		//			if(control is MediaItemControl mediaItem)
-		//			{
-		//				// 恢复默认背景色
-		//				control.BackColor = SystemColors.Control;
-		//			}
-		//		}
-		//	}
-		//	catch(Exception ex)
-		//	{
-		//		MessageBox.Show($"取消选择素材失败: {ex.Message}", "错误",MessageBoxButtons.OK, MessageBoxIcon.Error);
-		//	}
-		//}
-
-		// 更新 FlowLayoutPanel 可见性状态
+	
 		private void UpdateFlowLayoutVisibility()
 		{
 			try
@@ -3540,7 +3485,7 @@ namespace MusicChange
 					{
 						flowLayoutPanelContextMenu.Show(flowLayoutPanelMedia, e.Location);
 					}
-				}
+				}       
 			}
 			catch(Exception ex)
 			{
@@ -3606,8 +3551,8 @@ namespace MusicChange
 				MessageBox.Show($"刷新列表失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 		}
-		// 在窗体关闭时清理右键菜单资源
-		//protected override void OnFormClosingMenu(FormClosingEventArgs e)
+
+		//protected override void OnFormClosingMenu(FormClosingEventArgs e)  // 在窗体关闭时清理右键菜单资源
 		//{
 		//	try
 		//	{
@@ -3695,6 +3640,15 @@ namespace MusicChange
 				MessageBox.Show($"反向选择失败: {ex.Message}", "错误",
 							   MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
+		}
+		private void Userimage_Click(object sender, EventArgs e)  // 用户设置图片 
+		{
+			//RegistrationForm registrationForm = new();
+			//registrationForm.ShowDialog();
+			user user = new();
+			user.ShowDialog();
+
+		
 		}
 		// 删除选中的控件
 		private void DeleteSelectedItems_Click(object sender, EventArgs e)
@@ -3877,6 +3831,7 @@ namespace MusicChange
 
 		#endregion
 	}
+
 	#region ------------ calss  AudioPlayer  VideoInfo 属性类 获取  ------------
 	public class AudioPlayer:IDisposable
 	{
@@ -4066,23 +4021,14 @@ namespace MusicChange
 			get; set;
 		}
 	}
-
-
-	public static class MessageBoxHelper
+	public static class MessageBoxHelper   // 设置延伸关闭消息框
 	{
-
-
 		// 使用别名
-
-
 		[DllImport("user32.dll", SetLastError = true)]
 		private static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
-
 		[DllImport("user32.dll", CharSet = CharSet.Auto)]
 		private static extern int PostMessage(IntPtr hWnd, int Msg, IntPtr wParam, IntPtr lParam);
-
 		private const int WM_CLOSE = 0x0010;
-
 		public static void ShowAutoClose(string message, string caption, int timeoutMs)
 		{
 			// 显示消息框
@@ -4122,7 +4068,6 @@ namespace MusicChange
 	#region ------------     ------------
 
 	#endregion
-
 }
 
 

@@ -63,10 +63,50 @@ namespace MusicChange.Properties {
         /// <summary>
         ///   查找 System.Drawing.Bitmap 类型的本地化资源。
         /// </summary>
-        public static System.Drawing.Bitmap add1 {
+        public static System.Drawing.Bitmap _1f527 {
             get {
-                object obj = ResourceManager.GetObject("add1", resourceCulture);
+                object obj = ResourceManager.GetObject("_1f527", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
+        public static System.Drawing.Bitmap _1f52f {
+            get {
+                object obj = ResourceManager.GetObject("_1f52f", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
+        public static System.Drawing.Bitmap add {
+            get {
+                object obj = ResourceManager.GetObject("add", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
+        public static System.Drawing.Bitmap bico {
+            get {
+                object obj = ResourceManager.GetObject("bico", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似于 (图标) 的 System.Drawing.Icon 类型的本地化资源。
+        /// </summary>
+        public static System.Drawing.Icon bico_32x32 {
+            get {
+                object obj = ResourceManager.GetObject("bico_32x32", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
             }
         }
         
@@ -87,6 +127,26 @@ namespace MusicChange.Properties {
             get {
                 object obj = ResourceManager.GetObject("Delete", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似于 (图标) 的 System.Drawing.Icon 类型的本地化资源。
+        /// </summary>
+        public static System.Drawing.Icon edit {
+            get {
+                object obj = ResourceManager.GetObject("edit", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似于 (图标) 的 System.Drawing.Icon 类型的本地化资源。
+        /// </summary>
+        public static System.Drawing.Icon edit1 {
+            get {
+                object obj = ResourceManager.GetObject("edit1", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
             }
         }
         
@@ -113,9 +173,9 @@ namespace MusicChange.Properties {
         /// <summary>
         ///   查找 System.Drawing.Bitmap 类型的本地化资源。
         /// </summary>
-        public static System.Drawing.Bitmap ico1 {
+        public static System.Drawing.Bitmap loading {
             get {
-                object obj = ResourceManager.GetObject("ico1", resourceCulture);
+                object obj = ResourceManager.GetObject("loading", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -123,9 +183,9 @@ namespace MusicChange.Properties {
         /// <summary>
         ///   查找 System.Drawing.Bitmap 类型的本地化资源。
         /// </summary>
-        public static System.Drawing.Bitmap loading {
+        public static System.Drawing.Bitmap man {
             get {
-                object obj = ResourceManager.GetObject("loading", resourceCulture);
+                object obj = ResourceManager.GetObject("man", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -163,6 +223,16 @@ namespace MusicChange.Properties {
         /// <summary>
         ///   查找 System.Drawing.Bitmap 类型的本地化资源。
         /// </summary>
+        public static System.Drawing.Bitmap pauseb__2_ {
+            get {
+                object obj = ResourceManager.GetObject("pauseb__2_", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
         public static System.Drawing.Bitmap QRcode {
             get {
                 object obj = ResourceManager.GetObject("QRcode", resourceCulture);
@@ -173,9 +243,29 @@ namespace MusicChange.Properties {
         /// <summary>
         ///   查找 System.Drawing.Bitmap 类型的本地化资源。
         /// </summary>
+        public static System.Drawing.Bitmap R_C {
+            get {
+                object obj = ResourceManager.GetObject("R_C", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
         public static System.Drawing.Bitmap R_Code100 {
             get {
-                object obj = ResourceManager.GetObject("R-Code100", resourceCulture);
+                object obj = ResourceManager.GetObject("R_Code100", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
+        public static System.Drawing.Bitmap required {
+            get {
+                object obj = ResourceManager.GetObject("required", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -193,9 +283,39 @@ namespace MusicChange.Properties {
         /// <summary>
         ///   查找 System.Drawing.Bitmap 类型的本地化资源。
         /// </summary>
+        public static System.Drawing.Bitmap startb {
+            get {
+                object obj = ResourceManager.GetObject("startb", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
         public static System.Drawing.Bitmap stop {
             get {
                 object obj = ResourceManager.GetObject("stop", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
+        public static System.Drawing.Bitmap stopb {
+            get {
+                object obj = ResourceManager.GetObject("stopb", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
+        public static System.Drawing.Bitmap woman {
+            get {
+                object obj = ResourceManager.GetObject("woman", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -216,16 +336,6 @@ namespace MusicChange.Properties {
         public static System.Drawing.Bitmap 前进x {
             get {
                 object obj = ResourceManager.GetObject("前进x", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
-        /// </summary>
-        public static System.Drawing.Bitmap 右转150 {
-            get {
-                object obj = ResourceManager.GetObject("右转150", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -266,6 +376,16 @@ namespace MusicChange.Properties {
         public static System.Drawing.Bitmap 左转150 {
             get {
                 object obj = ResourceManager.GetObject("左转150", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
+        public static System.Drawing.Bitmap 微信图片_20250726014750 {
+            get {
+                object obj = ResourceManager.GetObject("微信图片_20250726014750", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

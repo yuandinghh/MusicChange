@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data.SQLite;
+using Microsoft.Data.Sqlite;
 using static MusicChange.db;
 
 namespace MusicChange
@@ -18,7 +15,7 @@ namespace MusicChange
 		// 创建媒体资源
 		public int Create(MediaAsset mediaAsset)
 		{
-			using (var connection = new SQLiteConnection( _connectionString )) {
+			using (var connection = new SqliteConnection( _connectionString )) {
 				connection.Open();
 
 				string sql = @"
@@ -31,7 +28,7 @@ namespace MusicChange
                     );
                     SELECT last_insert_rowid();";
 
-				using (var command = new SQLiteCommand( sql, connection )) {
+				using (var command = new SqliteCommand( sql, connection )) {
 					command.Parameters.AddWithValue( "@user_id", mediaAsset.UserId );
 					command.Parameters.AddWithValue( "@name", mediaAsset.Name );
 					command.Parameters.AddWithValue( "@file_path", mediaAsset.FilePath );
@@ -51,7 +48,7 @@ namespace MusicChange
 		// 根据ID获取媒体资源
 		public MediaAsset GetById(int id)
 		{
-			using (var connection = new SQLiteConnection( _connectionString )) {
+			using (var connection = new SqliteConnection( _connectionString )) {
 				connection.Open();
 
 				string sql = @"
@@ -60,7 +57,7 @@ namespace MusicChange
                     FROM media_assets 
                     WHERE id = @id";
 
-				using (var command = new SQLiteCommand( sql, connection )) {
+				using (var command = new SqliteCommand( sql, connection )) {
 					command.Parameters.AddWithValue( "@id", id );
 
 					using (var reader = command.ExecuteReader()) {
@@ -93,7 +90,7 @@ namespace MusicChange
 		{
 			var mediaAssets = new List<MediaAsset>();
 
-			using (var connection = new SQLiteConnection( _connectionString )) {
+			using (var connection = new SqliteConnection( _connectionString )) {
 				connection.Open();
 
 				string sql = @"
@@ -103,7 +100,7 @@ namespace MusicChange
                     WHERE user_id = @user_id
                     ORDER BY created_at DESC";
 
-				using (var command = new SQLiteCommand( sql, connection )) {
+				using (var command = new SqliteCommand( sql, connection )) {
 					command.Parameters.AddWithValue( "@user_id", userId );
 
 					using (var reader = command.ExecuteReader()) {
@@ -134,7 +131,7 @@ namespace MusicChange
 		// 更新媒体资源
 		public bool Update(MediaAsset mediaAsset)
 		{
-			using (var connection = new SQLiteConnection( _connectionString )) {
+			using (var connection = new SqliteConnection( _connectionString )) {
 				connection.Open();
 
 				string sql = @"
@@ -144,7 +141,7 @@ namespace MusicChange
                         width = @width, height = @height, framerate = @framerate, codec = @codec
                     WHERE id = @id";
 
-				using (var command = new SQLiteCommand( sql, connection )) {
+				using (var command = new SqliteCommand( sql, connection )) {
 					command.Parameters.AddWithValue( "@user_id", mediaAsset.UserId );
 					command.Parameters.AddWithValue( "@name", mediaAsset.Name );
 					command.Parameters.AddWithValue( "@file_path", mediaAsset.FilePath );
@@ -165,12 +162,12 @@ namespace MusicChange
 		// 删除媒体资源
 		public bool Delete(int id)
 		{
-			using (var connection = new SQLiteConnection( _connectionString )) {
+			using (var connection = new SqliteConnection( _connectionString )) {
 				connection.Open();
 
 				string sql = "DELETE FROM media_assets WHERE id = @id";
 
-				using (var command = new SQLiteCommand( sql, connection )) {
+				using (var command = new SqliteCommand( sql, connection )) {
 					command.Parameters.AddWithValue( "@id", id );
 					return command.ExecuteNonQuery() > 0;
 				}

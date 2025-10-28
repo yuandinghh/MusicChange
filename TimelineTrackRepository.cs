@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data.SQLite;
+using Microsoft.Data.Sqlite;
 using static MusicChange.db;
 
 namespace MusicChange
@@ -19,7 +16,7 @@ namespace MusicChange
 		// 创建时间线轨道
 		public int Create(TimelineTrack track)
 		{
-			using (var connection = new SQLiteConnection( _connectionString )) {
+			using (var connection = new SqliteConnection( _connectionString )) {
 				connection.Open();
 
 				string sql = @"
@@ -30,7 +27,7 @@ namespace MusicChange
                     );
                     SELECT last_insert_rowid();";
 
-				using (var command = new SQLiteCommand( sql, connection )) {
+				using (var command = new SqliteCommand( sql, connection )) {
 					command.Parameters.AddWithValue( "@project_id", track.ProjectId );
 					command.Parameters.AddWithValue( "@track_type", track.TrackType );
 					command.Parameters.AddWithValue( "@track_index", track.TrackIndex );
@@ -47,7 +44,7 @@ namespace MusicChange
 		// 根据ID获取时间线轨道
 		public TimelineTrack GetById(int id)
 		{
-			using (var connection = new SQLiteConnection( _connectionString )) {
+			using (var connection = new SqliteConnection( _connectionString )) {
 				connection.Open();
 
 				string sql = @"
@@ -55,7 +52,7 @@ namespace MusicChange
                     FROM timeline_tracks 
                     WHERE id = @id";
 
-				using (var command = new SQLiteCommand( sql, connection )) {
+				using (var command = new SqliteCommand( sql, connection )) {
 					command.Parameters.AddWithValue( "@id", id );
 
 					using (var reader = command.ExecuteReader()) {
@@ -85,7 +82,7 @@ namespace MusicChange
 		{
 			var tracks = new List<TimelineTrack>();
 
-			using (var connection = new SQLiteConnection( _connectionString )) {
+			using (var connection = new SqliteConnection( _connectionString )) {
 				connection.Open();
 
 				string sql = @"
@@ -94,7 +91,7 @@ namespace MusicChange
                     WHERE project_id = @project_id
                     ORDER BY track_index";
 
-				using (var command = new SQLiteCommand( sql, connection )) {
+				using (var command = new SqliteCommand( sql, connection )) {
 					command.Parameters.AddWithValue( "@project_id", projectId );
 
 					using (var reader = command.ExecuteReader()) {
@@ -122,7 +119,7 @@ namespace MusicChange
 		// 更新时间线轨道
 		public bool Update(TimelineTrack track)
 		{
-			using (var connection = new SQLiteConnection( _connectionString )) {
+			using (var connection = new SqliteConnection( _connectionString )) {
 				connection.Open();
 
 				string sql = @"
@@ -131,7 +128,7 @@ namespace MusicChange
                         name = @name, is_muted = @is_muted, is_locked = @is_locked, volume = @volume
                     WHERE id = @id";
 
-				using (var command = new SQLiteCommand( sql, connection )) {
+				using (var command = new SqliteCommand( sql, connection )) {
 					command.Parameters.AddWithValue( "@project_id", track.ProjectId );
 					command.Parameters.AddWithValue( "@track_type", track.TrackType );
 					command.Parameters.AddWithValue( "@track_index", track.TrackIndex );
@@ -149,12 +146,12 @@ namespace MusicChange
 		// 删除时间线轨道
 		public bool Delete(int id)
 		{
-			using (var connection = new SQLiteConnection( _connectionString )) {
+			using (var connection = new SqliteConnection( _connectionString )) {
 				connection.Open();
 
 				string sql = "DELETE FROM timeline_tracks WHERE id = @id";
 
-				using (var command = new SQLiteCommand( sql, connection )) {
+				using (var command = new SqliteCommand( sql, connection )) {
 					command.Parameters.AddWithValue( "@id", id );
 					return command.ExecuteNonQuery() > 0;
 				}

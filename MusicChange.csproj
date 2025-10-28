@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="packages\SQLite.3.13.0\build\net45\SQLite.props" Condition="Exists('packages\SQLite.3.13.0\build\net45\SQLite.props')" />
   <Import Project="packages\SixLabors.ImageSharp.3.1.11\build\SixLabors.ImageSharp.props" Condition="Exists('packages\SixLabors.ImageSharp.3.1.11\build\SixLabors.ImageSharp.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -87,6 +88,9 @@
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=9.0.0.9, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.9.0.9\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Data.Sqlite, Version=9.0.10.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Data.Sqlite.Core.9.0.10\lib\netstandard2.0\Microsoft.Data.Sqlite.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Extensions.Caching.Abstractions, Version=9.0.0.9, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Extensions.Caching.Abstractions.9.0.9\lib\net462\Microsoft.Extensions.Caching.Abstractions.dll</HintPath>
     </Reference>
@@ -154,8 +158,14 @@
     <Reference Include="SharpCompress, Version=0.40.0.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
       <HintPath>packages\SharpCompress.0.40.0\lib\netstandard2.0\SharpCompress.dll</HintPath>
     </Reference>
+    <Reference Include="SQLitePCLRaw.batteries_v2, Version=2.1.10.2445, Culture=neutral, PublicKeyToken=8226ea5df37bcae9, processorArchitecture=MSIL">
+      <HintPath>packages\SQLitePCLRaw.bundle_e_sqlite3.2.1.10\lib\net461\SQLitePCLRaw.batteries_v2.dll</HintPath>
+    </Reference>
     <Reference Include="SQLitePCLRaw.core, Version=3.0.2.2801, Culture=neutral, PublicKeyToken=1488e028ca7ab535, processorArchitecture=MSIL">
       <HintPath>packages\SQLitePCLRaw.core.3.0.2\lib\netstandard2.0\SQLitePCLRaw.core.dll</HintPath>
+    </Reference>
+    <Reference Include="SQLitePCLRaw.provider.dynamic_cdecl, Version=2.1.10.2445, Culture=neutral, PublicKeyToken=b68184102cba0b3b, processorArchitecture=MSIL">
+      <HintPath>packages\SQLitePCLRaw.provider.dynamic_cdecl.2.1.10\lib\netstandard2.0\SQLitePCLRaw.provider.dynamic_cdecl.dll</HintPath>
     </Reference>
     <Reference Include="stdole, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
@@ -177,12 +187,6 @@
     <Reference Include="System.Data.Common, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>packages\System.Data.Common.4.3.0\lib\net451\System.Data.Common.dll</HintPath>
       <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Data.SQLite, Version=2.0.2.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>packages\System.Data.SQLite.2.0.2\lib\net471\System.Data.SQLite.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Data.SQLite.Linq, Version=1.0.119.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>packages\System.Data.SQLite.Linq.1.0.119.0\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System.Design" />
     <Reference Include="System.Diagnostics.DiagnosticSource, Version=9.0.0.9, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -310,6 +314,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClipRepository.cs" />
+    <Compile Include="CryptoHelper.cs" />
     <Compile Include="db.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="LaserEditing.cs">
@@ -325,6 +330,7 @@
     <Compile Include="MediaItemControl.Designer.cs">
       <DependentUpon>MediaItemControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="PasswordHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Projects.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -339,6 +345,12 @@
     <Compile Include="QRCode.Designer.cs">
       <DependentUpon>QRCode.cs</DependentUpon>
     </Compile>
+    <Compile Include="RegistrationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RegistrationForm.Designer.cs">
+      <DependentUpon>RegistrationForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="temp.cs" />
     <Compile Include="TimelineTrackRepository.cs" />
     <Compile Include="ToolTipEx.cs">
@@ -346,6 +358,13 @@
     </Compile>
     <Compile Include="TransactionDetailRepository.cs" />
     <Compile Include="TransactionRepository.cs" />
+    <Compile Include="user.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="user.Designer.cs">
+      <DependentUpon>user.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UsersRepository.cs" />
     <EmbeddedResource Include="LaserEditing.resx">
       <DependentUpon>LaserEditing.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -361,8 +380,14 @@
     <EmbeddedResource Include="QRCode.resx">
       <DependentUpon>QRCode.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="RegistrationForm.resx">
+      <DependentUpon>RegistrationForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ToolTipEx.resx">
       <DependentUpon>ToolTipEx.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="user.resx">
+      <DependentUpon>user.cs</DependentUpon>
     </EmbeddedResource>
     <None Include=".editorconfig" />
     <None Include="app.manifest" />
@@ -401,22 +426,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
-    <None Include="后退.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="前进.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="前进x.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="后退x.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="右转150.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="左转150.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
@@ -431,30 +440,109 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ico.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="QRcode.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="stop.jpg" />
-    <None Include="pause.jpg" />
-    <None Include="start.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="DefaultVideoThumbnail.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="music43.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="music.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\delete.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="fm.png" />
+    <None Include="Resources\edit.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\fm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ico.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\loading.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\music.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\music43.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pause.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pauseb %282%29.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\QRcode.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\R-C.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\R-Code100.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\start.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\startb.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\stop.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\stopb.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\true.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\后退.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\后退x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\前进.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\前进x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\微信图片_20250726014750.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\右转150.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\最大化.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\最小化.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\左转150.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\1f52f.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\1f527.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bico.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bico_32x32.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\DefaultVideoThumbnail.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\woman.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\man.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\required.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
@@ -463,15 +551,14 @@
     </PropertyGroup>
     <Error Condition="!Exists('packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets'))" />
     <Error Condition="!Exists('packages\System.ValueTuple.4.6.1\build\net471\System.ValueTuple.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\System.ValueTuple.4.6.1\build\net471\System.ValueTuple.targets'))" />
-    <Error Condition="!Exists('packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.119.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.119.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets'))" />
     <Error Condition="!Exists('packages\SixLabors.ImageSharp.3.1.11\build\SixLabors.ImageSharp.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\SixLabors.ImageSharp.3.1.11\build\SixLabors.ImageSharp.props'))" />
     <Error Condition="!Exists('packages\VideoLAN.LibVLC.Windows.3.0.21\build\VideoLAN.LibVLC.Windows.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\VideoLAN.LibVLC.Windows.3.0.21\build\VideoLAN.LibVLC.Windows.targets'))" />
     <Error Condition="!Exists('packages\Magick.NET-Q8-AnyCPU.14.9.0\build\netstandard20\Magick.NET-Q8-AnyCPU.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Magick.NET-Q8-AnyCPU.14.9.0\build\netstandard20\Magick.NET-Q8-AnyCPU.targets'))" />
+    <Error Condition="!Exists('packages\SQLite.3.13.0\build\net45\SQLite.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\SQLite.3.13.0\build\net45\SQLite.props'))" />
   </Target>
   <Import Project="packages\EntityFramework.6.5.1\build\EntityFramework.targets" Condition="Exists('packages\EntityFramework.6.5.1\build\EntityFramework.targets')" />
   <Import Project="packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" />
   <Import Project="packages\System.ValueTuple.4.6.1\build\net471\System.ValueTuple.targets" Condition="Exists('packages\System.ValueTuple.4.6.1\build\net471\System.ValueTuple.targets')" />
-  <Import Project="packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.119.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets" Condition="Exists('packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.119.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" />
   <Import Project="packages\VideoLAN.LibVLC.Windows.3.0.21\build\VideoLAN.LibVLC.Windows.targets" Condition="Exists('packages\VideoLAN.LibVLC.Windows.3.0.21\build\VideoLAN.LibVLC.Windows.targets')" />
   <Import Project="packages\Magick.NET-Q8-AnyCPU.14.9.0\build\netstandard20\Magick.NET-Q8-AnyCPU.targets" Condition="Exists('packages\Magick.NET-Q8-AnyCPU.14.9.0\build\netstandard20\Magick.NET-Q8-AnyCPU.targets')" />
 </Project>

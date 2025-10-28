@@ -85,7 +85,7 @@ namespace MusicChange
 			// 
 			this.LTimeLength.BackColor = System.Drawing.Color.White;
 			this.LTimeLength.ForeColor = System.Drawing.Color.Black;
-			this.LTimeLength.Location = new System.Drawing.Point(110, 0);
+			this.LTimeLength.Location = new System.Drawing.Point(125, 0);
 			this.LTimeLength.Margin = new System.Windows.Forms.Padding(0);
 			this.LTimeLength.Name = "LTimeLength";
 			this.LTimeLength.Size = new System.Drawing.Size(50, 20);
