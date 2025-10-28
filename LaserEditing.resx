@@ -121,7 +121,7 @@
   <data name="min.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABkAAAAUCAYAAAB4d5a9AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        vQAADr0BR/uQrQAAAOtJREFUSEu9kksORFAQRf0SYkEGdmEibIeFEAYiLI74TG939S9eK7xOKi05kRzl
+        vAAADrwBlbxySQAAAOtJREFUSEu9kksORFAQRf0SYkEGdmEibIeFEAYiLI74TG939S9eK7xOKi05kRzl
         3ijPuF/4A6yUhpXSsFIaVkrDSmlYKQ0r4TgOPM+748J1eZ7Pn1iWxea8UAUNE1EUoSxL1HV9SlVVKIoC
         QRDANE0la4MqaJBK8jzHNE1Y1/WScRyRJImS84UqqIRWlWUZ5nlmQ7csy/IoSdNUyfliL23b/nwJhRzx
         LhmG4fcSWlccx2jbFl3XHdL3/ePeNA3CMNzlbNhLWhmdHt/3taEVa//4i6PIQuEnBYQqNF5Q0JxlpTSs
@@ -131,7 +131,7 @@
   <data name="max.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABkAAAAUCAYAAAB4d5a9AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        vQAADr0BR/uQrQAAApBJREFUSEuNlL1LQlEYxrMvIYQIiiKXwEFBmqJRp8omKf8AoUlrcXfMwaGCygaH
+        vAAADrwBlbxySQAAApBJREFUSEuNlL1LQlEYxrMvIYQIiiKXwEFBmqJRp8omKf8AoUlrcXfMwaGCygaH
         WpoSFMGaLYdoaxAEI+yLREErP2t86jlwbt7bNRV+3HPe+5z3Oe/rOXfg54d+MBgMunEJ33dqNPpfYS/+
         M9KaaNANKnChyWSCxWKB1Wr9l5mZGQwPD+vl+RNQMT09jUgkgru7Ozw8PODp6Unh8fFReZLr62t4PB49
         I9VEKZsMDg5ifX0d1WoV7XYbn5+fCpzLmByTi4sLTExMaFunb0ID7sjr9eLj40MkyOVyiEajODo6Ehwe
@@ -148,7 +148,7 @@
   <data name="qrcode1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACgAAAAnCAYAAAB9qAq4AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        vQAADr0BR/uQrQAAA0FJREFUWEfNmD9IQkEcxy3pj9LQ1GbglFsEjhWRRkO5O9XS0FaCQ1sQNRQ1NDSk
+        vAAADrwBlbxySQAAA0FJREFUWEfNmD9IQkEcxy3pj9LQ1GbglFsEjhWRRkO5O9XS0FaCQ1sQNRQ1NDSk
         QlNQg4sWFDQZBQWSEoUhLlFUQ2j/XC9+P7gf75539t5LHw4f0N/73t2H5929ezqq1SprZUjw5uaGra2t
         sZWVFSXv7+81HZjl9PRU2jdnd3eXVSoVyqPg8/Mz6+3tZQ6Hoy5PT0/CYFaIRqPSvrUsLi5SHgXPz8+l
         QT12CY6MjFAeBTOZjBDo7Oxk3d3dNcCd5g2tsrS0JO27vb2dxh8eHqa8VDCVSrGvr68afn5+hMGs8P39
