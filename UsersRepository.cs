@@ -13,24 +13,16 @@ namespace MusicChange
 	{
 		private readonly string _connectionString;
 		public UsersRepository(string dbPath)
-		{
-			// 使用与现有 db 类相同的连接字符串变量（保持项目内一致性）
+		{	// 使用与现有 db 类相同的连接字符串变量（保持项目内一致性）
 			_connectionString = $"Data Source={dbPath};Version=3;";
 		}
 //主程序如何在用户注册时将用户信息插入到数据库的 Users 表中？，设计一个 窗口 输入用户信息
 		// Create: 插入用户，返回新记录的 id
 		public int Create(Users user)
 		{
-			//_connectionString = $"Data Source={D:\\Documents\\Visual Studio 2022\\MusicChange\\LaserEditing.db};Version=3;";
 			using var connection = new SQLiteConnection(_connectionString);
 			connection.Open();
-
-			string sql = @"
-                INSERT INTO users 
-                    (username, email, password_hash, iphone, full_name, avatar_path, is_active, created_at, updated_at, draftposition, is_locked, is_deleted, is_modified)
-                VALUES
-                    (@username, @email, @password_hash, @iphone, @full_name, @avatar_path, @is_active, @created_at, @updated_at, @draftposition, @is_locked, @is_deleted, @is_modified);
-                SELECT last_insert_rowid();";
+       		string sql = @"INSERT INTO users (username, email, password_hash, iphone, full_name, avatar_path, is_active, created_at, updated_at, draftposition, is_locked, is_deleted, is_modified) VALUES (@username, @email, @password_hash, @iphone, @full_name, @avatar_path, @is_active, @created_at, @updated_at, @draftposition, @is_locked, @is_deleted, @is_modified);  SELECT last_insert_rowid();";
 			using var cmd = new SQLiteCommand( sql, connection );
 			cmd.Parameters.AddWithValue( "@username", user.Username ?? "" );
 			cmd.Parameters.AddWithValue( "@email", user.Email ?? "" );

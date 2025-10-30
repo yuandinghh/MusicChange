@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
-namespace MusicChange
+namespace MusicChange.Controls
 {
-	public partial class user:Form
+	public class ImageSelectorControl : UserControl
 	{
-        private UsersRepository _usersRepo;
-		private bool usernamenull = false;
-		private int newId = 0;
+		private Panel panelCanvas;
+		private PictureBox pictureBoxInner;
+		private Button btnLoad;
+		private Button btnConfirm;
+		private Label lblPath;
+
 		private Bitmap _originalImage;
 		private bool _isDragging;
 		private Point _dragStart;
@@ -22,18 +23,23 @@ namespace MusicChange
 			get; private set;
 		}
 
-		public user()
+		// 事件：图片保存完成后通知外部
+		public event EventHandler<string> ImageSaved;
+
+		public ImageSelectorControl( )
 		{
-			// 使用 db.dbPath（确保已初始化）
-			_usersRepo = new UsersRepository(db.dbPath);
-			InitializeComponent();
+			InitializeComponents();
+		}
+
+		private void InitializeComponents( )
+		{
 			// Panel 用于滚动显示大图
-			//panelCanvas = new Panel
-			//{
-			//	Dock = DockStyle.Fill,
-			//	AutoScroll = true,
-			//	BackColor = Color.Black
-			//};
+			panelCanvas = new Panel
+			{
+				Dock = DockStyle.Fill,
+				AutoScroll = true,
+				BackColor = Color.Black
+			};
 			panelCanvas.Paint += PanelCanvas_Paint;
 			panelCanvas.MouseDown += PanelCanvas_MouseDown;
 			panelCanvas.MouseMove += PanelCanvas_MouseMove;
@@ -47,25 +53,26 @@ namespace MusicChange
 
 			panelCanvas.Controls.Add( pictureBoxInner );
 
-			//// 按钮和路径标签
-			//btnLoad = new Button { Text = "选择图片", Dock = DockStyle.Top, Height = 30 };
-			//btnLoad.Click += BtnLoad_Click;
+			// 按钮和路径标签
+			btnLoad = new Button { Text = "选择图片", Dock = DockStyle.Top, Height = 30 };
+			btnLoad.Click += BtnLoad_Click;
 
-			//btnConfirm = new Button { Text = "确认并保存 50×50", Dock = DockStyle.Top, Height = 30 };
-			//btnConfirm.Click += BtnConfirm_Click;
+			btnConfirm = new Button { Text = "确认并保存 50×50", Dock = DockStyle.Top, Height = 30 };
+			btnConfirm.Click += BtnConfirm_Click;
 
-			//lblPath = new Label { Text = "保存路径：", Dock = DockStyle.Bottom, Height = 24, AutoEllipsis = true };
+			lblPath = new Label { Text = "保存路径：", Dock = DockStyle.Bottom, Height = 24, AutoEllipsis = true };
 
 			// 布局
-			//var rightPanel = new Panel { Dock = DockStyle.Right, Width = 140 };
-			//rightPanel.Controls.Add( btnConfirm );
-			//rightPanel.Controls.Add( btnLoad );
+			var rightPanel = new Panel { Dock = DockStyle.Right, Width = 140 };
+			rightPanel.Controls.Add( btnConfirm );
+			rightPanel.Controls.Add( btnLoad );
 
-			//this.Controls.Add( panelCanvas );
-			//this.Controls.Add( rightPanel );
-			//this.Controls.Add( lblPath );
+			this.Controls.Add( panelCanvas );
+			this.Controls.Add( rightPanel );
+			this.Controls.Add( lblPath );
 
-
+			// 初始尺寸推荐
+			this.Size = new Size( 400, 300 );
 		}
 
 		private void BtnLoad_Click(object sender, EventArgs e)
@@ -252,207 +259,18 @@ namespace MusicChange
 			// 保存路径与事件
 			SavedImagePath = fullPath;
 			lblPath.Text = "保存路径：" + fullPath;
-			//ImageSaved?.Invoke( this, fullPath );
+			ImageSaved?.Invoke( this, fullPath );
 
 			MessageBox.Show( "图片已保存并显示（50×50）", "完成", MessageBoxButtons.OK, MessageBoxIcon.Information );
 			panelCanvas.Invalidate();
 		}
 
-		private void btnRegister_Click(object sender, EventArgs e)  // 注册
+		protected override void Dispose(bool disposing)
 		{
-			try
-			{
-				if(!ValidateInput(out string username, out string email, out string password))
-				{
-					if(usernamenull)
-					{
-						SetStatus.Text = "未注册";
-						var userw = new Users
-						{
-							Username = username,
-							Email = "110959751@qq.com",
-							PasswordHash = "123456789",
-							Iphone = txtPhone.Text.Trim(),
-							FullName = txtFullName.Text.Trim(),
-							AvatarPath = "",
-							IsActive = true,
-							CreatedAt = DateTime.Now,
-							UpdatedAt = DateTime.Now
-						};
-                        bool same = _usersRepo.ExistsByUsername(username);
-						int newIdw = _usersRepo.Create(userw);
-
-						if(newIdw > 0)
-						{
-							//SetStatus.Text = "未注册用户成功";
-							MessageBox.Show("未注册用户成功。", "注册完成", MessageBoxButtons.OK, MessageBoxIcon.Information);
-							this.DialogResult = DialogResult.OK;
-							this.Close();
-						}
-						else
-						{
-							SetStatus.Text = "注册失败，请重试";
-						}
-
-					}
-					return;
-				}
-				if(_usersRepo.ExistsByUsername(username))   //检查用户名是否存在
-				{
-					SetStatus.Text = $"用户名已存在，请更换";
-					return;
-				}
-				string passwordHash = PasswordHelper.HashPassword(password);  // 生成密码哈希（格式： iterations.salt.hash）
-				var user = new Users
-				{
-					Username = username,
-					Email = email,
-					PasswordHash = passwordHash,
-					Iphone = txtPhone.Text.Trim(),
-					FullName = txtFullName.Text.Trim(),
-					AvatarPath = "",
-					IsActive = true,
-					CreatedAt = DateTime.Now,
-					UpdatedAt = DateTime.Now,
-					Draftposition = "",
-					IsLocked = false,
-					IsDeleted = false,
-					IsModified = false,
-				};
-				newId = _usersRepo.Create(user);
-				if(newId > 0)
-				{
-					SetStatus.Text = "注册成功";
-					MessageBox.Show("用户注册成功。", "注册完成", MessageBoxButtons.OK, MessageBoxIcon.Information);
-					this.DialogResult = DialogResult.OK;
-					this.Close();
-				}
-				else
-				{
-					SetStatus.Text = "注册失败，请重试";
-				}
+			if (disposing) {
+				_originalImage?.Dispose();
 			}
-			catch(Exception ex)
-			{
-				SetStatus.Text = ex.Message;
-                MessageBox.Show("发生错误: " + ex.Message, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				
-			}
+			base.Dispose( disposing );
 		}
-		private void btnCancel_Click(object sender, EventArgs e)
-		{
-			this.Close();
-			this.Dispose();
-		}
-
-		private bool ValidateInput(out string username, out string email, out string password)
-		{
-			username = txtUsername.Text.Trim();
-			email = txtEmail.Text.Trim();
-			password = txtPassword.Text;
-			usernamenull = false;
-
-			if(string.IsNullOrEmpty(username))
-			{
-				SetStatus.Text = "用户名不能为空";
-				usernamenull = true;
-				txtUsername.Focus();
-				return false;
-			}
-
-			if(username.Length < 3)
-			{
-				SetStatus.Text = "用户名至少 3 个字符";
-				txtUsername.Focus();
-				return false;
-			}
-
-			if(string.IsNullOrEmpty(email) || !Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
-			{
-				SetStatus.Text = "请输入有效邮箱地址";
-				txtEmail.Focus();
-				return false;
-			}
-
-			if(string.IsNullOrEmpty(password) || password.Length < 6)
-			{
-				SetStatus.Text = "密码至少 6 个字符";
-				txtPassword.Focus();
-				return false;
-			}
-
-			if(password != txtConfirm.Text)
-			{
-				SetStatus.Text = "两次输入密码不匹配";
-				txtConfirm.Focus();
-				return false;
-			}
-			return true;
-		}
-
-
-
-		#region ------------ 调用 用户控件 ImageSelectorControl     没用 ------------
-		//private void AddInlineImageSelector( )
-		//{
-		//	var selector = new ImageSelectorControl
-		//	{
-		//		Width = 300,
-		//		Height = 220,
-		//		Location = new Point( 10, 10 )
-		//	};
-		//	selector.ImageSaved += (s, path) =>
-		//	{
-		//		// 处理保存结果（同上）
-		//		if (this.Controls.Find( "pictureBoxAvatar", true ).FirstOrDefault() is PictureBox pb) {
-		//			pb.Image?.Dispose();
-		//			using (var img = Image.FromFile( (string)path )) {
-		//				pb.Image = new Bitmap( img );
-		//			}
-		//		}
-		//		// 可以把路径写入文本框或字段
-		//	};
-		//	this.Controls.Add( selector );
-		//}
-		// 在 user 窗体中使用：打开 ImageSelectorDialog 并获取保存路径  如何 在 user 窗口 中调用 用户控件 ImageSelectorControl
-
-		//private void OpenImageSelectorAndSetAvatar( )
-		//{
-		//	using (var dlg = new ImageSelectorControl()) {
-		//		if (dlg.ShowDialog( this ) == DialogResult.OK) {
-		//			string savedPath = dlg.SavedImagePath;
-		//			if (!string.IsNullOrEmpty( savedPath )) {
-		//				// 假设 user 窗体有一个 pictureBoxAvatar 和 txtAvatarPath 控件
-		//				try {
-		//					// 更新 UI 预览
-		//					if (this.Controls.Find( "pictureBoxAvatar", true ).Length > 0) {
-		//						var pb = this.Controls.Find( "pictureBoxAvatar", true )[0] as PictureBox;
-		//						pb.Image?.Dispose();
-		//						pb.Image = System.Drawing.Image.FromFile( savedPath );
-		//					}
-
-		//					// 存储路径到文本框或成员变量
-		//					if (this.Controls.Find( "txtAvatarPath", true ).Length > 0) {
-		//						var tb = this.Controls.Find( "txtAvatarPath", true )[0] as TextBox;
-		//						tb.Text = savedPath;
-		//					}
-
-		//					// 如果你有 Users 对象，设置 AvatarPath 字段
-		//					// currentUser.AvatarPath = savedPath;
-		//				}
-		//				catch (Exception ex) {
-		//					MessageBox.Show( "加载已保存图片失败: " + ex.Message, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error );
-		//				}
-		//			}
-		//		}
-		//	}
-		//}
-
-		// 示例：把上面方法绑定到某按钮点击事件（在 InitializeComponent 或设计器中绑定）：
-		//private void btnSelectAvatar_Click(object sender, EventArgs e)
-		//{
-		//	OpenImageSelectorAndSetAvatar();
-		//}
-		#endregion
 	}
 }

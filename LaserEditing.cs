@@ -83,7 +83,7 @@ namespace MusicChange
 		{
 			InitializeComponent();
 			IsfirstPlaying = false;
-			AutoScaleMode = AutoScaleMode.Dpi; // 根据系统DPI自动缩放	EnsureVideoViewInitialized();  //动态加载 videoView1
+			//AutoScaleMode = AutoScaleMode.Dpi; // 根据系统DPI自动缩放	EnsureVideoViewInitialized();  //动态加载 videoView1
 			UserControlNumber = 0;
 		}
 		private void LaserEditing_Load(object sender, EventArgs e)
@@ -118,18 +118,16 @@ namespace MusicChange
 				  HideAudioControls();
 			  }));
 			};
-			//pictureBox1.			sC4.Panel1.AutoScroll = false;
-			//ConfigureFlowLayoutPanelScrolling();
-			ConfigureFlowLayoutPanel();
-			InitializeFlowLayoutPanelContextMenu();
-			// 订阅 FlowLayoutPanel 的键盘事件
-			flowLayoutPanelMedia.KeyDown += flowLayoutPanelMedia_KeyDown;
+		
+			ConfigureFlowLayoutPanel();  // 配置 FlowLayoutPanel 的滚动
+			InitializeFlowLayoutPanelContextMenu();  // 配置 FlowLayoutPanel 的上下文菜单
+			flowLayoutPanelMedia.KeyDown += flowLayoutPanelMedia_KeyDown;   // 订阅 FlowLayoutPanel 的键盘事件
 			flowLayoutPanelMedia.KeyPress += flowLayoutPanelMedia_KeyPress;
 
 
 		}
 
-		#region ------- ToolTip 鼠标进入悬停显示 -------
+		#region ------- ToolTip 鼠标进入悬停显示 读取用户是否登陆 -------
 
 		private void ConfigureToolTip(ToolTipEx toolTip1)
 		{           // 设置 ToolTip 属性
@@ -207,6 +205,14 @@ namespace MusicChange
 									 new RectangleF(e.Bounds.X, e.Bounds.Y, 200, e.Bounds.Height));
 			};
 			toolTip1.SetToolTip(buttonX2, "提示", "这是一个可以自动换行的长文本提示，当达到指定宽度时会自动换行显示...");
+			//对表 user 调用数据库 取得 第一页记录 是否存在，如果存在 取出user ，存入public class Users
+            Users = new Users();
+            //Users.GetUser(1);
+            if(Users.Id > 0)
+			{
+				//Userimage.Image = Users.;
+				Userimage.Text = Users.Username;
+			}
 			toolTip1.SetToolTip(Userimage, "提示", "个人用户信息和注册");
 
 		}
@@ -1319,6 +1325,13 @@ namespace MusicChange
 		}
 		// 使用外部播放器的标志
 		private bool UseExternalPlayerForMaximize = false;
+
+		public Users Users
+		{
+			get;
+			private set;
+		}
+
 		// 修改原有的最大化切换方法
 		private void ToggleVideoMaximize()
 		{
@@ -2660,15 +2673,6 @@ namespace MusicChange
 				return;
 			try
 			{
-				// 设置 FlowLayoutPanel 属性
-				flowLayoutPanelMedia.FlowDirection = FlowDirection.LeftToRight;
-				flowLayoutPanelMedia.WrapContents = true;
-				//flowLayoutPanelMedia.AutoScroll = true;
-				// 减少内边距
-				flowLayoutPanelMedia.Padding = new Padding(5);
-				// 确保控件紧密排列
-				//flowLayoutPanelMedia.FlowLayoutPanel.FlowDirection = FlowDirection.LeftToRight;
-				flowLayoutPanelMedia.FlowDirection = FlowDirection.LeftToRight;
 				flowLayoutPanelMedia.PerformLayout();  // 强制重新布局
 			}
 			catch(Exception ex)
@@ -3319,7 +3323,6 @@ namespace MusicChange
 			if(lblAudioTime != null)
 				lblAudioTime.Visible = false;
 		}
-		// 在 LaserEditing 类的全局变量区域添加
 		// 在 InitializeComponent 方法或 LaserEditing_Load 方法中初始化右键菜单
 		private void InitializeFlowLayoutPanelContextMenu()
 		{
@@ -3329,9 +3332,7 @@ namespace MusicChange
 				{
 					flowLayoutPanelContextMenu.Dispose();
 				}
-
 				flowLayoutPanelContextMenu = new ContextMenuStrip();
-
 				// 添加"清空所有控件"菜单项
 				ToolStripMenuItem clearAllItem = new ToolStripMenuItem("清空所有素材");
 				clearAllItem.Click += ClearAllMediaItems_Click;
@@ -3351,24 +3352,19 @@ namespace MusicChange
 				ToolStripMenuItem selectAllItem = new ToolStripMenuItem("选择全部");
 				selectAllItem.Click += SelectAllMediaItems_Click;
 				flowLayoutPanelContextMenu.Items.Add(selectAllItem);
-
 				// 添加"取消选择"菜单项
 				ToolStripMenuItem deselectAllItem = new ToolStripMenuItem("取消选择");
 				deselectAllItem.Click += DeselectAllMediaItems_Click;
 				flowLayoutPanelContextMenu.Items.Add(deselectAllItem);
-
 				// 添加分隔线
 				flowLayoutPanelContextMenu.Items.Add(new ToolStripSeparator());
-
 				// 添加"反向选择"菜单项
 				ToolStripMenuItem invertSelectionItem = new ToolStripMenuItem("反向选择");
 				invertSelectionItem.Click += InvertSelection_Click;
 				flowLayoutPanelContextMenu.Items.Add(invertSelectionItem);
-
 				// 将右键菜单关联到 FlowLayoutPanel
 				flowLayoutPanelMedia.ContextMenuStrip = flowLayoutPanelContextMenu;
 			}
-
 			catch(Exception ex)
 			{
 				System.Diagnostics.Debug.WriteLine($"初始化右键菜单失败: {ex.Message}");
@@ -4060,7 +4056,6 @@ namespace MusicChange
 	#endregion
 
 	#region ------------     ------------
-
 	#endregion
 }
 
