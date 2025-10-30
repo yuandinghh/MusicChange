@@ -3277,6 +3277,56 @@ C# SQLite 事务表创建程序
 			get; set;
 		}
 	}
+	public class PubUsers
+	{
+		public int Id
+		{
+			get; set;
+		}
+		public string Username
+		{
+			get; set;
+		}
+		public string Email
+		{
+			get; set;
+		}
+		public string PasswordHash
+		{
+			get; set;
+		}
+		public string Iphone
+		{
+			get; set;
+		}
+		public string FullName
+		{
+			get; set;
+		}
+		public string AvatarPath
+		{
+			get; set;
+		}
+		public bool IsActive { get; set; } = true;
+		public DateTime CreatedAt { get; set; } = DateTime.Now;
+		public DateTime UpdatedAt { get; set; } = DateTime.Now;
+		public string Draftposition
+		{
+			get; set;
+		}
+		public bool IsLocked
+		{
+			get; set;
+		}
+		public bool IsDeleted
+		{
+			get; set;
+		}
+		public bool IsModified
+		{
+			get; set;
+		}
+	}
 	public class Settings
 	{
 		public int Id

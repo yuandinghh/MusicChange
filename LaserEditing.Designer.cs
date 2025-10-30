@@ -208,6 +208,7 @@ namespace MusicChange
 			this.Userimage.Margin = new System.Windows.Forms.Padding(1, 1, 20, 1);
 			this.Userimage.Name = "Userimage";
 			this.Userimage.Size = new System.Drawing.Size(34, 32);
+			this.Userimage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
 			this.Userimage.TabIndex = 5;
 			this.Userimage.TabStop = false;
 			this.Userimage.Click += new System.EventHandler(this.Userimage_Click);

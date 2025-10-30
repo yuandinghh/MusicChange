@@ -74,11 +74,13 @@ namespace MusicChange
 		private LibVLC _libVLC1, _libVLC2, _libVLC3;
 		private MediaPlayer _player1, _player2, _player3;
 		private VideoView _videoView1, _videoView2, _videoView3;        //private LibVLC _libVLC; // LibVLC 实例（视频播放用）
-		private AudioPlayer _audioPlayer; // NAudio 播放器实例
-		bool isShowOnce = false; // 是否已显示一次cut 			 //private LibVLCSharp.WinForms.VideoView videoView1;
+		private AudioPlayer _audioPlayer; // NAudio 实例	bool isShowOnce = false; // 是否已显示一次cut 			 //private LibVLCSharp.WinForms.VideoView videoView1;
 		string subDirectory; // 子目录名称
 		private ContextMenuStrip flowLayoutPanelContextMenu;
 		private int UserControlNumber = 0;
+		public static Users Pubuser = new Users();
+		private UsersRepository usersRepo;
+
 		public LaserEditing()
 		{
 			InitializeComponent();
@@ -118,15 +120,17 @@ namespace MusicChange
 				  HideAudioControls();
 			  }));
 			};
-		
+
 			ConfigureFlowLayoutPanel();  // 配置 FlowLayoutPanel 的滚动
 			InitializeFlowLayoutPanelContextMenu();  // 配置 FlowLayoutPanel 的上下文菜单
 			flowLayoutPanelMedia.KeyDown += flowLayoutPanelMedia_KeyDown;   // 订阅 FlowLayoutPanel 的键盘事件
 			flowLayoutPanelMedia.KeyPress += flowLayoutPanelMedia_KeyPress;
-
+			intiuser();
+	
 
 		}
 
+	
 		#region ------- ToolTip 鼠标进入悬停显示 读取用户是否登陆 -------
 
 		private void ConfigureToolTip(ToolTipEx toolTip1)
@@ -206,9 +210,9 @@ namespace MusicChange
 			};
 			toolTip1.SetToolTip(buttonX2, "提示", "这是一个可以自动换行的长文本提示，当达到指定宽度时会自动换行显示...");
 			//对表 user 调用数据库 取得 第一页记录 是否存在，如果存在 取出user ，存入public class Users
-            Users = new Users();
-            //Users.GetUser(1);
-            if(Users.Id > 0)
+			Users = new Users();
+			//Users.GetUser(1);
+			if(Users.Id > 0)
 			{
 				//Userimage.Image = Users.;
 				Userimage.Text = Users.Username;
@@ -2961,7 +2965,7 @@ namespace MusicChange
 					Debug.WriteLine($"写入媒体资源到数据库失败: {ex.Message}");
 				}
 			}
-		
+
 
 			// 更新面板可见性与状态显示
 			UpdateFlowLayoutVisibility();
@@ -3639,6 +3643,10 @@ namespace MusicChange
 		{
 			user user = new();
 			user.ShowDialog();
+			if(user.luser.AvatarPath != null)
+			{// 将logopic路径的图片存入 Userimage
+				Userimage.Image = Image.FromFile(user.luser.AvatarPath);
+			}
 		}
 		// 删除选中的控件
 		private void DeleteSelectedItems_Click(object sender, EventArgs e)
@@ -3820,6 +3828,22 @@ namespace MusicChange
 
 
 		#endregion
+		#region ------------ 加载 用户信息    ------------
+		void intiuser()
+		{
+			usersRepo = new UsersRepository(db.dbPath);    //读第一条LaserEditing.db数据库的User 存入Pubuser 类中
+			Pubuser = usersRepo.GetById(11);  //???????????
+			if(Pubuser != null)
+			{
+
+				if(Pubuser.AvatarPath != null)
+				{
+					Userimage.Image = Image.FromFile(Pubuser.AvatarPath); // 显示用户头像
+				}
+			}
+		}
+		#endregion
+
 	}
 
 	#region ------------ calss  AudioPlayer  VideoInfo 属性类 获取  ------------
