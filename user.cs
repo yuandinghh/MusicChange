@@ -13,7 +13,6 @@ namespace MusicChange
 		private UsersRepository _usersRepo;
 		private bool usernamenull = false;
 		private int newId = 0;
-		string savePath = null;
 		public static string logopic = null;
 		public static Users luser = new();
 		//private Bitmap _originalImage;
@@ -29,9 +28,16 @@ namespace MusicChange
 		public user()
 		{
 			// 使用 db.dbPath（确保已初始化）
-			_usersRepo = new UsersRepository(db.dbPath);
 			InitializeComponent();
 			InitializeUI();
+			logopic = null;
+			if(LaserEditing.Pubuser != null)
+			{
+				if(LaserEditing.Pubuser.AvatarPath != null)
+				{
+					pictureBox.Image = Image.FromFile(LaserEditing.Pubuser.AvatarPath); // 显示用户头像
+				}
+			}
 
 			// Panel 用于滚动显示大图
 			//panelCanvas = new Panel
@@ -305,16 +311,11 @@ namespace MusicChange
 					SetStatus.Text = $"用户名已存在，请更换";
 					return;
 				}
-				string logopic = null;
-				if(savePath != null)
-				{
-					logopic = savePath;
-				}
 				string passwordHash = PasswordHelper.HashPassword(password);  // 生成密码哈希（格式： iterations.salt.hash）
 				SetStatus.Text = "未注册";
 				luser.Username = username;
 				luser.Email = "110959751@qq.com";
-				luser.PasswordHash = "123456789";
+				luser.PasswordHash = passwordHash;
 				luser.Iphone = txtPhone.Text.Trim();
 				luser.FullName = txtFullName.Text.Trim();
 				luser.AvatarPath = logopic;
@@ -426,6 +427,8 @@ namespace MusicChange
 		// 选择图片按钮点击事件
 		private void SelectButton_Click(object sender, EventArgs e)
 		{
+			Image originalImage, resizedImage;
+			string savePath;
 			using(OpenFileDialog openFileDialog = new OpenFileDialog())
 			{
 				openFileDialog.Filter = "图片文件|*.jpg;*.jpeg;*.png;*.bmp;*.gif|所有文件|*.*";
@@ -434,44 +437,41 @@ namespace MusicChange
 				if(openFileDialog.ShowDialog() == DialogResult.OK)
 				{
 					try
-					{
-						// 获取PictureBox控件
-						PictureBox pictureBox = (PictureBox)this.Controls[19];
-
-						// 加载图片并显示
-						using(Image originalImage = Image.FromFile(openFileDialog.FileName))
+					{                       // // 加载图片并显示
+						originalImage = Image.FromFile(openFileDialog.FileName);
 						{
 							// 在PictureBox中显示原始图片
 							pictureBox.Image = new Bitmap(originalImage);
-
+							savePath = GetSavePath(openFileDialog.SafeFileName);
 							// 检查图片是否需要压缩
 							if(originalImage.Width > 50 || originalImage.Height > 50)
-							{
-								// 等比例压缩图片
-								Image resizedImage = ResizeImage(originalImage, 50, 50);
-
-								// 保存压缩后的图片到当前文件夹
-								savePath = GetSavePath(openFileDialog.SafeFileName);
+							{                       // 等比例压缩图片
+								resizedImage = ResizeImage(originalImage, 50, 50);
 								resizedImage.Save(savePath);
-
-								//MessageBox.Show($"图片已压缩并保存至:\n{savePath}", "操作完成");
-
+								string filenanme = Path.GetFileName(savePath);
+								logopic = Path.Combine(LaserEditing.subDirectory, "User") + "\\" + filenanme;
+								File.Copy(savePath, logopic, true);
+								SetStatus.Text = "图片已压缩并保存";
 								resizedImage.Dispose();
 							}
 							else
 							{
-								MessageBox.Show("图片尺寸小于等于50×50，无需压缩", "提示");
+								originalImage = Image.FromFile(openFileDialog.FileName);
+								originalImage.Save(savePath);
+								string filenanme = Path.GetFileName(savePath);
+								logopic = Path.Combine(LaserEditing.subDirectory, "User") + "\\" + filenanme;
+								File.Copy(savePath, logopic, true);
+								SetStatus.Text = "图片尺寸小于等于50×50";
 							}
 						}
 					}
 					catch(Exception ex)
 					{
-						MessageBox.Show($"处理图片时出错: {ex.Message}", "错误");
+						_ = MessageBox.Show($"处理图片时出错: {ex.Message}", "错误");
 					}
 				}
 			}
 		}
-
 		// 等比例压缩图片
 		private Image ResizeImage(Image image, int maxWidth, int maxHeight)
 		{

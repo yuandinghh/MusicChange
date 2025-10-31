@@ -58,10 +58,10 @@ namespace MusicChange
 			this.btnRegister = new DevComponents.DotNetBar.ButtonX();
 			this.btnCancel = new DevComponents.DotNetBar.ButtonX();
 			this.panelCanvas = new System.Windows.Forms.Panel();
+			this.lblPath = new System.Windows.Forms.Label();
 			this.pictureBox = new System.Windows.Forms.PictureBox();
 			this.selectButton = new System.Windows.Forms.Button();
 			this.btnConfirm = new System.Windows.Forms.Button();
-			this.lblPath = new System.Windows.Forms.Label();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.panelCanvas.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
@@ -298,17 +298,28 @@ namespace MusicChange
 			// panelCanvas
 			// 
 			this.panelCanvas.Controls.Add(this.lblPath);
-			this.panelCanvas.Location = new System.Drawing.Point(49, 381);
+			this.panelCanvas.Location = new System.Drawing.Point(49, 611);
 			this.panelCanvas.Name = "panelCanvas";
-			this.panelCanvas.Size = new System.Drawing.Size(256, 334);
+			this.panelCanvas.Size = new System.Drawing.Size(256, 104);
 			this.panelCanvas.TabIndex = 36;
 			this.panelCanvas.Visible = false;
+			// 
+			// lblPath
+			// 
+			this.lblPath.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.lblPath.ForeColor = System.Drawing.Color.White;
+			this.lblPath.Location = new System.Drawing.Point(22, 49);
+			this.lblPath.Name = "lblPath";
+			this.lblPath.RightToLeft = System.Windows.Forms.RightToLeft.No;
+			this.lblPath.Size = new System.Drawing.Size(117, 30);
+			this.lblPath.TabIndex = 34;
+			this.lblPath.Text = "保存路径";
 			// 
 			// pictureBox
 			// 
 			this.pictureBox.BackColor = System.Drawing.Color.DimGray;
 			this.pictureBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.pictureBox.Location = new System.Drawing.Point(640, 421);
+			this.pictureBox.Location = new System.Drawing.Point(647, 434);
 			this.pictureBox.Margin = new System.Windows.Forms.Padding(30);
 			this.pictureBox.Name = "pictureBox";
 			this.pictureBox.Size = new System.Drawing.Size(100, 100);
@@ -320,11 +331,11 @@ namespace MusicChange
 			// 
 			this.selectButton.AutoSize = true;
 			this.selectButton.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.selectButton.Location = new System.Drawing.Point(28, 13);
+			this.selectButton.Location = new System.Drawing.Point(16, 28);
 			this.selectButton.Name = "selectButton";
-			this.selectButton.Size = new System.Drawing.Size(99, 30);
+			this.selectButton.Size = new System.Drawing.Size(119, 30);
 			this.selectButton.TabIndex = 32;
-			this.selectButton.Text = "选择图片";
+			this.selectButton.Text = "选择图片:";
 			this.selectButton.UseVisualStyleBackColor = true;
 			this.selectButton.Click += new System.EventHandler(this.SelectButton_Click);
 			// 
@@ -339,17 +350,6 @@ namespace MusicChange
 			this.btnConfirm.Text = "确认并保存";
 			this.btnConfirm.UseVisualStyleBackColor = true;
 			this.btnConfirm.Visible = false;
-			// 
-			// lblPath
-			// 
-			this.lblPath.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.lblPath.ForeColor = System.Drawing.Color.White;
-			this.lblPath.Location = new System.Drawing.Point(43, 80);
-			this.lblPath.Name = "lblPath";
-			this.lblPath.RightToLeft = System.Windows.Forms.RightToLeft.No;
-			this.lblPath.Size = new System.Drawing.Size(176, 30);
-			this.lblPath.TabIndex = 34;
-			this.lblPath.Text = "保存路径";
 			// 
 			// panel1
 			// 

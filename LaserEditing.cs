@@ -75,10 +75,11 @@ namespace MusicChange
 		private MediaPlayer _player1, _player2, _player3;
 		private VideoView _videoView1, _videoView2, _videoView3;        //private LibVLC _libVLC; // LibVLC 实例（视频播放用）
 		private AudioPlayer _audioPlayer; // NAudio 实例	bool isShowOnce = false; // 是否已显示一次cut 			 //private LibVLCSharp.WinForms.VideoView videoView1;
-		string subDirectory; // 子目录名称
 		private ContextMenuStrip flowLayoutPanelContextMenu;
 		private int UserControlNumber = 0;
 		public static Users Pubuser = new Users();
+		public static string documentsPath; // 文档目录名称
+        public static string subDirectory;  //文档下 子目录名称工作目录 ResourceFolder
 		private UsersRepository usersRepo;
 
 		public LaserEditing()
@@ -87,6 +88,8 @@ namespace MusicChange
 			IsfirstPlaying = false;
 			//AutoScaleMode = AutoScaleMode.Dpi; // 根据系统DPI自动缩放	EnsureVideoViewInitialized();  //动态加载 videoView1
 			UserControlNumber = 0;
+			documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+			subDirectory = Path.Combine(documentsPath, "ResourceFolder");
 		}
 		private void LaserEditing_Load(object sender, EventArgs e)
 		{
@@ -2816,9 +2819,6 @@ namespace MusicChange
 		private new void Click(object sender, EventArgs e)
 		{
 			listBox1.Items.Clear();
-			string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-			Debug.WriteLine("默认文档目录: " + documentsPath);
-			subDirectory = Path.Combine(documentsPath, "ResourceFolder");
 			if(!Directory.Exists(subDirectory))
 			{
 				try
@@ -3832,7 +3832,7 @@ namespace MusicChange
 		void intiuser()
 		{
 			usersRepo = new UsersRepository(db.dbPath);    //读第一条LaserEditing.db数据库的User 存入Pubuser 类中
-			Pubuser = usersRepo.GetById(11);  //???????????
+			Pubuser = usersRepo.GetById(15);  //???????????
 			if(Pubuser != null)
 			{
 
