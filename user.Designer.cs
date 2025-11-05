@@ -57,15 +57,22 @@ namespace MusicChange
 			this.txtUsername = new DevComponents.DotNetBar.Controls.TextBoxX();
 			this.btnRegister = new DevComponents.DotNetBar.ButtonX();
 			this.btnCancel = new DevComponents.DotNetBar.ButtonX();
-			this.panelCanvas = new System.Windows.Forms.Panel();
 			this.lblPath = new System.Windows.Forms.Label();
 			this.pictureBox = new System.Windows.Forms.PictureBox();
 			this.selectButton = new System.Windows.Forms.Button();
 			this.btnConfirm = new System.Windows.Forms.Button();
 			this.panel1 = new System.Windows.Forms.Panel();
-			this.panelCanvas.SuspendLayout();
+			this.userimage = new System.Windows.Forms.PictureBox();
+			this.username = new DevComponents.DotNetBar.LabelX();
+			this.labelX1 = new DevComponents.DotNetBar.LabelX();
+			this.registertime = new DevComponents.DotNetBar.LabelX();
+			this.days = new DevComponents.DotNetBar.LabelX();
+			this.versions = new DevComponents.DotNetBar.LabelX();
+			this.labelX3 = new DevComponents.DotNetBar.LabelX();
+			this.register = new DevComponents.DotNetBar.LabelX();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
 			this.panel1.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.userimage)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// label7
@@ -295,20 +302,11 @@ namespace MusicChange
 			this.btnCancel.Text = "取消";
 			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
 			// 
-			// panelCanvas
-			// 
-			this.panelCanvas.Controls.Add(this.lblPath);
-			this.panelCanvas.Location = new System.Drawing.Point(49, 611);
-			this.panelCanvas.Name = "panelCanvas";
-			this.panelCanvas.Size = new System.Drawing.Size(256, 104);
-			this.panelCanvas.TabIndex = 36;
-			this.panelCanvas.Visible = false;
-			// 
 			// lblPath
 			// 
 			this.lblPath.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.lblPath.ForeColor = System.Drawing.Color.White;
-			this.lblPath.Location = new System.Drawing.Point(22, 49);
+			this.lblPath.Location = new System.Drawing.Point(762, 467);
 			this.lblPath.Name = "lblPath";
 			this.lblPath.RightToLeft = System.Windows.Forms.RightToLeft.No;
 			this.lblPath.Size = new System.Drawing.Size(117, 30);
@@ -319,7 +317,7 @@ namespace MusicChange
 			// 
 			this.pictureBox.BackColor = System.Drawing.Color.DimGray;
 			this.pictureBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.pictureBox.Location = new System.Drawing.Point(647, 434);
+			this.pictureBox.Location = new System.Drawing.Point(629, 445);
 			this.pictureBox.Margin = new System.Windows.Forms.Padding(30);
 			this.pictureBox.Name = "pictureBox";
 			this.pictureBox.Size = new System.Drawing.Size(100, 100);
@@ -331,7 +329,7 @@ namespace MusicChange
 			// 
 			this.selectButton.AutoSize = true;
 			this.selectButton.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.selectButton.Location = new System.Drawing.Point(16, 28);
+			this.selectButton.Location = new System.Drawing.Point(16, 25);
 			this.selectButton.Name = "selectButton";
 			this.selectButton.Size = new System.Drawing.Size(119, 30);
 			this.selectButton.TabIndex = 32;
@@ -360,14 +358,144 @@ namespace MusicChange
 			this.panel1.Size = new System.Drawing.Size(163, 141);
 			this.panel1.TabIndex = 35;
 			// 
+			// userimage
+			// 
+			this.userimage.BackColor = System.Drawing.Color.DimGray;
+			this.userimage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.userimage.Location = new System.Drawing.Point(112, 68);
+			this.userimage.Margin = new System.Windows.Forms.Padding(30);
+			this.userimage.Name = "userimage";
+			this.userimage.Size = new System.Drawing.Size(100, 100);
+			this.userimage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+			this.userimage.TabIndex = 37;
+			this.userimage.TabStop = false;
+			// 
+			// username
+			// 
+			this.username.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+			// 
+			// 
+			// 
+			this.username.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+			this.username.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.username.FontBold = true;
+			this.username.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+			this.username.Location = new System.Drawing.Point(23, 230);
+			this.username.Name = "username";
+			this.username.Size = new System.Drawing.Size(318, 29);
+			this.username.TabIndex = 38;
+			this.username.Text = "你好：";
+			// 
+			// labelX1
+			// 
+			this.labelX1.AutoSize = true;
+			this.labelX1.BackColor = System.Drawing.Color.White;
+			// 
+			// 
+			// 
+			this.labelX1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+			this.labelX1.Font = new System.Drawing.Font("宋体", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.labelX1.FontBold = true;
+			this.labelX1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+			this.labelX1.Location = new System.Drawing.Point(112, 281);
+			this.labelX1.Name = "labelX1";
+			this.labelX1.Size = new System.Drawing.Size(107, 34);
+			this.labelX1.TabIndex = 39;
+			this.labelX1.Text = "注册时间";
+			// 
+			// registertime
+			// 
+			this.registertime.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+			// 
+			// 
+			// 
+			this.registertime.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+			this.registertime.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.registertime.FontBold = true;
+			this.registertime.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+			this.registertime.Location = new System.Drawing.Point(23, 337);
+			this.registertime.Name = "registertime";
+			this.registertime.Size = new System.Drawing.Size(300, 29);
+			this.registertime.TabIndex = 40;
+			// 
+			// days
+			// 
+			this.days.BackColor = System.Drawing.Color.Lime;
+			// 
+			// 
+			// 
+			this.days.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+			this.days.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.days.FontBold = true;
+			this.days.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+			this.days.Location = new System.Drawing.Point(23, 396);
+			this.days.Name = "days";
+			this.days.Size = new System.Drawing.Size(300, 29);
+			this.days.TabIndex = 41;
+			// 
+			// versions
+			// 
+			this.versions.BackColor = System.Drawing.Color.Black;
+			// 
+			// 
+			// 
+			this.versions.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+			this.versions.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.versions.FontBold = true;
+			this.versions.ForeColor = System.Drawing.Color.White;
+			this.versions.Location = new System.Drawing.Point(23, 639);
+			this.versions.Name = "versions";
+			this.versions.Size = new System.Drawing.Size(300, 29);
+			this.versions.TabIndex = 42;
+			this.versions.Text = "当前版本：V1.0";
+			// 
+			// labelX3
+			// 
+			this.labelX3.BackColor = System.Drawing.Color.Black;
+			// 
+			// 
+			// 
+			this.labelX3.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+			this.labelX3.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.labelX3.FontBold = true;
+			this.labelX3.ForeColor = System.Drawing.Color.White;
+			this.labelX3.Location = new System.Drawing.Point(23, 677);
+			this.labelX3.Name = "labelX3";
+			this.labelX3.Size = new System.Drawing.Size(300, 29);
+			this.labelX3.TabIndex = 43;
+			this.labelX3.Text = "作者Email:110959751@qq.com";
+			// 
+			// register
+			// 
+			this.register.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+			// 
+			// 
+			// 
+			this.register.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+			this.register.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.register.FontBold = true;
+			this.register.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+			this.register.Location = new System.Drawing.Point(23, 460);
+			this.register.Name = "register";
+			this.register.Size = new System.Drawing.Size(190, 29);
+			this.register.TabIndex = 44;
+			// 
 			// user
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
 			this.ClientSize = new System.Drawing.Size(891, 742);
+			this.Controls.Add(this.lblPath);
+			this.Controls.Add(this.register);
+			this.Controls.Add(this.labelX3);
+			this.Controls.Add(this.versions);
+			this.Controls.Add(this.days);
+			this.Controls.Add(this.registertime);
+			this.Controls.Add(this.labelX1);
+			this.Controls.Add(this.username);
+			this.Controls.Add(this.userimage);
 			this.Controls.Add(this.panel1);
-			this.Controls.Add(this.panelCanvas);
 			this.Controls.Add(this.btnRegister);
 			this.Controls.Add(this.btnCancel);
 			this.Controls.Add(this.label7);
@@ -389,10 +517,10 @@ namespace MusicChange
 			this.Name = "user";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "用户信息";
-			this.panelCanvas.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
 			this.panel1.ResumeLayout(false);
 			this.panel1.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.userimage)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -416,11 +544,18 @@ namespace MusicChange
 		private DevComponents.DotNetBar.Controls.TextBoxX txtUsername;
 		private DevComponents.DotNetBar.ButtonX btnRegister;
 		private DevComponents.DotNetBar.ButtonX btnCancel;
-		private System.Windows.Forms.Panel panelCanvas;
 		private System.Windows.Forms.PictureBox pictureBox;
 		private System.Windows.Forms.Button selectButton;
 		private System.Windows.Forms.Button btnConfirm;
 		private System.Windows.Forms.Label lblPath;
 		private System.Windows.Forms.Panel panel1;
+		public	PictureBox userimage;
+		public DevComponents.DotNetBar.LabelX username;
+		private DevComponents.DotNetBar.LabelX labelX1;
+		private DevComponents.DotNetBar.LabelX registertime;
+		private DevComponents.DotNetBar.LabelX days;
+		private DevComponents.DotNetBar.LabelX versions;
+		private DevComponents.DotNetBar.LabelX labelX3;
+		private DevComponents.DotNetBar.LabelX register;
 	}
 }

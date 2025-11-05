@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -38,6 +39,22 @@ namespace MusicChange
 					pictureBox.Image = Image.FromFile(LaserEditing.Pubuser.AvatarPath); // 显示用户头像
 				}
 			}
+			DateTime r = LaserEditing.Pubuser.CreatedAt;
+			userimage.Image = Image.FromFile(LaserEditing.Pubuser.AvatarPath); // 显示用户头像
+			username.Text = "你好："+LaserEditing.Pubuser.Username;
+			CultureInfo chineseCulture = new CultureInfo("zh-CN");  //`中文
+			registertime.Text = r.ToString("yyyy年MM月dd日 HH:mm:ss", chineseCulture);
+            if(LaserEditing.Pubuser.IsActive == true)
+			{
+				register.Text = "应用程序已经注册";
+			}
+			else
+			{
+				register.Text = "应用程序未注册";
+			}
+			//versions.Text = "当前版本：" + LaserEditing.AppVersion;
+			//将当前时间减去注册时间 ，获得天数
+			days.Text = "你已经使用：  " + (DateTime.Now - LaserEditing.Pubuser.CreatedAt).Days + " 天";
 
 			// Panel 用于滚动显示大图
 			//panelCanvas = new Panel
@@ -351,7 +368,6 @@ namespace MusicChange
 			this.Close();
 			this.Dispose();
 		}
-
 		private bool ValidateInput(out string username, out string email, out string password)
 		{
 			username = txtUsername.Text.Trim();
@@ -400,7 +416,6 @@ namespace MusicChange
 		// 初始化UI控件
 		private void InitializeUI()
 		{
-
 			// 创建选择图片按钮
 			//Button selectButton = new Button
 			//{

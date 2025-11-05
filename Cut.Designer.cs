@@ -1632,6 +1632,7 @@
 			this.button43.TabIndex = 33;
 			this.button43.Text = "获取音频";
 			this.button43.UseVisualStyleBackColor = false;
+			this.button43.Click += new System.EventHandler(this.button43_Click);
 			// 
 			// videoView1
 			// 

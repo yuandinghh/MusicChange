@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using LibVLCSharp.Shared;
 
 namespace MusicChange {
 	internal static class Program {
@@ -23,11 +24,10 @@ namespace MusicChange {
 			{
 				if(createNew)
 				{
-                    // C#
-                    //SQLitePCL.Batteries_V2.Init();
-                    Application.EnableVisualStyles();
-                    Application.SetCompatibleTextRenderingDefault( false );
-                    Application.Run( new LaserEditing() );
+					// C#
+					//SQLitePCL.Batteries_V2.Init();
+					Core.Initialize(); // LibVLCSharp 全局初始化
+					Application.Run( new LaserEditing() );
 				}
 				else
 				{

@@ -52,7 +52,7 @@ namespace MusicChange
 			comboBoxSpeed.SelectedIndexChanged += comboBoxSpeed_SelectedIndexChanged; //示例：为按钮和组合框添加说明
 			#endregion
 
-			#region ------- ToolTip 鼠标进入悬停显示 -------
+		#region ------- ToolTip 鼠标进入悬停显示 -------
 			ToolTipEx toolTip1 = new ToolTipEx();   // 创建自定义 ToolTipEx 实例 ，鼠标悬停时显示提示信息
 													//toolTip1.TipFont = new Font("微软雅黑", 20); // 这里设置字体和大小
 			ConfigureToolTip(toolTip1);
@@ -1003,57 +1003,7 @@ ffmpeg -ss 00:00:15.200 -to 00:00:30.500 -accurate_seek -i input.mp4 -c:v copy -
 		{       //扫描所有进程
 
 			Process[] processes;            // 检查管理员权限
-											//if (!IsRunningAsAdmin()) {
-											//	MessageBox.Show( "请以管理员身份运行程序" );
-											//	RestartAsAdmin();
-											//	return;
-											//}
-											//TerminateProcess( "AlibabaProtect" );
-											//TerminateProcess( "AliPaladin" );  // 可能存在的关联进程
-
-			//// 清空 ListBox 或其他显示控件（假设有一个 listBox1 用于显示）
-			//listBox3.Items.Clear();
-			//_mediaPlayer.Visible = false;
-			//try {       // 获取所有正在运行的进程
-			//	processes = Process.GetProcesses();
-			//	listBox3.Items.Clear();
-			//	// 遍历所有进程
-			//	foreach (Process process in processes) {
-			//		try {
-			//			// 获取进程名称和 ID
-			//			string processInfo = $"名称: {process.ProcessName}, ID: {process.Id}";
-			//			if (process.ProcessName != "svchost")
-			//				listBox3.Items.Add( processInfo );
-			//		}
-			//		catch (Exception ex) {
-			//			// 如果无法获取某些进程信息，记录错误
-			//			listBox3.Items.Add( $"无法获取进程信息: {ex.Message}" );
-			//		}
-			//	}
-			//	//listBox3 排序	
-			//	var items = new List<string>();
-			//	foreach (var item in listBox3.Items) {
-			//		items.Add( item.ToString() );
-			//	}
-			//	items.Sort(); // 默认按字符串升序排序
-			//	listBox3.Items.Clear();
-			//	//创建文件，将数据写入文件中
-			//	//string filePath = Path.Combine( Application.StartupPath, "process_list.txt" );
-			//	//try {
-			//	//	File.WriteAllLines( filePath, items );
-			//	//	label9.Text = $"进程信息已写入文件：{filePath}" + "写入成功";
-			//	//}
-			//	//catch (Exception ex) {
-			//	//	label9.Text = $"写入文件失败: {ex.Message}" + "错误";
-			//	//}
-
-			//	foreach (var item in items) {
-			//		listBox3.Items.Add( item );
-			//	}
-			//}
-			//catch (Exception ex) {
-			//	MessageBox.Show( $"扫描进程时出错: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error );
-			//}
+		
 
 			processes = Process.GetProcessesByName("ffmpeg");
 			if(processes.Length > 0)
@@ -1344,6 +1294,11 @@ bilinear=1：使用双线性插值提高旋转后的画质
 			//this.Hide();
 			ChangePictuer change = new ChangePictuer(); //???
 			change.Show();
+
+		}
+
+		private void button43_Click(object sender, EventArgs e)
+		{
 
 		}
 

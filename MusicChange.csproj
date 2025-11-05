@@ -278,6 +278,9 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="TagLibSharp, Version=2.3.0.0, Culture=neutral, PublicKeyToken=db62eba44689b5b0, processorArchitecture=MSIL">
+      <HintPath>packages\TagLibSharp.2.3.0\lib\net462\TagLibSharp.dll</HintPath>
+    </Reference>
     <Reference Include="Vlc.DotNet.Forms, Version=3.1.0.0, Culture=neutral, PublicKeyToken=84529da31f4eb963, processorArchitecture=MSIL">
       <HintPath>packages\Vlc.DotNet.Forms.3.1.0\lib\net45\Vlc.DotNet.Forms.dll</HintPath>
     </Reference>
@@ -288,24 +291,36 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClipRepository.cs" />
     <Compile Include="CryptoHelper.cs" />
     <Compile Include="db.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Helpers\ClipRepository.cs" />
+    <Compile Include="Helpers\FFmpegHelper.cs" />
+    <Compile Include="Helpers\MediaAssetRepository.cs" />
+    <Compile Include="Helpers\PasswordHelper.cs" />
+    <Compile Include="Helpers\TimelineTrackRepository.cs" />
+    <Compile Include="Helpers\TransactionDetailRepository.cs" />
+    <Compile Include="Helpers\TransactionRepository.cs" />
+    <Compile Include="Helpers\WaveformRenderer.cs" />
     <Compile Include="LaserEditing.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="LaserEditing.Designer.cs">
       <DependentUpon>LaserEditing.cs</DependentUpon>
     </Compile>
-    <Compile Include="MediaAssetRepository.cs" />
+    <Compile Include="LivpConverter.cs" />
+    <Compile Include="MediaItemControG.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MediaItemControG.Designer.cs">
+      <DependentUpon>MediaItemControG.cs</DependentUpon>
+    </Compile>
     <Compile Include="MediaItemControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="MediaItemControl.Designer.cs">
       <DependentUpon>MediaItemControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="PasswordHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Projects.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -320,23 +335,27 @@
     <Compile Include="QRCode.Designer.cs">
       <DependentUpon>QRCode.cs</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\ProjectsRepository.cs" />
+    <Compile Include="Helpers\UsersRepository.cs" />
     <Compile Include="temp.cs" />
-    <Compile Include="TimelineTrackRepository.cs" />
+    <Compile Include="TimelineControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ToolTipEx.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="TransactionDetailRepository.cs" />
-    <Compile Include="TransactionRepository.cs" />
     <Compile Include="user.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="user.Designer.cs">
       <DependentUpon>user.cs</DependentUpon>
     </Compile>
-    <Compile Include="UsersRepository.cs" />
     <EmbeddedResource Include="LaserEditing.resx">
       <DependentUpon>LaserEditing.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MediaItemControG.resx">
+      <DependentUpon>MediaItemControG.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MediaItemControl.resx">
       <DependentUpon>MediaItemControl.cs</DependentUpon>
@@ -348,6 +367,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="QRCode.resx">
       <DependentUpon>QRCode.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TimelineControl.resx">
+      <DependentUpon>TimelineControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ToolTipEx.resx">
       <DependentUpon>ToolTipEx.cs</DependentUpon>

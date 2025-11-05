@@ -51,6 +51,8 @@
 			this.textBoxX3 = new DevComponents.DotNetBar.Controls.TextBoxX();
 			this.listBox2 = new System.Windows.Forms.ListBox();
 			this.buttonX6 = new DevComponents.DotNetBar.ButtonX();
+			this.textBox4 = new System.Windows.Forms.TextBox();
+			this.buttonX7 = new DevComponents.DotNetBar.ButtonX();
 			this.SuspendLayout();
 			// 
 			// button1
@@ -153,7 +155,7 @@
 			this.buttonX1.AutoSize = true;
 			this.buttonX1.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
 			this.buttonX1.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.buttonX1.Location = new System.Drawing.Point(718, 72);
+			this.buttonX1.Location = new System.Drawing.Point(708, 69);
 			this.buttonX1.Name = "buttonX1";
 			this.buttonX1.Size = new System.Drawing.Size(140, 30);
 			this.buttonX1.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
@@ -210,12 +212,11 @@
 			// buttonx3
 			// 
 			this.buttonx3.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-			this.buttonx3.AutoSize = true;
 			this.buttonx3.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
 			this.buttonx3.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.buttonx3.Location = new System.Drawing.Point(736, 441);
+			this.buttonx3.Location = new System.Drawing.Point(1075, 61);
 			this.buttonx3.Name = "buttonx3";
-			this.buttonx3.Size = new System.Drawing.Size(206, 38);
+			this.buttonx3.Size = new System.Drawing.Size(116, 38);
 			this.buttonx3.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
 			this.buttonx3.TabIndex = 17;
 			this.buttonx3.Text = "提取音频";
@@ -270,7 +271,7 @@
 			// 
 			this.textBoxX1.Border.Class = "TextBoxBorder";
 			this.textBoxX1.Border.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-			this.textBoxX1.Location = new System.Drawing.Point(736, 410);
+			this.textBoxX1.Location = new System.Drawing.Point(736, 392);
 			this.textBoxX1.Name = "textBoxX1";
 			this.textBoxX1.PreventEnterBeep = true;
 			this.textBoxX1.Size = new System.Drawing.Size(160, 25);
@@ -297,10 +298,11 @@
 			this.listBox2.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.listBox2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
 			this.listBox2.FormattingEnabled = true;
+			this.listBox2.HorizontalScrollbar = true;
 			this.listBox2.ItemHeight = 18;
-			this.listBox2.Location = new System.Drawing.Point(696, 495);
+			this.listBox2.Location = new System.Drawing.Point(695, 443);
 			this.listBox2.Name = "listBox2";
-			this.listBox2.Size = new System.Drawing.Size(425, 130);
+			this.listBox2.Size = new System.Drawing.Size(512, 202);
 			this.listBox2.TabIndex = 23;
 			// 
 			// buttonX6
@@ -317,11 +319,35 @@
 			this.buttonX6.Text = "选择目标目录";
 			this.buttonX6.Click += new System.EventHandler(this.buttonX6_Click);
 			// 
+			// textBox4
+			// 
+			this.textBox4.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.textBox4.Location = new System.Drawing.Point(938, 12);
+			this.textBox4.Name = "textBox4";
+			this.textBox4.Size = new System.Drawing.Size(269, 30);
+			this.textBox4.TabIndex = 26;
+			this.textBox4.Text = "F:\\提取mp4音乐";
+			// 
+			// buttonX7
+			// 
+			this.buttonX7.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+			this.buttonX7.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
+			this.buttonX7.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.buttonX7.Location = new System.Drawing.Point(768, 11);
+			this.buttonX7.Name = "buttonX7";
+			this.buttonX7.Size = new System.Drawing.Size(144, 38);
+			this.buttonX7.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+			this.buttonX7.TabIndex = 27;
+			this.buttonX7.Text = "选择视频目录";
+			this.buttonX7.Click += new System.EventHandler(this.buttonX7_Click);
+			// 
 			// ChangePictuer
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(1219, 658);
+			this.Controls.Add(this.buttonX7);
+			this.Controls.Add(this.textBox4);
 			this.Controls.Add(this.buttonX6);
 			this.Controls.Add(this.listBox2);
 			this.Controls.Add(this.textBoxX3);
@@ -377,5 +403,7 @@
 		private DevComponents.DotNetBar.Controls.TextBoxX textBoxX3;
 		private System.Windows.Forms.ListBox listBox2;
 		private DevComponents.DotNetBar.ButtonX buttonX6;
+		private System.Windows.Forms.TextBox textBox4;
+		private DevComponents.DotNetBar.ButtonX buttonX7;
 	}
 }

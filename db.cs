@@ -1119,7 +1119,7 @@ C# SQLite 事务表创建程序
 		//                  thumbnail_path TEXT,
 		//                  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 		//                  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-		//			note TEXT,
+		//					note TEXT,
 		//                  FOREIGN KEY (user_id) REFERENCES users (id)
 		//              )";
 
@@ -2773,6 +2773,10 @@ C# SQLite 事务表创建程序
 		{
 			get; set;
 		}
+		public int NumberOfMediaFiles
+		{
+			get;  set;
+		}
 		public DateTime CreatedAt
 		{
 			get; set;
@@ -2781,12 +2785,7 @@ C# SQLite 事务表创建程序
 		{
 			get; set;
 		}
-		public string Note
-		{
-			get; set;
-		}
-
-
+	
 	}
 	public class MediaAsset
 	{

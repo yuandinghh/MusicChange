@@ -268,7 +268,7 @@ namespace MusicChange
 				}
 			}
 		}
-		private void buttonx4_Click(object sender, EventArgs e)
+		private void buttonx4_Click(object sender, EventArgs e)//选择文件夹
 		{  //选择文件夹 音频
 			using FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
 			folderBrowserDialog.Description = "请选择一个文件夹";
@@ -293,16 +293,16 @@ namespace MusicChange
 			}
 
 		}
-		private async void buttonx3_Click(object sender, EventArgs e)
+		private async void buttonx3_Click(object sender, EventArgs e)   //转换mp4-》aac
 		{
 			int count = 0;
-			var path = @"G:\刀郎的主页";
+			var path = @"F:\提取mp4音乐";
 			List<string> imageList = new List<string>();
-			if (textBoxX2.Text == "") {
-				path = @"G:\刀郎的主页";  //@"D:\音乐";
+			if (textBox4.Text == "") {
+				path = @"F:\提取mp4音乐";  //@"D:\音乐";
 			}
 			else {
-				path = textBoxX2.Text;
+				path = textBox4.Text;
 			}
 			var timagefiles = Directory.GetFiles( path, "*.*" ).Where( file => file.ToLower().EndsWith( "mp4" ) ).ToList();
 			imageList.AddRange( timagefiles );
@@ -312,6 +312,7 @@ namespace MusicChange
 				return;
 			}
 			else {       // 遍历文件列表并添加到 ListBox    string filestr = timagefiles[0].ToString();
+				
 				foreach (string file in imageList) {
 					listBox2.Items.Add( file );
 					// string fileName = Path.GetFileName(file);
@@ -369,11 +370,11 @@ namespace MusicChange
 							textBox1.Text = "提取音频失败: " + ex.Message;
 						}
 					}
-				}
+				}  // 遍历完成
 			}
 		}
 		///根据路径和文件名，获取文件的所有信息
-		private void TraverseAllFilesAndDirectories(string rootPath, List<string> allFiles)
+		private void TraverseAllFilesAndDirectories(string rootPath, List<string> allFiles)  //获取文件信息
 		{
 			try {
 				var files = Directory.GetFiles( rootPath );// 获取当前目录下的所有文件
@@ -408,6 +409,7 @@ namespace MusicChange
 								$"最后访问时间: {fileInfo.LastAccessTime}\n" +
 								$"最后修改时间: {fileInfo.LastWriteTime}\n" +
 								$"扩展名: {fileInfo.Extension}\n" +
+                                //$"是否隐藏: {fileInfo.}\n" +
 								$"是否只读: {fileInfo.IsReadOnly}";
 
 				// 显示文件信息
@@ -443,7 +445,7 @@ namespace MusicChange
 
 
 		}
-		public static void CopyDirectory(string sourceDir, string targetDir, bool overwrite = true)
+		public static void CopyDirectory(string sourceDir, string targetDir, bool overwrite = true)  //复制目录
 		{
 			var source = new DirectoryInfo( sourceDir );
 			var target = new DirectoryInfo( targetDir );
@@ -468,7 +470,7 @@ namespace MusicChange
 			}
 		}
 
-		private void buttonX6_Click(object sender, EventArgs e)
+		private void buttonX6_Click(object sender, EventArgs e)  //选择目录
 		{
 			//选择目录
             FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
@@ -476,6 +478,15 @@ namespace MusicChange
             {
                 textBoxX2.Text = folderBrowserDialog.SelectedPath;
             }
+		}
+
+		private void buttonX7_Click(object sender, EventArgs e)
+		{
+			FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+			if(folderBrowserDialog.ShowDialog() == DialogResult.OK)
+			{
+				textBox4.Text = folderBrowserDialog.SelectedPath;
+			}
 		}
 	}
 

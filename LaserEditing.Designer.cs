@@ -103,13 +103,23 @@ namespace MusicChange
 			this.muteButton = new DevComponents.DotNetBar.ButtonX();
 			this.audioPositionTrackBar = new System.Windows.Forms.TrackBar();
 			this.listBox1 = new System.Windows.Forms.ListBox();
+			this.panel2 = new System.Windows.Forms.Panel();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.panel3 = new System.Windows.Forms.Panel();
-			this.panel2 = new System.Windows.Forms.Panel();
 			this.textBoxX1 = new DevComponents.DotNetBar.Controls.TextBoxX();
+			this.btnAddFiles = new System.Windows.Forms.Button();
 			this.temp2 = new System.Windows.Forms.TextBox();
 			this.temp1 = new System.Windows.Forms.TextBox();
 			this.temp = new System.Windows.Forms.TextBox();
+			this.panel10 = new System.Windows.Forms.Panel();
+			this.panel4 = new System.Windows.Forms.Panel();
+			this.LeftbelowP = new System.Windows.Forms.Panel();
+			this.panel9 = new System.Windows.Forms.Panel();
+			this.panel7 = new System.Windows.Forms.Panel();
+			this.panel8 = new System.Windows.Forms.Panel();
+			this.panel6 = new System.Windows.Forms.Panel();
+			this.panel5 = new System.Windows.Forms.Panel();
+			this.LeftbelowP1 = new System.Windows.Forms.Panel();
 			this.progressTimer = new System.Windows.Forms.Timer(this.components);
 			this.audioTimer = new System.Windows.Forms.Timer(this.components);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -121,6 +131,7 @@ namespace MusicChange
 			this.topleft.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.VerticalHorizontalDivision)).BeginInit();
 			this.VerticalHorizontalDivision.Panel1.SuspendLayout();
+			this.VerticalHorizontalDivision.Panel2.SuspendLayout();
 			this.VerticalHorizontalDivision.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.sC3)).BeginInit();
 			this.sC3.Panel1.SuspendLayout();
@@ -143,7 +154,8 @@ namespace MusicChange
 			this.volumeControlPanel.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.volumeTrackBar)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.audioPositionTrackBar)).BeginInit();
-			this.panel1.SuspendLayout();
+			this.LeftbelowP.SuspendLayout();
+			this.panel7.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// splitContainer1
@@ -403,6 +415,9 @@ namespace MusicChange
 			// VerticalHorizontalDivision.Panel2
 			// 
 			this.VerticalHorizontalDivision.Panel2.BackColor = System.Drawing.Color.Black;
+			this.VerticalHorizontalDivision.Panel2.Controls.Add(this.panel10);
+			this.VerticalHorizontalDivision.Panel2.Controls.Add(this.panel4);
+			this.VerticalHorizontalDivision.Panel2.Controls.Add(this.LeftbelowP);
 			this.VerticalHorizontalDivision.Panel2.ForeColor = System.Drawing.Color.Black;
 			this.VerticalHorizontalDivision.Panel2.Margin = new System.Windows.Forms.Padding(10);
 			this.VerticalHorizontalDivision.Panel2.Padding = new System.Windows.Forms.Padding(2);
@@ -845,10 +860,13 @@ namespace MusicChange
 			// 
 			// sC4.Panel2
 			// 
-			this.sC4.Panel2.BackColor = System.Drawing.Color.DimGray;
+			this.sC4.Panel2.BackColor = System.Drawing.Color.Black;
+			this.sC4.Panel2.Controls.Add(this.panel3);
 			this.sC4.Panel2.Controls.Add(this.listBox1);
+			this.sC4.Panel2.Controls.Add(this.panel2);
 			this.sC4.Panel2.Controls.Add(this.panel1);
 			this.sC4.Panel2.Controls.Add(this.textBoxX1);
+			this.sC4.Panel2.Controls.Add(this.btnAddFiles);
 			this.sC4.Panel2.Controls.Add(this.temp2);
 			this.sC4.Panel2.Controls.Add(this.temp1);
 			this.sC4.Panel2.Controls.Add(this.temp);
@@ -864,14 +882,13 @@ namespace MusicChange
 			// 
 			this.videoView1.BackColor = System.Drawing.Color.Black;
 			this.videoView1.BackgroundImage = global::MusicChange.Properties.Resources.fm;
-			this.videoView1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
 			this.videoView1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.videoView1.Location = new System.Drawing.Point(0, 30);
 			this.videoView1.MediaPlayer = null;
 			this.videoView1.Name = "videoView1";
 			this.videoView1.Size = new System.Drawing.Size(715, 602);
 			this.videoView1.TabIndex = 13;
-			this.videoView1.Text = "videoView1";
+			this.videoView1.Text = "videoView";
 			// 
 			// lblAudioTime
 			// 
@@ -1262,34 +1279,32 @@ namespace MusicChange
 			this.listBox1.ItemHeight = 15;
 			this.listBox1.Location = new System.Drawing.Point(17, 390);
 			this.listBox1.Name = "listBox1";
-			this.listBox1.Size = new System.Drawing.Size(383, 214);
+			this.listBox1.Size = new System.Drawing.Size(383, 79);
 			this.listBox1.TabIndex = 5;
-			// 
-			// panel1
-			// 
-			this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-			this.panel1.Controls.Add(this.panel3);
-			this.panel1.Controls.Add(this.panel2);
-			this.panel1.Location = new System.Drawing.Point(34, 236);
-			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(233, 122);
-			this.panel1.TabIndex = 2;
-			// 
-			// panel3
-			// 
-			this.panel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-			this.panel3.Location = new System.Drawing.Point(158, 6);
-			this.panel3.Name = "panel3";
-			this.panel3.Size = new System.Drawing.Size(233, 122);
-			this.panel3.TabIndex = 2;
 			// 
 			// panel2
 			// 
 			this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-			this.panel2.Location = new System.Drawing.Point(161, 3);
+			this.panel2.Location = new System.Drawing.Point(251, 225);
 			this.panel2.Name = "panel2";
-			this.panel2.Size = new System.Drawing.Size(233, 122);
+			this.panel2.Size = new System.Drawing.Size(113, 58);
 			this.panel2.TabIndex = 1;
+			// 
+			// panel1
+			// 
+			this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+			this.panel1.Location = new System.Drawing.Point(34, 236);
+			this.panel1.Name = "panel1";
+			this.panel1.Size = new System.Drawing.Size(87, 58);
+			this.panel1.TabIndex = 2;
+			// 
+			// panel3
+			// 
+			this.panel3.BackColor = System.Drawing.Color.Gray;
+			this.panel3.Location = new System.Drawing.Point(155, 245);
+			this.panel3.Name = "panel3";
+			this.panel3.Size = new System.Drawing.Size(74, 38);
+			this.panel3.TabIndex = 2;
 			// 
 			// textBoxX1
 			// 
@@ -1303,6 +1318,15 @@ namespace MusicChange
 			this.textBoxX1.PreventEnterBeep = true;
 			this.textBoxX1.Size = new System.Drawing.Size(261, 25);
 			this.textBoxX1.TabIndex = 4;
+			// 
+			// btnAddFiles
+			// 
+			this.btnAddFiles.Location = new System.Drawing.Point(46, 520);
+			this.btnAddFiles.Name = "btnAddFiles";
+			this.btnAddFiles.Size = new System.Drawing.Size(75, 23);
+			this.btnAddFiles.TabIndex = 18;
+			this.btnAddFiles.Text = "button2";
+			this.btnAddFiles.UseVisualStyleBackColor = true;
 			// 
 			// temp2
 			// 
@@ -1325,6 +1349,95 @@ namespace MusicChange
 			this.temp.Size = new System.Drawing.Size(261, 25);
 			this.temp.TabIndex = 0;
 			this.temp.Text = "F:\\英语学习\\MTEY0102.MP4";
+			// 
+			// panel10
+			// 
+			this.panel10.Location = new System.Drawing.Point(243, 100);
+			this.panel10.Name = "panel10";
+			this.panel10.Size = new System.Drawing.Size(1284, 90);
+			this.panel10.TabIndex = 2;
+			// 
+			// panel4
+			// 
+			this.panel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+			this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
+			this.panel4.Location = new System.Drawing.Point(2, 2);
+			this.panel4.Margin = new System.Windows.Forms.Padding(8);
+			this.panel4.Name = "panel4";
+			this.panel4.Size = new System.Drawing.Size(2093, 43);
+			this.panel4.TabIndex = 1;
+			// 
+			// LeftbelowP
+			// 
+			this.LeftbelowP.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+			this.LeftbelowP.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+			this.LeftbelowP.Controls.Add(this.panel9);
+			this.LeftbelowP.Controls.Add(this.panel7);
+			this.LeftbelowP.Controls.Add(this.panel6);
+			this.LeftbelowP.Controls.Add(this.panel5);
+			this.LeftbelowP.Controls.Add(this.LeftbelowP1);
+			this.LeftbelowP.Location = new System.Drawing.Point(0, 48);
+			this.LeftbelowP.Margin = new System.Windows.Forms.Padding(10);
+			this.LeftbelowP.Name = "LeftbelowP";
+			this.LeftbelowP.Padding = new System.Windows.Forms.Padding(3);
+			this.LeftbelowP.Size = new System.Drawing.Size(160, 295);
+			this.LeftbelowP.TabIndex = 0;
+			// 
+			// panel9
+			// 
+			this.panel9.BackColor = System.Drawing.Color.LightGray;
+			this.panel9.Dock = System.Windows.Forms.DockStyle.Top;
+			this.panel9.Location = new System.Drawing.Point(3, 237);
+			this.panel9.Name = "panel9";
+			this.panel9.Size = new System.Drawing.Size(154, 60);
+			this.panel9.TabIndex = 4;
+			// 
+			// panel7
+			// 
+			this.panel7.BackColor = System.Drawing.Color.Black;
+			this.panel7.Controls.Add(this.panel8);
+			this.panel7.Dock = System.Windows.Forms.DockStyle.Top;
+			this.panel7.Location = new System.Drawing.Point(3, 177);
+			this.panel7.Name = "panel7";
+			this.panel7.Size = new System.Drawing.Size(154, 60);
+			this.panel7.TabIndex = 3;
+			// 
+			// panel8
+			// 
+			this.panel8.BackColor = System.Drawing.Color.DarkGray;
+			this.panel8.Dock = System.Windows.Forms.DockStyle.Top;
+			this.panel8.Location = new System.Drawing.Point(0, 0);
+			this.panel8.Name = "panel8";
+			this.panel8.Size = new System.Drawing.Size(154, 58);
+			this.panel8.TabIndex = 4;
+			// 
+			// panel6
+			// 
+			this.panel6.BackColor = System.Drawing.Color.Gray;
+			this.panel6.Dock = System.Windows.Forms.DockStyle.Top;
+			this.panel6.Location = new System.Drawing.Point(3, 119);
+			this.panel6.Name = "panel6";
+			this.panel6.Size = new System.Drawing.Size(154, 58);
+			this.panel6.TabIndex = 2;
+			// 
+			// panel5
+			// 
+			this.panel5.BackColor = System.Drawing.Color.DimGray;
+			this.panel5.Dock = System.Windows.Forms.DockStyle.Top;
+			this.panel5.Location = new System.Drawing.Point(3, 61);
+			this.panel5.Name = "panel5";
+			this.panel5.Size = new System.Drawing.Size(154, 58);
+			this.panel5.TabIndex = 1;
+			// 
+			// LeftbelowP1
+			// 
+			this.LeftbelowP1.BackColor = System.Drawing.Color.Black;
+			this.LeftbelowP1.Dock = System.Windows.Forms.DockStyle.Top;
+			this.LeftbelowP1.Location = new System.Drawing.Point(3, 3);
+			this.LeftbelowP1.Name = "LeftbelowP1";
+			this.LeftbelowP1.Size = new System.Drawing.Size(154, 58);
+			this.LeftbelowP1.TabIndex = 0;
 			// 
 			// progressTimer
 			// 
@@ -1368,6 +1481,7 @@ namespace MusicChange
 			this.topleft.ResumeLayout(false);
 			this.topleft.PerformLayout();
 			this.VerticalHorizontalDivision.Panel1.ResumeLayout(false);
+			this.VerticalHorizontalDivision.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.VerticalHorizontalDivision)).EndInit();
 			this.VerticalHorizontalDivision.ResumeLayout(false);
 			this.sC3.Panel1.ResumeLayout(false);
@@ -1395,7 +1509,8 @@ namespace MusicChange
 			this.volumeControlPanel.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.volumeTrackBar)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.audioPositionTrackBar)).EndInit();
-			this.panel1.ResumeLayout(false);
+			this.LeftbelowP.ResumeLayout(false);
+			this.panel7.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -1471,8 +1586,17 @@ namespace MusicChange
 		private System.Windows.Forms.TrackBar audioPositionTrackBar;
 		private System.Windows.Forms.Label lcontrolnum;
 		private System.Windows.Forms.PictureBox Userimage;
+		private System.Windows.Forms.Panel LeftbelowP;
+		private System.Windows.Forms.Panel LeftbelowP1;
+		private System.Windows.Forms.Panel panel4;
+		private System.Windows.Forms.Panel panel9;
+		private System.Windows.Forms.Panel panel7;
+		private System.Windows.Forms.Panel panel8;
+		private System.Windows.Forms.Panel panel6;
+		private System.Windows.Forms.Panel panel5;
+		private System.Windows.Forms.Button btnAddFiles;
+		private System.Windows.Forms.Panel panel10;
 		private LibVLCSharp.WinForms.VideoView videoView1;
-		//private LibVLCSharp.WinForms.VideoView videoView1;
 	}
 }
 #endregion 
