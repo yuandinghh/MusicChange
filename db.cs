@@ -1519,7 +1519,6 @@ C# SQLite 事务表创建程序
 					ThumbnailPath = @"D:\Documents\ResourceFolder\D:\Documents\ResourceFolder.jpg",
 					CreatedAt = DateTime.Now,
 					UpdatedAt = DateTime.Now,
-					Note = "这是一个测试项目"
 				};
 
 				int projectId = projectRepo.Create(project);
@@ -1682,7 +1681,6 @@ C# SQLite 事务表创建程序
 			using var command = new SQLiteCommand(sql, connection);
 			command.ExecuteNonQuery();
 		}
-
 		private void CreateMediaAssetsTable(SQLiteConnection connection)
 		{
 			string sql = @"
@@ -1705,7 +1703,6 @@ C# SQLite 事务表创建程序
 			using var command = new SQLiteCommand(sql, connection);
 			command.ExecuteNonQuery();
 		}
-
 		private void CreateTimelineTracksTable(SQLiteConnection connection)
 		{
 			string sql = @"
@@ -1725,7 +1722,6 @@ C# SQLite 事务表创建程序
 			using var command = new SQLiteCommand(sql, connection);
 			command.ExecuteNonQuery();
 		}
-
 		private void CreateClipsTable(SQLiteConnection connection)
 		{
 			string sql = @"
@@ -1774,7 +1770,6 @@ C# SQLite 事务表创建程序
 			using var command = new SQLiteCommand(sql, connection);
 			command.ExecuteNonQuery();
 		}
-
 		private void CreateTransactionDetailsTable(SQLiteConnection connection)
 		{
 			string sql = @"
@@ -1795,7 +1790,6 @@ C# SQLite 事务表创建程序
 				command.ExecuteNonQuery();
 			}
 		}
-
 		private void CreateEffectsTable(SQLiteConnection connection)
 		{
 			string sql = @"
@@ -1813,7 +1807,6 @@ C# SQLite 事务表创建程序
 				command.ExecuteNonQuery();
 			}
 		}
-
 		private void CreateClipEffectsTable(SQLiteConnection connection)
 		{
 			string sql = @"
@@ -1836,7 +1829,6 @@ C# SQLite 事务表创建程序
 				command.ExecuteNonQuery();
 			}
 		}
-
 		private void CreateUserProfilesTable(SQLiteConnection connection)
 		{
 			string sql = @"
@@ -1858,7 +1850,6 @@ C# SQLite 事务表创建程序
 				command.ExecuteNonQuery();
 			}
 		}
-
 		private void CreateUserSessionsTable(SQLiteConnection connection)
 		{
 			string sql = @"
@@ -2775,7 +2766,7 @@ C# SQLite 事务表创建程序
 		}
 		public int NumberOfMediaFiles
 		{
-			get;  set;
+			get; set;
 		}
 		public DateTime CreatedAt
 		{
@@ -2785,7 +2776,7 @@ C# SQLite 事务表创建程序
 		{
 			get; set;
 		}
-	
+
 	}
 	public class MediaAsset
 	{
@@ -3225,7 +3216,6 @@ C# SQLite 事务表创建程序
 			get; set;
 		}
 	}
-
 	public class Users
 	{
 		public int Id
@@ -3489,6 +3479,75 @@ C# SQLite 事务表创建程序
 			get; set;
 		}
 	}
+	public class Main
+	{
+		public int Id
+		{
+			get; set;
+		}
+		public int CurrenUserId
+		{
+			get; set;
+		}
+		public int CurrenProjectId   //
+		{
+			get; set;
+		}
+		public DateTime LoginTime { get; set; } = DateTime.Now; // 登录时间
+		public DateTime Workofftime { get; set; } = DateTime.Now;  // 登出时间
+		public string version    // 版本
+		{
+			get; set;
+		}
+		public string first_version    // 第一版本 交付时间
+		{
+			get; set;
+		}
+		public string Server_website   // 服务器网址  默认为空 没建立服务器
+		{
+			get; set;
+		}
+		public string complaint    //投诉  	
+		{
+			get; set;
+		}
+		public int complaint_Feedback    //投诉  反馈
+		{
+			get; set;
+		}
+		public string complaint_country    //投诉  反馈
+		{
+			get; set;
+		}
+		public int complaint_id    //投诉  反馈
+		{
+			get; set;
+		}
+		public bool IsLocked    // 是否锁定
+		{
+			get; set;
+		}
+		public bool current_run    //当前运行user  和 project
+		{
+			get; set;
+		}
+		public string The_next_revision_schedule    //	下一改版时间
+		{
+			get; set;
+		}
+		public DateTime Version_end_time { get; set; } = DateTime.Now;
+		public string registered_user   //	注册用户 如果未注册  null，1： 按月付费，2 按年付费	
+		{
+			get; set;
+		}
+		public string Description
+		{
+			get; set;
+		}    // 描述
+
+	}
+
+
 	#endregion
 
 

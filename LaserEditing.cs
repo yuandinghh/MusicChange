@@ -91,6 +91,12 @@ namespace MusicChange
 		// 新增字段（类成员区）
 		private ProjectsRepository _projectsRepo;
 		private Project _currentProject;
+		public static Project project = new Project();
+		// 类成员区：新增 MainRepository 与当前会话记录
+
+		private MainRepository _mainRepo;
+		private Main _currentMainEntry;
+		public static Main main = new Main();
 
 		public LaserEditing()
 		{
@@ -157,7 +163,16 @@ namespace MusicChange
 			this.DragDrop += MainForm_DragDrop;
 			//InitTimeline();
 			InitializeProjectsRepository(); // 初始化项目仓库
+			InitializeMainRepository();
 
+			// 若用户已加载，则启动会话（示例使用 Pubuser.Id）
+			if(Pubuser != null && Pubuser.Id > 0)
+			{
+				// 如果尚未创建当前项目，可以创建或传入现有项目 id
+				if(_currentProject == null)
+					CreateNewProjectIfNeeded();
+				StartSession(Pubuser.Id, _currentProject?.Id ?? 0);
+			}
 		}
 
 
@@ -4013,7 +4028,6 @@ namespace MusicChange
 				timeline.AddMediaFile(f);
 		}
 		#endregion
-
 		#region ------------  项目 Projiect 数据库操作   ------------
 
 		// 在 LaserEditing_Load 或初始化处调用：
@@ -4077,13 +4091,145 @@ namespace MusicChange
 		// 在方法开始处（导入对话前或紧接导入之前）确保 repo 与 project
 		// 调用 CreateNewProjectIfNeeded() 根据需求（这里示例在每次导入若无 current project 则创建）
 		#endregion
+		#region ------------使用主数据表 Main     ------------
+		// 在窗体初始化或 Load 时调用：初始化 MainRepository
+		private void InitializeMainRepository()
+		{
+			if(_mainRepo == null)
+			{
+				_mainRepo = new MainRepository(db.dbPath);
+			}
+		}
+
+		// 启动会话：在用户登录后或程序启动并确认用户时调用
+		private void StartSession(int userId, int projectId = 0, string version = null)
+		{
+			InitializeMainRepository();
+
+			// 如果已有正在运行的会话，先结束它（防止重复）
+			var running = _mainRepo.GetCurrentRunning();
+			if(running != null)
+			{
+				running.current_run = false;
+				running.Workofftime = DateTime.Now;
+				_mainRepo.Update(running);
+			}
+
+			var m = new Main
+			{
+				CurrenUserId = userId,
+				CurrenProjectId = projectId,
+				LoginTime = DateTime.Now,
+				Workofftime = DateTime.Now,
+				version = version ?? Properties.Application.ProductVersion,
+				IsLocked = false,
+				current_run = true,
+				The_next_revision_schedule = null,
+				Version_end_time = DateTime.Now,
+				registered_user = null,
+				Description = $"Session started from LaserEditing {Environment.MachineName}"
+			};
+
+			int newId = _mainRepo.Create(m);
+			m.Id = newId;
+			_currentMainEntry = m;
+		}
+		// 结束会话：在用户登出或窗体关闭前调用
+		private void EndSession()
+		{
+			try
+			{
+				if(_mainRepo == null)
+					InitializeMainRepository();
+
+				if(_currentMainEntry == null)
+				{
+					// 尝试从数据库获取当前运行的记录
+					_currentMainEntry = _mainRepo.GetCurrentRunning();
+				}
+
+				if(_currentMainEntry != null)
+				{
+					_currentMainEntry.Workofftime = DateTime.Now;
+					_currentMainEntry.current_run = false;
+					// 可选：记录退出时的项目 / 用户信息
+					_mainRepo.Update(_currentMainEntry);
+				}
+			}
+			catch(Exception ex)
+			{
+				Debug.WriteLine($"EndSession 异常: {ex.Message}");
+			}
+		}
+		// 在创建新项目时，若希望把当前会话的 CurrenProjectId 同步到 main 表，更新会话
+		private void CreateNewProjectIfNeeded_aa(string name = null)
+		{
+			InitializeProjectsRepository();
+
+			if(_currentProject != null)
+				return;
+
+			var proj = new Project
+			{
+				UserId = Pubuser?.Id ?? 1,
+				Name = string.IsNullOrWhiteSpace(name) ? $"Project {DateTime.Now:yyyyMMdd_HHmm}" : name,
+				Description = "",
+				Width = 1920,
+				Height = 1080,
+				Framerate = 30.0,
+				Duration = 0.0,
+				NumberOfMediaFiles = 0,
+				CreatedAt = DateTime.Now,
+				UpdatedAt = DateTime.Now
+			};
+
+			int id = _projectsRepo.Create(proj);
+			proj.Id = id;
+			_currentProject = proj;
+
+			// 同步当前会话的项目 id
+			if(_currentMainEntry != null)
+			{
+				_currentMainEntry.CurrenProjectId = proj.Id;
+				_mainRepo.Update(_currentMainEntry);
+			}
+		}
+/*		GitHub Copilot
+
+下面给出把 `MainRepository` 集成到 `LaserEditing` 窗体、并在用户登录 / 启动会话与退出 / 关闭窗体时记录登录（login）和登出（workoff）信息的最小可用补丁。说明要点后给出可直接粘贴到 `LaserEditing.cs` 的代码片段（放在类成员区与合适位置的方法）。
+
+要点
+- 在窗体初始化时创建 `MainRepository` 实例。
+- 登录时调用 `StartSession(userId, projectId)`：创建一条 `main` 记录并将 `current_run=1` 标记该会话为正在运行。
+- 退出或窗体关闭时调用 `EndSession()`：更新当前记录的 `workofftime` 并把 `current_run=0`。
+- 提供 `GetCurrentSession()` 以在启动时恢复上次未正确结束的会话（可选）。
+- 在创建/切换项目时更新 `CurrenProjectId` 并同步到 `main` 表（若 session 存在）。
+
+把下面代码片段按注释位置合并到 `LaserEditing.cs`（类成员区、Load、CreateNewProjectIfNeeded、OnFormClosing 等处）。
+
+```csharp
+// 类成员区：新增 MainRepository 与当前会话记录
+private MainRepository _mainRepo;
+private Main _currentMainEntry;
+```
+```csharp
+
+
+说明与注意事项（短）
+- 上面方法依赖先前你已有的 `MainRepository` / `Main` 定义（请确认命名与字段一致）。
+- 在真实登录流程中，应在用户成功验证后调用 `StartSession`；登出或程序崩溃恢复时可使用 `GetCurrentRunning()` 找到未结束的会话再更新。
+- `MainRepository.GetCurrentRunning()` 在之前的实现里按 `current_run = 1` 查找最近一条，会话恢复/检测基于此。
+- 若你希望记录更多（IP、机器、版本、退出原因），在 `Main` 模型与表中加入字段并在 `StartSession` / `EndSession` 中填充。
+- 保证对数据库的写操作尽量在非 UI 密集路径使用 try/catch 并记录异常，避免阻塞 UI。
+
+需要我把上述修改直接生成完整文件补丁（替换 LaserEditing.cs 的相应区域）并说明每处改动吗？
+*/
+		#endregion
+		#region ------------     ------------
+		#endregion
+
 
 	}
-
-
-
-
-
 
 
 	#region ------------ calss  AudioPlayer  VideoInfo 属性类 获取  ------------
@@ -4319,8 +4465,7 @@ namespace MusicChange
 
 	#endregion
 
-	#region ------------     ------------
-	#endregion
+
 }
 
 

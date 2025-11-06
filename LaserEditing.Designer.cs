@@ -102,10 +102,10 @@ namespace MusicChange
 			this.stopButton = new System.Windows.Forms.Button();
 			this.muteButton = new DevComponents.DotNetBar.ButtonX();
 			this.audioPositionTrackBar = new System.Windows.Forms.TrackBar();
+			this.panel3 = new System.Windows.Forms.Panel();
 			this.listBox1 = new System.Windows.Forms.ListBox();
 			this.panel2 = new System.Windows.Forms.Panel();
 			this.panel1 = new System.Windows.Forms.Panel();
-			this.panel3 = new System.Windows.Forms.Panel();
 			this.textBoxX1 = new DevComponents.DotNetBar.Controls.TextBoxX();
 			this.btnAddFiles = new System.Windows.Forms.Button();
 			this.temp2 = new System.Windows.Forms.TextBox();
@@ -1273,6 +1273,14 @@ namespace MusicChange
 			this.audioPositionTrackBar.TabIndex = 12;
 			this.audioPositionTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
 			// 
+			// panel3
+			// 
+			this.panel3.BackColor = System.Drawing.Color.Gray;
+			this.panel3.Location = new System.Drawing.Point(155, 245);
+			this.panel3.Name = "panel3";
+			this.panel3.Size = new System.Drawing.Size(74, 38);
+			this.panel3.TabIndex = 2;
+			// 
 			// listBox1
 			// 
 			this.listBox1.FormattingEnabled = true;
@@ -1297,14 +1305,6 @@ namespace MusicChange
 			this.panel1.Name = "panel1";
 			this.panel1.Size = new System.Drawing.Size(87, 58);
 			this.panel1.TabIndex = 2;
-			// 
-			// panel3
-			// 
-			this.panel3.BackColor = System.Drawing.Color.Gray;
-			this.panel3.Location = new System.Drawing.Point(155, 245);
-			this.panel3.Name = "panel3";
-			this.panel3.Size = new System.Drawing.Size(74, 38);
-			this.panel3.TabIndex = 2;
 			// 
 			// textBoxX1
 			// 
