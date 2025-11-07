@@ -11,7 +11,6 @@ namespace MusicChange
 {
 	public partial class user:Form
 	{
-		private UsersRepository _usersRepo;
 		private bool usernamenull = false;
 		private int newId = 0;
 		public static string logopic = null;
@@ -30,7 +29,6 @@ namespace MusicChange
 		{
 			// 使用 db.dbPath（确保已初始化）
 			InitializeComponent();
-			InitializeUI();
 			logopic = null;
 			if(LaserEditing.Pubuser != null)
 			{
@@ -38,24 +36,48 @@ namespace MusicChange
 				{
 					pictureBox.Image = Image.FromFile(LaserEditing.Pubuser.AvatarPath); // 显示用户头像
 				}
-			}
-			DateTime r = LaserEditing.Pubuser.CreatedAt;
-			userimage.Image = Image.FromFile(LaserEditing.Pubuser.AvatarPath); // 显示用户头像
-			username.Text = "你好："+LaserEditing.Pubuser.Username;
-			CultureInfo chineseCulture = new CultureInfo("zh-CN");  //`中文
-			registertime.Text = r.ToString("yyyy年MM月dd日 HH:mm:ss", chineseCulture);
-            if(LaserEditing.Pubuser.IsActive == true)
-			{
-				register.Text = "应用程序已经注册";
+				DateTime r = LaserEditing.Pubuser.CreatedAt;
+				userimage.Image = Image.FromFile(LaserEditing.Pubuser.AvatarPath); // 显示用户头像
+				username.Text = "你好：" + LaserEditing.Pubuser.Username;
+				CultureInfo chineseCulture = new CultureInfo("zh-CN");  //`中文
+				registertime.Text = r.ToString("yyyy年MM月dd日 HH:mm:ss", chineseCulture);  // 注册时间
+				if(LaserEditing.Pubuser.IsActive == true)
+				{
+					register.Text = "应用程序已经注册";
+				}
+				else
+				{
+					register.Text = "应用程序未注册";
+				}
+				//versions.Text = "当前版本：" + LaserEditing.AppVersion;
+				//将当前时间减去注册时间 ，获得天数
+				days.Text = "你已经使用：  " + (DateTime.Now - LaserEditing.Pubuser.CreatedAt).Days + " 天";
+
 			}
 			else
 			{
-				register.Text = "应用程序未注册";
-			}
-			//versions.Text = "当前版本：" + LaserEditing.AppVersion;
-			//将当前时间减去注册时间 ，获得天数
-			days.Text = "你已经使用：  " + (DateTime.Now - LaserEditing.Pubuser.CreatedAt).Days + " 天";
+				if(!db.IsTableEmpty("Users"))
+				{
 
+
+					LaserEditing.usersRepo = new UsersRepository(db.dbPath);    //读第一条LaserEditing.db数据库的User 存入Pubuser 类中
+					LaserEditing.Pubuser = LaserEditing.usersRepo.GetById(15);  //???????????
+					if(LaserEditing.Pubuser != null)
+					{
+
+						if(LaserEditing.Pubuser.AvatarPath != null)
+						{
+							userimage.Image = Image.FromFile(LaserEditing.Pubuser.AvatarPath); // 显示用户头像
+						}
+					}
+				}
+				else
+				{
+					SetStatus.Text = "你好：" + "请先注册";
+					username.Text = "";
+					labelX1.Text = "";
+				}
+			}
 			// Panel 用于滚动显示大图
 			//panelCanvas = new Panel
 			//{
@@ -305,8 +327,8 @@ namespace MusicChange
 						luser.CreatedAt = DateTime.Now;
 						luser.UpdatedAt = DateTime.Now;
 
-						bool same = _usersRepo.ExistsByUsername(username);
-						int newIdw = _usersRepo.Create(luser);
+						bool same = LaserEditing.usersRepo.ExistsByUsername(username);
+						int newIdw = LaserEditing.usersRepo.Create(luser);
 
 						if(newIdw > 0)
 						{
@@ -323,10 +345,19 @@ namespace MusicChange
 					}
 					return;
 				}
-				if(_usersRepo.ExistsByUsername(username))   //检查用户名是否存在
+				//获取当前 users 记录数  				int count = _usersRepo.GetAll().Count;
+				if(!db.IsTableEmpty("Users"))
 				{
-					SetStatus.Text = $"用户名已存在，请更换";
-					return;
+					if(LaserEditing.usersRepo.ExistsByUsername(username))   //检查用户名是否存在
+					{
+						SetStatus.Text = $"用户名已存在，请更换";
+						return;
+					}
+				}
+				else
+				{
+					//db.ClearTableAndResetId("Users");
+					db.ClearUserTable();
 				}
 				string passwordHash = PasswordHelper.HashPassword(password);  // 生成密码哈希（格式： iterations.salt.hash）
 				SetStatus.Text = "未注册";
@@ -343,10 +374,12 @@ namespace MusicChange
 				luser.IsLocked = false;
 				luser.IsDeleted = false;
 				luser.IsModified = false;
-				newId = _usersRepo.Create(luser);
+				newId = LaserEditing.usersRepo.Create(luser);  // 创建用户
 				if(newId > 0)
 				{
 					SetStatus.Text = "注册成功";
+					//写 main 数据库
+
 					MessageBox.Show("用户注册成功。", "注册完成", MessageBoxButtons.OK, MessageBoxIcon.Information);
 					this.DialogResult = DialogResult.OK;
 					this.Close();
@@ -411,32 +444,6 @@ namespace MusicChange
 				return false;
 			}
 			return true;
-		}
-
-		// 初始化UI控件
-		private void InitializeUI()
-		{
-			// 创建选择图片按钮
-			//Button selectButton = new Button
-			//{
-			//	Text = "选择图片",
-			//	Location = new Point(20, 20),
-			//	Width = 100,
-			//	Height = 30
-			//};
-			//selectButton.Click += SelectButton_Click;
-
-			// 创建显示图片的PictureBox
-			//PictureBox pictureBox = new PictureBox
-			//{
-			//	Location = new Point(20, 70),
-			//	Width = 540,
-			//	Height = 400,
-			//	BorderStyle = BorderStyle.FixedSingle,
-			//	SizeMode = PictureBoxSizeMode.Zoom
-			//};
-			//this.Controls.Add(selectButton);
-			//this.Controls.Add(pictureBox);
 		}
 
 		// 选择图片按钮点击事件
@@ -522,13 +529,11 @@ namespace MusicChange
 
 			return resizedBitmap;
 		}
-
-		// 获取保存路径，避免覆盖原文件
-		private string GetSavePath(string originalFileName)
+		private string GetSavePath(string originalFileName)  // 获取保存路径，避免覆盖原文件
 		{
 			string directory = Application.StartupPath; // 当前应用程序所在文件夹
-			string fileName = Path.GetFileNameWithoutExtension(originalFileName);
-			string extension = Path.GetExtension(originalFileName);
+			string fileName = Path.GetFileNameWithoutExtension(originalFileName);  // 文件名
+			string extension = Path.GetExtension(originalFileName);  // 扩展名
 
 			// 生成新文件名，添加"_resized"后缀
 			string newFileName = $"{fileName}_resized{extension}";

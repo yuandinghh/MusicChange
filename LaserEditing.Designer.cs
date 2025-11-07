@@ -1362,7 +1362,7 @@ namespace MusicChange
 			this.panel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
 			this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
 			this.panel4.Location = new System.Drawing.Point(2, 2);
-			this.panel4.Margin = new System.Windows.Forms.Padding(8);
+			this.panel4.Margin = new System.Windows.Forms.Padding(10);
 			this.panel4.Name = "panel4";
 			this.panel4.Size = new System.Drawing.Size(2093, 43);
 			this.panel4.TabIndex = 1;

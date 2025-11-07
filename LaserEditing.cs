@@ -58,10 +58,9 @@ namespace MusicChange
 		private const float ZOOM_INCREMENT = 0.05f;
 		private const float MIN_ZOOM = 0.2f;
 		private const float MAX_ZOOM = 3.0f;
-		public static Users Pubuser = new Users();
+	
 		public static string documentsPath; // 文档目录名称
 		public static string subDirectory;  //文档下 子目录名称工作目录 ResourceFolder
-		private UsersRepository usersRepo;
 		private readonly ToolTipEx toolTipEx = new();  //private bool darkMode = false; private VlcControl vlcControl = new VlcControl();
 		private ContextMenuStrip speedContextMenu;      // 在类中添加上下文菜单
 		private const int MIN_WIDTH = 600;
@@ -83,29 +82,31 @@ namespace MusicChange
 		private AudioPlayer _audioPlayer; // NAudio 实例	bool isShowOnce = false; // 是否已显示一次cut 			 //private LibVLCSharp.WinForms.VideoView videoView1;
 		private ContextMenuStrip flowLayoutPanelContextMenu;
 		private int UserControlNumber = 0;
-
 		//把代码改成直接集成到你当前项目命名空间 MusicChange（并把 Avatar / 其它控件整合），或要我把 wave 渲染改为更精确的峰值图与时间刻度、或者加入视频内嵌预览（LibVLC VideoView）示例，我可以继续完善。
-		private TimelineControl timeline;
-		//private Button btnAddFiles;
-		private LibVLC _libVLC;
-		// 新增字段（类成员区）
+		private TimelineControl timeline;		//private Button btnAddFiles;
+		private LibVLC _libVLC;		// 新增字段（类成员区）
 		private ProjectsRepository _projectsRepo;
 		private Project _currentProject;
 		public static Project project = new Project();
-		// 类成员区：新增 MainRepository 与当前会话记录
-
-		private MainRepository _mainRepo;
-		private Main _currentMainEntry;
-		public static Main main = new Main();
-
+		public static MainRepository mainRepo;
+		public static Main Pubmain = new Main();
+		public static Users Pubuser = new();
+		public static UsersRepository usersRepo;
+	
+		
 		public LaserEditing()
 		{
 			InitializeComponent();
 			IsfirstPlaying = false;
 			//AutoScaleMode = AutoScaleMode.Dpi; // 根据系统DPI自动缩放	EnsureVideoViewInitialized();  //动态加载 videoView1
 			UserControlNumber = 0;
-			documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-			subDirectory = Path.Combine(documentsPath, "ResourceFolder");
+			documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);  // 获取默认文档目录路径
+			subDirectory = Path.Combine(documentsPath, "ResourceFolder");   //媒体目录
+
+			usersRepo = new UsersRepository(db.dbPath);    //读第一条LaserEditing.db数据库的User 存入Pubuser 类中
+			Pubuser = usersRepo.GetById(15);  //???????????
+		
+		
 		}
 		private void LaserEditing_Load(object sender, EventArgs e)
 		{
@@ -146,7 +147,6 @@ namespace MusicChange
 			intiuser(); // 初始化用户窗口界面
 						//btnAddFiles = new Button { Text = "添加文件...", Dock = DockStyle.Top, Height = 36 };
 						//btnAddFiles.Click += BtnAddFiles_Click;
-
 			timeline = new TimelineControl(_libVLC)
 			{
 				Dock = DockStyle.Fill,
@@ -157,24 +157,28 @@ namespace MusicChange
 			this.panel10.Controls.Add(timeline);
 			//this.Controls.Add(btnAddFiles);
 			panel10.BringToFront(); //   BringToFront()​;
-									// 允许从资源管理器拖入文件
-			this.AllowDrop = true;
+			this.AllowDrop = true;  // 允许从资源管理器拖入文件
 			this.DragEnter += MainForm_DragEnter;
 			this.DragDrop += MainForm_DragDrop;
 			//InitTimeline();
+
+            InitializeProjects();
 			InitializeProjectsRepository(); // 初始化项目仓库
-			InitializeMainRepository();
+			InitializeMainRepository();   // 初始化主表
 
 			// 若用户已加载，则启动会话（示例使用 Pubuser.Id）
-			if(Pubuser != null && Pubuser.Id > 0)
-			{
-				// 如果尚未创建当前项目，可以创建或传入现有项目 id
-				if(_currentProject == null)
-					CreateNewProjectIfNeeded();
-				StartSession(Pubuser.Id, _currentProject?.Id ?? 0);
-			}
+			//if(Pubuser != null && Pubuser.Id > 0)
+			//{
+			//	// 如果尚未创建当前项目，可以创建或传入现有项目 id
+			//	if(_currentProject == null)
+			//		CreateNewProjectIfNeeded();
+			//	StartSession(Pubuser.Id, _currentProject?.Id ?? 0);
+			//}
 		}
 
+        private void InitializeProjects()
+		{ 
+		}
 
 		#region ------------------------ ToolTip 鼠标进入悬停显示 读取用户是否登陆 -------
 
@@ -1048,10 +1052,11 @@ namespace MusicChange
 		private void button8_Click(object sender, EventArgs e)  //退出当前窗口
 		{
 			//Application.Exit();
+			//StartSession(Pubuser.Id, _currentProject?.Id ?? 0);
 			this.Close();
 		}
 
-		private void button3_Click(object sender, EventArgs e)
+		private void button3_Click(object sender, EventArgs e)   // 最大化
 		{
 			if(WindowState == FormWindowState.Maximized)
 			{
@@ -1063,8 +1068,7 @@ namespace MusicChange
 			}
 
 		}
-
-		private void button42_Click(object sender, EventArgs e)
+		private void button42_Click(object sender, EventArgs e)   // minimize
 		{           //minimize
 			if(WindowState == FormWindowState.Minimized)
 			{
@@ -1075,8 +1079,7 @@ namespace MusicChange
 				WindowState = FormWindowState.Minimized; // 最小化窗口
 			}
 		}
-
-		private void buttonx6_Click(object sender, EventArgs e)
+		private void buttonx6_Click(object sender, EventArgs e)   // cut
 		{
 			//只显示一次Cut 窗口
 			//if(isShowOnce)
@@ -1088,7 +1091,7 @@ namespace MusicChange
 			//cut.Show();
 
 		}
-		private bool IsInResizeArea(System.Drawing.Point point)
+		private bool IsInResizeArea(System.Drawing.Point point)    // 判断鼠标是否在窗口的边缘
 		{
 			return point.X <= borderSize ||  // 左边界
 				   point.X >= this.ClientSize.Width - borderSize ||  // 右边界
@@ -1100,7 +1103,7 @@ namespace MusicChange
 		{
 		}
 
-		private void splitContainer6_MouseMove(object sender, MouseEventArgs e)
+		private void splitContainer6_MouseMove(object sender, MouseEventArgs e)    // 鼠标移动
 		{
 			//SetCursorBasedOnPosition( e.Location );
 		}
@@ -3862,10 +3865,10 @@ namespace MusicChange
 					Userimage.Image = Image.FromFile(Pubuser.AvatarPath); // 显示用户头像
 				}
 			}
-
-
 		}
+
 		#endregion
+
 		#region ------------ 将用户界面的 视频 音频 拖到下面 剪辑界面   ------------
 		/// <summary>
 		/// 使用给定 LibVLC（若为 null 则临时创建）通过 MediaPlayer.TakeSnapshot 获取快照并返回 VideoInfo（包含 Thumbnail 和 DurationSeconds）
@@ -4092,27 +4095,69 @@ namespace MusicChange
 		// 调用 CreateNewProjectIfNeeded() 根据需求（这里示例在每次导入若无 current project 则创建）
 		#endregion
 		#region ------------使用主数据表 Main     ------------
-		// 在窗体初始化或 Load 时调用：初始化 MainRepository
-		private void InitializeMainRepository()
-		{
-			if(_mainRepo == null)
-			{
-				_mainRepo = new MainRepository(db.dbPath);
-			}
-		}
 
-		// 启动会话：在用户登录后或程序启动并确认用户时调用
-		private void StartSession(int userId, int projectId = 0, string version = null)
+		//db.ClearTableAndResetId("users");		 // 彻底清空表
+									 
+		private void InitializeMainRepository()   // 在窗体初始化或 Load 时调用：初始化 MainRepository
 		{
-			InitializeMainRepository();
+			//Pubmain = mainRepo.GetById(1);  //???????????
+			if(mainRepo == null)
+			{
+				mainRepo = new MainRepository(db.dbPath); //		int count = _usersRepo.GetAll().Count;
+				if(!db.IsTableEmpty("Main"))  // 判断表是否为空
+				{   // 表非空
+					Pubmain = mainRepo.GetCurrentRunning();
+					return;
+				}
+				else  // 表为空
+				{
+					db.ClearTableAndResetId("Main");
+					Pubmain = new Main
+					{
+						CurrenUserId = Pubuser?.Id ?? 1,
+						CurrenProjectId = 0,
+						LoginTime = DateTime.Now,
+						Workofftime = DateTime.Now,
+						version = "V1.0.0",
+						first_version = "1.0.0",
+						Server_website = "https://www.musicchange.com",
+						complaint_count = 0,  //投诉 次数
+						complaint_id = 0,
+						IsLocked = false,
+						current_run = true,
+						The_next_revision_schedule = 365,  //下次版本更新时间 天数  默认一年
+					};
+					mainRepo.Create(Pubmain);  //写入空数据
+				}
+				//如果current_run 为真 获取所有数据		mainRepo.GetAll();	mainRepo.GetCurrentRunning();
+			
+				//if(Pubmain != null)
+				//{
+				//	Pubmain.current_run = false;
+				//	Pubmain.Workofftime = DateTime.Now;
+				//	mainRepo.Update(Pubmain);
+				//}
+
+			}
+			else
+			{
+                Pubmain = mainRepo.GetCurrentRunning();
+			}
+
+
+		}
+		// 启动会话：在用户登录后或程序启动并确认用户时调用
+		private void StartSession(int userId, int projectId = 0, string version = null)   // 启动会话
+		{
+			//InitializeMainRepository();
 
 			// 如果已有正在运行的会话，先结束它（防止重复）
-			var running = _mainRepo.GetCurrentRunning();
+			var running = mainRepo.GetCurrentRunning();
 			if(running != null)
 			{
 				running.current_run = false;
 				running.Workofftime = DateTime.Now;
-				_mainRepo.Update(running);
+				mainRepo.Update(running);
 			}
 
 			var m = new Main
@@ -4124,36 +4169,36 @@ namespace MusicChange
 				version = version ?? Properties.Application.ProductVersion,
 				IsLocked = false,
 				current_run = true,
-				The_next_revision_schedule = null,
+				The_next_revision_schedule = 365,
 				Version_end_time = DateTime.Now,
 				registered_user = null,
 				Description = $"Session started from LaserEditing {Environment.MachineName}"
 			};
 
-			int newId = _mainRepo.Create(m);
+			int newId = mainRepo.Create(m);
 			m.Id = newId;
-			_currentMainEntry = m;
+			Pubmain = m;
 		}
 		// 结束会话：在用户登出或窗体关闭前调用
 		private void EndSession()
 		{
 			try
 			{
-				if(_mainRepo == null)
+				if(mainRepo == null)
 					InitializeMainRepository();
 
-				if(_currentMainEntry == null)
+				if(Pubmain == null)
 				{
 					// 尝试从数据库获取当前运行的记录
-					_currentMainEntry = _mainRepo.GetCurrentRunning();
+					Pubmain = mainRepo.GetCurrentRunning();
 				}
 
-				if(_currentMainEntry != null)
+				if(Pubmain != null)
 				{
-					_currentMainEntry.Workofftime = DateTime.Now;
-					_currentMainEntry.current_run = false;
+					Pubmain.Workofftime = DateTime.Now;
+					Pubmain.current_run = false;
 					// 可选：记录退出时的项目 / 用户信息
-					_mainRepo.Update(_currentMainEntry);
+					mainRepo.Update(Pubmain);
 				}
 			}
 			catch(Exception ex)
@@ -4188,10 +4233,10 @@ namespace MusicChange
 			_currentProject = proj;
 
 			// 同步当前会话的项目 id
-			if(_currentMainEntry != null)
+			if(Pubmain != null)
 			{
-				_currentMainEntry.CurrenProjectId = proj.Id;
-				_mainRepo.Update(_currentMainEntry);
+				Pubmain.CurrenProjectId = proj.Id;
+				mainRepo.Update(Pubmain);
 			}
 		}
 /*		GitHub Copilot
@@ -4209,8 +4254,8 @@ namespace MusicChange
 
 ```csharp
 // 类成员区：新增 MainRepository 与当前会话记录
-private MainRepository _mainRepo;
-private Main _currentMainEntry;
+private MainRepository mainRepo;
+private Main Pubmain;
 ```
 ```csharp
 

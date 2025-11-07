@@ -295,6 +295,7 @@
     <Compile Include="db.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\ClipRepository.cs" />
+    <Compile Include="Helpers\ComplaintRepository.cs" />
     <Compile Include="Helpers\FFmpegHelper.cs" />
     <Compile Include="Helpers\MainRepository.cs" />
     <Compile Include="Helpers\MediaAssetRepository.cs" />

@@ -70,19 +70,187 @@ namespace MusicChange  // 数据库操作封装类
 				MessageBox.Show($"初始化失败：{ex.Message}");
 			}
 		}
+		/// <summary>
+		/// 判断表的记录数是否为零
+		/// </summary>
+		/// <param name="tableName">表名</param>
+		/// <returns>true：记录数为零；false：记录数大于零</returns>
+		public static bool IsTableEmpty(string tableName)
+		{
+			_connectionString = $"Data Source={dbPath};Version=3;";
+			// 验证表名合法性（简单防注入，若表名来自用户输入需加强校验）
+			if(string.IsNullOrWhiteSpace(tableName) || tableName.Contains(";") || tableName.Contains("'"))
+			{
+				throw new ArgumentException("无效的表名");
+			}
+
+			using(var connection = new SQLiteConnection(_connectionString))
+			{
+				connection.Open();
+
+				using(var cmd = connection.CreateCommand())
+				{
+					// 查询表的总记录数
+					cmd.CommandText = $"SELECT COUNT(*) FROM {tableName};";
+
+					// 执行查询并获取结果（COUNT(*) 始终返回数值，不会为 null）
+					long rowCount = (long)cmd.ExecuteScalar();
+
+					// 判断是否为零
+					return rowCount == 0;
+				}
+			}
+		}
+		/// <summary>
+		/// 清空表数据并重置自增ID为1
+		/// </summary>
+		/// <param name="tableName">表名</param>
+		public static void ClearTableAndResetId(string tableName)  // 清空表数据并重置自增ID为1
+		{
+			_connectionString = $"Data Source={dbPath};Version=3;";
+			// 使用using确保连接和命令自动释放
+			using(var connection = new SQLiteConnection(_connectionString))
+			{
+				connection.Open();
+
+				// 开始事务（确保操作原子性）
+				using(var transaction = connection.BeginTransaction())
+				{
+					try
+					{
+						// 1. 临时关闭外键约束（避免删除时因外键关联失败）
+						using(var cmd = connection.CreateCommand())
+						{
+							cmd.Transaction = transaction;
+							cmd.CommandText = "PRAGMA foreign_keys = OFF;";
+							cmd.ExecuteNonQuery();
+						}
+
+						// 2. 清空表数据
+						using(var cmd = connection.CreateCommand())
+						{
+							cmd.Transaction = transaction;
+							cmd.CommandText = $"DELETE FROM {tableName};"; // 注意：表名需确保安全，避免SQL注入
+							cmd.ExecuteNonQuery();
+						}
+
+						// 3. 重置自增计数器（sqlite_sequence记录自增ID当前值）
+						using(var cmd = connection.CreateCommand())
+						{
+							cmd.Transaction = transaction;
+							// 若表从未插入过数据，sqlite_sequence中可能无记录，执行更新不影响
+							cmd.CommandText = $"UPDATE sqlite_sequence SET seq = 0 WHERE name = '{tableName}';";
+							cmd.ExecuteNonQuery();
+						}
+
+						// 4. 恢复外键约束
+						using(var cmd = connection.CreateCommand())
+						{
+							cmd.Transaction = transaction;
+							cmd.CommandText = "PRAGMA foreign_keys = ON;";
+							cmd.ExecuteNonQuery();
+						}
+
+						// 提交事务
+						transaction.Commit();
+						//Console.WriteLine($"表 {tableName} 已清空，自增ID将从1开始。");
+					}
+					catch(Exception ex)
+					{
+						// 出错时回滚事务
+						transaction.Rollback();
+						Console.WriteLine($"操作失败：{ex.Message}");
+					}
+				}
+			}
+		}
+
+		// 清空 users  表
+		public static void ClearUserTable()
+		{
+			_connectionString = $"Data Source={dbPath};Version=3;";
+			using var connection = new SQLiteConnection(_connectionString);
+			connection.Open();
+			using var transaction = connection.BeginTransaction();
+			try
+			{
+				// 清空用户表
+				using var deleteCmd = new SQLiteCommand("DELETE FROM users", connection);
+				deleteCmd.ExecuteNonQuery();
+
+				// 重置自增ID
+				using var resetCmd = new SQLiteCommand("DELETE FROM sqlite_sequence WHERE name='users'", connection);
+				resetCmd.ExecuteNonQuery();
+
+				transaction.Commit();
+				Console.WriteLine("用户表已清空，ID将从1开始计数");
+			}
+			catch(Exception ex)
+			{
+				transaction.Rollback();
+				Console.WriteLine($"清空表失败: {ex.Message}");
+				throw;
+			}
+		}
+
+		// 清空 users  表
+		public static void ClearUserTable(string tableName)
+		{
+			_connectionString = $"Data Source={dbPath};Version=3;";
+			using var connection = new SQLiteConnection(_connectionString);
+			connection.Open();
+			using var transaction = connection.BeginTransaction();
+			try
+			{
+				// 清空用户表
+				using var deleteCmd = new SQLiteCommand("DELETE FROM {tableName}", connection);
+				deleteCmd.ExecuteNonQuery();
+
+				// 重置自增ID
+				using var resetCmd = new SQLiteCommand("DELETE FROM sqlite_sequence WHERE name='tableName'", connection);
+				resetCmd.ExecuteNonQuery();
+
+				transaction.Commit();
+				Console.WriteLine("用户表已清空，ID将从1开始计数");
+			}
+			catch(Exception ex)
+			{
+				transaction.Rollback();
+				Console.WriteLine($"清空表失败: {ex.Message}");
+				throw;
+			}
+		}
+
+		// 验证重置结果
+		public void VerifyReset()
+		{
+			using var connection = new SQLiteConnection(_connectionString);
+			connection.Open();
+
+			// 检查当前自增ID值
+			using var cmd = new SQLiteCommand("SELECT seq FROM sqlite_sequence WHERE name='users'", connection);
+			var result = cmd.ExecuteScalar();
+
+			if(result == null)
+			{
+				Console.WriteLine("自增ID已重置，下一个插入的ID将是1");
+			}
+		}
+
+
 
 		#region --------- 应该不用了  创建一个 clip 剪辑数据库的详细表，并给出c# sqlite 程序  ------------
 
 		/*
-        1.	clips - 存储音频剪辑的基本信息
+		1.	clips - 存储音频剪辑的基本信息
 		2.	projects - 存储项目信息
 		3.	clip_effects - 存储剪辑效果设置
 
-        1.	创建(Create): InsertProject, InsertClip, InsertClipEffect
-        2.	读取(Read): GetProjectById, GetAllProjects, GetClipById, GetClipsByProjectId, GetAllClips, GetClipEffectById, GetClipEffectsByClipId
-        3.	更新(Update): UpdateProject, UpdateClip, UpdateClipEffect
-        4.	删除(Delete): DeleteProject, DeleteClip, DeleteClipEffect
-        */
+		1.	创建(Create): InsertProject, InsertClip, InsertClipEffect
+		2.	读取(Read): GetProjectById, GetAllProjects, GetClipById, GetClipsByProjectId, GetAllClips, GetClipEffectById, GetClipEffectsByClipId
+		3.	更新(Update): UpdateProject, UpdateClip, UpdateClipEffect
+		4.	删除(Delete): DeleteProject, DeleteClip, DeleteClipEffect
+		*/
 
 		/// <summary>
 		///  Projects 表操作
@@ -520,75 +688,75 @@ namespace MusicChange  // 数据库操作封装类
 		/* 
 		数据库表关系图
 
-	这个设计提供了完整的用户管理功能，包括：
-	1.	基础用户信息 (users) - 存储用户的基本账户信息
-	2.	用户配置文件 (user_profiles) - 存储用户的个性化设置
-	3.	用户会话 (user_sessions) - 管理用户登录会话
-	4.	用户偏好 (user_preferences) - 存储用户的详细偏好设置
-	5.	 (user_logintime)   - 记录用户登录时间
-	特点：
-	•	使用外键约束保证数据完整性
-	•	创建索引提高查询性能
-	•	使用触发器自动更新时间戳
-	•	支持级联删除，当用户被删除时相关数据也会被自动清理
-	•	提供默认数据插入功能
+		这个设计提供了完整的用户管理功能，包括：
+		1.	基础用户信息 (users) - 存储用户的基本账户信息
+		2.	用户配置文件 (user_profiles) - 存储用户的个性化设置
+		3.	用户会话 (user_sessions) - 管理用户登录会话
+		4.	用户偏好 (user_preferences) - 存储用户的详细偏好设置
+		5.	 (user_logintime)   - 记录用户登录时间
+		特点：
+		•	使用外键约束保证数据完整性
+		•	创建索引提高查询性能
+		•	使用触发器自动更新时间戳
+		•	支持级联删除，当用户被删除时相关数据也会被自动清理
+		•	提供默认数据插入功能
 		数据库表结构设计
-	-----------------------------------------------
-	1. users 表 - 用户信息表
-	列名		类型	约束	描述
-	id			INTEGER	PRIMARY KEY AUTOINCREMENT	用户ID
-	username	TEXT	NOT NULL UNIQUE	用户名
-	email		TEXT	NOT NULL UNIQUE	邮箱
-	password_hash	TEXT	NOT NULL	密码哈希值
+		-----------------------------------------------
+		1. users 表 - 用户信息表
+		列名		类型	约束	描述
+		id			INTEGER	PRIMARY KEY AUTOINCREMENT	用户ID
+		username	TEXT	NOT NULL UNIQUE	用户名
+		email		TEXT	NOT NULL UNIQUE	邮箱
+		password_hash	TEXT	NOT NULL	密码哈希值
 		   iphone TEXT,	NOT NULL UNIQUE	手机号码
-	full_name	TEXT					真实姓名
-		 
-	avatar_path	TEXT					头像路径
-	is_active	INTEGER	NOT NULL DEFAULT 1	是否激活
-	created_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
-	updated_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	更新时间
-    draftposition TEXT,            职位草案           
-    is_locked INTEGER NOT NULL DEFAULT 0,
-    is_deleted INTEGER NOT NULL DEFAULT 0,
-    is_modified INTEGER NOT NULL DEFAULT 0,
-    note TEXT
+		full_name	TEXT					真实姓名
+
+		avatar_path	TEXT					头像路径
+		is_active	INTEGER	NOT NULL DEFAULT 1	是否激活
+		created_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
+		updated_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	更新时间
+		draftposition TEXT,            职位草案           
+		is_locked INTEGER NOT NULL DEFAULT 0,
+		is_deleted INTEGER NOT NULL DEFAULT 0,
+		is_modified INTEGER NOT NULL DEFAULT 0,
+		note TEXT
 
 
 		2. user_profiles 表 - 用户详细信息表
-	列名	类型	约束	描述
-	id	INTEGER	PRIMARY KEY AUTOINCREMENT	配置ID
-	user_id	INTEGER	NOT NULL UNIQUE, FOREIGN KEY REFERENCES users(id)	用户ID
-	preferred_language	TEXT		偏好语言
-	theme	TEXT		主题设置
-	default_project_location	TEXT		默认项目保存位置
-	auto_save_interval	INTEGER		自动保存间隔（分钟）
-	max_undo_steps	INTEGER		最大撤销步数
-	created_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
-	updated_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	更新时间
+		列名	类型	约束	描述
+		id	INTEGER	PRIMARY KEY AUTOINCREMENT	配置ID
+		user_id	INTEGER	NOT NULL UNIQUE, FOREIGN KEY REFERENCES users(id)	用户ID
+		preferred_language	TEXT		偏好语言
+		theme	TEXT		主题设置
+		default_project_location	TEXT		默认项目保存位置
+		auto_save_interval	INTEGER		自动保存间隔（分钟）
+		max_undo_steps	INTEGER		最大撤销步数
+		created_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
+		updated_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	更新时间
 
-	3. user_sessions 表 - 用户会话表
-	列名	类型	约束	描述
-	id	INTEGER	PRIMARY KEY AUTOINCREMENT	会话ID
-	user_id	INTEGER	NOT NULL, FOREIGN KEY REFERENCES users(id)	用户ID
-	session_token	TEXT	NOT NULL UNIQUE	会话令牌
-	ip_address	TEXT		IP地址
-	user_agent	TEXT		用户代理
-	expires_at	DATETIME	NOT NULL	过期时间
-	created_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
+		3. user_sessions 表 - 用户会话表
+		列名	类型	约束	描述
+		id	INTEGER	PRIMARY KEY AUTOINCREMENT	会话ID
+		user_id	INTEGER	NOT NULL, FOREIGN KEY REFERENCES users(id)	用户ID
+		session_token	TEXT	NOT NULL UNIQUE	会话令牌
+		ip_address	TEXT		IP地址
+		user_agent	TEXT		用户代理
+		expires_at	DATETIME	NOT NULL	过期时间
+		created_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
 
-	4. user_preferences 表 - 用户偏好设置表
-	列名	类型	约束	描述
-	id	INTEGER	PRIMARY KEY AUTOINCREMENT	偏好ID
-	user_id	INTEGER	NOT NULL, FOREIGN KEY REFERENCES users(id)	用户ID
-	preference_key	TEXT	NOT NULL	偏好键名
-	preference_value	TEXT	NOT NULL	偏好值
-	created_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
-	updated_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	更新时间
+		4. user_preferences 表 - 用户偏好设置表
+		列名	类型	约束	描述
+		id	INTEGER	PRIMARY KEY AUTOINCREMENT	偏好ID
+		user_id	INTEGER	NOT NULL, FOREIGN KEY REFERENCES users(id)	用户ID
+		preference_key	TEXT	NOT NULL	偏好键名
+		preference_value	TEXT	NOT NULL	偏好值
+		created_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
+		updated_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	更新时间
 
-	5. userslogintime 表 - 用户登录时间表
-	列名	类型	约束	描述
-	id	INTEGER	PRIMARY KEY AUTOINCREMENT	用户ID
-	iduser	INTEGER	NOT NULL UNIQUE, FOREIGN KEY REFERENCES users(id)	用户ID
+		5. userslogintime 表 - 用户登录时间表
+		列名	类型	约束	描述
+		id	INTEGER	PRIMARY KEY AUTOINCREMENT	用户ID
+		iduser	INTEGER	NOT NULL UNIQUE, FOREIGN KEY REFERENCES users(id)	用户ID
 		login_time	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	登录时间
 		end_time	DATETIME		登出时间
 		created_at	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
@@ -922,144 +1090,144 @@ namespace MusicChange  // 数据库操作封装类
 		/*
 		视频剪辑软件的 事务表 如何定义
 		视频剪辑软件中的事务表主要用于记录用户的操作历史、项目变更、_undo/redo_操作等。以下是如何定义视频剪辑软件的事务表结构：
-事务表结构设计
-1. ----------------------- projects 表 - 项目信息表
-列名			类型	约束	描述
-id				INTEGER	PRIMARY KEY AUTOINCREMENT				项目ID
-user_id			INTEGER	NOT NULL, FOREIGN KEY REFERENCES users(id)	用户ID
-name			TEXT	NOT NULL								项目名称
-description		TEXT		项目描述
-width			INTEGER	NOT NULL DEFAULT 1920				项目宽度
-height			INTEGER	NOT NULL DEFAULT 1080				项目高度
-framerate		REAL	NOT NULL DEFAULT 30.0				帧率
-duration		REAL	NOT NULL DEFAULT 0.0				项目时长
-thumbnail_path		TEXT		缩略图路径
-created_at			DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
-updated_at			DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	更新时间
-note			TEXT		备注信息
+		事务表结构设计
+		1. ----------------------- projects 表 - 项目信息表
+		列名			类型	约束	描述
+		id				INTEGER	PRIMARY KEY AUTOINCREMENT				项目ID
+		user_id			INTEGER	NOT NULL, FOREIGN KEY REFERENCES users(id)	用户ID
+		name			TEXT	NOT NULL								项目名称
+		description		TEXT		项目描述
+		width			INTEGER	NOT NULL DEFAULT 1920				项目宽度
+		height			INTEGER	NOT NULL DEFAULT 1080				项目高度
+		framerate		REAL	NOT NULL DEFAULT 30.0				帧率
+		duration		REAL	NOT NULL DEFAULT 0.0				项目时长
+		thumbnail_path		TEXT		缩略图路径
+		created_at			DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
+		updated_at			DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	更新时间
+		note			TEXT		备注信息
 		约束：PRIMARY KEY(id)
 		约束：FOREIGN KEY REFERENCES users(id) ON DELETE CASCADE
 		索引：UNIQUE(name, user_id)
 
-2. ------------------- media_assets 表 - 媒体资源表
-列名			类型	约束	描述
-id				INTEGER	PRIMARY KEY AUTOINCREMENT	资源ID
-user_id			INTEGER	NOT NULL, FOREIGN KEY REFERENCES users(id)	用户ID
-name			TEXT	NOT NULL					资源名称
-file_path			TEXT	NOT NULL			文件路径
-file_size			INTEGER	NOT NULL				文件大小(字节)
-media_type			TEXT	NOT NULL				媒体类型(video/audio/image)
-duration			REAL		时长(秒)
-width				INTEGER		宽度
-height				INTEGER		高度
-framerate			REAL		帧率
-codec				TEXT		编解码器
-created_at			DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
-updated_at			DATETIME	 DEFAULT CURRENT_TIMESTAMP	更新时间
-note				TEXT		备注信息
+		2. ------------------- media_assets 表 - 媒体资源表
+		列名			类型	约束	描述
+		id				INTEGER	PRIMARY KEY AUTOINCREMENT	资源ID
+		user_id			INTEGER	NOT NULL, FOREIGN KEY REFERENCES users(id)	用户ID
+		name			TEXT	NOT NULL					资源名称
+		file_path			TEXT	NOT NULL			文件路径
+		file_size			INTEGER	NOT NULL				文件大小(字节)
+		media_type			TEXT	NOT NULL				媒体类型(video/audio/image)
+		duration			REAL		时长(秒)
+		width				INTEGER		宽度
+		height				INTEGER		高度
+		framerate			REAL		帧率
+		codec				TEXT		编解码器
+		created_at			DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
+		updated_at			DATETIME	 DEFAULT CURRENT_TIMESTAMP	更新时间
+		note				TEXT		备注信息
 
-3. ----------------------------- timeline_tracks 表 - 时间线轨道表
-列名			类型	约束	描述
-id				INTEGER	PRIMARY KEY AUTOINCREMENT	轨道ID
-project_id			INTEGER	NOT NULL, FOREIGN KEY REFERENCES projects(id)	项目ID
-track_type			TEXT	NOT NULL	轨道类型(video/audio)
-track_index			INTEGER	NOT NULL	轨道索引
-name				TEXT	NOT NULL	轨道名称
-is_muted			INTEGER	NOT NULL DEFAULT 0	是否静音
-is_locked			INTEGER	NOT NULL DEFAULT 0	是否锁定
-volume				REAL	NOT NULL DEFAULT 1.0	音量(0.0-1.0)
-created_at			DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
-updated_at			DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	更新时间
-note				TEXT		备注信息
+		3. ----------------------------- timeline_tracks 表 - 时间线轨道表
+		列名			类型	约束	描述
+		id				INTEGER	PRIMARY KEY AUTOINCREMENT	轨道ID
+		project_id			INTEGER	NOT NULL, FOREIGN KEY REFERENCES projects(id)	项目ID
+		track_type			TEXT	NOT NULL	轨道类型(video/audio)
+		track_index			INTEGER	NOT NULL	轨道索引
+		name				TEXT	NOT NULL	轨道名称
+		is_muted			INTEGER	NOT NULL DEFAULT 0	是否静音
+		is_locked			INTEGER	NOT NULL DEFAULT 0	是否锁定
+		volume				REAL	NOT NULL DEFAULT 1.0	音量(0.0-1.0)
+		created_at			DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
+		updated_at			DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	更新时间
+		note				TEXT		备注信息
 
-4. ----------------------------- clips 表 - 剪辑片段表
-列名				类型	约束	描述
-id					INTEGER	PRIMARY KEY AUTOINCREMENT	剪辑ID
-project_id			INTEGER	NOT NULL, FOREIGN KEY REFERENCES projects(id)	项目ID
-track_id			INTEGER	NOT NULL, FOREIGN KEY REFERENCES timeline_tracks(id)	轨道ID
-media_asset_id		INTEGER	FOREIGN KEY REFERENCES media_assets(id)	媒体资源ID
-name				TEXT	NOT NULL		剪辑名称
-start_time			REAL	NOT NULL		在时间线上的开始时间
-end_time			REAL	NOT NULL		在时间线上的结束时间
-media_start_time	REAL	NOT NULL DEFAULT 0.0	在媒体中的开始时间
-media_end_time		REAL	NOT NULL				在媒体中的结束时间
-position_x			REAL	NOT NULL DEFAULT 0.0	X位置
-position_y			REAL	NOT NULL DEFAULT 0.0	Y位置
-scale_x				REAL	NOT NULL DEFAULT 1.0	X缩放
-scale_y				REAL	NOT NULL DEFAULT 1.0	Y缩放
-rotation			REAL	NOT NULL DEFAULT 0.0	旋转角度
-volume				REAL	NOT NULL DEFAULT 1.0	音量
-is_muted			INTEGER	NOT NULL DEFAULT 0		是否静音
-created_at			DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
-updated_at			DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	更新时间
-note				TEXT		备注信息
+		4. ----------------------------- clips 表 - 剪辑片段表
+		列名				类型	约束	描述
+		id					INTEGER	PRIMARY KEY AUTOINCREMENT	剪辑ID
+		project_id			INTEGER	NOT NULL, FOREIGN KEY REFERENCES projects(id)	项目ID
+		track_id			INTEGER	NOT NULL, FOREIGN KEY REFERENCES timeline_tracks(id)	轨道ID
+		media_asset_id		INTEGER	FOREIGN KEY REFERENCES media_assets(id)	媒体资源ID
+		name				TEXT	NOT NULL		剪辑名称
+		start_time			REAL	NOT NULL		在时间线上的开始时间
+		end_time			REAL	NOT NULL		在时间线上的结束时间
+		media_start_time	REAL	NOT NULL DEFAULT 0.0	在媒体中的开始时间
+		media_end_time		REAL	NOT NULL				在媒体中的结束时间
+		position_x			REAL	NOT NULL DEFAULT 0.0	X位置
+		position_y			REAL	NOT NULL DEFAULT 0.0	Y位置
+		scale_x				REAL	NOT NULL DEFAULT 1.0	X缩放
+		scale_y				REAL	NOT NULL DEFAULT 1.0	Y缩放
+		rotation			REAL	NOT NULL DEFAULT 0.0	旋转角度
+		volume				REAL	NOT NULL DEFAULT 1.0	音量
+		is_muted			INTEGER	NOT NULL DEFAULT 0		是否静音
+		created_at			DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
+		updated_at			DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	更新时间
+		note				TEXT		备注信息
 
 
-5. --------------------------- transactions 表 - 事务表
-列名				类型	约束	描述
-id					INTEGER	PRIMARY KEY AUTOINCREMENT	事务ID
-project_id			INTEGER	NOT NULL, FOREIGN KEY REFERENCES projects(id)	项目ID
-user_id				INTEGER	NOT NULL, FOREIGN KEY REFERENCES users(id)	用户ID
-transaction_type	TEXT	NOT NULL									事务类型
-description			TEXT	NOT NULL							事务描述
-timestamp			DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	时间戳
+		5. --------------------------- transactions 表 - 事务表
+		列名				类型	约束	描述
+		id					INTEGER	PRIMARY KEY AUTOINCREMENT	事务ID
+		project_id			INTEGER	NOT NULL, FOREIGN KEY REFERENCES projects(id)	项目ID
+		user_id				INTEGER	NOT NULL, FOREIGN KEY REFERENCES users(id)	用户ID
+		transaction_type	TEXT	NOT NULL									事务类型
+		description			TEXT	NOT NULL							事务描述
+		timestamp			DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	时间戳
 
-is_undone			INTEGER	NOT NULL DEFAULT 0					是否已撤销
-is_redone			INTEGER	NOT NULL DEFAULT 0					是否已重做
-created_at			DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
-updated_at			DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	更新时间
-note				TEXT		备注信息
+		is_undone			INTEGER	NOT NULL DEFAULT 0					是否已撤销
+		is_redone			INTEGER	NOT NULL DEFAULT 0					是否已重做
+		created_at			DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
+		updated_at			DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	更新时间
+		note				TEXT		备注信息
 		约束：PRIMARY KEY(id)
 		约束：FOREIGN KEY REFERENCES projects(id) ON DELETE CASCADE
 		约束：FOREIGN KEY REFERENCES users(id) ON DELETE CASCADE
 
-6. ----------------------- transaction_details 表 - 事务详情表
-列名			类型	约束	描述
-id	INTEGER	PRIMARY KEY AUTOINCREMENT	详情ID
-transaction_id	INTEGER	NOT NULL, FOREIGN KEY REFERENCES transactions(id)	事务ID
-operation_type	TEXT	NOT NULL	操作类型(create/update/delete)
-table_name		TEXT	NOT NULL	表名
-record_id		INTEGER	NOT NULL	记录ID
-old_values		TEXT		旧值(JSON格式)
-new_values		TEXT		新值(JSON格式)
-created_at		DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
-note				TEXT		备注信息
+		6. ----------------------- transaction_details 表 - 事务详情表
+		列名			类型	约束	描述
+		id	INTEGER	PRIMARY KEY AUTOINCREMENT	详情ID
+		transaction_id	INTEGER	NOT NULL, FOREIGN KEY REFERENCES transactions(id)	事务ID
+		operation_type	TEXT	NOT NULL	操作类型(create/update/delete)
+		table_name		TEXT	NOT NULL	表名
+		record_id		INTEGER	NOT NULL	记录ID
+		old_values		TEXT		旧值(JSON格式)
+		new_values		TEXT		新值(JSON格式)
+		created_at		DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
+		note				TEXT		备注信息
 
-7. ----------------------------effects 表 - 效果表
-列名			类型	约束	描述
-id				INTEGER	PRIMARY KEY AUTOINCREMENT	效果ID
-name			TEXT	NOT NULL	效果名称
-effect_type		TEXT	NOT NULL	效果类型
-description		TEXT		效果描述
-parameters		TEXT		参数定义(JSON格式)
-created_at		DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
-note				TEXT		备注信息
+		7. ----------------------------effects 表 - 效果表
+		列名			类型	约束	描述
+		id				INTEGER	PRIMARY KEY AUTOINCREMENT	效果ID
+		name			TEXT	NOT NULL	效果名称
+		effect_type		TEXT	NOT NULL	效果类型
+		description		TEXT		效果描述
+		parameters		TEXT		参数定义(JSON格式)
+		created_at		DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
+		note				TEXT		备注信息
 
-8. -----------------clip_effects 表 - 剪辑效果关联表
-列名			类型	约束	描述
-id				INTEGER	PRIMARY KEY AUTOINCREMENT	关联ID
-clip_id			INTEGER	NOT NULL, FOREIGN KEY REFERENCES clips(id)	剪辑ID
-effect_id		INTEGER	NOT NULL, FOREIGN KEY REFERENCES effects(id)	效果ID
-parameters		TEXT	NOT NULL	参数值(JSON格式)
-start_time		REAL	NOT NULL DEFAULT 0.0	开始时间
-end_time		REAL	NOT NULL	结束时间
-order_index		INTEGER	NOT NULL	排序索引
-is_enabled		INTEGER	NOT NULL DEFAULT 1	是否启用
-created_at		DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
-note				TEXT		备注信息
+		8. -----------------clip_effects 表 - 剪辑效果关联表
+		列名			类型	约束	描述
+		id				INTEGER	PRIMARY KEY AUTOINCREMENT	关联ID
+		clip_id			INTEGER	NOT NULL, FOREIGN KEY REFERENCES clips(id)	剪辑ID
+		effect_id		INTEGER	NOT NULL, FOREIGN KEY REFERENCES effects(id)	效果ID
+		parameters		TEXT	NOT NULL	参数值(JSON格式)
+		start_time		REAL	NOT NULL DEFAULT 0.0	开始时间
+		end_time		REAL	NOT NULL	结束时间
+		order_index		INTEGER	NOT NULL	排序索引
+		is_enabled		INTEGER	NOT NULL DEFAULT 1	是否启用
+		created_at		DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP	创建时间
+		note				TEXT		备注信息
 
-C# SQLite 事务表创建程序
- 
-事务操作示例类
- 
-这个事务表设计提供了以下功能：
-1.	完整的项目结构管理 - 包括项目、媒体资源、时间线轨道和剪辑片段
-2.	事务跟踪 - 记录所有用户操作，支持撤销/重做功能
-3.	效果系统 - 支持为剪辑添加各种效果
-4.	索引优化 - 为常用查询字段创建索引
-5.	自动时间戳 - 使用触发器自动更新时间戳
-6.	数据完整性 - 使用外键约束保证数据一致性
-通过这些表结构，视频剪辑软件可以完整地记录用户的操作历史，实现_undo/redo_功能，并且可以追踪项目的完整变更历史。
+		C# SQLite 事务表创建程序
+
+		事务操作示例类
+
+		这个事务表设计提供了以下功能：
+		1.	完整的项目结构管理 - 包括项目、媒体资源、时间线轨道和剪辑片段
+		2.	事务跟踪 - 记录所有用户操作，支持撤销/重做功能
+		3.	效果系统 - 支持为剪辑添加各种效果
+		4.	索引优化 - 为常用查询字段创建索引
+		5.	自动时间戳 - 使用触发器自动更新时间戳
+		6.	数据完整性 - 使用外键约束保证数据一致性
+		通过这些表结构，视频剪辑软件可以完整地记录用户的操作历史，实现_undo/redo_功能，并且可以追踪项目的完整变更历史。
 		*/
 
 		//namespace VideoEditor.Database  	{	public class TransactionDatabaseSetup		{		
@@ -3485,11 +3653,11 @@ C# SQLite 事务表创建程序
 		{
 			get; set;
 		}
-		public int CurrenUserId
+		public int CurrenUserId  // 当前用户id
 		{
 			get; set;
 		}
-		public int CurrenProjectId   //
+		public int CurrenProjectId   //项目 id,根据当前项目 确认 应该运行 那个 工程 project
 		{
 			get; set;
 		}
@@ -3507,15 +3675,7 @@ C# SQLite 事务表创建程序
 		{
 			get; set;
 		}
-		public string complaint    //投诉  	
-		{
-			get; set;
-		}
-		public int complaint_Feedback    //投诉  反馈
-		{
-			get; set;
-		}
-		public string complaint_country    //投诉  反馈
+		public int complaint_count    //投诉count
 		{
 			get; set;
 		}
@@ -3527,15 +3687,15 @@ C# SQLite 事务表创建程序
 		{
 			get; set;
 		}
-		public bool current_run    //当前运行user  和 project
+		public bool current_run    //当前运行user  和 project  根据当前项目 确认 应该运行 那个 工程 project=1
 		{
 			get; set;
 		}
-		public string The_next_revision_schedule    //	下一改版时间
+		public int The_next_revision_schedule    //	下一改版时间
 		{
 			get; set;
 		}
-		public DateTime Version_end_time { get; set; } = DateTime.Now;
+		public DateTime Version_end_time { get; set; } = DateTime.Now;  // 版本结束时间
 		public string registered_user   //	注册用户 如果未注册  null，1： 按月付费，2 按年付费	
 		{
 			get; set;
@@ -3546,6 +3706,31 @@ C# SQLite 事务表创建程序
 		}    // 描述
 
 	}
+
+	//public class Complaint    // 投诉
+	//{
+	//	public int Id
+	//	{
+	//		get; set;
+	//	}
+	//	public int Main_id  // 当前用户id
+	//	{
+	//		get; set;
+	//	}
+	//	public string complaint    //投诉count
+	//	{
+	//		get; set;
+	//	}
+	//	public string username    //投诉count
+	//	{
+	//		get; set;
+	//	}
+	//	public string complaint_feedback    //投诉count
+	//	{
+	//		get; set;
+	//	}
+	//	public DateTime LoginTime { get; set; } = DateTime.Now; // 登录时间
+	//}
 
 
 	#endregion

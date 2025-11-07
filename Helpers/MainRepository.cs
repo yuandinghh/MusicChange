@@ -31,9 +31,7 @@ CREATE TABLE IF NOT EXISTS main (
   version TEXT,
   first_version TEXT,
   server_website TEXT,
-  complaint TEXT,
-  complaint_feedback INTEGER,
-  complaint_country TEXT,
+  complaint_count INTEGER`,
   complaint_id INTEGER,
   is_locked INTEGER NOT NULL DEFAULT 0,
   current_run INTEGER NOT NULL DEFAULT 0,
@@ -57,13 +55,13 @@ CREATE TABLE IF NOT EXISTS main (
 			const string sql = @"
 INSERT INTO main(
   curren_user_id, curren_project_id, login_time, workofftime,
-  version, first_version, server_website, complaint, complaint_feedback,
+  version, first_version, server_website,
   complaint_country, complaint_id, is_locked, current_run, the_next_revision_schedule,
   version_end_time, registered_user, description, created_at, updated_at
 ) VALUES (
   @curren_user_id, @curren_project_id, @login_time, @workofftime,
-  @version, @first_version, @server_website, @complaint, @complaint_feedback,
-  @complaint_country, @complaint_id, @is_locked, @current_run, @the_next_revision_schedule,
+  @version, @first_version, @server_website,
+  @complaint_count, @complaint_id, @is_locked, @current_run, @the_next_revision_schedule,
   @version_end_time, @registered_user, @description, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
 );
 SELECT last_insert_rowid();";
@@ -88,7 +86,7 @@ SELECT last_insert_rowid();";
 			return null;
 		}
 
-		public Main? GetCurrentRunning()
+		public Main? GetCurrentRunning()  // 当前运行
 		{
 			const string sql = "SELECT * FROM main WHERE current_run = 1 ORDER BY updated_at DESC LIMIT 1;";
 			using var conn = new SQLiteConnection(_connectionString);
@@ -100,7 +98,7 @@ SELECT last_insert_rowid();";
 			return null;
 		}
 
-		public List<Main> GetAll()
+		public List<Main> GetAll()  // 所有
 		{
 			var list = new List<Main>();
 			const string sql = "SELECT * FROM main ORDER BY created_at DESC;";
@@ -126,9 +124,7 @@ UPDATE main SET
   version=@version,
   first_version=@first_version,
   server_website=@server_website,
-  complaint=@complaint,
-  complaint_feedback=@complaint_feedback,
-  complaint_country=@complaint_country,
+  complaint_country=@complaint_count,
   complaint_id=@complaint_id,
   is_locked=@is_locked,
   current_run=@current_run,
@@ -156,7 +152,7 @@ WHERE id = @id;";
 			return cmd.ExecuteNonQuery() > 0;
 		}
 
-		private static void AddParameters(SQLiteCommand cmd, Main m)
+		private static void AddParameters(SQLiteCommand cmd, Main m) // 添加参数
 		{
 			cmd.Parameters.AddWithValue("@curren_user_id", m.CurrenUserId);
 			cmd.Parameters.AddWithValue("@curren_project_id", m.CurrenProjectId);
@@ -165,9 +161,7 @@ WHERE id = @id;";
 			cmd.Parameters.AddWithValue("@version", (object?)m.version ?? DBNull.Value);
 			cmd.Parameters.AddWithValue("@first_version", (object?)m.first_version ?? DBNull.Value);
 			cmd.Parameters.AddWithValue("@server_website", (object?)m.Server_website ?? DBNull.Value);
-			cmd.Parameters.AddWithValue("@complaint", (object?)m.complaint ?? DBNull.Value);
-			cmd.Parameters.AddWithValue("@complaint_feedback", m.complaint_Feedback);
-			cmd.Parameters.AddWithValue("@complaint_country", (object?)m.complaint_country ?? DBNull.Value);
+			cmd.Parameters.AddWithValue("@complaint_count", (object?)m.complaint_count ?? DBNull.Value);
 			cmd.Parameters.AddWithValue("@complaint_id", m.complaint_id);
 			cmd.Parameters.AddWithValue("@is_locked", m.IsLocked ? 1 : 0);
 			cmd.Parameters.AddWithValue("@current_run", m.current_run ? 1 : 0);
@@ -177,7 +171,7 @@ WHERE id = @id;";
 			cmd.Parameters.AddWithValue("@description", (object?)m.Description ?? DBNull.Value);
 		}
 
-		private static Main MapReaderToMain(IDataRecord r)
+		private static Main MapReaderToMain(IDataRecord r)  // 映射
 		{
 			var m = new Main
 			{
@@ -189,13 +183,11 @@ WHERE id = @id;";
 				version = r["version"] as string,
 				first_version = r["first_version"] as string,
 				Server_website = r["server_website"] as string,
-				complaint = r["complaint"] as string,
-				complaint_Feedback = r["complaint_feedback"] == DBNull.Value ? 0 : Convert.ToInt32(r["complaint_feedback"]),
-				complaint_country = r["complaint_country"] as string,
+				complaint_count = r["complaint_count"] == DBNull.Value ? 0 : Convert.ToInt32(r["complaint_id"]),
 				complaint_id = r["complaint_id"] == DBNull.Value ? 0 : Convert.ToInt32(r["complaint_id"]),
 				IsLocked = r["is_locked"] != DBNull.Value && Convert.ToInt32(r["is_locked"]) == 1,
 				current_run = r["current_run"] != DBNull.Value && Convert.ToInt32(r["current_run"]) == 1,
-				The_next_revision_schedule = r["the_next_revision_schedule"] as string,
+				The_next_revision_schedule = Convert.ToInt32(r["The_next_revision_schedule"]),
 				Version_end_time = r["version_end_time"] == DBNull.Value ? DateTime.MinValue : Convert.ToDateTime(r["version_end_time"]),
 				registered_user = r["registered_user"] as string,
 				Description = r["description"] as string
