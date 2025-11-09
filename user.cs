@@ -30,7 +30,7 @@ namespace MusicChange
 			// 使用 db.dbPath（确保已初始化）
 			InitializeComponent();
 			logopic = null;
-			if(LaserEditing.Pubuser != null)
+			if(LaserEditing.Pubuser != null)  // 已登录
 			{
 				if(LaserEditing.Pubuser.AvatarPath != null)
 				{
@@ -49,29 +49,26 @@ namespace MusicChange
 				{
 					register.Text = "应用程序未注册";
 				}
-				//versions.Text = "当前版本：" + LaserEditing.AppVersion;
+				versions.Text = "当前版本：" + LaserEditing.Pubmain.version;
 				//将当前时间减去注册时间 ，获得天数
 				days.Text = "你已经使用：  " + (DateTime.Now - LaserEditing.Pubuser.CreatedAt).Days + " 天";
 
 			}
-			else
+			else   // 未登录
 			{
-				if(!db.IsTableEmpty("Users"))
+				if(!db.IsTableEmpty("Users"))    // 数据库不为空
 				{
-
-
 					LaserEditing.usersRepo = new UsersRepository(db.dbPath);    //读第一条LaserEditing.db数据库的User 存入Pubuser 类中
-					LaserEditing.Pubuser = LaserEditing.usersRepo.GetById(15);  //???????????
+					LaserEditing.Pubuser = LaserEditing.usersRepo.GetById(LaserEditing.Pubmain.CurrenUserId);  //??????????? 
 					if(LaserEditing.Pubuser != null)
 					{
-
 						if(LaserEditing.Pubuser.AvatarPath != null)
 						{
 							userimage.Image = Image.FromFile(LaserEditing.Pubuser.AvatarPath); // 显示用户头像
 						}
 					}
 				}
-				else
+				else   // 数据库为空
 				{
 					SetStatus.Text = "你好：" + "请先注册";
 					username.Text = "";
@@ -312,46 +309,66 @@ namespace MusicChange
 		{
 			try
 			{
-				if(!ValidateInput(out string username, out string email, out string password))
-				{
+				if(!ValidateInput(out string username, out string email, out string password))  // 验证输入
+				{  // 验证失败
+
 					if(usernamenull)
 					{
+						logopic = Path.Combine(LaserEditing.subDirectory, "User") + "\\" + "logo.jpg";
 						SetStatus.Text = "未注册";
-						luser.Username = username;
+						luser.Username = "未注册";
 						luser.Email = "110959751@qq.com";
-						luser.PasswordHash = "123456789";
-						luser.Iphone = txtPhone.Text.Trim();
-						luser.FullName = txtFullName.Text.Trim();
-						luser.AvatarPath = "";
+						luser.PasswordHash = "";
+						luser.Iphone = "";
+						luser.FullName = "";
+						luser.AvatarPath = logopic;
 						luser.IsActive = true;
 						luser.CreatedAt = DateTime.Now;
 						luser.UpdatedAt = DateTime.Now;
-
-						bool same = LaserEditing.usersRepo.ExistsByUsername(username);
-						int newIdw = LaserEditing.usersRepo.Create(luser);
-
-						if(newIdw > 0)
+						luser.Draftposition = "";
+						luser.IsLocked = false;
+						luser.IsDeleted = false;
+						luser.IsModified = false;
+						newId = LaserEditing.usersRepo.Create(luser);  // 创建用户
+						if(newId > 0)
 						{
-							//SetStatus.Text = "未注册用户成功";
+							SetStatus.Text = "未注册用户成功";
 							MessageBox.Show("未注册用户成功。", "注册完成", MessageBoxButtons.OK, MessageBoxIcon.Information);
-							this.DialogResult = DialogResult.OK;
+							LaserEditing.Pubuser = luser;   // 保存用户信息
+									//if(LaserEditing.Pubmain != null)  //将 id  存入 main 表的userid 列 							{
+							LaserEditing.mainRepo.Update(new Main { Id = LaserEditing.Pubmain.Id, CurrenUserId = newId });   // 更新当前正在运行的项目
+							LaserEditing.Pubmain.CurrenUserId = luser.Id;   //			}
 							this.Close();
 						}
 						else
 						{
-							SetStatus.Text = "注册失败，请重试";
+							SetStatus.Text = "注册失败，数据库故障！联系厂家";
 						}
 
 					}
+
 					return;
-				}
-				//获取当前 users 记录数  				int count = _usersRepo.GetAll().Count;
-				if(!db.IsTableEmpty("Users"))
+				}   // 验证成功
+					//获取当前 users 记录数  				int count = _usersRepo.GetAll().Count;
+				if(!db.IsTableEmpty("Users"))  // 判断表是否为空
 				{
 					if(LaserEditing.usersRepo.ExistsByUsername(username))   //检查用户名是否存在
 					{
-						SetStatus.Text = $"用户名已存在，请更换";
+						SetStatus.Text = $"用户名已存在";
+						//窗口提示如果 需要新注册，则返回
+						MessageBox.Show("用户已存在，请重新输入用户名。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+						//获得 MessageBox 返回值
+						if(DialogResult.OK == MessageBox.Show("用户已存在，请重新输入用户名。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information))
+						{
+							return;
+						}
+						txtUsername.Focus();
+
 						return;
+					}
+					else // 用户名不存在
+					{
+						SetStatus.Text = $"请重新输入注册信息";
 					}
 				}
 				else
@@ -378,7 +395,14 @@ namespace MusicChange
 				if(newId > 0)
 				{
 					SetStatus.Text = "注册成功";
-					//写 main 数据库
+					LaserEditing.Pubuser = luser;   // 保存用户信息
+					if(LaserEditing.Pubmain != null)  //将 id  存入 main 表的userid 列
+					{
+						LaserEditing.mainRepo.Update(new Main { Id = LaserEditing.Pubmain.Id, CurrenUserId = newId });   // 更新当前正在运行的项目
+						LaserEditing.Pubmain.CurrenUserId = luser.Id;
+					}
+
+					//var main = LaserEditing.mainRepo.GetCurrentRunning();
 
 					MessageBox.Show("用户注册成功。", "注册完成", MessageBoxButtons.OK, MessageBoxIcon.Information);
 					this.DialogResult = DialogResult.OK;

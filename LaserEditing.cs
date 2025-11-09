@@ -103,9 +103,7 @@ namespace MusicChange
 			documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);  // 获取默认文档目录路径
 			subDirectory = Path.Combine(documentsPath, "ResourceFolder");   //媒体目录
 
-			usersRepo = new UsersRepository(db.dbPath);    //读第一条LaserEditing.db数据库的User 存入Pubuser 类中
-			Pubuser = usersRepo.GetById(15);  //???????????
-		
+			
 		
 		}
 		private void LaserEditing_Load(object sender, EventArgs e)
@@ -161,10 +159,9 @@ namespace MusicChange
 			this.DragEnter += MainForm_DragEnter;
 			this.DragDrop += MainForm_DragDrop;
 			//InitTimeline();
-
-            InitializeProjects();
-			InitializeProjectsRepository(); // 初始化项目仓库
 			InitializeMainRepository();   // 初始化主表
+			InitializeProjectsRepository(); // 初始化项目仓库
+		
 
 			// 若用户已加载，则启动会话（示例使用 Pubuser.Id）
 			//if(Pubuser != null && Pubuser.Id > 0)
@@ -176,8 +173,179 @@ namespace MusicChange
 			//}
 		}
 
-        private void InitializeProjects()
-		{ 
+		private new void Click(object sender, EventArgs e)  //导入素材文件  .并存入数据库的projects 表
+		{
+			listBox1.Items.Clear();
+
+			// 确保子目录存在
+			if(!Directory.Exists(subDirectory))
+			{
+				try
+				{
+					Directory.CreateDirectory(subDirectory);
+					Debug.WriteLine("子目录创建成功: " + subDirectory);
+				}
+				catch(Exception ex)
+				{
+					MessageBox.Show("创建子目录失败: " + ex.Message);
+					return;
+				}
+			}
+
+			using OpenFileDialog ofd = new()
+			{
+				Multiselect = true,
+				Filter = "媒体文件|*.mp4;*.avi;*.jpg;*.png;*.mp3;*.wav|视频文件|*.mp4;*.avi|音频文件|*.mp3;*.wav|图片文件|*.jpg;*.png",
+				Title = "请选择要导入的音频、视频或图片文件",
+				InitialDirectory = subDirectory  //指定初始目录 文件夹
+			};
+
+			if(ofd.ShowDialog() != DialogResult.OK)
+				return;
+
+			var database = new db(db.dbPath);
+
+			// 确保项目仓库与当前工程存在
+			InitializeProjectsRepository();
+			CreateNewProjectIfNeeded(); // 如果没有当前工程则创建一个
+
+			// 已加载文件集合（忽略大小写）
+			var loadedPaths = new HashSet<string>(flowLayoutPanelMedia.Controls.OfType<MediaItemControl>().Select(mi => mi.FilePath ?? string.Empty),
+				StringComparer.OrdinalIgnoreCase);
+
+			int addedCount = 0;
+			int duplicateCount = 0;
+			double addedSeconds = 0.0; // 统计新增媒体总时长（秒）
+
+			foreach(string filePath in ofd.FileNames)
+			{
+				MediaType mediaType;
+				if(IsVideoFile(filePath))
+					mediaType = MediaType.Video;
+				else if(IsAudioFile(filePath))
+					mediaType = MediaType.Audio;
+				else if(IsImageFile(filePath))
+					mediaType = MediaType.Image;
+				else
+					continue;
+
+				// 如果已存在则跳过并高亮已存在项
+				if(loadedPaths.Contains(filePath))
+				{
+					duplicateCount++;
+					var existing = flowLayoutPanelMedia.Controls.OfType<MediaItemControl>().FirstOrDefault(mi => string.Equals(mi.FilePath, filePath, StringComparison.OrdinalIgnoreCase));
+					if(existing != null)
+					{
+						try
+						{
+							existing.BringToFront();
+							var oldColor = existing.BackColor;
+							existing.BackColor = Color.LightGreen;
+							Task.Run(async () =>
+							{
+								await Task.Delay(500);
+								if(!existing.IsDisposed)
+								{
+									existing.Invoke(new Action(() =>
+									{
+										try
+										{
+											existing.BackColor = oldColor;
+										}
+										catch { }
+									}));
+								}
+							});
+						}
+						catch { }
+					}
+					continue;
+				}
+
+				// 新增控件
+				MediaItemControl mediaItem = new(filePath, mediaType);
+				flowLayoutPanelMedia.Controls.Add(mediaItem);
+
+				loadedPaths.Add(filePath);
+				addedCount++;
+
+				// 可选信息（防止空引用）
+				try
+				{
+					listBox1.Items.Add(mediaItem.MediaType);
+					listBox1.Items.Add(mediaItem.FilePath ?? string.Empty);
+					try
+					{
+						listBox1.Items.Add(mediaItem.Image?.Width + "x" + mediaItem.Image?.Height);
+					}
+					catch { }
+					listBox1.Items.Add(mediaItem.Location.X);
+					listBox1.Items.Add(mediaItem.Location.Y);
+				}
+				catch { }
+
+				// 写入数据库（仅对新添加项）
+				try
+				{
+					var fi = new FileInfo(filePath);
+					var asset = new MediaAsset
+					{
+						UserId = Pubuser?.Id ?? 1,
+						Name = Path.GetFileName(filePath),
+						FilePath = filePath,
+						FileSize = fi.Exists ? fi.Length : 0,
+						MediaType = mediaType.ToString().ToLower(),
+						Duration = null,
+						Width = null,
+						Height = null,
+						Framerate = null,
+						Codec = null,
+						CreatedAt = DateTime.Now
+					};
+
+					if(!string.IsNullOrEmpty(mediaItem.TimeLength))
+					{
+						double? seconds = ParseDurationToSeconds(mediaItem.TimeLength);
+						if(seconds.HasValue)
+							asset.Duration = seconds.Value;
+					}
+
+					if(mediaItem.Image != null)
+					{
+						asset.Width = mediaItem.Image.Width;
+						asset.Height = mediaItem.Image.Height;
+					}
+
+					int newId = database.InsertMediaAsset(asset);
+					mediaItem.Tag = newId;
+
+					// 累计时长（若有）
+					if(asset.Duration.HasValue)
+					{
+						addedSeconds += asset.Duration.Value;
+					}
+				}
+				catch(Exception ex)
+				{
+					Debug.WriteLine($"写入媒体资源到数据库失败: {ex.Message}");
+				}
+			}
+
+			// 导入结束后：更新界面与项目元数据
+			UpdateFlowLayoutVisibility();
+			UpdateStatus($"导入完成：新增 {addedCount} 个，已存在 {duplicateCount} 个，当前总计 {flowLayoutPanelMedia.Controls.Count} 个");
+			string t = $"导入完成：新增 {addedCount} 个，已存在 {duplicateCount} 个。\n当前已加载：{flowLayoutPanelMedia.Controls.Count} 个";
+			MessageBoxHelper.ShowAutoClose("3秒后自动关闭", t, 3000);
+
+			// 把新增数量与时长更新到当前项目（如果有）
+			try
+			{
+				UpdateProjectAfterImport(addedCount, addedSeconds, null);
+			}
+			catch(Exception ex)
+			{
+				Debug.WriteLine($"更新项目元信息失败: {ex.Message}");
+			}
 		}
 
 		#region ------------------------ ToolTip 鼠标进入悬停显示 读取用户是否登陆 -------
@@ -4034,14 +4202,23 @@ namespace MusicChange
 		#region ------------  项目 Projiect 数据库操作   ------------
 
 		// 在 LaserEditing_Load 或初始化处调用：
-		private void InitializeProjectsRepository()
+		private void InitializeProjectsRepository()   // 初始化项目数据库
 		{
 			if(_projectsRepo == null)
 			{
 				_projectsRepo = new ProjectsRepository(db.dbPath);
+				try
+				{
+					// 确保 projects 表已创建
+					_projectsRepo.EnsureTableExists();
+				}
+				catch(Exception ex)
+				{
+					Debug.WriteLine($"Ensure projects table failed: {ex.Message}");
+					// 不中断流程，仅记录。调用方在需要时会再次尝试。
+				}
 			}
 		}
-
 		// 创建新项目
 		private void CreateNewProjectIfNeeded(string name = null)
 		{
@@ -4096,22 +4273,23 @@ namespace MusicChange
 		#endregion
 		#region ------------使用主数据表 Main     ------------
 
-		//db.ClearTableAndResetId("users");		 // 彻底清空表
-									 
-		private void InitializeMainRepository()   // 在窗体初始化或 Load 时调用：初始化 MainRepository
+		// 在 InitializeMainRepository 方法中，new MainRepository(db.dbPath); 之后加入 EnsureTableExists 调用
+		private void InitializeMainRepository()
 		{
-			//Pubmain = mainRepo.GetById(1);  //???????????
-			if(mainRepo == null)
+			if(mainRepo == null)  // 确保 repo 创建
 			{
-				mainRepo = new MainRepository(db.dbPath); //		int count = _usersRepo.GetAll().Count;
-				if(!db.IsTableEmpty("Main"))  // 判断表是否为空
-				{   // 表非空
-					Pubmain = mainRepo.GetCurrentRunning();
+				mainRepo = new MainRepository(db.dbPath);
+				//mainRepo.EnsureTableExists();  // 确保 main 表存在（自动创建）  GetCurrentRunning
+				if(!db.IsTableEmpty("Main"))   // 判断表是否为空
+				{    // 表不为空
+					Pubmain = mainRepo.GetCurrentRunning();   // 读第一条LaserEditing.db数据库的Main 存入Pubmain 类中  找到  current_run = true,  当前能运行项目
+					usersRepo = new UsersRepository(db.dbPath);    //读第一条LaserEditing.db数据库的User 存入Pubuser 类中
+					Pubuser = usersRepo.GetById(Pubmain.CurrenUserId);  // 读用户表
 					return;
 				}
-				else  // 表为空
+				else   // 表为空
 				{
-					db.ClearTableAndResetId("Main");
+					db.ClearTableAndResetId("Main");  // 清空表数据并重置自增ID为1
 					Pubmain = new Main
 					{
 						CurrenUserId = Pubuser?.Id ?? 1,
@@ -4119,34 +4297,79 @@ namespace MusicChange
 						LoginTime = DateTime.Now,
 						Workofftime = DateTime.Now,
 						version = "V1.0.0",
-						first_version = "1.0.0",
+						first_version = "V1.0.0",
 						Server_website = "https://www.musicchange.com",
-						complaint_count = 0,  //投诉 次数
+						complaint_count = 0,
 						complaint_id = 0,
 						IsLocked = false,
 						current_run = true,
-						The_next_revision_schedule = 365,  //下次版本更新时间 天数  默认一年
+						The_next_revision_schedule = 365,
+						Version_end_time = 365,
+						registered_user ="未注册",
+						Description = $"Session started from LaserEditing {Environment.MachineName}",
+                        CreatedAt = DateTime.Now
 					};
-					mainRepo.Create(Pubmain);  //写入空数据
+					mainRepo.Create(Pubmain);
 				}
-				//如果current_run 为真 获取所有数据		mainRepo.GetAll();	mainRepo.GetCurrentRunning();
-			
-				//if(Pubmain != null)
-				//{
-				//	Pubmain.current_run = false;
-				//	Pubmain.Workofftime = DateTime.Now;
-				//	mainRepo.Update(Pubmain);
-				//}
-
 			}
-			else
+			else  // repo 已创建
 			{
-                Pubmain = mainRepo.GetCurrentRunning();
+				Pubmain = mainRepo.GetCurrentRunning();
+				usersRepo = new UsersRepository(db.dbPath);    //读第一条LaserEditing.db数据库的User 存入Pubuser 类中
+				Pubuser = usersRepo.GetById(Pubmain.CurrenUserId);  // 读用户表
 			}
-
-
 		}
-		// 启动会话：在用户登录后或程序启动并确认用户时调用
+		//db.ClearTableAndResetId("users");		 // 彻底清空表
+
+		//private void InitializeMainRepository()   // 在窗体初始化或 Load 时调用：初始化 MainRepository
+		//{
+		//	//Pubmain = mainRepo.GetById(1);  //???????????
+		//	if(mainRepo == null)
+		//	{
+		//		mainRepo = new MainRepository(db.dbPath); //		int count = _usersRepo.GetAll().Count;
+		//		if(!db.IsTableEmpty("Main"))  // 判断表是否为空
+		//		{   // 表非空
+		//			Pubmain = mainRepo.GetCurrentRunning();
+		//			return;
+		//		}
+		//		else  // 表为空
+		//		{
+		//			db.ClearTableAndResetId("Main");
+		//			Pubmain = new Main
+		//			{
+		//				CurrenUserId = Pubuser?.Id ?? 1,
+		//				CurrenProjectId = 0,
+		//				LoginTime = DateTime.Now,
+		//				Workofftime = DateTime.Now,
+		//				version = "V1.0.0",
+		//				first_version = "1.0.0",
+		//				Server_website = "https://www.musicchange.com",
+		//				complaint_count = 0,  //投诉 次数
+		//				complaint_id = 0,
+		//				IsLocked = false,
+		//				current_run = true,
+		//				The_next_revision_schedule = 365,  //下次版本更新时间 天数  默认一年
+		//			};
+		//			mainRepo.Create(Pubmain);  //写入空数据
+		//		}
+		//		//如果current_run 为真 获取所有数据		mainRepo.GetAll();	mainRepo.GetCurrentRunning();
+
+		//		//if(Pubmain != null)
+		//		//{
+		//		//	Pubmain.current_run = false;
+		//		//	Pubmain.Workofftime = DateTime.Now;
+		//		//	mainRepo.Update(Pubmain);
+		//		//}
+
+		//	}
+		//	else
+		//	{
+		//              Pubmain = mainRepo.GetCurrentRunning();
+		//	}
+
+
+		//}
+		//// 启动会话：在用户登录后或程序启动并确认用户时调用
 		private void StartSession(int userId, int projectId = 0, string version = null)   // 启动会话
 		{
 			//InitializeMainRepository();
@@ -4170,7 +4393,7 @@ namespace MusicChange
 				IsLocked = false,
 				current_run = true,
 				The_next_revision_schedule = 365,
-				Version_end_time = DateTime.Now,
+				Version_end_time = 365,
 				registered_user = null,
 				Description = $"Session started from LaserEditing {Environment.MachineName}"
 			};

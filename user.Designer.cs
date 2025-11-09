@@ -78,11 +78,11 @@ namespace MusicChange
 			// label7
 			// 
 			this.label7.AutoSize = true;
-			this.label7.Font = new System.Drawing.Font("宋体", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.label7.ForeColor = System.Drawing.Color.Green;
-			this.label7.Location = new System.Drawing.Point(552, 21);
+			this.label7.Font = new System.Drawing.Font("楷体", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.label7.ForeColor = System.Drawing.Color.White;
+			this.label7.Location = new System.Drawing.Point(570, 23);
 			this.label7.Name = "label7";
-			this.label7.Size = new System.Drawing.Size(124, 27);
+			this.label7.Size = new System.Drawing.Size(137, 30);
 			this.label7.TabIndex = 28;
 			this.label7.Text = "用户注册";
 			// 
@@ -372,7 +372,7 @@ namespace MusicChange
 			// 
 			// username
 			// 
-			this.username.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+			this.username.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
 			// 
 			// 
 			// 
@@ -405,7 +405,7 @@ namespace MusicChange
 			// 
 			// registertime
 			// 
-			this.registertime.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+			this.registertime.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
 			// 
 			// 
 			// 
@@ -420,7 +420,7 @@ namespace MusicChange
 			// 
 			// days
 			// 
-			this.days.BackColor = System.Drawing.Color.Lime;
+			this.days.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
 			// 
 			// 
 			// 

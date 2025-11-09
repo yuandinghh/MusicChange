@@ -215,7 +215,7 @@ namespace MusicChange
 			// Userimage
 			// 
 			this.Userimage.Dock = System.Windows.Forms.DockStyle.Right;
-			this.Userimage.Image = global::MusicChange.Properties.Resources.man;
+			this.Userimage.Image = global::MusicChange.Properties.Resources.logo;
 			this.Userimage.Location = new System.Drawing.Point(1911, 2);
 			this.Userimage.Margin = new System.Windows.Forms.Padding(1, 1, 20, 1);
 			this.Userimage.Name = "Userimage";

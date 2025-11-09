@@ -19,7 +19,7 @@ namespace MusicChange
             EnsureTableExists();
         }
 
-        private void EnsureTableExists()
+        public void EnsureTableExists()
         {
             const string sql = @"
 CREATE TABLE IF NOT EXISTS projects(

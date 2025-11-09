@@ -18,6 +18,7 @@ namespace MusicChange  // 数据库操作封装类
 		public db(string dbPath)
 		{
 			_connectionString = $"Data Source={dbPath};Version=3;";
+			//_connectionString = $"Data Source={dbPath};Version=3; Pooling=True;Journal Mode=WAL; ";  //Pooling=True：启用连接池，提高性能,	Journal Mode = WAL：启用 WAL（Write - Ahead Logging）模式，这是 SQLite 的高性能模式
 		}
 		// 1. 初始化数据库（创建表）
 		public void InitDatabase()
@@ -77,8 +78,9 @@ namespace MusicChange  // 数据库操作封装类
 		/// <returns>true：记录数为零；false：记录数大于零</returns>
 		public static bool IsTableEmpty(string tableName)
 		{
-			_connectionString = $"Data Source={dbPath};Version=3;";
-			// 验证表名合法性（简单防注入，若表名来自用户输入需加强校验）
+			_connectionString = $"Data Source={dbPath};Version=3; ";
+			//_connectionString = $"Data Source={dbPath};Version=3; Pooling=True;Journal Mode=WAL; ";  //Pooling=True：启用连接池，提高性能,	Journal Mode = WAL：启用 WAL（Write - Ahead Logging）模式，这是 SQLite 的高性能模式
+			// 验证表名合法性（简单防注入，若表名来自用户输入需加强校验）  ;
 			if(string.IsNullOrWhiteSpace(tableName) || tableName.Contains(";") || tableName.Contains("'"))
 			{
 				throw new ArgumentException("无效的表名");
@@ -3647,91 +3649,78 @@ namespace MusicChange  // 数据库操作封装类
 			get; set;
 		}
 	}
+
 	public class Main
 	{
 		public int Id
 		{
 			get; set;
 		}
-		public int CurrenUserId  // 当前用户id
+		public int CurrenUserId
 		{
 			get; set;
 		}
-		public int CurrenProjectId   //项目 id,根据当前项目 确认 应该运行 那个 工程 project
+		public int CurrenProjectId
 		{
 			get; set;
 		}
-		public DateTime LoginTime { get; set; } = DateTime.Now; // 登录时间
-		public DateTime Workofftime { get; set; } = DateTime.Now;  // 登出时间
-		public string version    // 版本
+		public DateTime LoginTime
 		{
 			get; set;
 		}
-		public string first_version    // 第一版本 交付时间
+		public DateTime Workofftime
 		{
 			get; set;
 		}
-		public string Server_website   // 服务器网址  默认为空 没建立服务器
+		public string version
 		{
 			get; set;
 		}
-		public int complaint_count    //投诉count
+		public string first_version
 		{
 			get; set;
 		}
-		public int complaint_id    //投诉  反馈
+		public string Server_website
 		{
 			get; set;
 		}
-		public bool IsLocked    // 是否锁定
+		public int complaint_count
 		{
 			get; set;
 		}
-		public bool current_run    //当前运行user  和 project  根据当前项目 确认 应该运行 那个 工程 project=1
+		public int complaint_id
 		{
 			get; set;
 		}
-		public int The_next_revision_schedule    //	下一改版时间
+		public bool IsLocked
 		{
 			get; set;
 		}
-		public DateTime Version_end_time { get; set; } = DateTime.Now;  // 版本结束时间
-		public string registered_user   //	注册用户 如果未注册  null，1： 按月付费，2 按年付费	
+		public bool current_run
+		{
+			get; set;
+		}
+		public int The_next_revision_schedule
+		{
+			get; set;
+		}
+		public int Version_end_time
+		{
+			get; set;
+		}
+		public string registered_user
 		{
 			get; set;
 		}
 		public string Description
 		{
 			get; set;
-		}    // 描述
-
+		}
+		public DateTime CreatedAt
+		{
+			get; set;
+		}
 	}
-
-	//public class Complaint    // 投诉
-	//{
-	//	public int Id
-	//	{
-	//		get; set;
-	//	}
-	//	public int Main_id  // 当前用户id
-	//	{
-	//		get; set;
-	//	}
-	//	public string complaint    //投诉count
-	//	{
-	//		get; set;
-	//	}
-	//	public string username    //投诉count
-	//	{
-	//		get; set;
-	//	}
-	//	public string complaint_feedback    //投诉count
-	//	{
-	//		get; set;
-	//	}
-	//	public DateTime LoginTime { get; set; } = DateTime.Now; // 登录时间
-	//}
-
 
 	#endregion
 
