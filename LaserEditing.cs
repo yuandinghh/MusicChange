@@ -58,7 +58,7 @@ namespace MusicChange
 		private const float ZOOM_INCREMENT = 0.05f;
 		private const float MIN_ZOOM = 0.2f;
 		private const float MAX_ZOOM = 3.0f;
-	
+
 		public static string documentsPath; // 文档目录名称
 		public static string subDirectory;  //文档下 子目录名称工作目录 ResourceFolder
 		private readonly ToolTipEx toolTipEx = new();  //private bool darkMode = false; private VlcControl vlcControl = new VlcControl();
@@ -83,17 +83,19 @@ namespace MusicChange
 		private ContextMenuStrip flowLayoutPanelContextMenu;
 		private int UserControlNumber = 0;
 		//把代码改成直接集成到你当前项目命名空间 MusicChange（并把 Avatar / 其它控件整合），或要我把 wave 渲染改为更精确的峰值图与时间刻度、或者加入视频内嵌预览（LibVLC VideoView）示例，我可以继续完善。
-		private TimelineControl timeline;		//private Button btnAddFiles;
-		private LibVLC _libVLC;		// 新增字段（类成员区）
-		private ProjectsRepository _projectsRepo;
-		private Project _currentProject;
-		public static Project project = new Project();
+		private TimelineControl timeline;       //private Button btnAddFiles;
+		private LibVLC _libVLC;     // 新增字段（类成员区）
+
 		public static MainRepository mainRepo;
 		public static Main Pubmain = new Main();
 		public static Users Pubuser = new();
 		public static UsersRepository usersRepo;
-	
-		
+
+		private ProjectsRepository _projectsRepo;
+		public static Project Pubproject = new();  // 当前项目
+		private Project _currentProject;    // 当前项目
+		private MediaAssetsRepository _mediaRepo;
+
 		public LaserEditing()
 		{
 			InitializeComponent();
@@ -103,8 +105,8 @@ namespace MusicChange
 			documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);  // 获取默认文档目录路径
 			subDirectory = Path.Combine(documentsPath, "ResourceFolder");   //媒体目录
 
-			
-		
+
+
 		}
 		private void LaserEditing_Load(object sender, EventArgs e)
 		{
@@ -159,26 +161,14 @@ namespace MusicChange
 			this.DragEnter += MainForm_DragEnter;
 			this.DragDrop += MainForm_DragDrop;
 			//InitTimeline();
-			InitializeMainRepository();   // 初始化主表
-			InitializeProjectsRepository(); // 初始化项目仓库
-		
+			InitializeMainRepository();   // 初始化主表  	已经在 初始化主表 调用 InitializeProjectsRepository(); // 初始化项目仓库
 
-			// 若用户已加载，则启动会话（示例使用 Pubuser.Id）
-			//if(Pubuser != null && Pubuser.Id > 0)
-			//{
-			//	// 如果尚未创建当前项目，可以创建或传入现有项目 id
-			//	if(_currentProject == null)
-			//		CreateNewProjectIfNeeded();
-			//	StartSession(Pubuser.Id, _currentProject?.Id ?? 0);
-			//}
+
 		}
 
 		private new void Click(object sender, EventArgs e)  //导入素材文件  .并存入数据库的projects 表
 		{
-			listBox1.Items.Clear();
-
-			// 确保子目录存在
-			if(!Directory.Exists(subDirectory))
+			if(!Directory.Exists(subDirectory))     // 确保子目录存在
 			{
 				try
 				{
@@ -204,14 +194,10 @@ namespace MusicChange
 				return;
 
 			var database = new db(db.dbPath);
-
-			// 确保项目仓库与当前工程存在
-			InitializeProjectsRepository();
+			InitializeProjectsRepository();  // 确保项目仓库与当前工程存在
 			CreateNewProjectIfNeeded(); // 如果没有当前工程则创建一个
-
-			// 已加载文件集合（忽略大小写）
 			var loadedPaths = new HashSet<string>(flowLayoutPanelMedia.Controls.OfType<MediaItemControl>().Select(mi => mi.FilePath ?? string.Empty),
-				StringComparer.OrdinalIgnoreCase);
+				StringComparer.OrdinalIgnoreCase);  //  已加载文件集合（忽略大小写）
 
 			int addedCount = 0;
 			int duplicateCount = 0;
@@ -265,37 +251,21 @@ namespace MusicChange
 				// 新增控件
 				MediaItemControl mediaItem = new(filePath, mediaType);
 				flowLayoutPanelMedia.Controls.Add(mediaItem);
-
 				loadedPaths.Add(filePath);
 				addedCount++;
-
-				// 可选信息（防止空引用）
-				try
-				{
-					listBox1.Items.Add(mediaItem.MediaType);
-					listBox1.Items.Add(mediaItem.FilePath ?? string.Empty);
-					try
-					{
-						listBox1.Items.Add(mediaItem.Image?.Width + "x" + mediaItem.Image?.Height);
-					}
-					catch { }
-					listBox1.Items.Add(mediaItem.Location.X);
-					listBox1.Items.Add(mediaItem.Location.Y);
-				}
-				catch { }
-
-				// 写入数据库（仅对新添加项）
-				try
+		
+				try     // 在写入数据库（仅对新添加项）处，替换为：
 				{
 					var fi = new FileInfo(filePath);
+					//将string 转换为double           double? seconds = ParseDurationToSeconds(mediaItem.TimeLength);
 					var asset = new MediaAsset
 					{
-						UserId = Pubuser?.Id ?? 1,
+						ProjectId = _currentProject?.Id ?? 0,     // <-- 关键：关联到当前项目
 						Name = Path.GetFileName(filePath),
 						FilePath = filePath,
 						FileSize = fi.Exists ? fi.Length : 0,
 						MediaType = mediaType.ToString().ToLower(),
-						Duration = null,
+						Duration =null,
 						Width = null,
 						Height = null,
 						Framerate = null,
@@ -316,23 +286,24 @@ namespace MusicChange
 						asset.Height = mediaItem.Image.Height;
 					}
 
-					int newId = database.InsertMediaAsset(asset);
+					// 使用 MediaAssetsRepository 保存，返回新 id
+					int newId = _mediaRepo.Create(asset);
 					mediaItem.Tag = newId;
 
-					// 累计时长（若有）
 					if(asset.Duration.HasValue)
-					{
 						addedSeconds += asset.Duration.Value;
-					}
 				}
 				catch(Exception ex)
 				{
+					//窗口提示
+					MessageBoxHelper.ShowAutoClose("5秒后自动关闭", ex.Message, 5000);
 					Debug.WriteLine($"写入媒体资源到数据库失败: {ex.Message}");
 				}
 			}
 
 			// 导入结束后：更新界面与项目元数据
 			UpdateFlowLayoutVisibility();
+
 			UpdateStatus($"导入完成：新增 {addedCount} 个，已存在 {duplicateCount} 个，当前总计 {flowLayoutPanelMedia.Controls.Count} 个");
 			string t = $"导入完成：新增 {addedCount} 个，已存在 {duplicateCount} 个。\n当前已加载：{flowLayoutPanelMedia.Controls.Count} 个";
 			MessageBoxHelper.ShowAutoClose("3秒后自动关闭", t, 3000);
@@ -3028,7 +2999,7 @@ namespace MusicChange
 		{
 			Click(sender, e);
 		}
-		private new void Click(object sender, EventArgs e)  //导入素材文件
+		private new void Click1(object sender, EventArgs e)  //导入素材文件
 		{
 			listBox1.Items.Clear();
 			if(!Directory.Exists(subDirectory))
@@ -3143,7 +3114,7 @@ namespace MusicChange
 					var fi = new FileInfo(filePath);
 					var asset = new MediaAsset
 					{
-						UserId = 1,
+						//UserId = 1,
 						Name = Path.GetFileName(filePath),
 						FilePath = filePath,
 						FileSize = fi.Exists ? fi.Length : 0,
@@ -3169,8 +3140,8 @@ namespace MusicChange
 						asset.Height = mediaItem.Image.Height;
 					}
 
-					int newId = database.InsertMediaAsset(asset);
-					mediaItem.Tag = newId;
+					//int newId = database.InsertMediaAsset(asset);
+					//mediaItem.Tag = newId;
 				}
 				catch(Exception ex)
 				{
@@ -4218,9 +4189,24 @@ namespace MusicChange
 					// 不中断流程，仅记录。调用方在需要时会再次尝试。
 				}
 			}
+
+			// 初始化 media assets 仓库
+			if(_mediaRepo == null)
+			{
+				_mediaRepo = new MediaAssetsRepository(db.dbPath);
+				try
+				{
+					_mediaRepo.EnsureTableExists();
+				}
+				catch(Exception ex)
+				{
+					Debug.WriteLine($"Ensure media_assets table failed: {ex.Message}");
+				}
+
+
+			}
 		}
-		// 创建新项目
-		private void CreateNewProjectIfNeeded(string name = null)
+		private void CreateNewProjectIfNeeded(string name = null)   // 创建新项目
 		{
 			InitializeProjectsRepository();
 
@@ -4270,11 +4256,49 @@ namespace MusicChange
 		// 在现有 Click(...) 导入方法内，示例修改位置：
 		// 在方法开始处（导入对话前或紧接导入之前）确保 repo 与 project
 		// 调用 CreateNewProjectIfNeeded() 根据需求（这里示例在每次导入若无 current project 则创建）
+		private void LoadMediaForCurrentProject()   // 加载当前项目下的媒体文件
+		{
+			if(_currentProject == null || _mediaRepo == null)
+				return;
+
+			var assets = _mediaRepo.GetByProjectId(_currentProject.Id);
+			flowLayoutPanelMedia.Controls.Clear();
+
+			foreach(var a in assets)
+			{
+				// 使用 MediaItemControl 构造函数（如果有接受 path 的构造），并把数据库 id 放入 Tag
+				var mediaType = MediaType.Video;
+				if(a.MediaType == "audio")
+					mediaType = MediaType.Audio;
+				else if(a.MediaType == "image")
+					mediaType = MediaType.Image;
+
+				var mi = new MediaItemControl(a.FilePath, mediaType);
+				mi.Tag = a.Id;
+				flowLayoutPanelMedia.Controls.Add(mi);
+			}
+
+			UpdateFlowLayoutVisibility();
+		}
+
+		private bool UpdateMediaAssetMetadata(int assetId, string newName = null, double? newDuration = null)  // 更新媒体文件元数据
+		{
+			var asset = _mediaRepo.GetById(assetId);
+			if(asset == null)
+				return false;
+
+			if(!string.IsNullOrEmpty(newName))
+				asset.Name = newName;
+			if(newDuration.HasValue)
+				asset.Duration = newDuration.Value;
+
+			return _mediaRepo.Update(asset);
+		}
 		#endregion
 		#region ------------使用主数据表 Main     ------------
 
 		// 在 InitializeMainRepository 方法中，new MainRepository(db.dbPath); 之后加入 EnsureTableExists 调用
-		private void InitializeMainRepository()
+		private void InitializeMainRepository()     // 初始化主数据库
 		{
 			if(mainRepo == null)  // 确保 repo 创建
 			{
@@ -4282,9 +4306,16 @@ namespace MusicChange
 				//mainRepo.EnsureTableExists();  // 确保 main 表存在（自动创建）  GetCurrentRunning
 				if(!db.IsTableEmpty("Main"))   // 判断表是否为空
 				{    // 表不为空
-					Pubmain = mainRepo.GetCurrentRunning();   // 读第一条LaserEditing.db数据库的Main 存入Pubmain 类中  找到  current_run = true,  当前能运行项目
+					Pubmain = mainRepo.GetById(1);     //main只有一条记录     .GetCurrentRunning();   current_run = true,  当前能运行项目
 					usersRepo = new UsersRepository(db.dbPath);    //读第一条LaserEditing.db数据库的User 存入Pubuser 类中
 					Pubuser = usersRepo.GetById(Pubmain.CurrenUserId);  // 读用户表
+					if(Pubmain.current_run)  // 当前有项目上次运行
+					{
+						InitializeProjectsRepository();  // 初始化项目数据库
+						Pubproject = _projectsRepo.GetById(Pubmain.CurrenProjectId); // 读项目表
+                        LoadMediaForCurrentProject();  // 加载当前项目下的媒体文件     timeline.LoadMedia(Pubproject.Id);
+						
+					}
 					return;
 				}
 				else   // 表为空
@@ -4305,9 +4336,9 @@ namespace MusicChange
 						current_run = true,
 						The_next_revision_schedule = 365,
 						Version_end_time = 365,
-						registered_user ="未注册",
+						registered_user = "未注册",
 						Description = $"Session started from LaserEditing {Environment.MachineName}",
-                        CreatedAt = DateTime.Now
+						CreatedAt = DateTime.Now
 					};
 					mainRepo.Create(Pubmain);
 				}
@@ -4317,6 +4348,13 @@ namespace MusicChange
 				Pubmain = mainRepo.GetCurrentRunning();
 				usersRepo = new UsersRepository(db.dbPath);    //读第一条LaserEditing.db数据库的User 存入Pubuser 类中
 				Pubuser = usersRepo.GetById(Pubmain.CurrenUserId);  // 读用户表
+				InitializeProjectsRepository();  // 获取项目
+				if(Pubmain.CurrenProjectId != 0)
+				{
+					Pubproject = _projectsRepo.GetById(Pubmain.CurrenProjectId);
+					// 根据 Pubproject.id 获取项目 中 所有 
+				}
+
 			}
 		}
 		//db.ClearTableAndResetId("users");		 // 彻底清空表
@@ -4403,7 +4441,7 @@ namespace MusicChange
 			Pubmain = m;
 		}
 		// 结束会话：在用户登出或窗体关闭前调用
-		private void EndSession()
+		private void EndSession()   // 结束会话
 		{
 			try
 			{
@@ -4430,7 +4468,7 @@ namespace MusicChange
 			}
 		}
 		// 在创建新项目时，若希望把当前会话的 CurrenProjectId 同步到 main 表，更新会话
-		private void CreateNewProjectIfNeeded_aa(string name = null)
+		private void CreateNewProjectIfNeeded_aa(string name = null)   // 创建新项目
 		{
 			InitializeProjectsRepository();
 
@@ -4462,36 +4500,36 @@ namespace MusicChange
 				mainRepo.Update(Pubmain);
 			}
 		}
-/*		GitHub Copilot
+		/*		GitHub Copilot
 
-下面给出把 `MainRepository` 集成到 `LaserEditing` 窗体、并在用户登录 / 启动会话与退出 / 关闭窗体时记录登录（login）和登出（workoff）信息的最小可用补丁。说明要点后给出可直接粘贴到 `LaserEditing.cs` 的代码片段（放在类成员区与合适位置的方法）。
+		下面给出把 `MainRepository` 集成到 `LaserEditing` 窗体、并在用户登录 / 启动会话与退出 / 关闭窗体时记录登录（login）和登出（workoff）信息的最小可用补丁。说明要点后给出可直接粘贴到 `LaserEditing.cs` 的代码片段（放在类成员区与合适位置的方法）。
 
-要点
-- 在窗体初始化时创建 `MainRepository` 实例。
-- 登录时调用 `StartSession(userId, projectId)`：创建一条 `main` 记录并将 `current_run=1` 标记该会话为正在运行。
-- 退出或窗体关闭时调用 `EndSession()`：更新当前记录的 `workofftime` 并把 `current_run=0`。
-- 提供 `GetCurrentSession()` 以在启动时恢复上次未正确结束的会话（可选）。
-- 在创建/切换项目时更新 `CurrenProjectId` 并同步到 `main` 表（若 session 存在）。
+		要点
+		- 在窗体初始化时创建 `MainRepository` 实例。
+		- 登录时调用 `StartSession(userId, projectId)`：创建一条 `main` 记录并将 `current_run=1` 标记该会话为正在运行。
+		- 退出或窗体关闭时调用 `EndSession()`：更新当前记录的 `workofftime` 并把 `current_run=0`。
+		- 提供 `GetCurrentSession()` 以在启动时恢复上次未正确结束的会话（可选）。
+		- 在创建/切换项目时更新 `CurrenProjectId` 并同步到 `main` 表（若 session 存在）。
 
-把下面代码片段按注释位置合并到 `LaserEditing.cs`（类成员区、Load、CreateNewProjectIfNeeded、OnFormClosing 等处）。
+		把下面代码片段按注释位置合并到 `LaserEditing.cs`（类成员区、Load、CreateNewProjectIfNeeded、OnFormClosing 等处）。
 
-```csharp
-// 类成员区：新增 MainRepository 与当前会话记录
-private MainRepository mainRepo;
-private Main Pubmain;
-```
-```csharp
+		```csharp
+		// 类成员区：新增 MainRepository 与当前会话记录
+		private MainRepository mainRepo;
+		private Main Pubmain;
+		```
+		```csharp
 
 
-说明与注意事项（短）
-- 上面方法依赖先前你已有的 `MainRepository` / `Main` 定义（请确认命名与字段一致）。
-- 在真实登录流程中，应在用户成功验证后调用 `StartSession`；登出或程序崩溃恢复时可使用 `GetCurrentRunning()` 找到未结束的会话再更新。
-- `MainRepository.GetCurrentRunning()` 在之前的实现里按 `current_run = 1` 查找最近一条，会话恢复/检测基于此。
-- 若你希望记录更多（IP、机器、版本、退出原因），在 `Main` 模型与表中加入字段并在 `StartSession` / `EndSession` 中填充。
-- 保证对数据库的写操作尽量在非 UI 密集路径使用 try/catch 并记录异常，避免阻塞 UI。
+		说明与注意事项（短）
+		- 上面方法依赖先前你已有的 `MainRepository` / `Main` 定义（请确认命名与字段一致）。
+		- 在真实登录流程中，应在用户成功验证后调用 `StartSession`；登出或程序崩溃恢复时可使用 `GetCurrentRunning()` 找到未结束的会话再更新。
+		- `MainRepository.GetCurrentRunning()` 在之前的实现里按 `current_run = 1` 查找最近一条，会话恢复/检测基于此。
+		- 若你希望记录更多（IP、机器、版本、退出原因），在 `Main` 模型与表中加入字段并在 `StartSession` / `EndSession` 中填充。
+		- 保证对数据库的写操作尽量在非 UI 密集路径使用 try/catch 并记录异常，避免阻塞 UI。
 
-需要我把上述修改直接生成完整文件补丁（替换 LaserEditing.cs 的相应区域）并说明每处改动吗？
-*/
+		需要我把上述修改直接生成完整文件补丁（替换 LaserEditing.cs 的相应区域）并说明每处改动吗？
+		*/
 		#endregion
 		#region ------------     ------------
 		#endregion

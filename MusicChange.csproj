@@ -298,7 +298,7 @@
     <Compile Include="Helpers\ComplaintRepository.cs" />
     <Compile Include="Helpers\FFmpegHelper.cs" />
     <Compile Include="Helpers\MainRepository.cs" />
-    <Compile Include="Helpers\MediaAssetRepository.cs" />
+    <Compile Include="Helpers\MediaAssetsRepository.cs" />
     <Compile Include="Helpers\PasswordHelper.cs" />
     <Compile Include="Helpers\TimelineTrackRepository.cs" />
     <Compile Include="Helpers\TransactionDetailRepository.cs" />

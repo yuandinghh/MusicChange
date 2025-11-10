@@ -1285,7 +1285,7 @@ namespace MusicChange
 			// 
 			this.listBox1.FormattingEnabled = true;
 			this.listBox1.ItemHeight = 15;
-			this.listBox1.Location = new System.Drawing.Point(17, 390);
+			this.listBox1.Location = new System.Drawing.Point(21, 333);
 			this.listBox1.Name = "listBox1";
 			this.listBox1.Size = new System.Drawing.Size(383, 79);
 			this.listBox1.TabIndex = 5;
@@ -1321,7 +1321,7 @@ namespace MusicChange
 			// 
 			// btnAddFiles
 			// 
-			this.btnAddFiles.Location = new System.Drawing.Point(46, 520);
+			this.btnAddFiles.Location = new System.Drawing.Point(34, 448);
 			this.btnAddFiles.Name = "btnAddFiles";
 			this.btnAddFiles.Size = new System.Drawing.Size(75, 23);
 			this.btnAddFiles.TabIndex = 18;

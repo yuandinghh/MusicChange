@@ -1663,113 +1663,7 @@ namespace MusicChange  // 数据库操作封装类
 		/// <summary>
 		/// 第一次 初始化事务  已经不用
 		/// </summary>
-		public void transactioninit()
-		{
-
-			// 初始化各个仓库
-			var projectRepo = new ProjectRepository(_connectionString);
-			var mediaAssetRepo = new MediaAssetRepository(_connectionString);
-			var trackRepo = new TimelineTrackRepository(_connectionString);
-			var clipRepo = new ClipRepository(_connectionString);
-			var transactionRepo = new TransactionRepository(_connectionString);
-			var transactionDetailRepo = new TransactionDetailRepository(_connectionString);
-
-			try
-			{
-				// 创建项目
-				var project = new Project
-				{
-					UserId = 1,
-					Name = "我的视频项目",
-					Description = "测试项目",
-					Width = 1920,
-					Height = 1080,
-					Framerate = 30.0,
-					Duration = 0.0,
-					ThumbnailPath = @"D:\Documents\ResourceFolder\D:\Documents\ResourceFolder.jpg",
-					CreatedAt = DateTime.Now,
-					UpdatedAt = DateTime.Now,
-				};
-
-				int projectId = projectRepo.Create(project);
-				Debug.WriteLine($"创建项目，ID: {projectId}");
-
-				// 获取项目
-				var retrievedProject = projectRepo.GetById(projectId);
-				Debug.WriteLine($"项目名称: {retrievedProject.Name}");
-
-				// 更新项目
-				retrievedProject.Description = "更新后的项目描述";
-				projectRepo.Update(retrievedProject);
-				Debug.WriteLine("项目已更新");
-
-				// 创建媒体资源
-				var mediaAsset = new MediaAsset
-				{
-					UserId = 1,
-					Name = "测试视频.mp4",
-					FilePath = @"C:\Videos\test.mp4",
-					FileSize = 1024000,
-					MediaType = "video",
-					Duration = 60.0,
-					Width = 1920,
-					Height = 1080,
-					Framerate = 30.0,
-					Codec = "H.264"
-				};
-
-				int mediaAssetId = mediaAssetRepo.Create(mediaAsset);
-				Debug.WriteLine($"创建媒体资源，ID: {mediaAssetId}");
-
-				// 创建时间线轨道
-				var track = new TimelineTrack
-				{
-					ProjectId = projectId,
-					TrackType = "video",
-					TrackIndex = 0,
-					Name = "视频轨道1",
-					IsMuted = false,
-					IsLocked = false,
-					Volume = 1.0
-				};
-
-				int trackId = trackRepo.Create(track);
-				Debug.WriteLine($"创建轨道，ID: {trackId}");
-
-				// 创建剪辑片段
-				var clip = new Clip
-				{
-					ProjectId = projectId,
-					TrackId = trackId,
-					MediaAssetId = mediaAssetId,
-					Name = "剪辑片段1",
-					StartTime = 0.0,
-					EndTime = 10.0,
-					MediaStartTime = 0.0,
-					MediaEndTime = 10.0,
-					PositionX = 0.0,
-					PositionY = 0.0,
-					ScaleX = 1.0,
-					ScaleY = 1.0,
-					Rotation = 0.0,
-					Volume = 1.0,
-					IsMuted = false
-				};
-
-				int clipId = clipRepo.Create(clip);
-				Debug.WriteLine($"创建剪辑片段，ID: {clipId}");
-				// 记录事务
-				//int transactionId = transactionRepo.RecordTransaction( projectId, 1, "create_clip", "创建剪辑片段" );
-				//Debug.WriteLine( $"记录事务，ID: {transactionId}" );
-				//// 记录事务详情
-				//transactionDetailRepo.RecordTransactionDetail( transactionId, "create", "clips", clipId, null, clip.ToString() );
-				Debug.WriteLine("记录事务详情");
-			}
-			catch(Exception ex)
-			{
-				Debug.WriteLine($"发生错误: {ex.Message}");
-			}
-		}
+	
 
 
 		static void TestDatabaseConnection(string databasePath)
@@ -2841,52 +2735,7 @@ namespace MusicChange  // 数据库操作封装类
 		#region --------- 2025-10-26 开始加入程序代码 ------------
 		//csharp db.cs
 		// 新增到 db 类（db.cs），靠近其他插入方法位置
-		public int InsertMediaAsset(MediaAsset asset)
-		{
-			using var connection = new SQLiteConnection(_connectionString);
-			connection.Open();
-
-			string sql = @"
-        INSERT INTO media_assets 
-        (user_id, name, file_path, file_size, media_type, duration, width, height, framerate, codec, created_at)
-        VALUES
-        (@user_id, @name, @file_path, @file_size, @media_type, @duration, @width, @height, @framerate, @codec, @created_at);
-        SELECT last_insert_rowid();";
-
-			using var command = new SQLiteCommand(sql, connection);
-
-			command.Parameters.AddWithValue("@user_id", asset.UserId);
-			command.Parameters.AddWithValue("@name", asset.Name ?? "");
-			command.Parameters.AddWithValue("@file_path", asset.FilePath ?? "");
-			command.Parameters.AddWithValue("@file_size", asset.FileSize);
-			command.Parameters.AddWithValue("@media_type", asset.MediaType ?? "");
-
-			if(asset.Duration.HasValue)
-				command.Parameters.AddWithValue("@duration", asset.Duration.Value);
-			else
-				command.Parameters.AddWithValue("@duration", DBNull.Value);
-
-			if(asset.Width.HasValue)
-				command.Parameters.AddWithValue("@width", asset.Width.Value);
-			else
-				command.Parameters.AddWithValue("@width", DBNull.Value);
-
-			if(asset.Height.HasValue)
-				command.Parameters.AddWithValue("@height", asset.Height.Value);
-			else
-				command.Parameters.AddWithValue("@height", DBNull.Value);
-
-			if(asset.Framerate.HasValue)
-				command.Parameters.AddWithValue("@framerate", asset.Framerate.Value);
-			else
-				command.Parameters.AddWithValue("@framerate", DBNull.Value);
-
-			command.Parameters.AddWithValue("@codec", asset.Codec ?? "");
-			command.Parameters.AddWithValue("@created_at", asset.CreatedAt == default ? DateTime.Now : asset.CreatedAt);
-
-			var result = command.ExecuteScalar();
-			return Convert.ToInt32(result);
-		}
+	
 
 
 		#endregion
@@ -2948,13 +2797,13 @@ namespace MusicChange  // 数据库操作封装类
 		}
 
 	}
-	public class MediaAsset
+	public class MediaAssetold
 	{
 		public int Id
 		{
 			get; set;
 		}
-		public int UserId
+		public int Projects_id
 		{
 			get; set;
 		}
@@ -3002,7 +2851,59 @@ namespace MusicChange  // 数据库操作封装类
 		{
 			get; set;
 		}
-		public string Note
+	}
+
+	public class MediaAsset
+	{
+		public int Id
+		{
+			get; set;
+		}
+		public int ProjectId
+		{
+			get; set;
+		}
+		public string Name
+		{
+			get; set;
+		}
+		public string FilePath
+		{
+			get; set;
+		}
+		public long FileSize
+		{
+			get; set;
+		}
+		public string MediaType
+		{
+			get; set;
+		}
+		public double? Duration
+		{
+			get; set;
+		}
+		public int? Width
+		{
+			get; set;
+		}
+		public int? Height
+		{
+			get; set;
+		}
+		public double? Framerate
+		{
+			get; set;
+		}
+		public string Codec
+		{
+			get; set;
+		}
+		public DateTime CreatedAt
+		{
+			get; set;
+		}
+		public DateTime? UpdatedAt
 		{
 			get; set;
 		}
@@ -3293,29 +3194,7 @@ namespace MusicChange  // 数据库操作封装类
 			get; set;
 		}
 	}
-	public class Projectold
-	{
-		public int Id
-		{
-			get; set;
-		}
-		public string Name
-		{
-			get; set;
-		}
-		public string Description
-		{
-			get; set;
-		}
-		public DateTime CreatedAt
-		{
-			get; set;
-		}
-		public DateTime UpdatedAt
-		{
-			get; set;
-		}
-	}
+	
 	public class Clipold
 	{
 		public int Id

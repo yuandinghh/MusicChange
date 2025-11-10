@@ -22,21 +22,21 @@ namespace MusicChange
         public void EnsureTableExists()
         {
             const string sql = @"
-CREATE TABLE IF NOT EXISTS projects(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,
-    name TEXT NOT NULL,
-    description TEXT,
-    width INTEGER NOT NULL DEFAULT 1920,
-    height INTEGER NOT NULL DEFAULT 1080,
-    framerate REAL NOT NULL DEFAULT 30.0,
-    duration REAL NOT NULL DEFAULT 0.0,
-    thumbnail_path TEXT,
-    number_of_media_files INTEGER NOT NULL DEFAULT 1,
-    created_at DATETIME NOT NULL DEFAULT (CURRENT_TIMESTAMP),
-    updated_at DATETIME NOT NULL DEFAULT (CURRENT_TIMESTAMP),
-    FOREIGN KEY (user_id) REFERENCES users (id)
-);";
+                CREATE TABLE IF NOT EXISTS projects(
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER NOT NULL,
+                    name TEXT NOT NULL,
+                    description TEXT,
+                    width INTEGER NOT NULL DEFAULT 1920,
+                    height INTEGER NOT NULL DEFAULT 1080,
+                    framerate REAL NOT NULL DEFAULT 30.0,
+                    duration REAL NOT NULL DEFAULT 0.0,
+                    thumbnail_path TEXT,
+                    number_of_media_files INTEGER NOT NULL DEFAULT 1,
+                    created_at DATETIME NOT NULL DEFAULT (CURRENT_TIMESTAMP),
+                    updated_at DATETIME NOT NULL DEFAULT (CURRENT_TIMESTAMP),
+                    FOREIGN KEY (user_id) REFERENCES users (id)
+                );";
             using var conn = new SQLiteConnection(_connectionString);
             conn.Open();
             using var cmd = new SQLiteCommand(sql, conn);
@@ -48,9 +48,9 @@ CREATE TABLE IF NOT EXISTS projects(
             if(p == null)
                 throw new ArgumentNullException(nameof(p));
             const string sql = @"
-INSERT INTO projects(user_id, name, description, width, height, framerate, duration, thumbnail_path, number_of_media_files, created_at, updated_at)
-VALUES(@user_id, @name, @description, @width, @height, @framerate, @duration, @thumbnail_path, @number_of_media_files, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-SELECT last_insert_rowid();";
+                    INSERT INTO projects(user_id, name, description, width, height, framerate, duration, thumbnail_path, number_of_media_files, created_at, updated_at)
+                    VALUES(@user_id, @name, @description, @width, @height, @framerate, @duration, @thumbnail_path, @number_of_media_files, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+                    SELECT last_insert_rowid();";
             using var conn = new SQLiteConnection(_connectionString);
             conn.Open();
             using var cmd = new SQLiteCommand(sql, conn);
@@ -93,7 +93,7 @@ SELECT last_insert_rowid();";
             return list;
         }
 
-        public List<Project> GetByUserId(int userId)
+        public List<Project> GetByUserId(int userId)  // GetByUserId 
         {
             var list = new List<Project>();
             const string sql = "SELECT * FROM projects WHERE user_id = @userId ORDER BY created_at DESC;";
@@ -107,23 +107,23 @@ SELECT last_insert_rowid();";
             return list;
         }
 
-        public bool Update(Project p)
+        public bool Update(Project p) //`Update`
         {
             if(p == null)
                 throw new ArgumentNullException(nameof(p));
             const string sql = @"
-UPDATE projects
-SET user_id = @user_id,
-    name = @name,
-    description = @description,
-    width = @width,
-    height = @height,
-    framerate = @framerate,
-    duration = @duration,
-    thumbnail_path = @thumbnail_path,
-    number_of_media_files = @number_of_media_files,
-    updated_at = CURRENT_TIMESTAMP
-WHERE id = @id;";
+                UPDATE projects
+                SET user_id = @user_id,
+                    name = @name,
+                    description = @description,
+                    width = @width,
+                    height = @height,
+                    framerate = @framerate,
+                    duration = @duration,
+                    thumbnail_path = @thumbnail_path,
+                    number_of_media_files = @number_of_media_files,
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE id = @id;";
             using var conn = new SQLiteConnection(_connectionString);
             conn.Open();
             using var cmd = new SQLiteCommand(sql, conn);
@@ -150,7 +150,7 @@ WHERE id = @id;";
             return cmd.ExecuteNonQuery() > 0;
         }
 
-        private static Project MapReaderToProject(IDataRecord r)
+        private static Project MapReaderToProject(IDataRecord r)  // `MapReaderToProject`
         {
             var p = new Project
             {
