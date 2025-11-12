@@ -95,11 +95,17 @@ namespace MusicChange
 			// buttonX1
 			// 
 			this.buttonX1.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+			this.buttonX1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
 			this.buttonX1.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-			this.buttonX1.Location = new System.Drawing.Point(117, 80);
+			this.buttonX1.Location = new System.Drawing.Point(145, 81);
+			this.buttonX1.Margin = new System.Windows.Forms.Padding(5);
 			this.buttonX1.Name = "buttonX1";
-			this.buttonX1.Size = new System.Drawing.Size(75, 23);
+			this.buttonX1.Size = new System.Drawing.Size(30, 30);
 			this.buttonX1.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+			this.buttonX1.Symbol = "";
+			this.buttonX1.SymbolColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
+			this.buttonX1.SymbolSize = 12F;
 			this.buttonX1.TabIndex = 4;
 			// 
 			// MediaItemControl

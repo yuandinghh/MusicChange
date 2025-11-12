@@ -32,15 +32,8 @@ namespace MusicChange
 		private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
 		[DllImport("user32.dll")]
 		private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
-		// 快捷键ID
-		//private const int HOTKEY_ID = 1;
-		//// 修饰符常量
-		//private const uint MOD_ALT = 0x0001;
-		//private const uint MOD_CONTROL = 0x0002;
-		//private const uint MOD_SHIFT = 0x0004;
-		// 鼠标状态变量
-		private bool isDragging = false;
-		private System.Drawing.Point dragStartPoint;
+			private bool isDragging = false;
+		private Point dragStartPoint;
 		private const int borderSize = 10;
 		private FormWindowState previousWindowState;
 		[DllImport("user32.dll")]
@@ -79,7 +72,7 @@ namespace MusicChange
 		private LibVLC _libVLC1, _libVLC2, _libVLC3;
 		private MediaPlayer _player1, _player2, _player3;
 		private VideoView _videoView1, _videoView2, _videoView3;        //private LibVLC _libVLC; // LibVLC 实例（视频播放用）
-		private AudioPlayer _audioPlayer; // NAudio 实例	bool isShowOnce = false; // 是否已显示一次cut 			 //private LibVLCSharp.WinForms.VideoView videoView1;
+		private AudioPlayer _audioPlayer; // NAudio 实例	bool isShowOnce = false; // 是否已显示一次cut  //private LibVLCSharp.WinForms.VideoView videoView1;
 		private ContextMenuStrip flowLayoutPanelContextMenu;
 		private int UserControlNumber = 0;
 		//把代码改成直接集成到你当前项目命名空间 MusicChange（并把 Avatar / 其它控件整合），或要我把 wave 渲染改为更精确的峰值图与时间刻度、或者加入视频内嵌预览（LibVLC VideoView）示例，我可以继续完善。
@@ -257,7 +250,8 @@ namespace MusicChange
 				try     // 在写入数据库（仅对新添加项）处，替换为：
 				{
 					var fi = new FileInfo(filePath);
-					//将string 转换为double           double? seconds = ParseDurationToSeconds(mediaItem.TimeLength);
+					//将string 转换为double
+					double? seconds = ParseDurationToSeconds(mediaItem.TimeLength);
 					var asset = new MediaAsset
 					{
 						ProjectId = _currentProject?.Id ?? 0,     // <-- 关键：关联到当前项目
@@ -265,29 +259,27 @@ namespace MusicChange
 						FilePath = filePath,
 						FileSize = fi.Exists ? fi.Length : 0,
 						MediaType = mediaType.ToString().ToLower(),
-						Duration =null,
+						Duration = seconds,
 						Width = null,
 						Height = null,
 						Framerate = null,
-						Codec = null,
+						Codec = MediaItemControl.videoInfo.snapshotPath,
 						CreatedAt = DateTime.Now
 					};
-
-					if(!string.IsNullOrEmpty(mediaItem.TimeLength))
+					if(!string.IsNullOrEmpty(mediaItem.TimeLength))   // 如果存在时间长度，则将其转换为秒
 					{
-						double? seconds = ParseDurationToSeconds(mediaItem.TimeLength);
+						 seconds = ParseDurationToSeconds(mediaItem.TimeLength);
 						if(seconds.HasValue)
 							asset.Duration = seconds.Value;
 					}
-
-					if(mediaItem.Image != null)
+					if(mediaItem.Image != null)			// 获取图片信息
 					{
-						asset.Width = mediaItem.Image.Width;
-						asset.Height = mediaItem.Image.Height;
+						asset.Width = MediaItemControl.videoInfo.Width;
+						asset.Height = MediaItemControl.videoInfo.Height;
 					}
-
-					// 使用 MediaAssetsRepository 保存，返回新 id
-					int newId = _mediaRepo.Create(asset);
+					Debug.WriteLine($"媒体资源到数据库: {asset}");
+					//显示 asset个 属性
+					int newId = _mediaRepo.Create(asset);       // 使用 MediaAssetsRepository 保存，返回新 id
 					mediaItem.Tag = newId;
 
 					if(asset.Duration.HasValue)
@@ -4726,6 +4718,19 @@ namespace MusicChange
 		{
 			get; set;
 		}
+		public int Width
+		{
+			get; set;
+		}
+		public int Height
+		{
+			get; set;
+		}
+		public string snapshotPath    // 视频首页 缩略图保存路径
+		{
+			get; set;
+		}
+	
 	}
 	public static class MessageBoxHelper   // 设置延伸关闭消息框
 	{
