@@ -32,7 +32,7 @@ namespace MusicChange
 		private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
 		[DllImport("user32.dll")]
 		private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
-			private bool isDragging = false;
+		private bool isDragging = false;
 		private Point dragStartPoint;
 		private const int borderSize = 10;
 		private FormWindowState previousWindowState;
@@ -82,12 +82,14 @@ namespace MusicChange
 		public static MainRepository mainRepo;
 		public static Main Pubmain = new Main();
 		public static Users Pubuser = new();
+		public static MediaAsset PubmediaAsset = new();
+		public static int PubmediaAssetid;
 		public static UsersRepository usersRepo;
 
 		private ProjectsRepository _projectsRepo;
 		public static Project Pubproject = new();  // 当前项目
 		private Project _currentProject;    // 当前项目
-		private MediaAssetsRepository _mediaRepo;
+		public static MediaAssetsRepository _mediaRepo;
 
 		public LaserEditing()
 		{
@@ -161,6 +163,7 @@ namespace MusicChange
 
 		private new void Click(object sender, EventArgs e)  //导入素材文件  .并存入数据库的projects 表
 		{
+			PubmediaAssetid = 0;
 			if(!Directory.Exists(subDirectory))     // 确保子目录存在
 			{
 				try
@@ -184,13 +187,13 @@ namespace MusicChange
 			if(ofd.ShowDialog() != DialogResult.OK)
 				return;
 			var database = new db(db.dbPath);
-			InitializeProjectsRepository();  // 确保项目仓库与当前工程存在
-			CreateNewProjectIfNeeded(); // 如果没有当前工程则创建一个
+			InitializeProjectsRepository();				// 确保项目仓库与当前工程存在
+			CreateNewProjectIfNeeded();					// 如果没有当前工程则创建一个
 			var loadedPaths = new HashSet<string>(flowLayoutPanelMedia.Controls.OfType<MediaItemControl>().Select(mi => mi.FilePath ?? string.Empty),
 				StringComparer.OrdinalIgnoreCase);  //  已加载文件集合（忽略大小写）
-			int addedCount = 0;						 // 新增媒体数量		
-			int duplicateCount = 0;					// 重复文件数量	
-			double addedSeconds = 0.0;				// 统计新增媒体总时长（秒）
+			int addedCount = 0;                      // 新增媒体数量		
+			int duplicateCount = 0;                 // 重复文件数量	
+			double addedSeconds = 0.0;              // 统计新增媒体总时长（秒）
 			foreach(string filePath in ofd.FileNames)
 			{
 				MediaType mediaType;
@@ -237,39 +240,41 @@ namespace MusicChange
 				flowLayoutPanelMedia.Controls.Add(mediaItem);
 				loadedPaths.Add(filePath);
 				addedCount++;
+				string file = "";
+                if(mediaType == MediaType.Video)
+				{
+					file = MediaItemControl.videoInfo.snapshotPath;
+				}
 				try     // 在写入数据库（仅对新添加项）处，替换为：
 				{
 					var fi = new FileInfo(filePath);
-					var asset = new MediaAsset
-					{
-						ProjectId = _currentProject?.Id ?? 0,     // <-- 关键：关联到当前项目
-						Name = Path.GetFileName(filePath),
-						FilePath = filePath,
-						FileSize = fi.Exists ? fi.Length : 0,
-						MediaType = mediaType.ToString().ToLower(),
-						Duration = "",
-						Width = null,
-						Height = null,
-						Framerate = null,
-						Codec = MediaItemControl.videoInfo.snapshotPath,
-						CreatedAt = DateTime.Now
-					};
+					PubmediaAsset.ProjectId = _currentProject?.Id ?? 0;     // <-- 关键：关联到当前项目
+					PubmediaAsset.Name = Path.GetFileName(filePath);
+					PubmediaAsset.FilePath = filePath;
+					PubmediaAsset.FileSize = fi.Exists ? fi.Length : 0;
+					PubmediaAsset.MediaType = mediaType.ToString().ToLower();
+					PubmediaAsset.Duration = "";
+					PubmediaAsset.Width = null;
+					PubmediaAsset.Height = null;
+					PubmediaAsset.Framerate = null;
+					PubmediaAsset.Codec = file;
+					PubmediaAsset.CreatedAt = DateTime.Now;
 					if(!string.IsNullOrEmpty(MediaItemControl.videoInfo.DurationSeconds))   // 如果存在时间长度，则将其转换为秒
 					{
-						asset.Duration = MediaItemControl.videoInfo.DurationSeconds;
+						PubmediaAsset.Duration = MediaItemControl.videoInfo.DurationSeconds;
 					}
-					if(mediaItem.Image != null)			// 获取图片信息
+					if(mediaItem.Image != null)         // 获取图片信息
 					{
-						asset.Width = MediaItemControl.videoInfo.Width;
-						asset.Height = MediaItemControl.videoInfo.Height;
+						PubmediaAsset.Width = MediaItemControl.videoInfo.Width;
+						PubmediaAsset.Height = MediaItemControl.videoInfo.Height;
 					}
-					Debug.WriteLine($"媒体资源到数据库: {asset}");
-					//显示 asset个 属性
-					int newId = _mediaRepo.Create(asset);       // 使用 MediaAssetsRepository 保存，返回新 id
-					mediaItem.Tag = newId;
-					if(asset.Duration != "")
+					Debug.WriteLine($"媒体资源到数据库: {PubmediaAsset}");
+					//显示 PubmediaAsset个 属性
+					PubmediaAssetid = _mediaRepo.Create(PubmediaAsset);       // 使用 MediaAssetsRepository 保存，返回新 id
+					mediaItem.Tag = PubmediaAssetid;							// 将新 id 绑定到控件的 Tag 属性
+					if(PubmediaAsset.Duration != "")
 					{
-						double d = (double)ParseDurationToSeconds(asset.Duration);
+						double d = (double)ParseDurationToSeconds(PubmediaAsset.Duration);
 						addedSeconds += d;
 					}
 				}
@@ -2835,7 +2840,7 @@ namespace MusicChange
 		}
 		#endregion
 		#region  ------------------  上左窗口 导入视频 音频 图片媒体   ------------------
-		private void ConfigureFlowLayoutPanel()				//配置 FlowLayoutPanel
+		private void ConfigureFlowLayoutPanel()             //配置 FlowLayoutPanel
 		{
 			if(flowLayoutPanelMedia == null)
 				return;
@@ -2880,7 +2885,7 @@ namespace MusicChange
 				System.Diagnostics.Debug.WriteLine($"配置 FlowLayoutPanel 滚动时出错: {ex.Message}");
 			}
 		}
-		private void initmportfile()						 //初始化导入文件
+		private void initmportfile()                         //初始化导入文件
 		{
 			flowLayoutPanelMedia.ControlAdded += (s, e) =>  // 订阅媒体项的“播放请求”事件
 			{
@@ -2913,7 +2918,7 @@ namespace MusicChange
 			DelayedAdjustScrolling();
 			//ConfigureFlowLayoutPanelScrolling();
 		}
-		private void DelayedAdjustScrolling()									//延迟调整滚动
+		private void DelayedAdjustScrolling()                                   //延迟调整滚动
 		{
 			try
 			{
@@ -2940,7 +2945,7 @@ namespace MusicChange
 				System.Diagnostics.Debug.WriteLine($"延迟调整滚动时出错: {ex.Message}");
 			}
 		}
-		private void ForceScrollAdjustment()							 //强制调整滚动
+		private void ForceScrollAdjustment()                             //强制调整滚动
 		{
 			try
 			{
@@ -2972,7 +2977,7 @@ namespace MusicChange
 			// 可以在这里添加滚动相关的处理逻辑
 			System.Diagnostics.Debug.WriteLine($"滚动位置: {e.NewValue}");
 		}
-		private void importdata_Click(object sender, EventArgs e)				 //导入素材文件
+		private void importdata_Click(object sender, EventArgs e)                //导入素材文件
 		{
 			Click(sender, e);
 		}
@@ -3443,7 +3448,7 @@ namespace MusicChange
 				MessageBox.Show($"清空素材失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 		}
-		private void UpdateFlowLayoutVisibility()							  // 更新 FlowLayoutPanel 可见性
+		private void UpdateFlowLayoutVisibility()                             // 更新 FlowLayoutPanel 可见性
 		{
 			try
 			{
@@ -3562,7 +3567,7 @@ namespace MusicChange
 		//}
 
 		// 选择所有媒体控件
-		private void SelectAllMediaItems_Click(object sender, EventArgs e)			 // 选择所有媒体控件
+		private void SelectAllMediaItems_Click(object sender, EventArgs e)           // 选择所有媒体控件
 		{
 			try
 			{
@@ -3583,7 +3588,7 @@ namespace MusicChange
 				MessageBox.Show($"选择素材失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 		}
-		private void DeselectAllMediaItems_Click(object sender, EventArgs e)		  // 取消选择所有媒体控件
+		private void DeselectAllMediaItems_Click(object sender, EventArgs e)          // 取消选择所有媒体控件
 		{
 			try
 			{
@@ -3606,7 +3611,7 @@ namespace MusicChange
 				MessageBox.Show($"取消选择素材失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 		}
-		private void InvertSelection_Click(object sender, EventArgs e)				   // 反向选择
+		private void InvertSelection_Click(object sender, EventArgs e)                 // 反向选择
 		{
 			try
 			{
@@ -3629,7 +3634,7 @@ namespace MusicChange
 							   MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 		}
-		private void Userimage_Click(object sender, EventArgs e)					   // 用户设置图片 
+		private void Userimage_Click(object sender, EventArgs e)                       // 用户设置图片 
 		{
 			user user = new();
 			user.ShowDialog();
@@ -3672,7 +3677,7 @@ namespace MusicChange
 				MessageBox.Show($"删除选中素材失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 		}
-		private void DeleteMediaItems(List<MediaItemControl> itemsToDelete)			     // 实际删除控件的方法
+		private void DeleteMediaItems(List<MediaItemControl> itemsToDelete)              // 实际删除控件的方法
 		{
 			try
 			{
@@ -3720,7 +3725,7 @@ namespace MusicChange
 							   MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 		}
-		private void UpdateStatus(string message)								      // 更新状态显示
+		private void UpdateStatus(string message)                                     // 更新状态显示
 		{
 			try
 			{
@@ -3759,7 +3764,7 @@ namespace MusicChange
 				DeleteSelectedItems_Click(null, EventArgs.Empty);
 			}
 		}
-		protected override bool ProcessCmdKey(ref Message msg, Keys keyData)			  // 在 LaserEditing 类中重写键盘事件处理
+		protected override bool ProcessCmdKey(ref Message msg, Keys keyData)              // 在 LaserEditing 类中重写键盘事件处理
 		{
 			// 检查是否是 FlowLayoutPanel 有焦点
 			if(flowLayoutPanelMedia.ContainsFocus)
@@ -3785,7 +3790,7 @@ namespace MusicChange
 
 			return base.ProcessCmdKey(ref msg, keyData);
 		}
-		private void flowLayoutPanelMedia_KeyDown(object sender, KeyEventArgs e)		 // 或者在 FlowLayoutPanel 的 KeyDown 事件中处理
+		private void flowLayoutPanelMedia_KeyDown(object sender, KeyEventArgs e)         // 或者在 FlowLayoutPanel 的 KeyDown 事件中处理
 		{
 			switch(e.KeyCode)
 			{
@@ -4068,10 +4073,10 @@ namespace MusicChange
 			_currentProject.UpdatedAt = DateTime.Now;
 			_projectsRepo.Update(_currentProject);
 			//获得当前项目的 id
-            int projectId = _currentProject.Id;
-            _currentProject = _projectsRepo.GetById(projectId);
+			int projectId = _currentProject.Id;
+			_currentProject = _projectsRepo.GetById(projectId);
 			//更新main 表的 curren_project_id
-            mainRepo.Update(new Main { Id = Pubmain.Id, CurrenProjectId = projectId });
+			mainRepo.Update(new Main { Id = Pubmain.Id, CurrenProjectId = projectId });
 		}
 
 		// 在方法开始处（导入对话前或紧接导入之前）确保 repo 与 project
@@ -4101,7 +4106,7 @@ namespace MusicChange
 			UpdateFlowLayoutVisibility();
 		}
 
-	
+
 		#endregion
 		#region ------------使用主数据表 Main     ------------
 
@@ -4121,8 +4126,8 @@ namespace MusicChange
 					{
 						InitializeProjectsRepository();  // 初始化项目数据库
 						Pubproject = _projectsRepo.GetById(Pubmain.CurrenProjectId); // 读项目表
-                        LoadMediaForCurrentProject();  // 加载当前项目下的媒体文件     timeline.LoadMedia(Pubproject.Id);
-						
+						LoadMediaForCurrentProject();  // 加载当前项目下的媒体文件     timeline.LoadMedia(Pubproject.Id);
+
 					}
 					return;
 				}
@@ -4546,7 +4551,7 @@ namespace MusicChange
 		{
 			get; set;
 		}
-	
+
 	}
 	public static class MessageBoxHelper   // 设置延伸关闭消息框
 	{

@@ -22,6 +22,8 @@ namespace MusicChange
 		private string path;
 		public static VideoInfo videoInfo = new();
 		private static string errorOutput;
+		private MediaAssetsRepository mediaRepo;
+
 		public bool IsSelected
 		{
 			get => _isSelected;
@@ -77,6 +79,7 @@ namespace MusicChange
 			lblFileName.Click += MediaItemControl_Click;
 
 			this.AllowDrop = true;
+			mediaRepo = new MediaAssetsRepository(db.dbPath);
 
 		}
 		public MediaItemControl(LibVLC libVLC, string path)  // 构造函数
@@ -147,18 +150,18 @@ namespace MusicChange
 																					 //获取图片的宽高
 					videoInfo.Width = originalImage.Width;
 					videoInfo.Height = originalImage.Height;
-					
+
 					LTimeLength.Visible = false;
 				}
-				else if(mediaType == MediaType.Video && File.Exists(filePath))				// 视频文件
+				else if(mediaType == MediaType.Video && File.Exists(filePath))              // 视频文件
 				{
-					videoInfo = await ExtractFirstFrameAsync(FilePath);						 // 获取视频信息
+					videoInfo = await ExtractFirstFrameAsync(FilePath);                      // 获取视频信息
 					if(videoInfo.Thumbnail != null)
 					{  // 保存首帧图片（示例）
 						ImagePath = videoInfo.FilePath;
 						Image = videoInfo.Thumbnail;
 						pictureBoxThumbnail.Image = Image;
-                        LTimeLength.Visible = true;
+						LTimeLength.Visible = true;
 						LTimeLength.Text = videoInfo.DurationSeconds;
 
 					}
@@ -168,7 +171,6 @@ namespace MusicChange
 					// 音频文件使用默认图标
 					pictureBoxThumbnail.Image = Properties.Resources.music43;
 					LTimeLength.Text = GetAudioDuration(FilePath);
-
 				}
 			}
 			catch(Exception ex)
@@ -374,10 +376,10 @@ namespace MusicChange
 				return "未知";
 			}
 		}
-		public  static async Task<VideoInfo> ExtractFirstFrameAsync(string videoPath)    //提取第一帧
+		public static async Task<VideoInfo> ExtractFirstFrameAsync(string videoPath)    //提取第一帧
 		{
-			 string outputImagePath = $"{DateTime.Now.ToString("yyyyMMddHHmmssfff")}.jpg";
-			 outputImagePath = Path.Combine(LaserEditing.subDirectory, "snapshotPath") + "\\" + outputImagePath;
+			string outputImagePath = $"{DateTime.Now.ToString("yyyyMMddHHmmssfff")}.jpg";
+			outputImagePath = Path.Combine(LaserEditing.subDirectory, "snapshotPath") + "\\" + outputImagePath;
 			videoInfo.snapshotPath = outputImagePath;
 			try
 			{
@@ -399,22 +401,6 @@ namespace MusicChange
 				{
 					tcs.SetResult(true);
 				};
-
-				//process.Exited += (sender, args) =>
-				//{
-				//	try
-				//	{
-				//		// 读取输出
-				//		string outputa = process.StandardOutput.ReadToEnd();
-				//		string errorOutputa = process.StandardError.ReadToEnd();
-				//		tcs.SetResult(process.ExitCode == 0);
-				//	}
-				//	catch(Exception ex)
-				//	{
-				//		tcs.SetException(ex);
-				//	}
-				//};
-
 				process.Start();    // 启动进程
 				var outputTask = process.StandardOutput.ReadToEndAsync(); // 异步读取输出流以防止阻塞
 				var errorTask = process.StandardError.ReadToEndAsync();
@@ -423,7 +409,7 @@ namespace MusicChange
 				// 确保读取完所有输出
 				string output = await outputTask;
 				string errorOutput = await errorTask;
-		
+
 				Debug.WriteLine("FFmpeg Exit Code: " + process.ExitCode);
 				Debug.WriteLine("FFmpeg Output: " + output);
 				Debug.WriteLine("FFmpeg Error: " + errorOutput);
@@ -438,8 +424,22 @@ namespace MusicChange
 					videoInfo.FilePath = videoPath;
 					videoInfo.Width = videoInfo.Thumbnail.Width;
 					videoInfo.Height = videoInfo.Thumbnail.Height;
+					//videoInfo.snapshotPath = outputImagePath;
+					int id = 0;
+					//string fileName = Path.GetFileName(videoPath);
+					id = LaserEditing._mediaRepo.GetIdByMediaTypeAndCodec("video", LaserEditing.PubmediaAsset.Codec);
+					if(LaserEditing.PubmediaAssetid != 0 && id != 0)   // 如果存在PubmediaAssetid，则更新数据库
+					{
+						// 更新MediaAsset数据库
+						LaserEditing.PubmediaAsset.Duration = videoInfo.DurationSeconds;
+						LaserEditing.PubmediaAsset.Width = videoInfo.Width;
+						LaserEditing.PubmediaAsset.Height = videoInfo.Height;
+						//LaserEditing.PubmediaAsset.Codec = videoInfo.snapshotPath;
+						//LaserEditing.PubmediaAsset.Id = LaserEditing.PubmediaAssetid;
+						LaserEditing.PubmediaAsset.Id = id;
+						LaserEditing._mediaRepo.Update(LaserEditing.PubmediaAsset);        // 更新MediaAsset数据库 根据id
+					}
 				}
-	
 				return videoInfo;
 			}
 			catch(Exception ex)

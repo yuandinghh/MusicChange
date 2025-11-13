@@ -2797,62 +2797,6 @@ namespace MusicChange  // 数据库操作封装类
 		}
 
 	}
-	public class MediaAssetold
-	{
-		public int Id
-		{
-			get; set;
-		}
-		public int Projects_id
-		{
-			get; set;
-		}
-		public string Name
-		{
-			get; set;
-		}
-		public string FilePath
-		{
-			get; set;
-		}
-		public long FileSize
-		{
-			get; set;
-		}
-		public string MediaType
-		{
-			get; set;
-		}
-		public double? Duration
-		{
-			get; set;
-		}
-		public int? Width
-		{
-			get; set;
-		}
-		public int? Height
-		{
-			get; set;
-		}
-		public double? Framerate
-		{
-			get; set;
-		}
-		public string Codec
-		{
-			get; set;
-		}
-		public DateTime CreatedAt
-		{
-			get; set;
-		}
-		public DateTime Updated_at
-		{
-			get; set;
-		}
-	}
-
 	public class MediaAsset
 	{
 		public int Id

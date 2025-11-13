@@ -117,6 +117,38 @@ VALUES (@projects_id, @name, @file_path, @file_size, @media_type, @duration, @wi
 			}
 			return list;
 		}
+		//查询，根据FilePath 字段 ，取得id
+        public int GetIdByFilePath(string filePath)
+        {
+            const string sql = "SELECT id FROM media_assets WHERE file_path = @file_path LIMIT 1;";
+            using var conn = new SQLiteConnection(_connectionString);
+            conn.Open();
+            using var cmd = new SQLiteCommand(sql, conn);
+            cmd.Parameters.AddWithValue("@file_path", filePath);
+            using var r = cmd.ExecuteReader();
+            if (r.Read())
+            {
+                return (int)r["id"];
+            }
+            return -1;
+        }
+
+		//查询，根据MediaType 字段为"video" 与 codec 取得id
+        public int GetIdByMediaTypeAndCodec(string mediaType, string codec)
+        {
+            const string sql = "SELECT id FROM media_assets WHERE media_type = @media_type AND codec = @codec LIMIT 1;";
+            using var conn = new SQLiteConnection(_connectionString);
+            conn.Open();
+            using var cmd = new SQLiteCommand(sql, conn);
+            cmd.Parameters.AddWithValue("@media_type", mediaType);
+            cmd.Parameters.AddWithValue("@codec", codec);
+            using var r = cmd.ExecuteReader();
+            if (r.Read())
+            {
+                return (int)r["id"];
+            }
+            return -1;
+        }
 
 		/// <summary>
 		/// 查询全部
@@ -139,7 +171,7 @@ VALUES (@projects_id, @name, @file_path, @file_size, @media_type, @duration, @wi
 		/// <summary>
 		/// 更新现有记录（根据 Id）
 		/// </summary>
-		public bool Update(MediaAsset asset)
+		public bool Update(MediaAsset asset)               // 更新
 		{
 			if(asset == null)
 				throw new ArgumentNullException(nameof(asset));
@@ -199,7 +231,6 @@ WHERE id = @id;
 			cmd.Parameters.AddWithValue("@framerate", asset.Framerate.HasValue ? (object)asset.Framerate.Value : DBNull.Value);
 			cmd.Parameters.AddWithValue("@codec", asset.Codec ?? string.Empty);
 		}
-
 		private static MediaAsset MapReaderToMediaAsset(IDataRecord r)
 		{
 			var a = new MediaAsset
