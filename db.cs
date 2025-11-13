@@ -2879,7 +2879,7 @@ namespace MusicChange  // 数据库操作封装类
 		{
 			get; set;
 		}
-		public double? Duration
+		public string Duration
 		{
 			get; set;
 		}
@@ -3528,7 +3528,6 @@ namespace MusicChange  // 数据库操作封装类
 			get; set;
 		}
 	}
-
 	public class Main
 	{
 		public int Id

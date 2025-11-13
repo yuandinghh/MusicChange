@@ -22,7 +22,6 @@ namespace MusicChange
 		private string path;
 		public static VideoInfo videoInfo = new();
 		private static string errorOutput;
-
 		public bool IsSelected
 		{
 			get => _isSelected;
@@ -64,6 +63,7 @@ namespace MusicChange
 
 			btnPlay.Visible = false;
 			btnPlay.BringToFront();
+			hadadd.Visible = false;
 
 			_ = SetThumbnailAsync(filePath, mediaType);  // 根据媒体类型设置初始显示
 
@@ -83,6 +83,8 @@ namespace MusicChange
 		{
 			this.libVLC = libVLC;
 			this.path = path;
+			hadadd.Visible = false;
+			butadd.Visible = false;
 		}
 		private void MediaItemControl_Click(object sender, EventArgs e)     // 点击控件切换选中状态
 		{
@@ -135,6 +137,7 @@ namespace MusicChange
 		}
 		private async Task SetThumbnailAsync(string filePath, MediaType mediaType)   // 设置缩略图
 		{
+			videoInfo.DurationSeconds = "";
 			try
 			{
 				if(mediaType == MediaType.Image && File.Exists(filePath))       // 图片文件
@@ -144,11 +147,12 @@ namespace MusicChange
 																					 //获取图片的宽高
 					videoInfo.Width = originalImage.Width;
 					videoInfo.Height = originalImage.Height;
+					
 					LTimeLength.Visible = false;
 				}
-				else if(mediaType == MediaType.Video && File.Exists(filePath))  // 视频文件
+				else if(mediaType == MediaType.Video && File.Exists(filePath))				// 视频文件
 				{
-					videoInfo = await ExtractFirstFrameAsync(FilePath);  // 获取视频信息
+					videoInfo = await ExtractFirstFrameAsync(FilePath);						 // 获取视频信息
 					if(videoInfo.Thumbnail != null)
 					{  // 保存首帧图片（示例）
 						ImagePath = videoInfo.FilePath;
@@ -265,7 +269,7 @@ namespace MusicChange
 			}
 			return videoInfo;
 		}
-		public static string GetVideoDuration(string videoPath)
+		public static string GetVideoDuration(string videoPath)    //获取视频时长
 		{
 			try
 			{
@@ -305,43 +309,6 @@ namespace MusicChange
 			{
 				Debug.WriteLine($"获取视频时长失败: {ex.Message}");
 				return "未知";
-			}
-		}
-		public static string  GetVideoDuration2(string videoPath)
-		{
-			try
-			{
-				// 构建 FFmpeg 命令：获取视频信息
-				ProcessStartInfo startInfo = new ProcessStartInfo
-				{
-					FileName = @"D:\C#\ffmpegbuild\bin\ffmpeg.exe",
-					Arguments = $"-i \"{videoPath}\"", // -i 表示输入文件
-					RedirectStandardError = true, // 错误输出包含视频信息
-					RedirectStandardOutput = true,
-					UseShellExecute = false,
-					CreateNoWindow = true
-				};
-
-				using Process process = Process.Start(startInfo);
-				string output = process.StandardError.ReadToEnd(); // 读取错误输出
-				process.WaitForExit();
-				// 匹配时长
-				Match match = Regex.Match(errorOutput, @"Duration:\s*(\d+):(\d+):(\d+\.\d+)");
-				if(match.Success)
-				{
-					int hours = int.Parse(match.Groups[1].Value);
-					int minutes = int.Parse(match.Groups[2].Value);
-					double seconds = double.Parse(match.Groups[3].Value);
-					// 格式化为 HH:mm:ss
-                    return $"{hours:00}:{minutes:00}:{seconds:00.00}";
-				}
-				return null;
-			}
-			catch(Exception ex)
-			{
-				//窗口提示
-				MessageBox.Show("获取时长失败：" + ex.Message);
-				return null;
 			}
 		}
 		public static async Task<string> GetVideoDurationAsync(string videoPath)
@@ -386,10 +353,9 @@ namespace MusicChange
 						throw new TimeoutException("FFmpeg获取时长超时");
 					}
 				}
-
+				Thread.Sleep(1000);
 				string output = await outputTask;
 				string errorOutput = await errorTask;
-
 				// 正则匹配时长
 				Match match = Regex.Match(errorOutput, @"Duration:\s*(\d+:\d+:\d+\.\d+)", RegexOptions.IgnoreCase);
 				if(match.Success)
@@ -467,21 +433,13 @@ namespace MusicChange
 					{
 						videoInfo.Thumbnail = Image.FromStream(fs);
 					}
-					videoInfo.DurationSeconds = GetVideoDuration(videoPath);
-					//videoInfo.DurationSeconds = await GetVideoDurationAsync(videoPath);
-					//GetVideoDuration(videoPath);
+					//videoInfo.DurationSeconds = GetVideoDuration(videoPath);
+					videoInfo.DurationSeconds = await GetVideoDurationAsync(videoPath);
 					videoInfo.FilePath = videoPath;
 					videoInfo.Width = videoInfo.Thumbnail.Width;
 					videoInfo.Height = videoInfo.Thumbnail.Height;
 				}
-				//videoInfo.Thumbnail = Image.FromFile(outputImagePath);
-    //            videoInfo.snapshotPath = outputImagePath;
-                //videoInfo.DurationSeconds = GetVideoDuration(videoPath).ToString();
-				//Thread.Sleep(1000);
-				//videoInfo.FilePath = videoPath;
-    //            videoInfo.Width = videoInfo.Thumbnail.Width;
-    //            videoInfo.Height = videoInfo.Thumbnail.Height;
-
+	
 				return videoInfo;
 			}
 			catch(Exception ex)
@@ -623,6 +581,33 @@ namespace MusicChange
 			string extension = Path.GetExtension(filePath).ToLower();
 			string[] supportedExtensions = { ".mp3", ".wav", ".wma", ".mp4", ".avi", ".mov", ".flv", ".mkv" };
 			return Array.IndexOf(supportedExtensions, extension) >= 0;
+		}
+
+		private void MediaItemControl_MouseMove(object sender, MouseEventArgs e)    //鼠标移动
+		{
+			hadadd.Visible = true;
+			hadadd.BringToFront();
+			butadd.Visible = true;
+			butadd.BringToFront();
+		}
+
+		private void butadd_Click(object sender, EventArgs e)  //添加文件到编辑区
+		{
+
+		}
+
+		private void MediaItemControl_MouseLeave(object sender, EventArgs e)  //鼠标离开
+		{
+			hadadd.Visible = false;
+			butadd.Visible = false;
+		}
+
+		private void MediaItemControl_MouseEnter(object sender, EventArgs e)    //鼠标进入
+		{
+			hadadd.Visible = true;
+			hadadd.BringToFront();
+			butadd.Visible = true;
+			butadd.BringToFront();
 		}
 	}
 

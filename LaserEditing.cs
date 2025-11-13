@@ -174,7 +174,6 @@ namespace MusicChange
 					return;
 				}
 			}
-
 			using OpenFileDialog ofd = new()
 			{
 				Multiselect = true,
@@ -182,20 +181,16 @@ namespace MusicChange
 				Title = "请选择要导入的音频、视频或图片文件",
 				InitialDirectory = subDirectory  //指定初始目录 文件夹
 			};
-
 			if(ofd.ShowDialog() != DialogResult.OK)
 				return;
-
 			var database = new db(db.dbPath);
 			InitializeProjectsRepository();  // 确保项目仓库与当前工程存在
 			CreateNewProjectIfNeeded(); // 如果没有当前工程则创建一个
 			var loadedPaths = new HashSet<string>(flowLayoutPanelMedia.Controls.OfType<MediaItemControl>().Select(mi => mi.FilePath ?? string.Empty),
 				StringComparer.OrdinalIgnoreCase);  //  已加载文件集合（忽略大小写）
-
-			int addedCount = 0;
-			int duplicateCount = 0;
-			double addedSeconds = 0.0; // 统计新增媒体总时长（秒）
-
+			int addedCount = 0;						 // 新增媒体数量		
+			int duplicateCount = 0;					// 重复文件数量	
+			double addedSeconds = 0.0;				// 统计新增媒体总时长（秒）
 			foreach(string filePath in ofd.FileNames)
 			{
 				MediaType mediaType;
@@ -207,13 +202,11 @@ namespace MusicChange
 					mediaType = MediaType.Image;
 				else
 					continue;
-
-				// 如果已存在则跳过并高亮已存在项
-				if(loadedPaths.Contains(filePath))
+				if(loadedPaths.Contains(filePath))    // 如果文件已存在，则跳过
 				{
 					duplicateCount++;
-					var existing = flowLayoutPanelMedia.Controls.OfType<MediaItemControl>().FirstOrDefault(mi => string.Equals(mi.FilePath, filePath, StringComparison.OrdinalIgnoreCase));
-					if(existing != null)
+					var existing = flowLayoutPanelMedia.Controls.OfType<MediaItemControl>().FirstOrDefault(mi => string.Equals(mi.FilePath, filePath, StringComparison.OrdinalIgnoreCase));   // 获取已存在的控件	  
+					if(existing != null)                     // 如果已存在，则将已存在的控件调到最前面
 					{
 						try
 						{
@@ -240,18 +233,13 @@ namespace MusicChange
 					}
 					continue;
 				}
-
-				// 新增控件
-				MediaItemControl mediaItem = new(filePath, mediaType);
+				MediaItemControl mediaItem = new(filePath, mediaType);   // 新增控件
 				flowLayoutPanelMedia.Controls.Add(mediaItem);
 				loadedPaths.Add(filePath);
 				addedCount++;
-		
 				try     // 在写入数据库（仅对新添加项）处，替换为：
 				{
 					var fi = new FileInfo(filePath);
-					//将string 转换为double
-					double? seconds = ParseDurationToSeconds(mediaItem.TimeLength);
 					var asset = new MediaAsset
 					{
 						ProjectId = _currentProject?.Id ?? 0,     // <-- 关键：关联到当前项目
@@ -259,18 +247,16 @@ namespace MusicChange
 						FilePath = filePath,
 						FileSize = fi.Exists ? fi.Length : 0,
 						MediaType = mediaType.ToString().ToLower(),
-						Duration = seconds,
+						Duration = "",
 						Width = null,
 						Height = null,
 						Framerate = null,
 						Codec = MediaItemControl.videoInfo.snapshotPath,
 						CreatedAt = DateTime.Now
 					};
-					if(!string.IsNullOrEmpty(mediaItem.TimeLength))   // 如果存在时间长度，则将其转换为秒
+					if(!string.IsNullOrEmpty(MediaItemControl.videoInfo.DurationSeconds))   // 如果存在时间长度，则将其转换为秒
 					{
-						 seconds = ParseDurationToSeconds(mediaItem.TimeLength);
-						if(seconds.HasValue)
-							asset.Duration = seconds.Value;
+						asset.Duration = MediaItemControl.videoInfo.DurationSeconds;
 					}
 					if(mediaItem.Image != null)			// 获取图片信息
 					{
@@ -281,9 +267,11 @@ namespace MusicChange
 					//显示 asset个 属性
 					int newId = _mediaRepo.Create(asset);       // 使用 MediaAssetsRepository 保存，返回新 id
 					mediaItem.Tag = newId;
-
-					if(asset.Duration.HasValue)
-						addedSeconds += asset.Duration.Value;
+					if(asset.Duration != "")
+					{
+						double d = (double)ParseDurationToSeconds(asset.Duration);
+						addedSeconds += d;
+					}
 				}
 				catch(Exception ex)
 				{
@@ -292,18 +280,16 @@ namespace MusicChange
 					Debug.WriteLine($"写入媒体资源到数据库失败: {ex.Message}");
 				}
 			}
-
 			// 导入结束后：更新界面与项目元数据
 			UpdateFlowLayoutVisibility();
-
 			UpdateStatus($"导入完成：新增 {addedCount} 个，已存在 {duplicateCount} 个，当前总计 {flowLayoutPanelMedia.Controls.Count} 个");
 			string t = $"导入完成：新增 {addedCount} 个，已存在 {duplicateCount} 个。\n当前已加载：{flowLayoutPanelMedia.Controls.Count} 个";
-			MessageBoxHelper.ShowAutoClose("3秒后自动关闭", t, 3000);
+			MessageBoxHelper.ShowAutoClose("2秒后自动关闭", t, 2000);
 
 			// 把新增数量与时长更新到当前项目（如果有）
 			try
 			{
-				UpdateProjectAfterImport(addedCount, addedSeconds, null);
+				UpdateProjectAfterImport(addedCount, addedSeconds, null);  // 更新项目元数据  同时更新main 表 添加当前项目为主项目
 			}
 			catch(Exception ex)
 			{
@@ -2849,7 +2835,7 @@ namespace MusicChange
 		}
 		#endregion
 		#region  ------------------  上左窗口 导入视频 音频 图片媒体   ------------------
-		private void ConfigureFlowLayoutPanel()  //配置 FlowLayoutPanel
+		private void ConfigureFlowLayoutPanel()				//配置 FlowLayoutPanel
 		{
 			if(flowLayoutPanelMedia == null)
 				return;
@@ -2862,7 +2848,6 @@ namespace MusicChange
 				System.Diagnostics.Debug.WriteLine($"配置 FlowLayoutPanel 时出错: {ex.Message}");
 			}
 		}
-
 		private void ConfigureFlowLayoutPanelScrolling()  //配置 FlowLayoutPanel 滚动
 		{
 			if(flowLayoutPanelMedia == null)
@@ -2895,7 +2880,7 @@ namespace MusicChange
 				System.Diagnostics.Debug.WriteLine($"配置 FlowLayoutPanel 滚动时出错: {ex.Message}");
 			}
 		}
-		private void initmportfile()  //初始化导入文件
+		private void initmportfile()						 //初始化导入文件
 		{
 			flowLayoutPanelMedia.ControlAdded += (s, e) =>  // 订阅媒体项的“播放请求”事件
 			{
@@ -2928,7 +2913,7 @@ namespace MusicChange
 			DelayedAdjustScrolling();
 			//ConfigureFlowLayoutPanelScrolling();
 		}
-		private void DelayedAdjustScrolling()  //延迟调整滚动
+		private void DelayedAdjustScrolling()									//延迟调整滚动
 		{
 			try
 			{
@@ -2955,7 +2940,7 @@ namespace MusicChange
 				System.Diagnostics.Debug.WriteLine($"延迟调整滚动时出错: {ex.Message}");
 			}
 		}
-		private void ForceScrollAdjustment() //强制调整滚动
+		private void ForceScrollAdjustment()							 //强制调整滚动
 		{
 			try
 			{
@@ -2987,167 +2972,9 @@ namespace MusicChange
 			// 可以在这里添加滚动相关的处理逻辑
 			System.Diagnostics.Debug.WriteLine($"滚动位置: {e.NewValue}");
 		}
-		private void importdata_Click(object sender, EventArgs e)  //导入素材文件
+		private void importdata_Click(object sender, EventArgs e)				 //导入素材文件
 		{
 			Click(sender, e);
-		}
-		private new void Click1(object sender, EventArgs e)  //导入素材文件
-		{
-			listBox1.Items.Clear();
-			if(!Directory.Exists(subDirectory))
-			{
-				try
-				{
-					Directory.CreateDirectory(subDirectory);
-					Debug.WriteLine("子目录创建成功: " + subDirectory);
-				}
-				catch(Exception ex)
-				{
-					MessageBox.Show("创建子目录失败: " + ex.Message);
-					return;
-				}
-			}
-			using OpenFileDialog ofd = new()
-			{
-				Multiselect = true,
-				Filter = "媒体文件|*.mp4;*.avi;*.jpg;*.png;*.mp3;*.wav|视频文件|*.mp4;*.avi|音频文件|*.mp3;*.wav|图片文件|*.jpg;*.png",
-				Title = "请选择要导入的音频、视频或图片文件",
-				InitialDirectory = subDirectory  //指定初始目录 文件夹
-			};
-
-			if(ofd.ShowDialog() != DialogResult.OK)
-				return;
-
-			var database = new db(db.dbPath);
-
-			// 已加载文件集合（忽略大小写）
-			var loadedPaths = new HashSet<string>(flowLayoutPanelMedia.Controls.OfType<MediaItemControl>().Select(mi => mi.FilePath ?? string.Empty),
-				StringComparer.OrdinalIgnoreCase);
-
-			int addedCount = 0;
-			int duplicateCount = 0;
-			//?????  加一个虚的 图片
-			//filePath = subDirectory + @"\\tempyd580415.mp4";
-			//MediaItemControl mediaItemadd = new(filePath, MediaType.Video);
-			////mediaItemadd = new(filePath, MediaType.Video);
-			//mediaItemadd.IsSelected = true;
-			//flowLayoutPanelMedia.Controls.Add(mediaItemadd);
-			//DeleteSelectedItems_Click(null, null);
-			foreach(string filePath in ofd.FileNames)
-			{
-				MediaType mediaType;
-				if(IsVideoFile(filePath))
-					mediaType = MediaType.Video;
-				else if(IsAudioFile(filePath))
-					mediaType = MediaType.Audio;
-				else if(IsImageFile(filePath))
-					mediaType = MediaType.Image;
-				else
-					continue;
-
-				// 如果已存在则跳过并高亮已存在项
-				if(loadedPaths.Contains(filePath))
-				{
-					duplicateCount++;
-					var existing = flowLayoutPanelMedia.Controls.OfType<MediaItemControl>().FirstOrDefault(mi => string.Equals(mi.FilePath, filePath, StringComparison.OrdinalIgnoreCase));
-
-					if(existing != null)
-					{
-						try
-						{
-							// 高亮并滚动可见，然后在短时间后恢复颜色
-							existing.BringToFront();
-							var oldColor = existing.BackColor;
-							existing.BackColor = Color.LightGreen;
-							// 异步恢复颜色（避免阻塞 UI 线程）
-							Task.Run(async () =>
-						   {
-							   await Task.Delay(500);
-							   if(!existing.IsDisposed)
-							   {
-								   existing.Invoke(new Action(() =>
-								  {
-									  try
-									  {
-										  existing.BackColor = oldColor;
-									  }
-									  catch { }
-								  }));
-							   }
-						   });
-						}
-						catch { }
-					}
-
-					continue;
-				}
-
-				// 新增控件
-				MediaItemControl mediaItem = new(filePath, mediaType);
-				flowLayoutPanelMedia.Controls.Add(mediaItem);
-
-				loadedPaths.Add(filePath);
-				addedCount++;
-
-				listBox1.Items.Add(mediaItem.MediaType);
-				listBox1.Items.Add(mediaItem.FilePath ?? string.Empty);
-				// 可选信息（防止空引用）
-				try
-				{
-					listBox1.Items.Add(mediaItem.Image?.Width + "x" + mediaItem.Image?.Height);
-				}
-				catch { }
-				listBox1.Items.Add(mediaItem.Location.X);
-				listBox1.Items.Add(mediaItem.Location.Y);
-
-				// 写入数据库（仅对新添加项）
-				try
-				{
-					var fi = new FileInfo(filePath);
-					var asset = new MediaAsset
-					{
-						//UserId = 1,
-						Name = Path.GetFileName(filePath),
-						FilePath = filePath,
-						FileSize = fi.Exists ? fi.Length : 0,
-						MediaType = mediaType.ToString().ToLower(),
-						Duration = null,
-						Width = null,
-						Height = null,
-						Framerate = null,
-						Codec = null,
-						CreatedAt = DateTime.Now
-					};
-
-					if(!string.IsNullOrEmpty(mediaItem.TimeLength))
-					{
-						double? seconds = ParseDurationToSeconds(mediaItem.TimeLength);
-						if(seconds.HasValue)
-							asset.Duration = seconds.Value;
-					}
-
-					if(mediaItem.Image != null)
-					{
-						asset.Width = mediaItem.Image.Width;
-						asset.Height = mediaItem.Image.Height;
-					}
-
-					//int newId = database.InsertMediaAsset(asset);
-					//mediaItem.Tag = newId;
-				}
-				catch(Exception ex)
-				{
-					Debug.WriteLine($"写入媒体资源到数据库失败: {ex.Message}");
-				}
-			}
-
-
-			// 更新面板可见性与状态显示
-			UpdateFlowLayoutVisibility();
-			UpdateStatus($"导入完成：新增 {addedCount} 个，已存在 {duplicateCount} 个，当前总计 {flowLayoutPanelMedia.Controls.Count} 个");
-			string t = $"导入完成：新增 {addedCount} 个，已存在 {duplicateCount} 个。\n当前已加载：{flowLayoutPanelMedia.Controls.Count} 个";
-			MessageBoxHelper.ShowAutoClose("3秒后自动关闭", t, 3000);
-			//MessageBox.Show($"导入完成：新增 {addedCount} 个，已存在 {duplicateCount} 个。\n当前已加载：{flowLayoutPanelMedia.Controls.Count} 个", "导入结果", MessageBoxButtons.OK, MessageBoxIcon.Information);
 		}
 		private double? ParseDurationToSeconds(string durationText)  // 辅助：把 "hh:mm:ss" 或 "mm:ss" 字符串解析为秒（小数）
 		{
@@ -3616,7 +3443,7 @@ namespace MusicChange
 				MessageBox.Show($"清空素材失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 		}
-		private void UpdateFlowLayoutVisibility()                       // 更新 FlowLayoutPanel 可见性
+		private void UpdateFlowLayoutVisibility()							  // 更新 FlowLayoutPanel 可见性
 		{
 			try
 			{
@@ -3735,7 +3562,7 @@ namespace MusicChange
 		//}
 
 		// 选择所有媒体控件
-		private void SelectAllMediaItems_Click(object sender, EventArgs e)  // 选择所有媒体控件
+		private void SelectAllMediaItems_Click(object sender, EventArgs e)			 // 选择所有媒体控件
 		{
 			try
 			{
@@ -3756,7 +3583,7 @@ namespace MusicChange
 				MessageBox.Show($"选择素材失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 		}
-		private void DeselectAllMediaItems_Click(object sender, EventArgs e)    // 取消选择所有媒体控件
+		private void DeselectAllMediaItems_Click(object sender, EventArgs e)		  // 取消选择所有媒体控件
 		{
 			try
 			{
@@ -3779,7 +3606,7 @@ namespace MusicChange
 				MessageBox.Show($"取消选择素材失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 		}
-		private void InvertSelection_Click(object sender, EventArgs e)           // 反向选择
+		private void InvertSelection_Click(object sender, EventArgs e)				   // 反向选择
 		{
 			try
 			{
@@ -3802,7 +3629,7 @@ namespace MusicChange
 							   MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 		}
-		private void Userimage_Click(object sender, EventArgs e)             // 用户设置图片 
+		private void Userimage_Click(object sender, EventArgs e)					   // 用户设置图片 
 		{
 			user user = new();
 			user.ShowDialog();
@@ -3845,7 +3672,7 @@ namespace MusicChange
 				MessageBox.Show($"删除选中素材失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 		}
-		private void DeleteMediaItems(List<MediaItemControl> itemsToDelete)         // 实际删除控件的方法
+		private void DeleteMediaItems(List<MediaItemControl> itemsToDelete)			     // 实际删除控件的方法
 		{
 			try
 			{
@@ -3893,7 +3720,7 @@ namespace MusicChange
 							   MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 		}
-		private void UpdateStatus(string message)                            // 更新状态显示
+		private void UpdateStatus(string message)								      // 更新状态显示
 		{
 			try
 			{
@@ -3932,7 +3759,7 @@ namespace MusicChange
 				DeleteSelectedItems_Click(null, EventArgs.Empty);
 			}
 		}
-		protected override bool ProcessCmdKey(ref Message msg, Keys keyData)     // 在 LaserEditing 类中重写键盘事件处理
+		protected override bool ProcessCmdKey(ref Message msg, Keys keyData)			  // 在 LaserEditing 类中重写键盘事件处理
 		{
 			// 检查是否是 FlowLayoutPanel 有焦点
 			if(flowLayoutPanelMedia.ContainsFocus)
@@ -3958,7 +3785,7 @@ namespace MusicChange
 
 			return base.ProcessCmdKey(ref msg, keyData);
 		}
-		private void flowLayoutPanelMedia_KeyDown(object sender, KeyEventArgs e)    // 或者在 FlowLayoutPanel 的 KeyDown 事件中处理
+		private void flowLayoutPanelMedia_KeyDown(object sender, KeyEventArgs e)		 // 或者在 FlowLayoutPanel 的 KeyDown 事件中处理
 		{
 			switch(e.KeyCode)
 			{
@@ -4181,7 +4008,6 @@ namespace MusicChange
 					// 不中断流程，仅记录。调用方在需要时会再次尝试。
 				}
 			}
-
 			// 初始化 media assets 仓库
 			if(_mediaRepo == null)
 			{
@@ -4194,8 +4020,6 @@ namespace MusicChange
 				{
 					Debug.WriteLine($"Ensure media_assets table failed: {ex.Message}");
 				}
-
-
 			}
 		}
 		private void CreateNewProjectIfNeeded(string name = null)   // 创建新项目
@@ -4243,9 +4067,13 @@ namespace MusicChange
 
 			_currentProject.UpdatedAt = DateTime.Now;
 			_projectsRepo.Update(_currentProject);
+			//获得当前项目的 id
+            int projectId = _currentProject.Id;
+            _currentProject = _projectsRepo.GetById(projectId);
+			//更新main 表的 curren_project_id
+            mainRepo.Update(new Main { Id = Pubmain.Id, CurrenProjectId = projectId });
 		}
 
-		// 在现有 Click(...) 导入方法内，示例修改位置：
 		// 在方法开始处（导入对话前或紧接导入之前）确保 repo 与 project
 		// 调用 CreateNewProjectIfNeeded() 根据需求（这里示例在每次导入若无 current project 则创建）
 		private void LoadMediaForCurrentProject()   // 加载当前项目下的媒体文件
@@ -4273,19 +4101,7 @@ namespace MusicChange
 			UpdateFlowLayoutVisibility();
 		}
 
-		private bool UpdateMediaAssetMetadata(int assetId, string newName = null, double? newDuration = null)  // 更新媒体文件元数据
-		{
-			var asset = _mediaRepo.GetById(assetId);
-			if(asset == null)
-				return false;
-
-			if(!string.IsNullOrEmpty(newName))
-				asset.Name = newName;
-			if(newDuration.HasValue)
-				asset.Duration = newDuration.Value;
-
-			return _mediaRepo.Update(asset);
-		}
+	
 		#endregion
 		#region ------------使用主数据表 Main     ------------
 

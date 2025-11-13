@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS media_assets(
 	file_path TEXT NOT NULL,
 	file_size INTEGER NOT NULL,
 	media_type TEXT NOT NULL,
-	duration REAL,
+	duration TEXT,
 	width INTEGER,
 	height INTEGER,
 	framerate REAL,
@@ -193,7 +193,7 @@ WHERE id = @id;
 			cmd.Parameters.AddWithValue("@file_path", asset.FilePath ?? string.Empty);
 			cmd.Parameters.AddWithValue("@file_size", asset.FileSize);
 			cmd.Parameters.AddWithValue("@media_type", asset.MediaType ?? string.Empty);
-			cmd.Parameters.AddWithValue("@duration", asset.Duration.HasValue ? (object)asset.Duration.Value : DBNull.Value);
+			cmd.Parameters.AddWithValue("@duration", asset.Duration ?? string.Empty);
 			cmd.Parameters.AddWithValue("@width", asset.Width.HasValue ? (object)asset.Width.Value : DBNull.Value);
 			cmd.Parameters.AddWithValue("@height", asset.Height.HasValue ? (object)asset.Height.Value : DBNull.Value);
 			cmd.Parameters.AddWithValue("@framerate", asset.Framerate.HasValue ? (object)asset.Framerate.Value : DBNull.Value);
@@ -210,7 +210,7 @@ WHERE id = @id;
 				FilePath = r["file_path"] as string,
 				FileSize = r["file_size"] != DBNull.Value ? Convert.ToInt64(r["file_size"]) : 0,
 				MediaType = r["media_type"] as string,
-				Duration = r["duration"] != DBNull.Value ? (double?)Convert.ToDouble(r["duration"]) : null,
+				Duration = r["duration"]  as string,
 				Width = r["width"] != DBNull.Value ? (int?)Convert.ToInt32(r["width"]) : null,
 				Height = r["height"] != DBNull.Value ? (int?)Convert.ToInt32(r["height"]) : null,
 				Framerate = r["framerate"] != DBNull.Value ? (double?)Convert.ToDouble(r["framerate"]) : null,
