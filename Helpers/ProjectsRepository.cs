@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
 using System.IO;
+using System.Windows.Forms;
 
 namespace MusicChange
 {
@@ -19,7 +20,7 @@ namespace MusicChange
             EnsureTableExists();
         }
 
-        public void EnsureTableExists()
+        public void EnsureTableExists()   //创建表
         {
             const string sql = @"
                 CREATE TABLE IF NOT EXISTS projects(
@@ -80,6 +81,63 @@ namespace MusicChange
             return null;
         }
 
+        //Project表字段nanme  ，本字段下所有记录全部取出
+        public List<Project> GetByName()
+        {
+            var list = new List<Project>();
+            string sql = "SELECT name FROM projects ORDER BY created_at DESC;";
+            using var conn = new SQLiteConnection(_connectionString);
+            conn.Open();
+            using var cmd = new SQLiteCommand(sql, conn);
+            using var rdr = cmd.ExecuteReader();
+            while(rdr.Read())
+                list.Add(MapReaderToProject(rdr));
+            return list;
+        }
+     
+        //Project表 栏 为 nanme  全部取出
+        public List<Project> GetByName(string name)
+        {
+            var list = new List<Project>();
+            const string sql = "SELECT * FROM projects WHERE name = @name ORDER BY created_at DESC;";
+            using var conn = new SQLiteConnection(_connectionString);
+            conn.Open();
+            using var cmd = new SQLiteCommand(sql, conn);
+            cmd.Parameters.AddWithValue("@name", name);
+            using var rdr = cmd.ExecuteReader();
+            while(rdr.Read())
+                list.Add(MapReaderToProject(rdr));
+            return list;
+        }
+        //根据字段name 获取id，并取出给条所有记录
+        public LinkedList<string> GetAllProjectId()
+        {
+            var list = new LinkedList<string>();
+            const string sql = "SELECT id FROM projects ORDER BY created_at DESC;";
+            using var conn = new SQLiteConnection(_connectionString);
+            conn.Open();
+            using var cmd = new SQLiteCommand(sql, conn);
+            using var rdr = cmd.ExecuteReader();
+            while(rdr.Read())
+                list.AddLast(rdr.GetString(0));
+            return list;
+        }
+
+     
+        //public List<Project> GetByUserIdAndName(int userId, string name)
+        //{
+        //    var list = new List<Project>();
+        //    const string sql = "SELECT * FROM projects WHERE user_id = @userId AND name = @name ORDER BY created_at DESC;";
+        //    using var conn = new SQLiteConnection(_connectionString);
+        //    conn.Open();
+        //    using var cmd = new SQLiteCommand(sql, conn);
+        //    cmd.Parameters.AddWithValue("@userId", userId);
+        //    cmd.Parameters.AddWithValue("@name", name);
+        //    using var rdr = cmd.ExecuteReader();
+        //    while(rdr.Read())
+        //       return list.Add(MapReaderToProject(rdr));
+        //}
+
         public List<Project> GetAll()
         {
             var list = new List<Project>();
@@ -105,6 +163,25 @@ namespace MusicChange
             while(rdr.Read())
                 list.Add(MapReaderToProject(rdr));
             return list;
+        }
+        public LinkedList<string> GetAllProjectIds()
+        {
+            var allIds = new LinkedList<string>();
+            // 无筛选条件，查询所有id
+            const string sql = "SELECT name FROM projects;";
+
+            using var conn = new SQLiteConnection(_connectionString);
+            conn.Open();
+            using var cmd = new SQLiteCommand(sql, conn);
+            using var rdr = cmd.ExecuteReader();
+
+            while(rdr.Read())
+            {
+               string name = rdr.GetString(0); // 读取int类型的id字段
+                allIds.AddLast(name); // 添加到链表
+            }
+
+            return allIds;
         }
 
         public bool Update(Project p) //`Update`
@@ -182,5 +259,10 @@ namespace MusicChange
 
             return p;
         }
-    }
+
+		//internal ComboBox GetByName()
+		//{
+		//	throw new NotImplementedException();
+		//}
+	}
 }

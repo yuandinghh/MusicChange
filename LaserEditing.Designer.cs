@@ -63,6 +63,8 @@ namespace MusicChange
 			this.dG = new DevComponents.DotNetBar.Controls.DataGridViewX();
 			this.flowLayoutPanelMedia = new System.Windows.Forms.FlowLayoutPanel();
 			this.lefttopfile = new System.Windows.Forms.Panel();
+			this.label1 = new System.Windows.Forms.Label();
+			this.currentPro = new System.Windows.Forms.ComboBox();
 			this.lcontrolnum = new System.Windows.Forms.Label();
 			this.qrcode0 = new DevComponents.DotNetBar.ButtonX();
 			this.importdata = new DevComponents.DotNetBar.ButtonX();
@@ -111,7 +113,7 @@ namespace MusicChange
 			this.temp2 = new System.Windows.Forms.TextBox();
 			this.temp1 = new System.Windows.Forms.TextBox();
 			this.temp = new System.Windows.Forms.TextBox();
-			this.panel10 = new System.Windows.Forms.Panel();
+			this.MediaDropPanel = new System.Windows.Forms.Panel();
 			this.panel4 = new System.Windows.Forms.Panel();
 			this.LeftbelowP = new System.Windows.Forms.Panel();
 			this.panel9 = new System.Windows.Forms.Panel();
@@ -415,7 +417,7 @@ namespace MusicChange
 			// VerticalHorizontalDivision.Panel2
 			// 
 			this.VerticalHorizontalDivision.Panel2.BackColor = System.Drawing.Color.Black;
-			this.VerticalHorizontalDivision.Panel2.Controls.Add(this.panel10);
+			this.VerticalHorizontalDivision.Panel2.Controls.Add(this.MediaDropPanel);
 			this.VerticalHorizontalDivision.Panel2.Controls.Add(this.panel4);
 			this.VerticalHorizontalDivision.Panel2.Controls.Add(this.LeftbelowP);
 			this.VerticalHorizontalDivision.Panel2.ForeColor = System.Drawing.Color.Black;
@@ -516,7 +518,7 @@ namespace MusicChange
 			this.openfile.TabIndex = 1;
 			this.openfile.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
 			this.openfile.UseVisualStyleBackColor = false;
-			this.openfile.Click += new System.EventHandler(this.importdata_Click);
+			this.openfile.Click += new System.EventHandler(this.Click);
 			// 
 			// dG
 			// 
@@ -575,6 +577,8 @@ namespace MusicChange
 			// lefttopfile
 			// 
 			this.lefttopfile.BackColor = System.Drawing.Color.Black;
+			this.lefttopfile.Controls.Add(this.label1);
+			this.lefttopfile.Controls.Add(this.currentPro);
 			this.lefttopfile.Controls.Add(this.lcontrolnum);
 			this.lefttopfile.Controls.Add(this.qrcode0);
 			this.lefttopfile.Controls.Add(this.importdata);
@@ -586,6 +590,27 @@ namespace MusicChange
 			this.lefttopfile.TabIndex = 11;
 			this.lefttopfile.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
 			// 
+			// label1
+			// 
+			this.label1.AutoSize = true;
+			this.label1.ForeColor = System.Drawing.Color.White;
+			this.label1.Location = new System.Drawing.Point(158, 9);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(67, 15);
+			this.label1.TabIndex = 5;
+			this.label1.Text = "当前项目";
+			// 
+			// currentPro
+			// 
+			this.currentPro.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.currentPro.FormattingEnabled = true;
+			this.currentPro.Location = new System.Drawing.Point(237, 6);
+			this.currentPro.Margin = new System.Windows.Forms.Padding(5, 5, 30, 5);
+			this.currentPro.Name = "currentPro";
+			this.currentPro.Size = new System.Drawing.Size(280, 23);
+			this.currentPro.TabIndex = 4;
+			this.currentPro.SelectedIndexChanged += new System.EventHandler(this.currentPro_SelectedIndexChanged);
+			// 
 			// lcontrolnum
 			// 
 			this.lcontrolnum.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -593,9 +618,11 @@ namespace MusicChange
 			this.lcontrolnum.AutoSize = true;
 			this.lcontrolnum.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.lcontrolnum.ForeColor = System.Drawing.Color.White;
-			this.lcontrolnum.Location = new System.Drawing.Point(572, 5);
+			this.lcontrolnum.Location = new System.Drawing.Point(563, 5);
+			this.lcontrolnum.Margin = new System.Windows.Forms.Padding(5);
 			this.lcontrolnum.Name = "lcontrolnum";
-			this.lcontrolnum.Size = new System.Drawing.Size(19, 20);
+			this.lcontrolnum.Padding = new System.Windows.Forms.Padding(3);
+			this.lcontrolnum.Size = new System.Drawing.Size(25, 26);
 			this.lcontrolnum.TabIndex = 3;
 			this.lcontrolnum.Text = "0";
 			this.lcontrolnum.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -639,7 +666,7 @@ namespace MusicChange
 			this.importdata.TextAlignment = DevComponents.DotNetBar.eButtonTextAlignment.Left;
 			this.importdata.TextColor = System.Drawing.Color.White;
 			this.importdata.ThemeAware = true;
-			this.importdata.Click += new System.EventHandler(this.importdata_Click);
+			this.importdata.Click += new System.EventHandler(this.Click);
 			// 
 			// flowLayoutPanel2
 			// 
@@ -880,15 +907,14 @@ namespace MusicChange
 			// 
 			// videoView1
 			// 
-			this.videoView1.BackColor = System.Drawing.Color.Black;
-			this.videoView1.BackgroundImage = global::MusicChange.Properties.Resources.fm;
+			this.videoView1.BackColor = System.Drawing.Color.Green;
 			this.videoView1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.videoView1.Location = new System.Drawing.Point(0, 30);
 			this.videoView1.MediaPlayer = null;
 			this.videoView1.Name = "videoView1";
 			this.videoView1.Size = new System.Drawing.Size(715, 602);
 			this.videoView1.TabIndex = 13;
-			this.videoView1.Text = "videoView";
+			this.videoView1.Text = "videoView2";
 			// 
 			// lblAudioTime
 			// 
@@ -1350,12 +1376,16 @@ namespace MusicChange
 			this.temp.TabIndex = 0;
 			this.temp.Text = "F:\\英语学习\\MTEY0102.MP4";
 			// 
-			// panel10
+			// MediaDropPanel
 			// 
-			this.panel10.Location = new System.Drawing.Point(243, 100);
-			this.panel10.Name = "panel10";
-			this.panel10.Size = new System.Drawing.Size(1284, 90);
-			this.panel10.TabIndex = 2;
+			this.MediaDropPanel.AllowDrop = true;
+			this.MediaDropPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.MediaDropPanel.BackColor = System.Drawing.Color.DimGray;
+			this.MediaDropPanel.Location = new System.Drawing.Point(173, 48);
+			this.MediaDropPanel.Name = "MediaDropPanel";
+			this.MediaDropPanel.Size = new System.Drawing.Size(1558, 58);
+			this.MediaDropPanel.TabIndex = 2;
 			// 
 			// panel4
 			// 
@@ -1595,8 +1625,10 @@ namespace MusicChange
 		private System.Windows.Forms.Panel panel6;
 		private System.Windows.Forms.Panel panel5;
 		private System.Windows.Forms.Button btnAddFiles;
-		private System.Windows.Forms.Panel panel10;
-		private LibVLCSharp.WinForms.VideoView videoView1;
+		private System.Windows.Forms.Panel MediaDropPanel;
+        private LibVLCSharp.WinForms.VideoView videoView1;
+		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.ComboBox currentPro;
 	}
 }
 #endregion 

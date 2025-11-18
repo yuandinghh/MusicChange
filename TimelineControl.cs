@@ -8,10 +8,10 @@ using MusicChange;
 
 namespace LaserEditing
 {
-	public class TimelineControl : FlowLayoutPanel
+	public class TimelineControl : FlowLayoutPanel             // Timeline
 	{
 		private LibVLC _libVLC;
-		public TimelineControl(LibVLC libVLC)
+		public TimelineControl(LibVLC libVLC)            // 构造函数
 		{
 			_libVLC = libVLC;
 			this.WrapContents = false;
@@ -23,7 +23,7 @@ namespace LaserEditing
 			this.DragDrop += TimelineControl_DragDrop;
 		}
 
-		private void TimelineControl_DragEnter(object sender, DragEventArgs e)
+		private void TimelineControl_DragEnter(object sender, DragEventArgs e)          // 拖拽文件进入
 		{
 			if (e.Data.GetDataPresent( DataFormats.FileDrop ))
 				e.Effect = DragDropEffects.Copy;
@@ -31,25 +31,26 @@ namespace LaserEditing
 				e.Effect = DragDropEffects.None;
 		}
 
-		private void TimelineControl_DragDrop(object sender, DragEventArgs e)
+		private void TimelineControl_DragDrop(object sender, DragEventArgs e)         // 拖拽文件释放
 		{
 			var files = (string[])e.Data.GetData( DataFormats.FileDrop );
 			foreach (var f in files)
 				AddMediaFile( f );
 		}
 
-		public void AddMediaFile(string path)
+		public void AddMediaFile(string path)                                  // 添加媒体文件
 		{
 			if (!File.Exists( path ))
 				return;
 			var ext = Path.GetExtension( path ).ToLowerInvariant();
-			var item = new MediaItemControl( _libVLC, path )
-			{
-				Width = 220,
-				Height = 140,
-				Margin = new Padding( 6 )
-			};
-			this.Controls.Add( item );
+
+			//var item = new MediaItemControl( _libVLC, path )
+			//{
+			//	Width = 220,
+			//	Height = 140,
+			//	Margin = new Padding( 6 )
+			//};
+			//this.Controls.Add( item );
 		}
 	}
 }

@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,13 +17,15 @@ namespace MusicChange
 	public partial class MediaItemControl:UserControl
 	{
 		//private static readonly Random _random = new(Guid.NewGuid().GetHashCode());
+		//private LibVLC libVLC;
+		//private string path;
+		//private static string errorOutput;
+		//private MediaAssetsRepository mediaRepo;
+
 		private bool _isSelected = false;
 		private Color _originalBackColor;
-		private LibVLC libVLC;
-		private string path;
 		public static VideoInfo videoInfo = new();
-		private static string errorOutput;
-		private MediaAssetsRepository mediaRepo;
+
 
 		public bool IsSelected
 		{
@@ -53,21 +56,74 @@ namespace MusicChange
 		{
 			get; private set;
 		}
-		public MediaItemControl(string filePath, MediaType mediaType)   // 构造函数
+		public bool IsAdded
+		{
+			get;
+			internal set;
+		}
+
+		// 1. 使用 event 关键字定义事件
+		// EventHandler<TEventArgs> 是标准的事件处理委托
+		// 这里我们使用自定义的事件参数类来传递更多信息
+		//public event EventHandler<ItemDraggedOutEventArgs> ItemDraggedOut;
+		// 简化：使用标准的 EventHandler，不传递自定义参数
+		public event EventHandler ItemDraggedOut;
+
+		//// 触发事件的方法
+		//protected virtual void OnItemDraggedOut(DragDropEffects effect)
+		//{
+		//	bool success = effect == DragDropEffects.Copy;
+		//	var args = new ItemDraggedOutEventArgs(FilePath, success);
+		//	//ItemDraggedOut?.Invoke(this, args);
+		//	ItemDraggedOut?.Invoke(this, EventArgs.Empty);
+		//}
+	
+		private void MediaItemControl_MouseDown_1(object sender, MouseEventArgs e)    // 点击控件触发拖放操作
+		{
+			// 当鼠标左键按下并移动时，开始拖放操作
+			if(e.Button == MouseButtons.Left)
+			{
+				// 创建一个数据对象，用于传递拖放的数据。
+				// 我们使用自定义格式 "MediaItemData"，并将文件路径和控件的其他属性（如Name）传递过去。
+				DataObject dragData = new DataObject();
+				dragData.SetData("MediaItemData", this); // 直接传递整个控件引用，方便获取所有属性
+
+				// 开始拖放操作，效果为 Copy（复制）
+				DragDropEffects effect = DoDragDrop(dragData, DragDropEffects.Copy);
+
+				// 拖放操作完成后，可以根据效果做一些事情
+				if(effect == DragDropEffects.Copy)
+				{
+					// 例如，触发一个事件，通知主界面该项已被成功拖出并放置
+					//object p = ItemDraggedOut?.Invoke(this, EventArgs.Empty);
+					//ItemDraggedOut?.Invoke(this, new ItemDraggedOutEventArgs() { Success = true, FilePath = FilePath, DragTime = TimeLength });
+					Debug.WriteLine($"文件已拖出并放置: {FilePath}");
+					OnItemDraggedOut(); // 只在不带参数的情况下触发
+				}
+			}
+		}
+		// 关键：将事件参数类设置为 public
+		private void OnItemDraggedOut()
+		{
+			ItemDraggedOut?.Invoke(this, EventArgs.Empty);
+			Debug.WriteLine($"文件已拖出: {FilePath}");
+		}
+
+		public MediaItemControl(string filePath, MediaType mediaType)		  // 构造函数
 		{
 			InitializeComponent();
 			TimeLength = "未知";
 			FilePath = filePath;
 			MediaType = mediaType;
-			// 保存原始背景色
-			_originalBackColor = this.BackColor;
+
+			_originalBackColor = this.BackColor;   // 保存原始背景色
 			lblFileName.Text = Path.GetFileName(filePath);
 
 			btnPlay.Visible = false;
 			btnPlay.BringToFront();
 			hadadd.Visible = false;
 
-			_ = SetThumbnailAsync(filePath, mediaType);  // 根据媒体类型设置初始显示
+			_ = SetThumbnailAsync(filePath, mediaType);  //  // 根据媒体类型选择不同 处理方式 
 
 			btnPlay.Click += (s, e) => PlayMedia();     // 播放按钮点击事件
 			pictureBoxThumbnail.Click += (s, e) => PlayMedia();  // 订阅点击事件
@@ -76,25 +132,29 @@ namespace MusicChange
 			// 添加点击事件来切换选中状态
 			this.Click += MediaItemControl_Click;
 			pictureBoxThumbnail.Click += MediaItemControl_Click;
-			lblFileName.Click += MediaItemControl_Click;
+			lblFileName.Click += MediaItemControl_Click;            //mediaRepo = new MediaAssetsRepository(db.dbPath);
 
-			this.AllowDrop = true;
-			mediaRepo = new MediaAssetsRepository(db.dbPath);
+			// 添加鼠标事件订阅
+			//this.MouseDown += MediaItemControl_MouseDown;  // 添加这行
+			//this.MouseMove += MediaItemControl_MouseMove;  // 添加这行
+			//this.MouseLeave += MediaItemControl_MouseLeave;  // 添加这行
+			//this.MouseEnter += MediaItemControl_MouseEnter;  // 添加这行
+
 
 		}
-		public MediaItemControl(LibVLC libVLC, string path)  // 构造函数
-		{
-			this.libVLC = libVLC;
-			this.path = path;
-			hadadd.Visible = false;
-			butadd.Visible = false;
-		}
+		//public MediaItemControl(LibVLC libVLC, string path)  // 构造函数
+		//{
+		//	this.libVLC = libVLC;
+		//	this.path = path;
+		//	hadadd.Visible = false;
+		//	butadd.Visible = false;
+		//}
 		private void MediaItemControl_Click(object sender, EventArgs e)     // 点击控件切换选中状态
 		{
 			IsSelected = !IsSelected;
 		}
 		// 更新选中状态的外观
-		private void UpdateSelectionAppearance()
+		private void UpdateSelectionAppearance()                           // 更新选中状态的外观
 		{
 			if(_isSelected)
 			{
@@ -128,29 +188,27 @@ namespace MusicChange
 
 			return newImage;
 		}
-		private void PlayMedia()    // 触发播放事件
+		private void PlayMedia()                                                 // 触发播放事件
 		{
 			MediaPlayRequested?.Invoke(this, new MediaPlayEventArgs(FilePath, MediaType));
 		}
 		// 自定义事件：请求播放媒体
-		public event EventHandler<MediaPlayEventArgs> MediaPlayRequested;
+		public event EventHandler<MediaPlayEventArgs> MediaPlayRequested;          // 自定义事件
 		private void pictureBoxThumbnail_Click(object sender, EventArgs e)      // 触发播放事件
 		{
 			MediaPlayRequested?.Invoke(this, new MediaPlayEventArgs(FilePath, MediaType));
 		}
-		private async Task SetThumbnailAsync(string filePath, MediaType mediaType)   // 设置缩略图
+		private async Task SetThumbnailAsync(string filePath, MediaType mediaType)  // 根据媒体类型选择不同 处理方式 设置缩略图
 		{
 			videoInfo.DurationSeconds = "";
 			try
 			{
 				if(mediaType == MediaType.Image && File.Exists(filePath))       // 图片文件
 				{
-					using Image originalImage = Image.FromFile(filePath);  // 对于图片文件，尝试加载缩略图
+					using Image originalImage = Image.FromFile(filePath);        // 对于图片文件，尝试加载缩略图
 					pictureBoxThumbnail.Image = ResizeImage(originalImage, 100, 75); // 调整为适合控件的大小
-																					 //获取图片的宽高
-					videoInfo.Width = originalImage.Width;
+					videoInfo.Width = originalImage.Width;   //获取图片的宽高
 					videoInfo.Height = originalImage.Height;
-
 					LTimeLength.Visible = false;
 				}
 				else if(mediaType == MediaType.Video && File.Exists(filePath))              // 视频文件
@@ -180,98 +238,7 @@ namespace MusicChange
 				System.Diagnostics.Debug.WriteLine($"加载缩略图失败: {ex.Message}");
 			}
 		}
-		public static async Task<VideoInfo> GetVideoInfo(string filePath)            //获取视频信息
-		{
-			try
-			{
-				// 创建 LibVLC，禁止音频输出以避免任何声音播放
-				using var libVlc = new LibVLC(new[] { "--no-audio", "--no-video-title-show" });
-				using var media = new Media(libVlc, filePath, FromType.FromPath);
-				using var player = new MediaPlayer(media);
-				try // 尝试先解析媒体元数据（可获得 duration）
-				{
-					// Parse 可以在不完全播放的情况下填充媒体信息（异步或同步行为依版本）
-					//_ = media.Parse( MediaParseOptions.ParseNetwork );
-					//media.parse_with_options(vlc.MediaParseFlag.Local, timeout = 3000); // 同步解析
-					// 等一点时间让解析完成（通常很快）
-					await Task.Delay(200);
-					long durationFromMedia = media.Duration;
-					if(durationFromMedia > 0)
-					{
-						var ts = TimeSpan.FromMilliseconds(durationFromMedia);
-						videoInfo.DurationSeconds = ts.Hours > 0 ? ts.ToString(@"hh\:mm\:ss") : ts.ToString(@"mm\:ss");
-					}
-				}
-				catch
-				{
-					// 忽略解析失败，后面会尝试从 player.Length 获取
-				}
-
-				// 需要快照时，MediaPlayer.TakeSnapshot 要求 MediaPlayer 实际运行一次。
-				// 启动并立即静音（LibVLC 已用 --no-audio），再请求快照并等待文件出现。
-				player.Mute = true; // 额外保证不出声音
-				player.Play();
-				player.Mute = false; // 额外保证不出声音
-				var sw = System.Diagnostics.Stopwatch.StartNew();   // 等待播放器进入可用状态或直到超时
-				while(sw.ElapsedMilliseconds < 2000)
-				{
-					if(player.Length > 0 || player.State == VLCState.Playing)
-						break;
-					await Task.Delay(100);
-				}
-
-				// 如果还没有通过 media.Parse 得到时长，尝试从 player.Length 读取
-				if(string.IsNullOrEmpty(videoInfo.DurationSeconds) || videoInfo.DurationSeconds == "00:00")
-				{
-					long lengthMs = player.Length;
-					if(lengthMs > 0)
-					{
-						var ts = TimeSpan.FromMilliseconds(Math.Max(0, lengthMs));
-						videoInfo.DurationSeconds = ts.Hours > 0 ? ts.ToString(@"hh\:mm\:ss") : ts.ToString(@"mm\:ss");
-					}
-				}
-
-				// 生成唯一文件名并请求快照
-				string timestampStr = DateTime.Now.ToString("yyyyMMddHHmmssfff");
-				string snapshotName = $"{timestampStr}.jpg";
-				string snapshotPath = Path.Combine(Directory.GetCurrentDirectory(), snapshotName);
-
-				// 请求快照（文件写入是异步由 VLC 完成）
-				bool requestOk = player.TakeSnapshot(0u, snapshotPath, 0u, 0u);
-				if(requestOk)
-				{
-					// 等待文件被写入（最多等待 3 秒）
-					var waitSw = System.Diagnostics.Stopwatch.StartNew();
-					while(waitSw.ElapsedMilliseconds < 2000)
-					{
-						if(File.Exists(snapshotPath) && new FileInfo(snapshotPath).Length > 0)
-							break;
-						await Task.Delay(100);
-					}
-
-					if(File.Exists(snapshotPath) && new FileInfo(snapshotPath).Length > 0)
-					{
-						// 安全加载图像到内存，避免文件句柄被锁定
-						using(var fs = new FileStream(snapshotPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-						{
-							videoInfo.Thumbnail = Image.FromStream(fs);
-						}
-						string filenanme = Path.GetFileName(snapshotPath);
-						filenanme = Path.Combine(LaserEditing.subDirectory, "snapshotPath") + "\\" + filenanme;
-						File.Copy(snapshotPath, filenanme, true);
-						videoInfo.snapshotPath = filenanme;
-					}
-				}
-				// 停止播放器（确保不继续播放）
-				player.Stop();
-			}
-			catch(Exception ex)
-			{
-				System.Diagnostics.Debug.WriteLine($"获取视频信息时出错: {ex.Message}");
-			}
-			return videoInfo;
-		}
-		public static string GetVideoDuration(string videoPath)    //获取视频时长
+		public static string GetVideoDuration(string videoPath)                        //获取视频时长  ，使用
 		{
 			try
 			{
@@ -284,15 +251,11 @@ namespace MusicChange
 					UseShellExecute = false,
 					CreateNoWindow = true
 				};
-
 				using Process process = Process.Start(startInfo);
-
 				// 重要：读取输出流防止阻塞
 				string output = process.StandardOutput.ReadToEnd();
 				string errorOutput = process.StandardError.ReadToEnd();
-
 				process.WaitForExit();
-
 				// 时长信息通常在错误输出中
 				// 正则匹配时长（格式：Duration: 00:01:23.45）
 				Match match = Regex.Match(errorOutput, @"Duration:\s*(\d+:\d+:\d+\.\d+)", RegexOptions.IgnoreCase);
@@ -302,69 +265,6 @@ namespace MusicChange
 					if(TimeSpan.TryParse(durationStr, out TimeSpan duration))
 					{
 						// 格式化输出
-						return duration.Hours > 0 ? duration.ToString(@"hh\:mm\:ss") : duration.ToString(@"mm\:ss");
-					}
-				}
-				return "未知";
-			}
-			catch(Exception ex)
-			{
-				Debug.WriteLine($"获取视频时长失败: {ex.Message}");
-				return "未知";
-			}
-		}
-		public static async Task<string> GetVideoDurationAsync(string videoPath)
-		{
-			try
-			{
-				ProcessStartInfo startInfo = new ProcessStartInfo
-				{
-					FileName = @"D:\C#\ffmpegbuild\bin\ffmpeg.exe",
-					Arguments = $"-i \"{videoPath}\"",
-					RedirectStandardError = true,
-					RedirectStandardOutput = true,
-					UseShellExecute = false,
-					CreateNoWindow = true
-				};
-
-				using Process process = new Process();
-				process.StartInfo = startInfo;
-
-				var tcs = new TaskCompletionSource<bool>();
-
-				process.EnableRaisingEvents = true;
-				process.Exited += (sender, args) => tcs.SetResult(true);
-
-				process.Start();
-
-				// 异步读取输出流防止阻塞
-				var outputTask = process.StandardOutput.ReadToEndAsync();
-				var errorTask = process.StandardError.ReadToEndAsync();
-
-				// 等待进程完成（带超时）
-				using(var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10)))
-				{
-					var completedTask = await Task.WhenAny(tcs.Task, Task.Delay(-1, cts.Token));
-
-					if(completedTask != tcs.Task)
-					{
-						if(!process.HasExited)
-						{
-							process.Kill();
-						}
-						throw new TimeoutException("FFmpeg获取时长超时");
-					}
-				}
-				Thread.Sleep(1000);
-				string output = await outputTask;
-				string errorOutput = await errorTask;
-				// 正则匹配时长
-				Match match = Regex.Match(errorOutput, @"Duration:\s*(\d+:\d+:\d+\.\d+)", RegexOptions.IgnoreCase);
-				if(match.Success)
-				{
-					string durationStr = match.Groups[1].Value;
-					if(TimeSpan.TryParse(durationStr, out TimeSpan duration))
-					{
 						return duration.Hours > 0 ? duration.ToString(@"hh\:mm\:ss") : duration.ToString(@"mm\:ss");
 					}
 				}
@@ -419,26 +319,42 @@ namespace MusicChange
 					{
 						videoInfo.Thumbnail = Image.FromStream(fs);
 					}
-					//videoInfo.DurationSeconds = GetVideoDuration(videoPath);
-					videoInfo.DurationSeconds = await GetVideoDurationAsync(videoPath);
+					//		videoInfo.DurationSeconds = GetVideoDuration(videoPath); // 获取视频时长ffmpeg
+					TimeSpan v = GetMediaDuration(videoPath);			//			获取视频时长 NAudio
+					DateTime dt = DateTime.Today.Add(v); // 今天的 00:05:03
+					videoInfo.DurationSeconds = dt.ToString("mm:ss"); // 输出: "05:03"
+					//videoInfo.DurationSeconds = await GetVideoDurationAsync(videoPath);
 					videoInfo.FilePath = videoPath;
 					videoInfo.Width = videoInfo.Thumbnail.Width;
 					videoInfo.Height = videoInfo.Thumbnail.Height;
-					//videoInfo.snapshotPath = outputImagePath;
+					videoInfo.snapshotPath = outputImagePath;
 					int id = 0;
-					//string fileName = Path.GetFileName(videoPath);
-					id = LaserEditing._mediaRepo.GetIdByMediaTypeAndCodec("video", LaserEditing.PubmediaAsset.Codec);
-					if(LaserEditing.PubmediaAssetid != 0 && id != 0)   // 如果存在PubmediaAssetid，则更新数据库
-					{
-						// 更新MediaAsset数据库
-						LaserEditing.PubmediaAsset.Duration = videoInfo.DurationSeconds;
-						LaserEditing.PubmediaAsset.Width = videoInfo.Width;
-						LaserEditing.PubmediaAsset.Height = videoInfo.Height;
-						//LaserEditing.PubmediaAsset.Codec = videoInfo.snapshotPath;
-						//LaserEditing.PubmediaAsset.Id = LaserEditing.PubmediaAssetid;
-						LaserEditing.PubmediaAsset.Id = id;
-						LaserEditing._mediaRepo.Update(LaserEditing.PubmediaAsset);        // 更新MediaAsset数据库 根据id
-					}
+					////string fileName = Path.GetFileName(videoPath);
+					//id = LaserEditing._mediaRepo.GetIdByMediaTypeAndCodec("video", LaserEditing.PubmediaAsset.Codec);
+					//MediaAsset target = LaserEditing.MediaAssets.FirstOrDefault(s => s.Codec == outputImagePath);
+					//               if(target != null)
+					//{
+					//	id = target.Id;
+					//}
+					//target.Duration = videoInfo.DurationSeconds;
+					//target.Width = videoInfo.Width;
+					//target.Height = videoInfo.Height;
+					////将更新的target 存入 LaserEditing.MediaAssets
+					//LaserEditing.MediaAssets[id] = target;
+					//LaserEditing.MediaAssets.Add(id, target);
+					//	id = LaserEditing._mediaRepo.Create(LaserEditing.PubmediaAsset);
+					//  LaserEditing.MediaAssets 
+					//if(LaserEditing.PubmediaAssetid != 0 && id != 0)   // 如果存在PubmediaAssetid，则更新数据库
+					//{
+					//	// 更新MediaAsset数据库
+					//	LaserEditing.PubmediaAsset.Duration = videoInfo.DurationSeconds;
+					//	LaserEditing.PubmediaAsset.Width = videoInfo.Width;
+					//	LaserEditing.PubmediaAsset.Height = videoInfo.Height;
+					////	//LaserEditing.PubmediaAsset.Codec = videoInfo.snapshotPath;
+					////	//LaserEditing.PubmediaAsset.Id = LaserEditing.PubmediaAssetid;
+					//	LaserEditing.PubmediaAsset.Id = LaserEditing.PubmediaAssetid;
+					//	LaserEditing._mediaRepo.Update(LaserEditing.PubmediaAsset);        // 更新MediaAsset数据库 根据id
+					//}
 				}
 				return videoInfo;
 			}
@@ -449,8 +365,7 @@ namespace MusicChange
 				return videoInfo;
 			}
 		}
-
-		protected override void Dispose(bool disposing)   // Dispose
+		protected override void Dispose(bool disposing)                              // Dispose
 		{
 			if(disposing)
 			{
@@ -481,7 +396,7 @@ namespace MusicChange
 
 			base.Dispose(disposing);
 		}
-		public string GetAudioDuration(string filePath)  //获取音频时长
+		public string GetAudioDuration(string filePath)                              //获取Audio音频时长
 		{
 			try
 			{
@@ -500,108 +415,75 @@ namespace MusicChange
 				return "00:00";
 			}
 		}
-		private void MediaItemControl_DragDrop(object sender, DragEventArgs e)  //拖放文件
-		{
-			// 处理拖放的文件
-			string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-			if(files.Length > 0)
-			{
-				ProcessDroppedFile(files[0]);
-			}
-		}
-		private void MediaItemControl_DragEnter(object sender, DragEventArgs e)
-		{
-			// 检查拖入的数据是否为文件
-			if(e.Data.GetDataPresent(DataFormats.FileDrop))
-			{
-				string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-				if(files.Length > 0 && IsMediaFile(files[0]))
-				{
-					e.Effect = DragDropEffects.Copy;
-					return;
-				}
-			}
-			e.Effect = DragDropEffects.None;
-		}
-		private void ProcessDroppedFile(string filePath)  //处理拖入的文件
-		{
-			try
-			{
-				// 获取媒体文件时长
-				TimeSpan duration = GetMediaDuration(filePath);
-				// 显示文件信息
-				string fileName = Path.GetFileName(filePath);
-				string message = $"文件: {fileName}\n时长: {duration:hh\\:mm\\:ss}";
+		//private void MediaItemControl_DragDrop(object sender, DragEventArgs e)       //拖放文件
+		//{
+		//	// 处理拖放的文件
+		//	string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+		//	if(files.Length > 0)
+		//	{
+		//		ProcessDroppedFile(files[0]);
+		//	}
+		//}
+		//private void MediaItemControl_DragEnter(object sender, DragEventArgs e)
+		//{
+		//	// 检查拖入的数据是否为文件
+		//	if(e.Data.GetDataPresent(DataFormats.FileDrop))
+		//	{
+		//		string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+		//		if(files.Length > 0 && IsMediaFile(files[0]))
+		//		{
+		//			e.Effect = DragDropEffects.Copy;
+		//			return;
+		//		}
+		//	}
+		//	e.Effect = DragDropEffects.None;
+		//}
 
-				// 在容器中添加文件信息
-				ListViewItem item = new ListViewItem(fileName);
-				item.SubItems.Add(duration.ToString(@"hh\:mm\:ss"));
-				item.SubItems.Add(filePath);
-				//listViewDroppedMedia.Items.Add( item );
-
-				MessageBox.Show(message, "文件已添加");
-			}
-			catch(Exception ex)
-			{
-				MessageBox.Show($"处理文件时出错: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
-			}
-		}
-		private TimeSpan GetMediaDuration(string filePath)  // 获取媒体文件时长
+		public static TimeSpan GetMediaDuration(string filePath)                              // 获取视频文件时长
 		{
 			string extension = Path.GetExtension(filePath).ToLower();
 
 			if(extension == ".mp4" || extension == ".avi" || extension == ".mov" || extension == ".flv" || extension == ".mkv")
 			{
-				return GetVideoDurationo(filePath);
+				//return GetVideoDurationo(filePath);
+				MediaFoundationApi.Startup();
+				try
+				{
+					using(var reader = new MediaFoundationReader(filePath))
+					{
+						return reader.TotalTime;
+					}
+				}
+				finally
+				{
+					MediaFoundationApi.Shutdown();
+				}
 			}
 
 			throw new NotSupportedException("不支持的媒体格式");
 		}
-		// 获取视频文件时长
-		private TimeSpan GetVideoDurationo(string filePath)
-		{
-			// 初始化MediaFoundation
-			MediaFoundationApi.Startup();
-
-			try
-			{
-				using(var reader = new MediaFoundationReader(filePath))
-				{
-					return reader.TotalTime;
-				}
-			}
-			finally
-			{
-				MediaFoundationApi.Shutdown();
-			}
-		}
-		// 检查是否为支持的媒体文件
 		private bool IsMediaFile(string filePath)
 		{
 			string extension = Path.GetExtension(filePath).ToLower();
 			string[] supportedExtensions = { ".mp3", ".wav", ".wma", ".mp4", ".avi", ".mov", ".flv", ".mkv" };
 			return Array.IndexOf(supportedExtensions, extension) >= 0;
 		}
-
-		private void MediaItemControl_MouseMove(object sender, MouseEventArgs e)    //鼠标移动
+		private void MediaItemControl_MouseMove(object sender, MouseEventArgs e)         //鼠标移动
 		{
 			hadadd.Visible = true;
 			hadadd.BringToFront();
 			butadd.Visible = true;
 			butadd.BringToFront();
 		}
-
-		private void butadd_Click(object sender, EventArgs e)  //添加文件到编辑区
+		private void butadd_Click(object sender, EventArgs e)                            //添加文件到编辑区
 		{
 
 		}
-
 		private void MediaItemControl_MouseLeave(object sender, EventArgs e)  //鼠标离开
 		{
 			hadadd.Visible = false;
 			butadd.Visible = false;
 		}
-
 		private void MediaItemControl_MouseEnter(object sender, EventArgs e)    //鼠标进入
 		{
 			hadadd.Visible = true;
@@ -609,6 +491,33 @@ namespace MusicChange
 			butadd.Visible = true;
 			butadd.BringToFront();
 		}
+
+		internal class ItemDraggedOutEventArgs
+		{
+			public ItemDraggedOutEventArgs(string filePath, bool success)
+			{
+				FilePath = filePath;
+				Success = success;
+			}
+
+			public bool Success
+			{
+				get;
+				internal set;
+			}
+			public object FilePath
+			{
+				get;
+				internal set;
+			}
+			public object DragTime
+			{
+				get;
+				internal set;
+			}
+		}
+
+	
 	}
 
 	public enum MediaType       // 媒体类型枚举

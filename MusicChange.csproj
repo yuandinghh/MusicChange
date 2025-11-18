@@ -167,7 +167,9 @@
     <Reference Include="stdole, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
-    <Reference Include="System" />
+    <Reference Include="System">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.dll</HintPath>
+    </Reference>
     <Reference Include="System.Collections.Immutable, Version=9.0.0.10, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>packages\System.Collections.Immutable.9.0.10\lib\net462\System.Collections.Immutable.dll</HintPath>
     </Reference>
@@ -304,6 +306,7 @@
     <Compile Include="Helpers\TransactionDetailRepository.cs" />
     <Compile Include="Helpers\TransactionRepository.cs" />
     <Compile Include="Helpers\WaveformRenderer.cs" />
+    <Compile Include="ItemDraggedOutEventArgs.cs" />
     <Compile Include="LaserEditing.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -311,12 +314,6 @@
       <DependentUpon>LaserEditing.cs</DependentUpon>
     </Compile>
     <Compile Include="LivpConverter.cs" />
-    <Compile Include="MediaItemControG.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="MediaItemControG.Designer.cs">
-      <DependentUpon>MediaItemControG.cs</DependentUpon>
-    </Compile>
     <Compile Include="MediaItemControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -356,9 +353,6 @@
     <EmbeddedResource Include="LaserEditing.resx">
       <DependentUpon>LaserEditing.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MediaItemControG.resx">
-      <DependentUpon>MediaItemControG.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MediaItemControl.resx">
       <DependentUpon>MediaItemControl.cs</DependentUpon>

@@ -126,7 +126,6 @@ namespace MusicChange
 			// 
 			// MediaItemControl
 			// 
-			this.AllowDrop = true;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.Gray;
@@ -141,8 +140,7 @@ namespace MusicChange
 			this.Name = "MediaItemControl";
 			this.Padding = new System.Windows.Forms.Padding(5);
 			this.Size = new System.Drawing.Size(180, 145);
-			this.DragDrop += new System.Windows.Forms.DragEventHandler(this.MediaItemControl_DragDrop);
-			this.DragEnter += new System.Windows.Forms.DragEventHandler(this.MediaItemControl_DragEnter);
+			this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MediaItemControl_MouseDown_1);
 			this.MouseEnter += new System.EventHandler(this.MediaItemControl_MouseEnter);
 			this.MouseLeave += new System.EventHandler(this.MediaItemControl_MouseLeave);
 			this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MediaItemControl_MouseMove);

@@ -403,6 +403,8 @@ namespace MusicChange
 					}
 
 					//var main = LaserEditing.mainRepo.GetCurrentRunning();
+					//newId 存入 main 表的curren_user_id列
+                    LaserEditing.mainRepo.Update(new Main { Id = LaserEditing.Pubmain.Id, CurrenUserId = newId });
 
 					MessageBox.Show("用户注册成功。", "注册完成", MessageBoxButtons.OK, MessageBoxIcon.Information);
 					this.DialogResult = DialogResult.OK;
@@ -410,6 +412,7 @@ namespace MusicChange
 				}
 				else
 				{
+					MessageBox.Show("注册失败，请重试。", "联系网管或厂家", MessageBoxButtons.OK, MessageBoxIcon.Information);
 					SetStatus.Text = "注册失败，请重试";
 				}
 			}
