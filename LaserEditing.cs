@@ -21,6 +21,8 @@ using Point = System.Drawing.Point;
 using FormsTimer = System.Windows.Forms.Timer;
 using ThreadingTimer = System.Threading.Timer;
 using LaserEditing;
+using Newtonsoft.Json;
+using System.Text;
 
 #endregion
 #region  ------------- 全局变量 -------------
@@ -79,20 +81,20 @@ namespace MusicChange
 		private TimelineControl timeline;     // 时间轴控件
 		private LibVLC _libVLC;     // 新增字段（类成员区）
 
-		public static MainRepository mainRepo;
-		public static Main Pubmain = new();
+		public static Main pubmain = new();
 		public static Users Pubuser = new();
 		public static MediaAsset PubmediaAsset = new();
-		public static int PubmediaAssetid;
-		public static UsersRepository usersRepo;
-
-		private ProjectsRepository _projectsRepo;
-		public static Project Pubproject = new();  // 当前项目
-		private bool isprojectfirstrun;    //project first run
-		private Project _currentProject;             // 当前项目
 		public static MediaAssetsRepository _mediaRepo;
 		public static List<MediaAsset> MediaAssets = new();
 		public static byte MediaAssetVideoCount = 0;
+		public static int PubmediaAssetid;
+		public static UsersRepository usersRepo;
+		private ProjectsRepository _projectsRepo;
+		private Project _currentProject;             // 当前项目 表变量
+		public static Project Pubproject = new();  // 当前项目 
+		private bool isprojectfirstrun;    //project first run
+	
+		
 
 		public LaserEditing()
 		{
@@ -3867,7 +3869,7 @@ namespace MusicChange
 				catch(Exception ex)
 				{
 					//窗口提示
-					MessageBoxHelper.ShowAutoClose("5秒后自动关闭", ex.Message, 5000);
+					MessageBoxHelper.ShowAutoClose("5秒后自动关闭,联系厂家", ex.Message, 5000);
 					System.Diagnostics.Debug.WriteLine($"写入媒体资源到数据库失败: {ex.Message}");
 				}
 			}
@@ -4052,7 +4054,67 @@ namespace MusicChange
 				timeline.AddMediaFile(f);
 		}
 		#endregion
-		#region ------------  项目 Projiect 数据库操作   ------------
+		#region ------------  项目 Projiect 数据库操作  main 存储 提取------------
+
+		public static void saveMain()    //保存项目信息
+		{
+			var mManager = new JsonFileManager<Main>("main.json");
+			pubmain = new Main
+			{
+				CurrenUserId = Pubuser?.Id ?? 1,
+				CurrenProjectId = 0,
+				LoginTime = DateTime.Now,
+				Workofftime = DateTime.Now,
+				version = "V1.0.0",
+				first_version = "V1.0.0",
+				Server_website = "https://www.musicchange.com",
+				complaint_count = 0,
+				complaint_id = 0,
+				IsLocked = false,
+				current_run = true,
+				The_next_revision_schedule = 365,
+				Version_end_time = 365,
+				registered_user = "未注册",
+				Description = $"Session started from LaserEditing {Environment.MachineName}",
+				CreatedAt = DateTime.Now
+			};
+			//main 类存入磁盘文字中
+			mManager.Save(pubmain);
+			//GC.Collect();
+			//GC.WaitForPendingFinalizers();
+			/*1. GC.Collect()    不能 随便使用
+作用：强制运行时立即执行垃圾回收
+
+行为：回收所有不再被引用的对象的内存
+
+通常情况：.NET的垃圾回收器会自动在需要时运行，不需要手动调用
+
+2. GC.WaitForPendingFinalizers()
+作用：阻塞当前线程，直到所有待处理的终结器执行完毕
+
+行为：确保实现了终结器（析构函数）的对象被完全清理
+
+配合使用：通常在GC.Collect()后调用，确保回收彻底*/
+
+		}
+		public static  void savepumMain(int uid, int pid, string description)
+		{
+			var mManager = new JsonFileManager<Main>("main.json");
+			if(uid != 0)
+				pubmain.CurrenUserId = uid;
+			if(pid != 0)
+				pubmain.CurrenProjectId = pid;
+			if(description != null)
+				pubmain.Description = description;
+			pubmain.LoginTime = DateTime.Now;
+			mManager.Save(pubmain);
+		}
+		public static void loadMain()
+		{
+			var mManager = new JsonFileManager<Main>("main.json");
+			pubmain = mManager.Load();
+		}
+
 
 		// 在 LaserEditing_Load 或初始化处调用：
 		private void InitializeProjectsRepository()   // 初始化项目数据库 只是 注册了 ProjectsRepository和 MediaAssetsRepository
@@ -4098,14 +4160,8 @@ namespace MusicChange
 					var pl = _projectsRepo.GetByName(selectedValue);
 					Pubproject = pl[0];
 					LoadMediaForCurrentProject(); // 加载当前项目下的所有 媒体文件 timeline.LoadMedia(Pubproject.Id);
-					//更新 main 表的 字段 curren_project_id，和 curren_user_id
-					Pubmain.CurrenProjectId = Pubproject.Id;
-                    Pubmain.CurrenUserId = Pubproject.UserId;    //改变了 curren_user_id
-					Pubmain.LoginTime = DateTime.Now;
-					mainRepo.Update(Pubmain);
-
-                    Pubuser = usersRepo.GetById(Pubmain.CurrenUserId); 
-					
+					savepumMain(Pubproject.UserId, Pubproject.Id, null);  //更新 main 表的 字段 curren_project_id，和 curren_user_id
+					Pubuser = usersRepo.GetById(pubmain.CurrenUserId);
 					if(Pubuser != null)
 					{
 						if(Pubuser.AvatarPath != null)
@@ -4113,23 +4169,19 @@ namespace MusicChange
 							Userimage.Image = Image.FromFile(Pubuser.AvatarPath); // 显示用户头像
 						}
 					}
-
 				}
-                else
-                {
+				else
+				{
 					isprojectfirstrun = false;
 				}
 			}
-
 		}
 
 		private void CreateNewProjectIfNeeded(string name = null)   // 创建新项目
 		{
 			InitializeProjectsRepository();
-
 			if(_currentProject != null)
 				return;
-
 			var proj = new Project
 			{
 				UserId = Pubuser?.Id ?? 1,
@@ -4149,7 +4201,7 @@ namespace MusicChange
 			_currentProject = proj;
 		}
 		// 导入后更新项目元信息
-		private void UpdateProjectAfterImport(int addedFiles, double addedSeconds, string thumbnailPath = null)
+		private void UpdateProjectAfterImport(int addedFiles, double addedSeconds, string thumbnailPath = null)    // 更新项目元信息
 		{
 			if(_projectsRepo == null)
 				InitializeProjectsRepository();
@@ -4167,11 +4219,10 @@ namespace MusicChange
 
 			_currentProject.UpdatedAt = DateTime.Now;
 			_projectsRepo.Update(_currentProject);
-		
-			int projectId = _currentProject.Id;										   //获得当前项目的 id
-			_currentProject = _projectsRepo.GetById(projectId);							   //获取当前项目的最新信息
-			
-			mainRepo.Update(new Main { Id = Pubmain.Id, CurrenProjectId = projectId });   //更新main 表的 curren_project_id
+
+			int projectId = _currentProject.Id;                                        //获得当前项目的 id
+			_currentProject = _projectsRepo.GetById(projectId);                            //获取当前项目的最新信息
+			savepumMain(0, projectId, "");   //更新main 表的 curren_project_id
 		}
 		// 在方法开始处（导入对话前或紧接导入之前）确保 repo 与 project
 		// 调用 CreateNewProjectIfNeeded() 根据需求（这里示例在每次导入若无 current project 则创建）
@@ -4206,68 +4257,41 @@ namespace MusicChange
 		// 在 InitializeMainRepository 方法中，new MainRepository(db.dbPath); 之后加入 EnsureTableExists 调用
 		private void InitializeMainRepository()     // 初始化主数据库 和 用户数据库 ，并导入 已有的 项目
 		{
-			if(mainRepo == null)  // 确保 repo 创建
+			//判断main.json 文件 是否存在，在当前文件夹下
+			if(!File.Exists("main.json"))    //不存在  首次运行
 			{
-				mainRepo = new MainRepository(db.dbPath);
-				//mainRepo.EnsureTableExists();  // 确保 main 表存在（自动创建）  GetCurrentRunning
-				if(!db.IsTableEmpty("Main"))   // 判断表是否为空
-				{    // 表不为空
-					Pubmain = mainRepo.GetById(1);     //main只有一条记录     .GetCurrentRunning();   current_run = true,  当前能运行项目
-					usersRepo = new UsersRepository(db.dbPath);    //读第一条LaserEditing.db数据库的User 存入Pubuser 类中
-					if (Pubuser == null)
-					{
-						MessageBox.Show("用户信息表为空！请先添加用户！", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
-						return;
-					}
-					Pubuser = usersRepo.GetById(Pubmain.CurrenUserId);  // 读用户表
-					if(Pubmain.CurrenProjectId != 0)  // 当前有项目上次运行   Pubmain.current_run
-					{
-						InitializeProjectsRepository();  // 初始化项目数据库
-						Pubproject = _projectsRepo.GetById(Pubmain.CurrenProjectId); // 读项目表
-						LoadMediaForCurrentProject(); // 加载当前项目下的所有 媒体文件 timeline.LoadMedia(Pubproject.Id);
-						var name = _projectsRepo.GetAllProjectIds();   // 获得所有项目名称
-						currentPro.Items.Clear();
-						// 转换为数组后批量添加
-						currentPro.Items.AddRange(name.ToArray());
-                        currentPro.Enabled = true;
-                        currentPro.Text = Pubproject.Name;
-			            //currentPro.SelectedIndex = currentPro.FindStringExact(Pubproject.Name); // 设置当前项目currentPro.Text = Pubproject.Name;
-					}
+				saveMain();   // 创建 main.json 文件
+				usersRepo = new UsersRepository(db.dbPath);    //读第一条LaserEditing.db数据库的User 存入Pubuser 类中
+				Pubuser = usersRepo.GetById(1);  // 读用户表
+				if(Pubuser == null)
+				{
+					MessageBox.Show("用户信息表为空！请先添加用户！", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
 					return;
 				}
-				else   // 表为空
+				if(pubmain.CurrenProjectId != 0)  // 当前有项目上次运行   Pubmain.current_run
 				{
-					db.ClearTableAndResetId("Main");  // 清空表数据并重置自增ID为1
-					Pubmain = new Main
-					{
-						CurrenUserId = Pubuser?.Id ?? 1,
-						CurrenProjectId = 0,
-						LoginTime = DateTime.Now,
-						Workofftime = DateTime.Now,
-						version = "V1.0.0",
-						first_version = "V1.0.0",
-						Server_website = "https://www.musicchange.com",
-						complaint_count = 0,
-						complaint_id = 0,
-						IsLocked = false,
-						current_run = true,
-						The_next_revision_schedule = 365,
-						Version_end_time = 365,
-						registered_user = "未注册",
-						Description = $"Session started from LaserEditing {Environment.MachineName}",
-						CreatedAt = DateTime.Now
-					};
-					mainRepo.Create(Pubmain);
+					InitializeProjectsRepository();  // 初始化项目数据库
+					Pubproject = _projectsRepo.GetById(pubmain.CurrenProjectId); // 读项目表
+					LoadMediaForCurrentProject(); // 加载当前项目下的所有 媒体文件 timeline.LoadMedia(Pubproject.Id);
+					var name = _projectsRepo.GetAllProjectIds();   // 获得所有项目名称
+					currentPro.Items.Clear();
+					// 转换为数组后批量添加
+					currentPro.Items.AddRange(name.ToArray());
+					currentPro.Enabled = true;
+					currentPro.Text = Pubproject.Name;
+					//currentPro.SelectedIndex = currentPro.FindStringExact(Pubproject.Name); // 设置当前项目currentPro.Text = Pubproject.Name;
 				}
+				return;
 			}
-			else  // repo 已创建
+
+			else  // main已创建
 			{
-				Pubmain = mainRepo.GetCurrentRunning();         // 获取当前运行项目
+				loadMain();      // 获取当前运行项目
 				usersRepo = new UsersRepository(db.dbPath);    //读第一条LaserEditing.db数据库的User 存入Pubuser 类中
-				Pubuser = usersRepo.GetById(Pubmain.CurrenUserId);  // 读用户表
-				if(Pubmain.CurrenUserId != 0)     //取 Pubmain curren_user_id 值   	 初始化用户窗口界面库
+				Pubuser = usersRepo.GetById(pubmain.CurrenUserId);  // 读用户表
+				if(pubmain.CurrenUserId != 0)     //取 Pubmain curren_user_id 值   	 初始化用户窗口界面库
 				{
-					Pubuser = usersRepo.GetById(Pubmain.CurrenUserId);  //???????????
+					Pubuser = usersRepo.GetById(pubmain.CurrenUserId);  //???????????
 				}
 				if(Pubuser != null)
 				{
@@ -4276,17 +4300,19 @@ namespace MusicChange
 						Userimage.Image = Image.FromFile(Pubuser.AvatarPath); // 显示用户头像
 					}
 				}
-				InitializeProjectsRepository();  // 获取项目
-				if(Pubmain.CurrenProjectId != 0)     // 取 Pubmain curren_project_id 值,xiangm
+				else
 				{
-					Pubproject = _projectsRepo.GetById(Pubmain.CurrenProjectId);   //获取项目
-					LoadMediaForCurrentProject();  // 根据 Pubproject.id 获取表MediaAsset 项目 中 所有 
-												   //timeline.LoadMedia(Pubproject.Id);
-												   //timeline.LoadProject(Pubproject);
-
-					var assets = _mediaRepo.GetByProjectId(Pubproject.Id);
+					MessageBox.Show("用户信息表为空！请先注册！", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					return;   //不注册仍可以使用
+				}
+				InitializeProjectsRepository();  // 获取项目
+				if(pubmain.CurrenProjectId != 0)     // 取 Pubmain curren_project_id 值
+				{
+					Pubproject = _projectsRepo.GetById(pubmain.CurrenProjectId);   //获取项目
+					LoadMediaForCurrentProject();                                   // 根据 Pubproject.id 获取表MediaAsset 项目 中 所有 
+					MediaAssets = _mediaRepo.GetByProjectId(Pubproject.Id);			// 获取项目下的所有 媒体文件
 					flowLayoutPanelMedia.Controls.Clear();
-					foreach(var a in assets)
+					foreach(var a in MediaAssets)
 					{
 						// 使用 MediaItemControl 构造函数（如果有接受 path 的构造），并把数据库 id 放入 Tag
 						var mediaType = MediaType.Video;
@@ -4294,97 +4320,15 @@ namespace MusicChange
 							mediaType = MediaType.Audio;
 						else if(a.MediaType == "image")
 							mediaType = MediaType.Image;
-
 						var mi = new MediaItemControl(a.FilePath, mediaType);
 						mi.Tag = a.Id;
 						flowLayoutPanelMedia.Controls.Add(mi);
-						//mi.MouseClick += MediaItemControl_MouseClick;
-						//mi.MouseDoubleClick += MediaItemControl_MouseDoubleClick;
-						//mi.MouseDown += MediaItemControl_MouseDown;
-						//mi.MouseUp += MediaItemControl_MouseUp;
-						//mi.MouseMove += MediaItemControl_MouseMove;
-						//mi.MouseLeave += MediaItemControl_MouseLeave;
-						//mi.MouseEnter += MediaItemControl_MouseEnter;
-						//mi.Click += MediaItemControl_Click;
-						//mi.DoubleClick += MediaItemControl_DoubleClick;
-						//mi.ContextMenuStrip = contextMenuStripMedia;
-						//mi.DragDrop += MediaItemControl_DragDrop;
-						//mi.DragEnter += MediaItemControl_DragEnter;
-						//mi.DragOver += MediaItemControl_DragOver;
-						//mi.DragLeave += MediaItemControl_DragLeave;
-						//mi.GiveFeedback += MediaItemControl_GiveFeedback;
-						//mi.QueryContinueDrag += MediaItemControl_QueryContinueDrag;
-						//mi.DragDrop += MediaItemControl_DragDrop;
-						//mi.DragLeave += MediaItemControl_DragLeave;
-
 					}
-					UpdateFlowLayoutVisibility();
-					//timeline.LoadMedia(Pubproject.Id);
-
+					UpdateFlowLayoutVisibility();  //  					//timeline.LoadMedia(Pubproject.Id);
 				}
 
 			}
 		}
-		private void StartSession(int userId, int projectId = 0, string version = null)   // 启动会话
-		{
-			//InitializeMainRepository();
-
-			// 如果已有正在运行的会话，先结束它（防止重复）
-			var running = mainRepo.GetCurrentRunning();
-			if(running != null)
-			{
-				running.current_run = false;
-				running.Workofftime = DateTime.Now;
-				mainRepo.Update(running);
-			}
-
-			var m = new Main
-			{
-				CurrenUserId = userId,
-				CurrenProjectId = projectId,
-				LoginTime = DateTime.Now,
-				Workofftime = DateTime.Now,
-				version = version ?? Properties.Application.ProductVersion,
-				IsLocked = false,
-				current_run = true,
-				The_next_revision_schedule = 365,
-				Version_end_time = 365,
-				registered_user = null,
-				Description = $"Session started from LaserEditing {Environment.MachineName}"
-			};
-
-			int newId = mainRepo.Create(m);
-			m.Id = newId;
-			Pubmain = m;
-		}
-		// 结束会话：在用户登出或窗体关闭前调用
-		private void EndSession()   // 结束会话
-		{
-			try
-			{
-				if(mainRepo == null)
-					InitializeMainRepository();
-
-				if(Pubmain == null)
-				{
-					// 尝试从数据库获取当前运行的记录
-					Pubmain = mainRepo.GetCurrentRunning();
-				}
-
-				if(Pubmain != null)
-				{
-					Pubmain.Workofftime = DateTime.Now;
-					Pubmain.current_run = false;
-					// 可选：记录退出时的项目 / 用户信息
-					mainRepo.Update(Pubmain);
-				}
-			}
-			catch(Exception ex)
-			{
-				Debug.WriteLine($"EndSession 异常: {ex.Message}");
-			}
-		}
-		// 在创建新项目时，若希望把当前会话的 CurrenProjectId 同步到 main 表，更新会话
 
 		/*		GitHub Copilot
 
@@ -4424,7 +4368,7 @@ namespace MusicChange
 
 	}
 
-	#region ------------ calss  AudioPlayer  VideoInfo 属性类 获取  ------------
+	#region ----------calss  AudioPlayer  VideoInfo MessageBoxHelper JsonFileManager ------------
 	public class AudioPlayer:IDisposable
 	{
 		private WaveOutEvent _waveOut;
@@ -4656,13 +4600,51 @@ namespace MusicChange
 		};
 			timer.Start();
 		}
-
-		//private static void callback(object state)
-		//{
-		//	throw new NotImplementedException();
-		//}
+	
 	}
 
+	public class JsonFileManager<T> where T : class
+	{
+		private readonly string _filePath;
+
+		public JsonFileManager(string filePath)
+		{
+			_filePath = filePath;
+		}
+		// 保存单个对象
+		public void Save(T obj)
+		{
+			string json = JsonConvert.SerializeObject(obj, Formatting.Indented);
+			File.WriteAllText(_filePath, json);
+		}
+
+		// 保存对象列表
+		public void SaveList(List<T> objects)
+		{
+			string json = JsonConvert.SerializeObject(objects, Formatting.Indented);
+			File.WriteAllText(_filePath, json);
+		}
+
+		// 读取单个对象
+		public T Load()
+		{
+			if(!File.Exists(_filePath))
+				return null;
+
+			string json = File.ReadAllText(_filePath);
+			return JsonConvert.DeserializeObject<T>(json);
+		}
+
+		// 读取对象列表
+		public List<T> LoadList()
+		{
+			if(!File.Exists(_filePath))
+				return new List<T>();
+
+			string json = File.ReadAllText(_filePath);
+			return JsonConvert.DeserializeObject<List<T>>(json) ?? new List<T>();
+		}
+	}
 
 
 	#endregion

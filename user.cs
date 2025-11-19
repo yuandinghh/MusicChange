@@ -49,7 +49,7 @@ namespace MusicChange
 				{
 					register.Text = "应用程序未注册";
 				}
-				versions.Text = "当前版本：" + LaserEditing.Pubmain.version;
+				versions.Text = "当前版本：" + LaserEditing.pubmain.version;
 				//将当前时间减去注册时间 ，获得天数
 				days.Text = "你已经使用：  " + (DateTime.Now - LaserEditing.Pubuser.CreatedAt).Days + " 天";
 
@@ -59,7 +59,7 @@ namespace MusicChange
 				if(!db.IsTableEmpty("Users"))    // 数据库不为空
 				{
 					LaserEditing.usersRepo = new UsersRepository(db.dbPath);    //读第一条LaserEditing.db数据库的User 存入Pubuser 类中
-					LaserEditing.Pubuser = LaserEditing.usersRepo.GetById(LaserEditing.Pubmain.CurrenUserId);  //??????????? 
+					LaserEditing.Pubuser = LaserEditing.usersRepo.GetById(LaserEditing.pubmain.CurrenUserId);   //读取用户信息
 					if(LaserEditing.Pubuser != null)
 					{
 						if(LaserEditing.Pubuser.AvatarPath != null)
@@ -311,7 +311,6 @@ namespace MusicChange
 			{
 				if(!ValidateInput(out string username, out string email, out string password))  // 验证输入
 				{  // 验证失败
-
 					if(usernamenull)
 					{
 						logopic = Path.Combine(LaserEditing.subDirectory, "User") + "\\" + "logo.jpg";
@@ -335,21 +334,19 @@ namespace MusicChange
 							SetStatus.Text = "未注册用户成功";
 							MessageBox.Show("未注册用户成功。", "注册完成", MessageBoxButtons.OK, MessageBoxIcon.Information);
 							LaserEditing.Pubuser = luser;   // 保存用户信息
-									//if(LaserEditing.Pubmain != null)  //将 id  存入 main 表的userid 列 							{
-							LaserEditing.mainRepo.Update(new Main { Id = LaserEditing.Pubmain.Id, CurrenUserId = newId });   // 更新当前正在运行的项目
-							LaserEditing.Pubmain.CurrenUserId = luser.Id;   //			}
+							LaserEditing.savepumMain(luser.Id, newId,"" );   // 更新当前正在运行的项目
 							this.Close();
 						}
 						else
 						{
-							SetStatus.Text = "注册失败，数据库故障！联系厂家";
+                            MessageBox.Show("数据库故障！联系厂家。", "注册失败", MessageBoxButtons.OK, MessageBoxIcon.Error);
+							SetStatus.Text = "数据库故障！联系厂家";
 						}
 
 					}
-
+					SetStatus.Text = $"请重新输入注册信息";
 					return;
-				}   // 验证成功
-					//获取当前 users 记录数  				int count = _usersRepo.GetAll().Count;
+				}   // 验证成功  	//获取当前 users 记录数  				int count = _usersRepo.GetAll().Count;
 				if(!db.IsTableEmpty("Users"))  // 判断表是否为空
 				{
 					if(LaserEditing.usersRepo.ExistsByUsername(username))   //检查用户名是否存在
@@ -363,58 +360,45 @@ namespace MusicChange
 							return;
 						}
 						txtUsername.Focus();
-
 						return;
 					}
 					else // 用户名不存在
 					{
-						SetStatus.Text = $"请重新输入注册信息";
+						string passwordHash = PasswordHelper.HashPassword(password);  // 生成密码哈希（格式： iterations.salt.hash）
+						luser.Username = username;
+						luser.Email = "110959751@qq.com";
+						luser.PasswordHash = passwordHash;
+						luser.Iphone = txtPhone.Text.Trim();
+						luser.FullName = txtFullName.Text.Trim();
+						luser.AvatarPath = logopic;
+						luser.IsActive = true;
+						luser.CreatedAt = DateTime.Now;
+						luser.UpdatedAt = DateTime.Now;
+						luser.Draftposition = "";
+						luser.IsLocked = false;
+						luser.IsDeleted = false;
+						luser.IsModified = false;
+						newId = LaserEditing.usersRepo.Create(luser);  // 创建用户
+						if(newId > 0)                                  // 创建成功
+						{
+                            SetStatus.Text = "注册成功";
+							LaserEditing.savepumMain(newId, 0, "");
+                            LaserEditing.Pubuser = luser;
+							return;
+						}
+						else
+						{
+							MessageBox.Show("注册失败，请重试。", "联系网管或厂家", MessageBoxButtons.OK, MessageBoxIcon.Information);
+							SetStatus.Text = "注册失败，请重试";
+						}
 					}
 				}
 				else
 				{
 					//db.ClearTableAndResetId("Users");
-					db.ClearUserTable();
+					db.ClearUserTable();    // 清空表
 				}
-				string passwordHash = PasswordHelper.HashPassword(password);  // 生成密码哈希（格式： iterations.salt.hash）
-				SetStatus.Text = "未注册";
-				luser.Username = username;
-				luser.Email = "110959751@qq.com";
-				luser.PasswordHash = passwordHash;
-				luser.Iphone = txtPhone.Text.Trim();
-				luser.FullName = txtFullName.Text.Trim();
-				luser.AvatarPath = logopic;
-				luser.IsActive = true;
-				luser.CreatedAt = DateTime.Now;
-				luser.UpdatedAt = DateTime.Now;
-				luser.Draftposition = "";
-				luser.IsLocked = false;
-				luser.IsDeleted = false;
-				luser.IsModified = false;
-				newId = LaserEditing.usersRepo.Create(luser);  // 创建用户
-				if(newId > 0)
-				{
-					SetStatus.Text = "注册成功";
-					LaserEditing.Pubuser = luser;   // 保存用户信息
-					if(LaserEditing.Pubmain != null)  //将 id  存入 main 表的userid 列
-					{
-						LaserEditing.mainRepo.Update(new Main { Id = LaserEditing.Pubmain.Id, CurrenUserId = newId });   // 更新当前正在运行的项目
-						LaserEditing.Pubmain.CurrenUserId = luser.Id;
-					}
-
-					//var main = LaserEditing.mainRepo.GetCurrentRunning();
-					//newId 存入 main 表的curren_user_id列
-                    LaserEditing.mainRepo.Update(new Main { Id = LaserEditing.Pubmain.Id, CurrenUserId = newId });
-
-					MessageBox.Show("用户注册成功。", "注册完成", MessageBoxButtons.OK, MessageBoxIcon.Information);
-					this.DialogResult = DialogResult.OK;
-					this.Close();
-				}
-				else
-				{
-					MessageBox.Show("注册失败，请重试。", "联系网管或厂家", MessageBoxButtons.OK, MessageBoxIcon.Information);
-					SetStatus.Text = "注册失败，请重试";
-				}
+		
 			}
 			catch(Exception ex)
 			{
@@ -472,52 +456,47 @@ namespace MusicChange
 			}
 			return true;
 		}
-
-		// 选择图片按钮点击事件
-		private void SelectButton_Click(object sender, EventArgs e)
+		private void SelectButton_Click(object sender, EventArgs e)                      // 选择图片按钮点击事件
 		{
 			Image originalImage, resizedImage;
 			string savePath;
-			using(OpenFileDialog openFileDialog = new OpenFileDialog())
+			using OpenFileDialog openFileDialog = new OpenFileDialog();
+			openFileDialog.Filter = "图片文件|*.jpg;*.jpeg;*.png;*.bmp;*.gif|所有文件|*.*";
+			openFileDialog.Title = "选择图片";
+			if(openFileDialog.ShowDialog() == DialogResult.OK)
 			{
-				openFileDialog.Filter = "图片文件|*.jpg;*.jpeg;*.png;*.bmp;*.gif|所有文件|*.*";
-				openFileDialog.Title = "选择图片";
-
-				if(openFileDialog.ShowDialog() == DialogResult.OK)
-				{
-					try
-					{                       // // 加载图片并显示
-						originalImage = Image.FromFile(openFileDialog.FileName);
+				try
+				{                       // // 加载图片并显示
+					originalImage = Image.FromFile(openFileDialog.FileName);
+					{
+						// 在PictureBox中显示原始图片
+						pictureBox.Image = new Bitmap(originalImage);
+						savePath = GetSavePath(openFileDialog.SafeFileName);
+						// 检查图片是否需要压缩
+						if(originalImage.Width > 50 || originalImage.Height > 50)
+						{                       // 等比例压缩图片
+							resizedImage = ResizeImage(originalImage, 50, 50);
+							resizedImage.Save(savePath);
+							string filenanme = Path.GetFileName(savePath);
+							logopic = Path.Combine(LaserEditing.subDirectory, "User") + "\\" + filenanme;
+							File.Copy(savePath, logopic, true);
+							SetStatus.Text = "图片已压缩并保存";
+							resizedImage.Dispose();
+						}
+						else
 						{
-							// 在PictureBox中显示原始图片
-							pictureBox.Image = new Bitmap(originalImage);
-							savePath = GetSavePath(openFileDialog.SafeFileName);
-							// 检查图片是否需要压缩
-							if(originalImage.Width > 50 || originalImage.Height > 50)
-							{                       // 等比例压缩图片
-								resizedImage = ResizeImage(originalImage, 50, 50);
-								resizedImage.Save(savePath);
-								string filenanme = Path.GetFileName(savePath);
-								logopic = Path.Combine(LaserEditing.subDirectory, "User") + "\\" + filenanme;
-								File.Copy(savePath, logopic, true);
-								SetStatus.Text = "图片已压缩并保存";
-								resizedImage.Dispose();
-							}
-							else
-							{
-								originalImage = Image.FromFile(openFileDialog.FileName);
-								originalImage.Save(savePath);
-								string filenanme = Path.GetFileName(savePath);
-								logopic = Path.Combine(LaserEditing.subDirectory, "User") + "\\" + filenanme;
-								File.Copy(savePath, logopic, true);
-								SetStatus.Text = "图片尺寸小于等于50×50";
-							}
+							originalImage = Image.FromFile(openFileDialog.FileName);
+							originalImage.Save(savePath);
+							string filenanme = Path.GetFileName(savePath);
+							logopic = Path.Combine(LaserEditing.subDirectory, "User") + "\\" + filenanme;
+							File.Copy(savePath, logopic, true);
+							SetStatus.Text = "图片尺寸小于等于50×50";
 						}
 					}
-					catch(Exception ex)
-					{
-						_ = MessageBox.Show($"处理图片时出错: {ex.Message}", "错误");
-					}
+				}
+				catch(Exception ex)
+				{
+					_ = MessageBox.Show($"处理图片时出错: {ex.Message}", "错误");
 				}
 			}
 		}

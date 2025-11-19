@@ -102,7 +102,7 @@ VALUES (@projects_id, @name, @file_path, @file_size, @media_type, @duration, @wi
 		/// <summary>
 		/// 根据项目 id 查询所有媒体资源
 		/// </summary>
-		public List<MediaAsset> GetByProjectId(int projectId)
+		public List<MediaAsset> GetByProjectId(int projectId)    // 查询
 		{
 			var list = new List<MediaAsset>();
 			const string sql = "SELECT * FROM media_assets WHERE projects_id = @pid ORDER BY id;";
@@ -113,7 +113,7 @@ VALUES (@projects_id, @name, @file_path, @file_size, @media_type, @duration, @wi
 			using var r = cmd.ExecuteReader();
 			while(r.Read())
 			{
-				list.Add(MapReaderToMediaAsset(r));
+				list.Add(MapReaderToMediaAsset(r));          // 将结果映射为 MediaAsset 对象
 			}
 			return list;
 		}
